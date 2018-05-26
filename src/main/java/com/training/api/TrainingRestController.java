@@ -109,8 +109,9 @@ public class TrainingRestController {
      * @param query
      * Created by huai23 on 2018-05-26 17:09:14.
      */
-    @RequestMapping (value = "list", method = RequestMethod.GET)
-    public ResponseEntity<String> list(@ModelAttribute TrainingQuery query ,HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping (value = "list", method = RequestMethod.POST)
+    public ResponseEntity<String> list(@RequestBody TrainingQuery query ,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" list  query = {}",query);
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" list  memberRequest = {}",memberRequest);
         return trainingService.list(query);

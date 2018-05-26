@@ -138,7 +138,7 @@ public class LessonService {
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" order  memberRequest = {}",memberRequest);
-        if(true){
+        if(false){
             return ResponseUtil.success("约课失败!该时段课程已约满!");
         }
         return ResponseUtil.success("约课成功");
