@@ -1,5 +1,6 @@
 package com.training.util;
 
+import com.training.domain.Member;
 import com.training.domain.User;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -14,5 +15,10 @@ public class RequestContextHelper {
         return user;
     }
 
+    public static Member getMember(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Member member = (Member)request.getAttribute("member");
+        return member;
+    }
 
 }

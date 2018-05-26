@@ -102,6 +102,16 @@ public class LessonRestController {
         return lessonService.delete(id);
     }
 
+    /**
+     * 根据实体更新
+     * @param query
+     * Created by huai23 on 2018-05-26 17:02:19.
+     */
+    @RequestMapping (value = "schedule", method = RequestMethod.POST)
+    public ResponseEntity<String> schedule(@RequestBody LessonQuery query,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  schedule  query = {}",query);
+        return lessonService.schedule(query);
+    }
 
 }
 

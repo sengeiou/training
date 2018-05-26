@@ -4,6 +4,7 @@ import com.training.domain.Member;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.RequestContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -111,6 +112,8 @@ public class MemberRestController {
     @RequestMapping (value = "sendCode", method = RequestMethod.POST)
     public ResponseEntity<String> sendCode(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
         logger.info(" memberRestController  sendCode  member = {}",member);
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" memberRestController  sendCode  memberRequest = {}",memberRequest);
         return memberService.sendCode(member);
     }
 
@@ -122,7 +125,22 @@ public class MemberRestController {
     @RequestMapping (value = "bind", method = RequestMethod.POST)
     public ResponseEntity<String> bind(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
         logger.info(" memberRestController  bind  member = {}",member);
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" memberRestController  bind  memberRequest = {}",memberRequest);
         return memberService.bind(member);
+    }
+
+
+    /**
+     * 根据ID查询实体
+     * @param memberId
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "getValidLessonType/{memberId}", method = RequestMethod.GET)
+    public ResponseEntity<String> getValidLessonType(@PathVariable String memberId,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" memberRestController  getValidLessonType  memberId = {}",memberId);
+        Member memberRequest = RequestContextHelper.getMember();
+        return memberService.getValidLessonType(memberId);
     }
 
 }

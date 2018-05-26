@@ -1,6 +1,9 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
+import com.training.domain.Lesson;
+import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,6 +106,19 @@ public class LessonService {
         }
         return ResponseUtil.exception("删除失败");
     }
+
+    public ResponseEntity<String> schedule(LessonQuery query) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" schedule  memberRequest = {}",memberRequest);
+        List<Lesson> lessonList = new ArrayList();
+
+
+        JSONObject jo = new JSONObject();
+        jo.put("lessonList", lessonList);
+        return ResponseUtil.success("查询课程时间表成功",lessonList);
+    }
+
+
 
 
 }

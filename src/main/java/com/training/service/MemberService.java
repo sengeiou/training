@@ -1,11 +1,13 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.training.common.*;
 import com.training.dao.MemberDao;
 import com.training.domain.Member;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
+import com.training.util.JwtUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +31,9 @@ public class MemberService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private JwtUtil jwt;
 
     /**
      * 新增实体
@@ -126,6 +132,13 @@ public class MemberService {
      */
     public ResponseEntity<String> sendCode(Member member) {
 
+        if(!StringUtils.isEmpty(member.getPhone())||member.getPhone().equals("1")){
+            return ResponseUtil.exception("手机号码异常");
+
+        }
+
+
+
 
         return ResponseUtil.success("发送验证码成功");
     }
@@ -137,11 +150,47 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:39:33.
      */
     public ResponseEntity<String> bind(Member member) {
-
-
-        return ResponseUtil.success("绑定成功");
+        JSONObject jo = new JSONObject();
+        if(StringUtils.isEmpty(member.getCode()) || !member.getCode().equals("1234")){
+            return ResponseUtil.exception("手机验证码错误!");
+        }
+        Member memberRequest = RequestContextHelper.getMember();
+        memberRequest.setOpenId("1");
+        logger.info(" memberRestController  bind  memberRequest = {}",memberRequest);
+        MemberEntity memberEntity = getByOpenId(memberRequest.getOpenId());
+        Member memberResult = new Member();
+        if(memberEntity!=null){
+            memberResult = new Member();
+            memberResult.setMemberId(memberEntity.getMemberId());
+            memberResult.setType(memberEntity.getType());
+            jo.put("member", memberEntity);
+        }else{
+            memberResult.setMemberId("");
+            memberResult.setType("");
+        }
+        String subject = JwtUtil.generalSubject(memberRequest.getOpenId(),memberResult);
+        try {
+            String token = jwt.createJWT(Const.JWT_ID, subject, Const.JWT_TTL);
+            jo.put("token", token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseUtil.success(jo);
     }
 
+    public ResponseEntity<String> getValidLessonType(String memberId) {
+        if(StringUtils.isEmpty(memberId)){
+            return ResponseUtil.exception("会员信息查询异常");
+        }
+        if(false){
+            return ResponseUtil.exception("无可用课时,请先购卡!");
+        }
+        List<String>  types = new ArrayList<>();
+        types.add("P");
+        types.add("T");
+        types.add("S");
+        return ResponseUtil.success(types);
+    }
 
 }
 

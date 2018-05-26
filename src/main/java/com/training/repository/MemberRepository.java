@@ -28,7 +28,7 @@ public interface MemberRepository {
                 " <if test=\"member.height != null\"> height, </if>" +
                 " <if test=\"member.idCard != null\"> id_card, </if>" +
                 " <if test=\"member.address != null\"> address, </if>" +
-                " <if test=\"member.cardId != null\"> card_id, </if>" +
+                " <if test=\"member.cardNo != null\"> card_no, </if>" +
                 " <if test=\"member.trainingHours != null\"> training_hours, </if>" +
                 " <if test=\"member.openId != null\"> open_id, </if>" +
                 " <if test=\"member.unionId != null\"> union_id, </if>" +
@@ -53,7 +53,7 @@ public interface MemberRepository {
                 " <if test=\"member.height != null\"> #{member.height}, </if>" +
                 " <if test=\"member.idCard != null\"> #{member.idCard}, </if>" +
                 " <if test=\"member.address != null\"> #{member.address}, </if>" +
-                " <if test=\"member.cardId != null\"> #{member.cardId}, </if>" +
+                " <if test=\"member.cardNo != null\"> #{member.cardNo}, </if>" +
                 " <if test=\"member.trainingHours != null\"> #{member.trainingHours}, </if>" +
                 " <if test=\"member.openId != null\"> #{member.openId}, </if>" +
                 " <if test=\"member.unionId != null\"> #{member.unionId}, </if>" +
@@ -68,7 +68,7 @@ public interface MemberRepository {
             "</script>")
     int add(@Param("member") MemberEntity member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_id,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
             " FROM member " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
@@ -84,7 +84,7 @@ public interface MemberRepository {
             " <if test=\"query.height != null\"> AND height = #{query.height} </if>" +
             " <if test=\"query.idCard != null\"> AND id_card = #{query.idCard} </if>" +
             " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
-            " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
+            " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.trainingHours != null\"> AND training_hours = #{query.trainingHours} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
@@ -112,7 +112,7 @@ public interface MemberRepository {
             " <if test=\"query.height != null\"> AND height = #{query.height} </if>" +
             " <if test=\"query.idCard != null\"> AND id_card = #{query.idCard} </if>" +
             " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
-            " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
+            " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.trainingHours != null\"> AND training_hours = #{query.trainingHours} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
@@ -124,15 +124,15 @@ public interface MemberRepository {
             "</script>")
     Long count(@Param("query") MemberQuery member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_id,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
             " FROM member " +
             " WHERE member_id = #{id} " +
             "</script>")
     MemberEntity getById(@Param("id") String id);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_id,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
             " FROM member " +
-            " WHERE open_d = #{openId} " +
+            " WHERE open_id = #{openId} " +
             "</script>")
     MemberEntity getByOpenId(@Param("openId") String openId);
 
@@ -150,7 +150,7 @@ public interface MemberRepository {
                 " <if test=\"member.height != null\"> height = #{member.height} , </if>" +
                 " <if test=\"member.idCard != null\"> id_card = #{member.idCard} , </if>" +
                 " <if test=\"member.address != null\"> address = #{member.address} , </if>" +
-                " <if test=\"member.cardId != null\"> card_id = #{member.cardId} , </if>" +
+                " <if test=\"member.cardNo != null\"> card_no = #{member.cardNo} , </if>" +
                 " <if test=\"member.trainingHours != null\"> training_hours = #{member.trainingHours} , </if>" +
                 " <if test=\"member.openId != null\"> open_id = #{member.openId} , </if>" +
                 " <if test=\"member.unionId != null\"> union_id = #{member.unionId} , </if>" +

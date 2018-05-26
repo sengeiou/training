@@ -2,6 +2,7 @@ package com.training.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.Const;
+import com.training.domain.Member;
 import com.training.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -74,17 +75,16 @@ public class JwtUtil {
 
     /**
      * 生成subject信息
-     * @param user
+     * @param member
      * @return
      */
-    public static String generalSubject(User user){
+    public static String generalSubject(String openId,Member member){
         JSONObject jo = new JSONObject();
-        jo.put("userId", user.getUserId());
-        jo.put("orgId", user.getOrgId());
-        jo.put("username",user.getUsername());
-        jo.put("roleId", user.getRoleId());
-        jo.put("custname",user.getCustname());
+        jo.put("openId", openId);
+        jo.put("memberId", member.getMemberId());
+        jo.put("type",member.getType());
         return jo.toJSONString();
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.training.config;
 
 import com.alibaba.fastjson.JSONObject;
+import com.training.domain.Member;
 import com.training.domain.User;
 import com.training.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -62,7 +63,7 @@ public class SessonFilter implements Filter {
             logger.info(" request.getRequestURI() = {} ,  Authorization = {} ",request.getRequestURI(),authorization);
 
             // 不过滤的uri
-            String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html",
+            String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code",
                     "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken",
                     "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",
                     ".css",".jpg",".png",".jpeg",".gif"};
@@ -103,8 +104,8 @@ public class SessonFilter implements Filter {
                         return;
                     }
                     String json = claims.getSubject();
-                    User user = JSONObject.parseObject(json, User.class);
-                    req.setAttribute("user",user);
+                    Member member = JSONObject.parseObject(json, Member.class);
+                    req.setAttribute("member",member);
                     // 如果session中存在登录者实体，则继续
                     chain.doFilter(request, response);
                 }
