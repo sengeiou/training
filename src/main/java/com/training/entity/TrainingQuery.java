@@ -48,6 +48,9 @@ public class TrainingQuery {
 
     private Date modified;
 
+    private String startDate;
+
+    private String endDate;
 
 }
 
