@@ -11,6 +11,7 @@ import java.util.List;
 public class GenService {
 
     private static final String packageOutPath = "com.training.service";//指定实体生成所在包的路径
+    private static final String packageOfService = "com.training.service";//指定实体生成所在包的路径
     private static final String packageOfDao = "com.training.dao";//指定实体生成所在包的路径
     private static final String packageOfRepository = "com.training.repository";//指定实体生成所在包的路径
     private static final String packageOfEntity = "com.training.entity";//指定实体生成所在包的路径
@@ -76,15 +77,15 @@ public class GenService {
         sb.append("package " + packageOutPath + ";\r\n\r\n");
         sb.append("import " + packageOfDao + ".*;\r\n");
         sb.append("import " + packageOfEntity + ".*;\r\n");
-        sb.append("import com.qy.travel.domain.User;\r\n");
-        sb.append("import com.qy.travel.common.*;\r\n");
+        sb.append("import com.training.domain.User;\r\n");
+        sb.append("import com.training.common.*;\r\n");
         sb.append("import org.slf4j.Logger;\r\n");
         sb.append("import org.slf4j.LoggerFactory;\r\n");
         sb.append("import org.springframework.stereotype.Service;\r\n");
         sb.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
         sb.append("import org.springframework.http.ResponseEntity;\r\n");
-        sb.append("import com.qy.travel.util.ResponseUtil;\r\n");
-        sb.append("import com.qy.travel.util.RequestContextHelper;\r\n");
+        sb.append("import com.training.util.ResponseUtil;\r\n");
+        sb.append("import com.training.util.RequestContextHelper;\r\n");
 
         sb.append("\r\nimport java.util.List;\r\n");
 

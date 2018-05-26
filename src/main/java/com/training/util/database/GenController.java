@@ -11,14 +11,14 @@ import java.util.List;
 
 public class GenController {
 
-    private static final String packageOutPath = "com.qy.travel.api";//指定实体生成所在包的路径
-    private static final String packageOfService = "com.qy.travel.service";//指定实体生成所在包的路径
-    private static final String packageOfDao = "com.qy.travel.dao";//指定实体生成所在包的路径
-    private static final String packageOfRepository = "com.qy.travel.repository";//指定实体生成所在包的路径
-    private static final String packageOfEntity = "com.qy.travel.entity";//指定实体生成所在包的路径
+    private static final String packageOutPath = "com.training.api";//指定实体生成所在包的路径
+    private static final String packageOfService = "com.training.service";//指定实体生成所在包的路径
+    private static final String packageOfDao = "com.training.dao";//指定实体生成所在包的路径
+    private static final String packageOfRepository = "com.training.repository";//指定实体生成所在包的路径
+    private static final String packageOfEntity = "com.training.entity";//指定实体生成所在包的路径
     private static final String authorName = "huai23";//作者名字
 
-    private static final  String table_schema = "travel";//数据库名
+    private static final  String table_schema = "training";//数据库名
 
     private static final boolean over_write = true;
 
@@ -79,10 +79,10 @@ public class GenController {
         sb.append("package " + packageOutPath + ";\r\n\r\n");
         sb.append("import " + packageOfService + ".*;\r\n");
         sb.append("import " + packageOfEntity + ".*;\r\n");
-        sb.append("import com.qy.travel.common.*;\r\n");
+        sb.append("import com.training.common.*;\r\n");
         sb.append("import org.slf4j.Logger;\r\n");
         sb.append("import org.slf4j.LoggerFactory;\r\n");
-        sb.append("import com.qy.travel.util.ResponseUtil;\r\n");
+        sb.append("import com.training.util.ResponseUtil;\r\n");
         sb.append("import org.springframework.http.ResponseEntity;\r\n");
         sb.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
         sb.append("import org.springframework.web.bind.annotation.RequestMapping;\r\n");

@@ -12,9 +12,13 @@ import java.util.List;
 
 public class GenEntityMysql {
 
-    private static final String packageOutPath = "com.qy.travel.entity";//指定实体生成所在包的路径
+    private static final String packageOutPath = "com.training.entity";//指定实体生成所在包的路径
+    private static final String packageOfService = "com.training.service";//指定实体生成所在包的路径
+    private static final String packageOfDao = "com.training.dao";//指定实体生成所在包的路径
+    private static final String packageOfRepository = "com.training.repository";//指定实体生成所在包的路径
+    private static final String packageOfEntity = "com.training.entity";//指定实体生成所在包的路径
     private static final String authorName = "huai23";//作者名字
-    private static final  String table_schema = "travel";//数据库名
+    private static final  String table_schema = "training";//数据库名
     private String[] colnames; // 列名数组
     private String[] colTypes; //列名类型数组
     private int[] colSizes; //列名大小数组
