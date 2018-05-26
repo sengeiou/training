@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.Lesson;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -103,7 +104,7 @@ public class LessonRestController {
     }
 
     /**
-     * 根据实体更新
+     * 查询时间表
      * @param query
      * Created by huai23 on 2018-05-26 17:02:19.
      */
@@ -111,6 +112,17 @@ public class LessonRestController {
     public ResponseEntity<String> schedule(@RequestBody LessonQuery query,HttpServletRequest request, HttpServletResponse response){
         logger.info("  schedule  query = {}",query);
         return lessonService.schedule(query);
+    }
+
+    /**
+     * 约课
+     * @param lesson
+     * Created by huai23 on 2018-05-26 17:02:19.
+     */
+    @RequestMapping (value = "order", method = RequestMethod.POST)
+    public ResponseEntity<String> order(@RequestBody Lesson lesson, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  order  lesson = {}",lesson);
+        return lessonService.order(lesson);
     }
 
 }

@@ -182,7 +182,7 @@ public class MemberService {
         if(StringUtils.isEmpty(memberId)){
             return ResponseUtil.exception("会员信息查询异常");
         }
-        if(false){
+        if(!memberId.equals("1")){
             return ResponseUtil.exception("无可用课时,请先购卡!");
         }
         List<String>  types = new ArrayList<>();

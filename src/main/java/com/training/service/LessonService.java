@@ -111,14 +111,38 @@ public class LessonService {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" schedule  memberRequest = {}",memberRequest);
         List<Lesson> lessonList = new ArrayList();
-
-
+        for (int i = 9; i < 22; i++) {
+            Lesson lesson = new Lesson();
+            lesson.setLessonId(System.currentTimeMillis()+"");
+            lesson.setStartHour(i);
+            lesson.setEndHour(i+1);
+            lesson.setCoachId("1");
+            lesson.setLessonDate(query.getLessonDate());
+            if(i%5==0){
+                lesson.setQuota(0);
+            }else{
+                lesson.setQuota(1);
+            }
+            if(i%3==0){
+                lesson.setStatus(-1);
+            }else{
+                lesson.setStatus(0);
+            }
+            lessonList.add(lesson);
+        }
         JSONObject jo = new JSONObject();
         jo.put("lessonList", lessonList);
         return ResponseUtil.success("查询课程时间表成功",lessonList);
     }
 
-
+    public ResponseEntity<String> order(Lesson lesson) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" order  memberRequest = {}",memberRequest);
+        if(true){
+            return ResponseUtil.success("约课失败!该时段课程已约满!");
+        }
+        return ResponseUtil.success("约课成功");
+    }
 
 
 }

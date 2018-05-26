@@ -1,8 +1,10 @@
 package com.training.api;
 
+import com.training.domain.Member;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.RequestContextHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -102,6 +104,17 @@ public class TrainingRestController {
         return trainingService.delete(id);
     }
 
+    /**
+     * 查询训练课程
+     * @param query
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "list", method = RequestMethod.GET)
+    public ResponseEntity<String> list(@ModelAttribute TrainingQuery query ,HttpServletRequest request, HttpServletResponse response){
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" list  memberRequest = {}",memberRequest);
+        return trainingService.list(query);
+    }
 
 }
 

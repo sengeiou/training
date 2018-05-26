@@ -1,9 +1,11 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,6 +106,16 @@ public class TrainingService {
         return ResponseUtil.exception("删除失败");
     }
 
+    public ResponseEntity<String> list(TrainingQuery query) {
+        if(StringUtils.isEmpty(query.getStartDate())||StringUtils.isEmpty(query.getEndDate())){
+            return ResponseUtil.success("请输入起始日期和结束日期");
+        }
+        List<Training> trainingList = new ArrayList<>();
+        Training training = new Training();
+        training.setLessonDate(query.getStartDate());
+        trainingList.add(training);
+        return ResponseUtil.success(trainingList);
+    }
 
 }
 
