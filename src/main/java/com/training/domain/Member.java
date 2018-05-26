@@ -61,6 +61,7 @@ public class Member {
 
     private Date modified;
 
+    private String code;
 
 }
 
