@@ -73,6 +73,9 @@ public class WechatService {
     public ResponseEntity<String> getMemberByCode(String code) {
         String openId = getOpenIdByCode(code);
         MemberEntity memberEntity = memberService.getByOpenId(openId);
+        if(memberEntity==null){
+            return ResponseUtil.exception("查无会员数据");
+        }
         return ResponseUtil.success(memberEntity);
     }
 
