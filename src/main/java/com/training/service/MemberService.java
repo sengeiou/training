@@ -2,6 +2,7 @@ package com.training.service;
 
 import com.training.common.*;
 import com.training.dao.MemberDao;
+import com.training.domain.Member;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
@@ -116,6 +117,29 @@ public class MemberService {
             return ResponseUtil.success("删除成功");
         }
         return ResponseUtil.exception("删除失败");
+    }
+
+    /**
+     * 根据手机号码发送验证码
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    public ResponseEntity<String> sendCode(Member member) {
+
+
+        return ResponseUtil.success("发送验证码成功");
+    }
+
+
+    /**
+     * 根据手机号码绑定会员
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    public ResponseEntity<String> bind(Member member) {
+
+
+        return ResponseUtil.success("绑定成功");
     }
 
 

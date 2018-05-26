@@ -41,7 +41,7 @@ public class WechatService {
      * 新增实体
      * @param code
      * Created by huai23 on 2018-05-26 13:33:17.
-     */ 
+     */
     public String getOpenIdByCode(String code){
         logger.info(" getOpenIdByCode  code1 = {}",code);
         code = JSON.parseObject(code).get("data").toString();

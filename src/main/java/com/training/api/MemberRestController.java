@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.Member;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -102,6 +103,27 @@ public class MemberRestController {
         return memberService.delete(id);
     }
 
+    /**
+     * 根据手机号码发送验证码
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "sendCode", method = RequestMethod.POST)
+    public ResponseEntity<String> sendCode(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info(" memberRestController  sendCode  member = {}",member);
+        return memberService.sendCode(member);
+    }
+
+    /**
+     * 根据手机号码绑定会员
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "bind", method = RequestMethod.POST)
+    public ResponseEntity<String> bind(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info(" memberRestController  bind  member = {}",member);
+        return memberService.bind(member);
+    }
 
 }
 
