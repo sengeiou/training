@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.Const;
 import com.training.domain.User;
+import com.training.entity.MemberEntity;
+import com.training.service.MemberService;
+import com.training.service.WechatService;
 import com.training.util.HttpUtils;
 import com.training.util.JwtUtil;
 import com.training.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +26,12 @@ import javax.servlet.http.HttpServletResponse;
 public class WechatRestController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private WechatService wechatService;
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     private JwtUtil jwt;
@@ -66,6 +76,16 @@ public class WechatRestController {
             logger.error(e.getMessage());
             return ResponseUtil.unKonwException();
         }
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param code
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "code/{code}", method = RequestMethod.GET)
+    public ResponseEntity<String> getMemberByCode(@PathVariable String code, HttpServletRequest request, HttpServletResponse response){
+        return wechatService.getMemberByCode(code);
     }
 
 }

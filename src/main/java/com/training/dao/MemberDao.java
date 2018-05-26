@@ -65,6 +65,16 @@ public class MemberDao {
     }
 
     /**
+     * 根据ID查询实体
+     * @param openId
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public MemberEntity getByOpenId(String openId){
+        MemberEntity memberDB = memberRepository.getByOpenId(openId);
+        return memberDB;
+    }
+
+    /**
      * 根据实体更新
      * @param member
      * Created by huai23 on 2018-05-26 13:33:17.

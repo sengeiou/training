@@ -5,6 +5,7 @@ import com.training.dao.MemberDao;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,19 @@ public class MemberService {
      */ 
     public MemberEntity getById(String id){
         MemberEntity memberDB = memberDao.getById(id);
+        return memberDB;
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param openId
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public MemberEntity getByOpenId(String openId){
+        if(StringUtils.isEmpty(openId)){
+            return null;
+        }
+        MemberEntity memberDB = memberDao.getByOpenId(openId);
         return memberDB;
     }
 

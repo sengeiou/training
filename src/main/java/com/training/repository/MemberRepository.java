@@ -130,6 +130,12 @@ public interface MemberRepository {
             "</script>")
     MemberEntity getById(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_id,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+            " FROM member " +
+            " WHERE open_d = #{openId} " +
+            "</script>")
+    MemberEntity getByOpenId(@Param("openId") String openId);
+
     @Update("<script> UPDATE member SET " +
                 " <if test=\"member.memberId != null\"> member_id = #{member.memberId} , </if>" +
                 " <if test=\"member.storeId != null\"> store_id = #{member.storeId} , </if>" +
