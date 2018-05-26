@@ -2,32 +2,39 @@ package com.training.domain;
 
 import lombok.Data;
 import java.util.Date;
-import java.util.List;
 
+/**
+ * training 实体类
+ * Created by huai23 on 2018-05-26 17:09:14.
+ */ 
 @Data
-public class Lesson {
+public class Training {
 
     private Long pkId;
 
-    private String lessonId;
+    private String trainingId;
 
-    private String storeId;
+    private String lessonId;
 
     private String title;
 
+    private String storeId;
+
     private String type;
+
+    private String memberId;
 
     private String coachId;
 
     private String cardNo;
+
+    private String cardType;
 
     private String lessonDate;
 
     private Integer startHour;
 
     private Integer endHour;
-
-    private Integer quota;
 
     private String trainingData;
 
@@ -41,6 +48,6 @@ public class Lesson {
 
     private Date modified;
 
-    private List<Training> trainingList;
 
 }
+
