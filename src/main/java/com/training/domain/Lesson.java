@@ -17,7 +17,11 @@ public class Lesson {
 
     private String type;
 
+    private String specialType;
+
     private String coachId;
+
+    private String coachName;
 
     private String cardNo;
 
@@ -29,9 +33,15 @@ public class Lesson {
 
     private Integer quota;
 
+    private Integer minCount;
+
+    private Integer maxCount;
+
     private String trainingData;
 
     private String feature;
+
+    private String myOrder;
 
     private String remark;
 

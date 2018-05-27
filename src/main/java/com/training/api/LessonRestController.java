@@ -125,5 +125,16 @@ public class LessonRestController {
         return lessonService.order(lesson);
     }
 
+    /**
+     * 约课
+     * @param lesson
+     * Created by huai23 on 2018-05-26 17:02:19.
+     */
+    @RequestMapping (value = "cancel", method = RequestMethod.POST)
+    public ResponseEntity<String> cancel(@RequestBody Lesson lesson, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  cancel  lesson = {}",lesson);
+        return lessonService.cancel(lesson);
+    }
+
 }
 

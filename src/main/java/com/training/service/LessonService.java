@@ -110,9 +110,71 @@ public class LessonService {
     public ResponseEntity<String> schedule(LessonQuery query) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" schedule  memberRequest = {}",memberRequest);
+        if(query.getType().equals("T")){
+            return quertTeamSchedule(query);
+        }
+        if(query.getType().startsWith("S")){
+            return quertSpecialSchedule(query);
+        }
         List<Lesson> lessonList = new ArrayList();
         for (int i = 9; i < 22; i++) {
             Lesson lesson = new Lesson();
+            lesson.setLessonId(System.currentTimeMillis()+"");
+            lesson.setStartHour(i);
+            lesson.setEndHour(i+1);
+            lesson.setCoachId("1");
+            lesson.setLessonDate(query.getLessonDate());
+            lesson.setMyOrder("0");
+            if(i%5==0){
+                lesson.setQuota(0);
+                if(i==10){
+                    lesson.setMyOrder("1");
+                }
+            }else{
+                lesson.setQuota(1);
+            }
+            if(i%3==0){
+                lesson.setStatus(-1);
+            }else{
+                lesson.setStatus(0);
+            }
+            lessonList.add(lesson);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("lessonList", lessonList);
+        return ResponseUtil.success("查询课程时间表成功",lessonList);
+    }
+
+    public ResponseEntity<String> quertTeamSchedule(LessonQuery query) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" schedule  memberRequest = {}",memberRequest);
+        List<Lesson> lessonList = new ArrayList();
+        for (int i = 0; i < 3; i++) {
+            Lesson lesson = new Lesson();
+            lesson.setLessonId(System.currentTimeMillis()+"");
+            lesson.setTitle("肌肉训练+"+i);
+            lesson.setCoachName("詹姆斯");
+            lesson.setStartHour(11+i);
+            lesson.setEndHour(12+1);
+            lesson.setCoachId("1");
+            lesson.setLessonDate(query.getLessonDate());
+            lesson.setQuota(4);
+            lesson.setMaxCount(8);
+            lesson.setMinCount(3);
+            lessonList.add(lesson);
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("lessonList", lessonList);
+        return ResponseUtil.success("查询课程时间表成功",lessonList);
+    }
+
+    public ResponseEntity<String> quertSpecialSchedule(LessonQuery query) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" schedule  memberRequest = {}",memberRequest);
+        List<Lesson> lessonList = new ArrayList();
+        for (int i = 9; i < 22; i++) {
+            Lesson lesson = new Lesson();
+            lesson.setTitle("肌肉训练课"+query.getType());
             lesson.setLessonId(System.currentTimeMillis()+"");
             lesson.setStartHour(i);
             lesson.setEndHour(i+1);
@@ -144,6 +206,14 @@ public class LessonService {
         return ResponseUtil.success("约课成功");
     }
 
+    public ResponseEntity<String> cancel(Lesson lesson) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" cancel  memberRequest = {}",memberRequest);
+        if(true){
+            return ResponseUtil.success("取消约课失败!");
+        }
+        return ResponseUtil.success("取消成功");
+    }
 
 }
 

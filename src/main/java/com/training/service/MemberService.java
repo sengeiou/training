@@ -3,6 +3,7 @@ package com.training.service;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.*;
 import com.training.dao.MemberDao;
+import com.training.domain.Lesson;
 import com.training.domain.Member;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
@@ -185,10 +186,32 @@ public class MemberService {
         if(!memberId.equals("1")){
             return ResponseUtil.exception("无可用课时,请先购卡!");
         }
-        List<String>  types = new ArrayList<>();
-        types.add("P");
-        types.add("T");
-        types.add("S");
+        List<Lesson>  types = new ArrayList<>();
+        Lesson p = new Lesson();
+        p.setType("P");
+        p.setCoachId("1");
+        types.add(p);
+
+        Lesson t = new Lesson();
+        t.setType("T");
+        t.setCoachId("1");
+        types.add(t);
+
+        Lesson s1 = new Lesson();
+        s1.setType("S1");
+        s1.setCoachId("1");
+        types.add(s1);
+
+        Lesson s2 = new Lesson();
+        s2.setType("S2");
+        s2.setCoachId("1");
+        types.add(s2);
+
+        Lesson s3 = new Lesson();
+        s3.setType("S3");
+        s3.setCoachId("1");
+        types.add(s3);
+
         return ResponseUtil.success(types);
     }
 

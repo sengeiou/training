@@ -20,6 +20,8 @@ public class LessonQuery {
 
     private String type;
 
+    private String specialType;
+
     private String coachId;
 
     private String cardNo;
