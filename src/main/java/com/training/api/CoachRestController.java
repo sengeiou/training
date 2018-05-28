@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.domain.Member;
+import com.training.domain.Training;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.entity.TrainingEntity;
@@ -134,7 +135,7 @@ public class CoachRestController {
     @RequestMapping (value = "trainingList", method = RequestMethod.GET)
     public ResponseEntity<String> trainingList(@ModelAttribute TrainingQuery query , @ModelAttribute PageRequest pageRequest, HttpServletRequest request, HttpServletResponse response){
         logger.info("  trainingList  TrainingQuery = {}",query);
-        Page<TrainingEntity> page = trainingService.find(query,pageRequest);
+        Page<Training> page = trainingService.trainingList(query,pageRequest);
         return ResponseUtil.success(page);
     }
 

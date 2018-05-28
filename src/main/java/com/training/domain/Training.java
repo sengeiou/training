@@ -48,6 +48,7 @@ public class Training {
 
     private Date modified;
 
+    private Member member;
 
 }
 

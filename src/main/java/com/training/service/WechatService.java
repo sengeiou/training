@@ -82,7 +82,8 @@ public class WechatService {
         if(StringUtils.isEmpty(openId)){
             return ResponseUtil.exception("获取openId异常");
         }
-        MemberEntity memberEntity = memberService.getByOpenId("1");
+        MemberEntity memberEntity = memberService.getByOpenId("2");
+        memberEntity = memberService.getById("2");
         Member member = new Member();
         if(memberEntity!=null){
             member = new Member();

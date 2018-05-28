@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Member;
 import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -8,6 +9,7 @@ import com.training.common.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class TrainingService {
 
     @Autowired
     private TrainingDao trainingDao;
+
+    @Autowired
+    private MemberService memberService;
 
     /**
      * 新增实体
@@ -75,9 +80,10 @@ public class TrainingService {
      * @param id
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
-    public TrainingEntity getById(String id){
+    public Training getById(String id){
         TrainingEntity trainingDB = trainingDao.getById(id);
-        return trainingDB;
+        Training training = transferTraining(trainingDB);
+        return training;
     }
 
     /**
@@ -116,6 +122,42 @@ public class TrainingService {
         trainingList.add(training);
         return ResponseUtil.success(trainingList);
     }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    public Page<Training> trainingList(TrainingQuery query , PageRequest page){
+        List<TrainingEntity> trainingList = trainingDao.find(query,page);
+        List<Training> data = new ArrayList<>();
+        for (TrainingEntity trainingEntity : trainingList){
+            Training training = transferTraining(trainingEntity);
+            data.add(training);
+        }
+        Long count = trainingDao.count(query);
+        Page<Training> returnPage = new Page<>();
+        returnPage.setContent(data);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    private Training transferTraining(TrainingEntity trainingEntity) {
+        if(trainingEntity==null){
+            return null;
+        }
+        Training training = new Training();
+        BeanUtils.copyProperties(trainingEntity,training);
+        MemberEntity memberEntity = memberService.getById(trainingEntity.getMemberId());
+        Member member = new Member();
+        BeanUtils.copyProperties(memberEntity,member);
+        training.setMember(member);
+        return training;
+    }
+
 
 }
 

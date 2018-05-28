@@ -190,26 +190,40 @@ public class MemberService {
         Lesson p = new Lesson();
         p.setType("P");
         p.setCoachId("1");
+        p.setTitle("私教课");
+        p.setCoachName("张三");
+
         types.add(p);
 
         Lesson t = new Lesson();
         t.setType("T");
         t.setCoachId("1");
+        t.setTitle("团体课");
+        t.setCoachName("张三");
+
         types.add(t);
 
         Lesson s1 = new Lesson();
         s1.setType("S1");
         s1.setCoachId("1");
+        s1.setTitle("肌肉强化");
+        s1.setCoachName("张三");
         types.add(s1);
 
         Lesson s2 = new Lesson();
         s2.setType("S2");
         s2.setCoachId("1");
+        s2.setTitle("瘦身训练");
+        s2.setCoachName("张三");
+
         types.add(s2);
 
         Lesson s3 = new Lesson();
         s3.setType("S3");
         s3.setCoachId("1");
+        s3.setTitle("产后恢复");
+        s3.setCoachName("张三");
+
         types.add(s3);
 
         return ResponseUtil.success(types);

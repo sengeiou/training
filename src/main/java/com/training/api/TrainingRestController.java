@@ -1,6 +1,7 @@
 package com.training.api;
 
 import com.training.domain.Member;
+import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -75,11 +76,11 @@ public class TrainingRestController {
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        TrainingEntity trainingDB = trainingService.getById(id);
-        if(trainingDB==null){
+        Training training = trainingService.getById(id);
+        if(training==null){
             return ResponseUtil.exception("查无数据");
         }
-        return ResponseUtil.success(trainingDB);
+        return ResponseUtil.success(training);
     }
 
     /**
