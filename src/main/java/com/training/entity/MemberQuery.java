@@ -40,6 +40,8 @@ public class MemberQuery {
 
     private String cardId;
 
+    private String cardNo;
+
     private Integer trainingHours;
 
     private String openId;

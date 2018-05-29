@@ -122,6 +122,7 @@ public class CoachRestController {
     @RequestMapping (value = "memberList", method = RequestMethod.GET)
     public ResponseEntity<String> memberList(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         logger.info("  memberList  MemberQuery = {}",query);
+        query.setType("M");
         Page<MemberEntity> page = memberService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
