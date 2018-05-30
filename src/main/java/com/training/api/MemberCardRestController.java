@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.MemberCard;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -49,7 +50,7 @@ public class MemberCardRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberCardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<MemberCardEntity> page = memberCardService.find(query,pageRequest);
+        Page<MemberCard> page = memberCardService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 

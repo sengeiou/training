@@ -1,17 +1,20 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,11 +49,18 @@ public class MemberCardService {
      * @param page
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
-    public Page<MemberCardEntity> find(MemberCardQuery query , PageRequest page){
+    public Page<MemberCard> find(MemberCardQuery query , PageRequest page){
         List<MemberCardEntity> memberCardList = memberCardDao.find(query,page);
+        List<MemberCard> content = new ArrayList<>();
+        for(MemberCardEntity memberCardEntity : memberCardList){
+            MemberCard memberCard = new MemberCard();
+            BeanUtils.copyProperties(memberCardEntity,memberCard);
+            memberCard.setCardName("私教次卡");
+            content.add(memberCard);
+        }
         Long count = memberCardDao.count(query);
-        Page<MemberCardEntity> returnPage = new Page<>();
-        returnPage.setContent(memberCardList);
+        Page<MemberCard> returnPage = new Page<>();
+        returnPage.setContent(content);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
