@@ -61,7 +61,6 @@ public class WechatUtils {
             body = "title_name";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
-            String timeStamp = ""+System.currentTimeMillis();
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
             Map<String,String> param = new HashMap();
             param.put("appid",appId);
@@ -79,7 +78,6 @@ public class WechatUtils {
             param.put("spbill_create_ip","127.0.0.1");
             param.put("notify_url","https://training/huai23.com/wechat/pay/callback");
             param.put("trade_type","JSAPI");
-            param.put("timeStamp",timeStamp);
             String sign = WXPayUtil.generateSignature(param,key);
             param.put("sign",sign);
             String reqBody = WXPayUtil.mapToXml(param);
@@ -89,9 +87,18 @@ public class WechatUtils {
             System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
             System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
             System.out.println("请求结果："+new String(data.getBytes("UTF-8"),"gbk"));
-            result.put("timeStamp",timeStamp);
-            result.put("signType","MD5");
-            return result;
+            String timeStamp = ""+System.currentTimeMillis();
+            Map<String, String> signMap = new HashMap<>();
+            signMap.put("appId",appId);
+            signMap.put("timeStamp",timeStamp);
+            signMap.put("nonceStr",nonce_str);
+            signMap.put("package","prepay_id="+result.get("prepay_id"));
+            signMap.put("signType","MD5");
+            sign = WXPayUtil.generateSignature(signMap);
+            Map<String, String> newResult = new HashMap<>();
+            newResult.putAll(signMap);
+            newResult.put("sign",sign);
+            return newResult;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
