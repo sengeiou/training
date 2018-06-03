@@ -23,7 +23,7 @@ public class WechatUtils {
     private static String key = "RZf7oGyoUCYBy9RTyatoHKufV1P45zWi";
     private static String signType = "MD5";
 
-    private static String notify_url = "https://training.huai23.com/wechat/pay/callback";
+    private static String notify_url = "https://trainingbj.huai23.com/wechat/pay/callback";
 
     /**
      * 新增实体
