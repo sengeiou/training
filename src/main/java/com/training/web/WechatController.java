@@ -1,5 +1,6 @@
 package com.training.web;
 
+import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.training.entity.SysLogEntity;
 import com.training.service.SysLogService;
@@ -57,12 +58,12 @@ public class WechatController {
             logger.info("----callback接收到的报文---  {}" ,result);
             Map<String, String> data  = WXPayUtil.xmlToMap(result);
             logger.info("----data---  {}" ,data);
-
+            String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
             sysLogEntity.setType("pay");
             sysLogEntity.setLevel(1);
-            sysLogEntity.setLogText(result.length()>1900?result.substring(0,1900):result);
+            sysLogEntity.setLogText(dataStr.length()>1900?dataStr.substring(0,1900):dataStr);
             sysLogEntity.setContent(result);
             sysLogEntity.setCreated(new Date());
             sysLogService.add(sysLogEntity);
@@ -70,7 +71,7 @@ public class WechatController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "index";
+        return null;
     }
 
 }
