@@ -57,7 +57,8 @@ public class WechatUtils {
     public static Map<String, String> prePayOrder(Map<String, String> input) {
         try {
             String openid = input.get("openId");
-            String body = "健身会员卡购买";
+            String body = new String("健身会员卡购买".getBytes("gbk"),"UTF-8");
+            body = "title_name";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String timeStamp = ""+System.currentTimeMillis();
@@ -84,8 +85,12 @@ public class WechatUtils {
             String reqBody = WXPayUtil.mapToXml(param);
             String data = HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
             Map<String, String> result = WXPayUtil.xmlToMap(data);
-            System.out.println("请求结果："+data);
+            System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
+            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
+            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
+            System.out.println("请求结果："+new String(data.getBytes("UTF-8"),"gbk"));
             result.put("timeStamp",timeStamp);
+            result.put("signType","MD5");
             return result;
         } catch (Exception e) {
             e.printStackTrace();
