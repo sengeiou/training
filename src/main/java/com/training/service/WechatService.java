@@ -39,8 +39,8 @@ public class WechatService {
     private JwtUtil jwt;
 
     private String jscode2session = "https://api.weixin.qq.com/sns/jscode2session";
-    private String appId = "wx51bc47a8e2de73c2";
-    private String secret = "801a7496df7c4cd4506c38bd0c0d7e47";
+    private String appId = "wxe31b9911ade01879";
+    private String secret = "25ac3e71e931e6d2e538bab01c63b70d";
     
     /**
      * 新增实体

@@ -2,6 +2,7 @@ package com.training.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.training.domain.Member;
+import com.training.domain.Staff;
 import com.training.domain.User;
 import com.training.util.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -45,104 +46,65 @@ public class SessonFilter implements Filter {
 //        }
         // 请求的uri
         String uri = request.getRequestURI();
-
         String authorization = request.getHeader("Authorization");
-
-        // 过滤session的uri
-        String[] adminFilter = new String[] {"/api/admin/","/admin/"};
-
-        boolean isClientUri = true;
-        for (String s : adminFilter){
-            if (uri.indexOf(s) != -1) {
-                isClientUri = false;
+        logger.info(" request.getRequestURI() = {} ,  Authorization = {} ",request.getRequestURI(),authorization);
+        // 不过滤的uri
+        String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code",
+                "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken",
+                "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",
+                ".css",".jpg",".png",".jpeg",".gif"};
+        // 是否过滤
+        boolean doFilter = true;
+        for (String s : notFilter)
+        {
+            if (uri.equals("/")){
+                doFilter = false;
+                break;
+            }
+            if (uri.indexOf(s) != -1){
+                // 如果uri中包含不过滤的uri，则不进行过滤
+                doFilter = false;
                 break;
             }
         }
-
-        if(isClientUri){
-            logger.info(" request.getRequestURI() = {} ,  Authorization = {} ",request.getRequestURI(),authorization);
-
-            // 不过滤的uri
-            String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code",
-                    "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken",
-                    "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",
-                    ".css",".jpg",".png",".jpeg",".gif"};
-            // 是否过滤
-            boolean doFilter = true;
-            for (String s : notFilter)
-            {
-                if (uri.equals("/")){
-                    doFilter = false;
-                    break;
-                }
-                if (uri.indexOf(s) != -1){
-                    // 如果uri中包含不过滤的uri，则不进行过滤
-                    doFilter = false;
-                    break;
-                }
-            }
-            logger.info(" request.getRequestURI() = {} , doFilter = {}, Authorization = {} , ",request.getRequestURI(),doFilter,authorization);
-            if (doFilter) {
-                // 执行过滤
-                // 从session中获取登录者实体
-                if (StringUtils.isEmpty(authorization)) {
+        logger.info(" request.getRequestURI() = {} , doFilter = {}, Authorization = {} , ",request.getRequestURI(),doFilter,authorization);
+        if (doFilter) {
+            // 执行过滤
+            // 从session中获取登录者实体
+            if (StringUtils.isEmpty(authorization)) {
 //                boolean isAjaxRequest = isAjaxRequest(request);
 //                if (isAjaxRequest) {
 //                    response.setCharacterEncoding("UTF-8");
 //                    response.sendError(HttpStatus.UNAUTHORIZED.value(), "您已经太长时间没有操作,请刷新页面");
 //                    return ;
 //                }
+                response.sendRedirect("/api/error");
+                return;
+            } else {
+                Claims claims = null;
+                try {
+                    claims = jwt.parseJWT(authorization);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     response.sendRedirect("/api/error");
                     return;
-                } else {
-                    Claims claims = null;
-                    try {
-                        claims = jwt.parseJWT(authorization);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        response.sendRedirect("/api/error");
-                        return;
-                    }
-                    String json = claims.getSubject();
+                }
+                String json = claims.getSubject();
+                if(uri.indexOf("/admin/")>=0){
+                    Staff staff = JSONObject.parseObject(json, Staff.class);
+                    req.setAttribute("staff",staff);
+                }else{
                     Member member = JSONObject.parseObject(json, Member.class);
                     req.setAttribute("member",member);
-                    // 如果session中存在登录者实体，则继续
-                    chain.doFilter(request, response);
                 }
-            } else {
-                // 如果不执行过滤，则继续
+                // 如果session中存在登录者实体，则继续
                 chain.doFilter(request, response);
             }
-        }else{
-            // 不过滤的uri
-            String[] notFilter = new String[] {"/admin/login","/admin/logout", "/api/admin/doLogin",".js",
-                    ".css",".jpg",".png",".jpeg",".gif"};
-            // 是否过滤
-            boolean doFilter = true;
-            for (String s : notFilter)
-            {
-                if (uri.indexOf(s) != -1){
-                    // 如果uri中包含不过滤的uri，则不进行过滤
-                    doFilter = false;
-                    break;
-                }
-            }
-            logger.info(" request.getRequestURI() = {} , doFilter = {} ",request.getRequestURI(),doFilter);
-            if (doFilter) {
-                // 执行过滤
-                // 从session中获取登录者实体
-                logger.info(" admin = {} ",request.getSession().getAttribute("admin"));
-                if (request.getSession().getAttribute("admin")==null) {
-                    response.sendRedirect("/admin/login");
-                    return;
-                }else{
-                    chain.doFilter(request, response);
-                }
-            } else {
-                // 如果不执行过滤，则继续
-                chain.doFilter(request, response);
-            }
+        } else {
+            // 如果不执行过滤，则继续
+            chain.doFilter(request, response);
         }
+
     }
 
     @Override

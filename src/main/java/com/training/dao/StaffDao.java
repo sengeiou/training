@@ -83,6 +83,15 @@ public class StaffDao {
         return n;
     }
 
+    /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    public StaffEntity getByUsername(String id){
+        StaffEntity staffDB = staffRepository.getByUsername(id);
+        return staffDB;
+    }
 
 }
 

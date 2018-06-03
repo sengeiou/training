@@ -122,6 +122,11 @@ public interface StaffRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+            " FROM staff " +
+            " WHERE username = #{username} " +
+            "</script>")
+    StaffEntity getByUsername(@Param("username") String username);
 
 }
 

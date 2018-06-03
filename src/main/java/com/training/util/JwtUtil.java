@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.training.common.Const;
 import com.training.domain.Member;
 import com.training.domain.User;
+import com.training.entity.StaffEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -86,5 +87,17 @@ public class JwtUtil {
         return jo.toJSONString();
     }
 
+    /**
+     * 生成subject信息
+     * @param staffEntity
+     * @return
+     */
+    public static String generalAdminSubject(StaffEntity staffEntity){
+        JSONObject jo = new JSONObject();
+        jo.put("staffId", staffEntity.getStaffId());
+        jo.put("username", staffEntity.getUsername());
+        jo.put("roleId",staffEntity.getRoleId());
+        return jo.toJSONString();
+    }
 
 }
