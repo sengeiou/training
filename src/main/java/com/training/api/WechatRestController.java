@@ -3,6 +3,7 @@ package com.training.api;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.Const;
+import com.training.domain.PrePayOrder;
 import com.training.domain.User;
 import com.training.entity.MemberEntity;
 import com.training.service.MemberService;
@@ -87,6 +88,18 @@ public class WechatRestController {
     public ResponseEntity<String> getMemberByCode(@PathVariable String code, HttpServletRequest request, HttpServletResponse response){
         logger.info("  getMemberByCode  code = {}",code);
         return wechatService.getMemberByCode(code);
+    }
+
+
+    /**
+     * 根据ID查询实体
+     * @param prePayOrder
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "prepay/{code}", method = RequestMethod.POST)
+    public ResponseEntity<String> prepay(@RequestBody PrePayOrder prePayOrder, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  prepay  prePayOrder = {}",prePayOrder);
+        return wechatService.prePayOrder(prePayOrder);
     }
 
 }

@@ -7,13 +7,12 @@ import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.MemberDao;
 import com.training.domain.Member;
+import com.training.domain.PrePayOrder;
 import com.training.domain.User;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
-import com.training.util.HttpUtils;
-import com.training.util.JwtUtil;
-import com.training.util.RequestContextHelper;
-import com.training.util.ResponseUtil;
+import com.training.util.*;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 微信业务操作类
@@ -38,47 +39,10 @@ public class WechatService {
     @Autowired
     private JwtUtil jwt;
 
-    private String jscode2session = "https://api.weixin.qq.com/sns/jscode2session";
-    private String appId = "wxe31b9911ade01879";
-    private String secret = "25ac3e71e931e6d2e538bab01c63b70d";
-    
-    /**
-     * 新增实体
-     * @param code
-     * Created by huai23 on 2018-05-26 13:33:17.
-     */
-    public String getOpenIdByCode(String code){
-        logger.info(" getOpenIdByCode  code1 = {}",code);
-        String openId = null;
-        try {
-//            code = JSON.parseObject(code).get("data").toString();
-//            logger.info(" getOpenIdByCode  code22 = {}",code);
-            StringBuilder urlPath = new StringBuilder(jscode2session); // 微信提供的API，这里最好也放在配置文件
-            urlPath.append(String.format("?appid=%s", appId));
-            urlPath.append(String.format("&secret=%s", secret));
-            urlPath.append(String.format("&js_code=%s", code));
-            urlPath.append(String.format("&grant_type=%s", "authorization_code")); // 固定值
-            String data = HttpUtils.doGet(urlPath.toString()); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
-            logger.info("请求结果：",data);
-            JSONObject obj = JSON.parseObject(data);
-            openId = obj.get("openid").toString();
-            String sessionKey = obj.get("session_key").toString();
-            logger.info("获得openId: {} ", openId);
-            logger.info("获得sessionKey:  {} ",sessionKey);
-            if(obj.containsKey("unionid")){
-                String unionId = obj.get("unionid").toString();
-                logger.info("获得unionId: {} ",unionId);
-            }
-        } catch (Exception e) {
-            logger.error(" getOpenIdByCode ERROR : {}",e.getMessage(),e);
-        }
-        return openId;
-    }
-
     public ResponseEntity<String> getMemberByCode(String code) {
         JSONObject jo = new JSONObject();
-//        String openId = getOpenIdByCode(code);
-        String openId = "oFg700C3DCUghR7lpn4mJpFAZQvU";
+        String openId = WechatUtils.getOpenIdByCode(code);
+//        String openId = "oFg700C3DCUghR7lpn4mJpFAZQvU";
         if(StringUtils.isEmpty(openId)){
             return ResponseUtil.exception("获取openId异常");
         }
@@ -104,5 +68,17 @@ public class WechatService {
         return ResponseUtil.success(jo);
     }
 
+    public ResponseEntity<String> prePayOrder(PrePayOrder prePayOrder) {
+        JSONObject jo = new JSONObject();
+        String openId = WechatUtils.getOpenIdByCode(prePayOrder.getCode());
+        Map<String, String> param = new HashMap<>();
+        param.put("openId",openId);
+        Map<String, String> result = WechatUtils.prePayOrder(param);
+        if(MapUtils.isEmpty(result)){
+            return ResponseUtil.exception("发起支付请求异常");
+        }
+        jo.putAll(result);
+        return  ResponseUtil.success(jo);
+    }
 }
 
