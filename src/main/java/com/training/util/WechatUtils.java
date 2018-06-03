@@ -21,7 +21,9 @@ public class WechatUtils {
     private static String secret = "25ac3e71e931e6d2e538bab01c63b70d";
     private static String mch_id = "1498414262";
     private static String key = "RZf7oGyoUCYBy9RTyatoHKufV1P45zWi";
+    private static String signType = "MD5";
 
+    private static String notify_url = "notify_url";
 
     /**
      * 新增实体
@@ -57,10 +59,7 @@ public class WechatUtils {
     public static Map<String, String> prePayOrder(Map<String, String> input) {
         try {
             String openid = input.get("openId");
-            String body = new String("健身会员卡购买".getBytes("gbk"),"UTF-8");
-            body = "健身会员卡购买";
-//            body = new String("健身会员卡购买".getBytes("UTF-8"),"gbk");
-//            body = "title_name";
+            String body = "健身会员卡购买";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
@@ -70,34 +69,34 @@ public class WechatUtils {
             param.put("openid",openid);
             param.put("device_info",device_info);
             param.put("nonce_str",nonce_str);
-            param.put("sign_type","MD5");
+            param.put("sign_type",signType);
             param.put("body",body);
             param.put("detail","detail123");
-            param.put("attach","attach");
+            param.put("attach","这是中文的attach");
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
             param.put("total_fee","1");
             param.put("spbill_create_ip","127.0.0.1");
-            param.put("notify_url","https://trainingbj.huai23.com/wechat/pay/callback");
+            param.put("notify_url",notify_url);
             param.put("trade_type","JSAPI");
             String sign = WXPayUtil.generateSignature(param,key);
             System.out.println("sign："+sign);
             param.put("sign",sign);
             String reqBody = WXPayUtil.mapToXml(param);
-            System.out.println("reqBody："+reqBody);
+//            System.out.println("reqBody："+reqBody);
             String data = HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
             Map<String, String> result = WXPayUtil.xmlToMap(data);
-            System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
-            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
-            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
-            System.out.println("请求结果："+new String(data.getBytes("UTF-8"),"gbk"));
+//            System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
+//            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
+//            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
+//            System.out.println("请求结果："+new String(data.getBytes("UTF-8"),"gbk"));
             String timeStamp = ""+System.currentTimeMillis();
             Map<String, String> signMap = new HashMap<>();
             signMap.put("appId",appId);
             signMap.put("timeStamp",timeStamp);
             signMap.put("nonceStr",nonce_str);
             signMap.put("package","prepay_id="+result.get("prepay_id"));
-            signMap.put("signType","MD5");
+            signMap.put("signType",signType);
             sign = WXPayUtil.generateSignature(signMap,key);
             Map<String, String> newResult = new HashMap<>();
             newResult.putAll(signMap);

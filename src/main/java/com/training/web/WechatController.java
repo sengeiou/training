@@ -47,6 +47,7 @@ public class WechatController {
     public String callback(HttpServletRequest request, HttpServletResponse response){
         logger.info("  WechatController  callback  ");
         try{
+            request.setCharacterEncoding("UTF-8");
             BufferedReader reader = request.getReader();
             String line = "";
             StringBuffer inputString = new StringBuffer();
@@ -56,6 +57,10 @@ public class WechatController {
             request.getReader().close();
             String result = inputString.toString();
             logger.info("----callback接收到的报文---  {}" ,result);
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("gbk"),"UTF-8"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("iso-8859-1"),"UTF-8"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("iso-8859-1"),"gbk"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("UTF-8"),"gbk"));
             Map<String, String> data  = WXPayUtil.xmlToMap(result);
             logger.info("----data---  {}" ,data);
             String dataStr = JSON.toJSONString(data);
@@ -67,6 +72,9 @@ public class WechatController {
             sysLogEntity.setContent(result);
             sysLogEntity.setCreated(new Date());
             sysLogService.add(sysLogEntity);
+//            sysLogEntity = sysLogService.getById(sysLogEntity.getLogId());
+//            logger.info("----sysLogEntity---  {}" ,JSON.toJSONString(sysLogEntity));
+//            System.out.println( " sysLogEntity =  "+JSON.toJSONString(sysLogEntity));
             response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
         } catch (Exception e) {
             e.printStackTrace();
