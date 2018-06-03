@@ -70,8 +70,8 @@ public class WechatService {
 
     public ResponseEntity<String> prePayOrder(PrePayOrder prePayOrder) {
         JSONObject jo = new JSONObject();
-//        String openId = WechatUtils.getOpenIdByCode(prePayOrder.getCode());
-        String openId = "odERo5IjbhDlNzqBbjWKi39eUEcY";
+        String openId = WechatUtils.getOpenIdByCode(prePayOrder.getCode());
+//        String openId = "odERo5IjbhDlNzqBbjWKi39eUEcY";
         Map<String, String> param = new HashMap<>();
         param.put("openId",openId);
         Map<String, String> result = WechatUtils.prePayOrder(param);
