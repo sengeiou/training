@@ -96,7 +96,7 @@ public class WechatRestController {
      * @param prePayOrder
      * Created by huai23 on 2018-05-26 13:39:33.
      */
-    @RequestMapping (value = "prepay/{code}", method = RequestMethod.POST)
+    @RequestMapping (value = "prepay", method = RequestMethod.POST)
     public ResponseEntity<String> prepay(@RequestBody PrePayOrder prePayOrder, HttpServletRequest request, HttpServletResponse response){
         logger.info("  prepay  prePayOrder = {}",prePayOrder);
         return wechatService.prePayOrder(prePayOrder);
