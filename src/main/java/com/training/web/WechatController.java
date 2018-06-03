@@ -1,6 +1,9 @@
 package com.training.web;
 
 import com.github.wxpay.sdk.WXPayUtil;
+import com.training.entity.SysLogEntity;
+import com.training.service.SysLogService;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -20,6 +24,9 @@ import java.util.Map;
 public class WechatController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private SysLogService sysLogService;
 
     /**
      * 首页
@@ -46,10 +53,20 @@ public class WechatController {
                 inputString.append(line);
             }
             request.getReader().close();
-            logger.info("----callback接收到的报文---  {}" ,inputString.toString());
-            Map<String, String> data  = WXPayUtil.xmlToMap(inputString.toString());
+            String result = inputString.toString();
+            logger.info("----callback接收到的报文---  {}" ,result);
+            Map<String, String> data  = WXPayUtil.xmlToMap(result);
             logger.info("----data---  {}" ,data);
-//            response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
+
+            SysLogEntity sysLogEntity = new SysLogEntity();
+            sysLogEntity.setLogId(IDUtils.getId());
+            sysLogEntity.setType("pay");
+            sysLogEntity.setLevel(1);
+            sysLogEntity.setLogText(result.length()>1900?result.substring(0,1900):result);
+            sysLogEntity.setContent(result);
+            sysLogEntity.setCreated(new Date());
+            sysLogService.add(sysLogEntity);
+            response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
         } catch (Exception e) {
             e.printStackTrace();
         }
