@@ -207,11 +207,12 @@ public class WXPayUtil {
                 sb.append(k).append("=").append(data.get(k).trim()).append("&");
         }
         sb.append("key=").append(key);
+        String str = sb.toString();
         if (SignType.MD5.equals(signType)) {
-            return MD5(sb.toString()).toUpperCase();
+            return MD5(str).toUpperCase();
         }
         else if (SignType.HMACSHA256.equals(signType)) {
-            return HMACSHA256(sb.toString(), key);
+            return HMACSHA256(str, key);
         }
         else {
             throw new Exception(String.format("Invalid sign_type: %s", signType));
@@ -236,7 +237,9 @@ public class WXPayUtil {
             if (data.get(k).trim().length() > 0) // 参数值为空，则不参与签名
                 sb.append(k).append("=").append(data.get(k).trim()).append("&");
         }
-        return MD5(sb.toString()).toUpperCase();
+        String str = sb.toString();
+        System.out.println(str);
+        return MD5(str).toUpperCase();
     }
 
 

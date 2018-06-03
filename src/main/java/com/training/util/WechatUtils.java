@@ -58,7 +58,9 @@ public class WechatUtils {
         try {
             String openid = input.get("openId");
             String body = new String("健身会员卡购买".getBytes("gbk"),"UTF-8");
-            body = "title_name";
+            body = "健身会员卡购买";
+//            body = new String("健身会员卡购买".getBytes("UTF-8"),"gbk");
+//            body = "title_name";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
@@ -79,8 +81,10 @@ public class WechatUtils {
             param.put("notify_url","https://training/huai23.com/wechat/pay/callback");
             param.put("trade_type","JSAPI");
             String sign = WXPayUtil.generateSignature(param,key);
+            System.out.println("sign："+sign);
             param.put("sign",sign);
             String reqBody = WXPayUtil.mapToXml(param);
+            System.out.println("reqBody："+reqBody);
             String data = HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
             Map<String, String> result = WXPayUtil.xmlToMap(data);
             System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
@@ -94,7 +98,7 @@ public class WechatUtils {
             signMap.put("nonceStr",nonce_str);
             signMap.put("package","prepay_id="+result.get("prepay_id"));
             signMap.put("signType","MD5");
-            sign = WXPayUtil.generateSignature(signMap);
+            sign = WXPayUtil.generateSignature(signMap,key);
             Map<String, String> newResult = new HashMap<>();
             newResult.putAll(signMap);
             newResult.put("sign",sign);

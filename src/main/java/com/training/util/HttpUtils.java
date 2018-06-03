@@ -164,9 +164,9 @@ public class HttpUtils {
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset", "utf-8");
+            conn.setRequestProperty("Accept-Charset", "UTF-8");
+            conn.setRequestProperty("contentType", "UTF-8");
+            conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=UTF-8");
             conn.setUseCaches(false);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
@@ -177,7 +177,7 @@ public class HttpUtils {
             if (param != null && !param.trim().equals(""))
             {
                 // 获取URLConnection对象对应的输出流
-                out = new PrintWriter(conn.getOutputStream());
+                out = new PrintWriter(new OutputStreamWriter(conn.getOutputStream(),"UTF-8"));
                 // 发送请求参数
                 out.print(param);
                 // flush输出流的缓冲
