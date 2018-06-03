@@ -78,7 +78,7 @@ public class WechatUtils {
             param.put("fee_type","CNY");
             param.put("total_fee","1");
             param.put("spbill_create_ip","127.0.0.1");
-            param.put("notify_url","https://training/huai23.com/wechat/pay/callback");
+            param.put("notify_url","https://trainingbj.huai23.com/wechat/pay/callback");
             param.put("trade_type","JSAPI");
             String sign = WXPayUtil.generateSignature(param,key);
             System.out.println("sign："+sign);

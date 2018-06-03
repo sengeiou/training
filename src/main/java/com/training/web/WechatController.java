@@ -43,7 +43,7 @@ public class WechatController {
      * Created by huai23 on 2018-06-03 16:44:48.
      */
     @RequestMapping (value = "/wechat/pay/callback")
-    public String app(HttpServletRequest request, HttpServletResponse response){
+    public String callback(HttpServletRequest request, HttpServletResponse response){
         logger.info("  WechatController  callback  ");
         try{
             BufferedReader reader = request.getReader();
@@ -70,7 +70,7 @@ public class WechatController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return "index";
     }
 
 }
