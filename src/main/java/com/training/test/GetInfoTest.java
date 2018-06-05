@@ -45,12 +45,17 @@ public class GetInfoTest {
         req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
         req.setEndTime(System.currentTimeMillis());
         req.setSize(10L);
-        req.setCursor(0L);
+        req.setCursor(22L);
         SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
         JSONObject result = JSON.parseObject(rsp.getBody());
         SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
         SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
+
+        System.out.println(" ================================  "+result);
+
+
         List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
+        System.out.println(" ================================  data = "+data.size());
 
         for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
             System.out.println(" ================================  ");
