@@ -169,8 +169,8 @@ public class DingtalkUtil {
         contractEntity.setPayType(contractMap.get("付款方式"));
         String dateStr = contractMap.get("[\"开始时间\",\"结束时间\"]").replace("[","").replace("]","");
         String[] dates = dateStr.split(",");
-        contractEntity.setStartDate(dates[0]);
-        contractEntity.setEndDate(dates[1]);
+        contractEntity.setStartDate(dates[0].replaceAll("\"",""));
+        contractEntity.setEndDate(dates[1].replaceAll("\"",""));
         contractEntity.setSalesman(contractMap.get("销售人员"));
         contractEntity.setCoach(contractMap.get("分配教练"));
         contractEntity.setRemark(contractMap.get("备注"));

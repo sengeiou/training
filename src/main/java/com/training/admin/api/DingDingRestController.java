@@ -121,14 +121,20 @@ public class DingDingRestController {
 
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
-        do{
-            contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
-            for (int i = 0; i < contractEntityList.size(); i++) {
-                ContractEntity contractEntity = contractEntityList.get(i);
-                contractService.add(contractEntity);
-            }
-            cursor++;
-        }while(contractEntityList!=null);
+        contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
+        for (int i = 0; i < contractEntityList.size(); i++) {
+            ContractEntity contractEntity = contractEntityList.get(i);
+            contractService.add(contractEntity);
+        }
+
+//        do{
+//            contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
+//            for (int i = 0; i < contractEntityList.size(); i++) {
+//                ContractEntity contractEntity = contractEntityList.get(i);
+//                contractService.add(contractEntity);
+//            }
+//            cursor++;
+//        }while(contractEntityList!=null);
         return "执行成功 : cursor = "+cursor;
     }
 
