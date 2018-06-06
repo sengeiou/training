@@ -1,7 +1,6 @@
 package com.training.repository;
 
-import com.training.entity.MemberEntity;
-import com.training.entity.MemberQuery;
+import com.training.entity.*;
 import org.apache.ibatis.annotations.*;
 import com.training.common.PageRequest;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 /**
  * member 数据库操作类
- * Created by huai23 on 2018-05-26 13:33:17.
+ * Created by huai23 on 2018-06-06 20:15:26.
  */ 
 @Mapper
 public interface MemberRepository {
@@ -34,6 +33,7 @@ public interface MemberRepository {
                 " <if test=\"member.unionId != null\"> union_id, </if>" +
                 " <if test=\"member.feature != null\"> feature, </if>" +
                 " <if test=\"member.origin != null\"> origin, </if>" +
+                " <if test=\"member.salesman != null\"> salesman, </if>" +
                 " <if test=\"member.remark != null\"> remark, </if>" +
                 " <if test=\"member.status != null\"> status, </if>" +
                 " <if test=\"member.creater != null\"> creater, </if>" +
@@ -59,6 +59,7 @@ public interface MemberRepository {
                 " <if test=\"member.unionId != null\"> #{member.unionId}, </if>" +
                 " <if test=\"member.feature != null\"> #{member.feature}, </if>" +
                 " <if test=\"member.origin != null\"> #{member.origin}, </if>" +
+                " <if test=\"member.salesman != null\"> #{member.salesman}, </if>" +
                 " <if test=\"member.remark != null\"> #{member.remark}, </if>" +
                 " <if test=\"member.status != null\"> #{member.status}, </if>" +
                 " <if test=\"member.creater != null\"> #{member.creater}, </if>" +
@@ -68,7 +69,7 @@ public interface MemberRepository {
             "</script>")
     int add(@Param("member") MemberEntity member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,salesman,remark,status,creater,created,modified " +
             " FROM member " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
@@ -90,6 +91,7 @@ public interface MemberRepository {
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
+            " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
@@ -118,13 +120,14 @@ public interface MemberRepository {
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
+            " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             "</script>")
     Long count(@Param("query") MemberQuery member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,card_no,training_hours,open_id,union_id,feature,origin,salesman,remark,status,creater,created,modified " +
             " FROM member " +
             " WHERE member_id = #{id} " +
             "</script>")
@@ -156,6 +159,7 @@ public interface MemberRepository {
                 " <if test=\"member.unionId != null\"> union_id = #{member.unionId} , </if>" +
                 " <if test=\"member.feature != null\"> feature = #{member.feature} , </if>" +
                 " <if test=\"member.origin != null\"> origin = #{member.origin} , </if>" +
+                " <if test=\"member.salesman != null\"> salesman = #{member.salesman} , </if>" +
                 " <if test=\"member.remark != null\"> remark = #{member.remark} , </if>" +
                 " <if test=\"member.status != null\"> status = #{member.status} , </if>" +
                 " <if test=\"member.creater != null\"> creater = #{member.creater} , </if>" +

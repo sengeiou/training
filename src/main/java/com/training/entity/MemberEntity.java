@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member 实体类
- * Created by huai23 on 2018-05-26 13:33:17.
+ * Created by huai23 on 2018-06-06 20:15:26.
  */ 
 @Data
 public class MemberEntity {
@@ -38,7 +38,7 @@ public class MemberEntity {
 
     private String address;
 
-    private String cardId;
+    private String cardNo;
 
     private Integer trainingHours;
 
@@ -49,6 +49,8 @@ public class MemberEntity {
     private String feature;
 
     private String origin;
+
+    private String salesman;
 
     private String remark;
 

@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member 查询类
- * Created by huai23 on 2018-05-26 13:33:17.
+ * Created by huai23 on 2018-06-06 20:15:26.
  */ 
 @Data
 public class MemberQuery {
@@ -38,8 +38,6 @@ public class MemberQuery {
 
     private String address;
 
-    private String cardId;
-
     private String cardNo;
 
     private Integer trainingHours;
@@ -52,6 +50,8 @@ public class MemberQuery {
 
     private String origin;
 
+    private String salesman;
+
     private String remark;
 
     private Integer status;
@@ -62,9 +62,6 @@ public class MemberQuery {
 
     private Date modified;
 
-    private String startDate;
-
-    private String endDate;
 
 }
 
