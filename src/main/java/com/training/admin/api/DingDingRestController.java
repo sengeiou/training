@@ -1,8 +1,10 @@
 package com.training.admin.api;
 
 import com.training.domain.Member;
+import com.training.entity.ContractEntity;
 import com.training.entity.StaffEntity;
 import com.training.entity.StoreEntity;
+import com.training.service.ContractService;
 import com.training.service.MemberService;
 import com.training.service.StaffService;
 import com.training.service.StoreService;
@@ -34,6 +36,9 @@ public class DingDingRestController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private ContractService contractService;
 
     @GetMapping("dept")
     public Object dept(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -111,13 +116,19 @@ public class DingDingRestController {
     @GetMapping("member")
     public Object member(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   member  ");
-        String processCode = "PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19";
-        List<Member> members = null;
+        String processCode = "PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19"; // 新签合同（次卡私教）
+//        String processCode = "PROC-FF6YQLE1N2-HESQB9ZYOW7FOIN97KIL1-84X7L0BJ-E"; // 新签合同（月卡私教）
+
+        List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
         do{
-//            members = DingtalkUtil.getMembers(processCode,cursor);
-//            cursor++;
-        }while(members!=null);
+            contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
+            for (int i = 0; i < contractEntityList.size(); i++) {
+                ContractEntity contractEntity = contractEntityList.get(i);
+                contractService.add(contractEntity);
+            }
+            cursor++;
+        }while(contractEntityList!=null);
         return "执行成功 : cursor = "+cursor;
     }
 

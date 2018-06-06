@@ -7,7 +7,8 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
 import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
-import com.training.domain.Member;
+import com.training.entity.ContractEntity;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -17,6 +18,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,37 +122,60 @@ public class DingtalkUtil {
         return staffList;
     }
 
-//    public static List<Member> getMembers(String processCode, Long cursor) throws Exception {
-//        String access_token = getSsoToken();
-//        DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
-//        SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
-//        req.setProcessCode(processCode);
-//        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
-//        req.setEndTime(System.currentTimeMillis());
-//        req.setSize(10L);
-//        req.setCursor(cursor);
-//        SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
-//        JSONObject result = JSON.parseObject(rsp.getBody());
-//        SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
-//        SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-//        System.out.println(" ================================  "+result);
-//        List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
-//        System.out.println(" ================================  data = "+data.size());
-//        for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-//            System.out.println(" ================================  ");
-//            System.out.println(""+item.getTitle());
-//            List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = item.getFormComponentValues();
-//            for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
-//                System.out.println(form.getName()+" : "+form.getValue());
-//            }
-//        }
-//
+    public static List<ContractEntity> getContracts(String processCode, Long cursor) throws Exception {
+        String access_token = getSsoToken();
+        DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
+        SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
+        req.setProcessCode(processCode);
+        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
+        req.setEndTime(System.currentTimeMillis());
+        req.setSize(10L);
+        req.setCursor(cursor);
+        SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
+        JSONObject result = JSON.parseObject(rsp.getBody());
+        SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
+        SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
+        System.out.println(" ================================  "+result);
+        List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
+        System.out.println(" ================================  data = "+data.size());
+        List<ContractEntity> contractEntityList = new ArrayList<>();
+        for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
+            System.out.println(" ================================  ");
+            System.out.println(""+item.getTitle());
+            ContractEntity contractEntity = converProcessinstance(item);
+            contractEntityList.add(contractEntity);
 
+        }
+        return contractEntityList;
+    }
 
-
-
-
-
-//    }
+    private static ContractEntity converProcessinstance(SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo) {
+        Map<String,String> contractMap = new HashMap();
+        List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+        for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+            System.out.println(form.getName()+" : "+form.getValue());
+            contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+        }
+        ContractEntity contractEntity = new ContractEntity();
+        contractEntity.setContractId(contractMap.get("合同编号"));
+        contractEntity.setContractName(processInstanceTopVo.getTitle());
+        contractEntity.setSignDate(contractMap.get("签约日期"));
+        contractEntity.setMemberName(contractMap.get("会员姓名"));
+        contractEntity.setGender(contractMap.get("会员性别"));
+        contractEntity.setPhone(contractMap.get("会员电话"));
+        contractEntity.setType(contractMap.get("合同属性"));
+        contractEntity.setTotal(Integer.parseInt(contractMap.get("购买课程")));
+        contractEntity.setMoney(contractMap.get("金额（元）"));
+        contractEntity.setPayType(contractMap.get("付款方式"));
+        String dateStr = contractMap.get("[\"开始时间\",\"结束时间\"]").replace("[","").replace("]","");
+        String[] dates = dateStr.split(",");
+        contractEntity.setStartDate(dates[0]);
+        contractEntity.setEndDate(dates[1]);
+        contractEntity.setSalesman(contractMap.get("销售人员"));
+        contractEntity.setCoach(contractMap.get("分配教练"));
+        contractEntity.setRemark(contractMap.get("备注"));
+        contractEntity.setImage(contractMap.get("图片"));
+        return contractEntity;
+    }
 
 }
