@@ -1,7 +1,9 @@
 package com.training.admin.api;
 
+import com.training.domain.Member;
 import com.training.entity.StaffEntity;
 import com.training.entity.StoreEntity;
+import com.training.service.MemberService;
 import com.training.service.StaffService;
 import com.training.service.StoreService;
 import com.training.util.DingtalkUtil;
@@ -29,6 +31,9 @@ public class DingDingRestController {
 
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("dept")
     public Object dept(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -99,6 +104,21 @@ public class DingDingRestController {
             }
         }
         return "执行成功";
+    }
+
+
+
+    @GetMapping("member")
+    public Object member(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   member  ");
+        String processCode = "PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19";
+        List<Member> members = null;
+        Long cursor = 1L;
+        do{
+//            members = DingtalkUtil.getMembers(processCode,cursor);
+//            cursor++;
+        }while(members!=null);
+        return "执行成功 : cursor = "+cursor;
     }
 
 }

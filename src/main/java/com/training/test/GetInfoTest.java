@@ -41,11 +41,15 @@ public class GetInfoTest {
 
         DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
         SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
-        req.setProcessCode("PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19");
+        req.setProcessCode("PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19");  // 新签合同（次卡私教）
+
+        req.setProcessCode("PROC-FF6YQLE1N2-HESQB9ZYOW7FOIN97KIL1-84X7L0BJ-E");  // 新签合同（月卡私教）
+
+
         req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
         req.setEndTime(System.currentTimeMillis());
         req.setSize(10L);
-        req.setCursor(22L);
+        req.setCursor(1L);
         SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
         JSONObject result = JSON.parseObject(rsp.getBody());
         SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();

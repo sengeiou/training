@@ -3,6 +3,11 @@ package com.training.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
+import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
+import com.training.domain.Member;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -114,5 +119,38 @@ public class DingtalkUtil {
         }
         return staffList;
     }
+
+//    public static List<Member> getMembers(String processCode, Long cursor) throws Exception {
+//        String access_token = getSsoToken();
+//        DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
+//        SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
+//        req.setProcessCode(processCode);
+//        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
+//        req.setEndTime(System.currentTimeMillis());
+//        req.setSize(10L);
+//        req.setCursor(cursor);
+//        SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
+//        JSONObject result = JSON.parseObject(rsp.getBody());
+//        SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
+//        SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
+//        System.out.println(" ================================  "+result);
+//        List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
+//        System.out.println(" ================================  data = "+data.size());
+//        for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
+//            System.out.println(" ================================  ");
+//            System.out.println(""+item.getTitle());
+//            List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = item.getFormComponentValues();
+//            for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+//                System.out.println(form.getName()+" : "+form.getValue());
+//            }
+//        }
+//
+
+
+
+
+
+
+//    }
 
 }
