@@ -103,6 +103,11 @@ public class StaffService {
         return ResponseUtil.exception("删除失败");
     }
 
+    public StaffEntity getByUsername(String username){
+        StaffEntity staffDB = staffDao.getByUsername(username);
+        return staffDB;
+    }
+
 
 }
 

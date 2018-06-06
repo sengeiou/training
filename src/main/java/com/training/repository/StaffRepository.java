@@ -124,7 +124,7 @@ public interface StaffRepository {
 
     @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
-            " WHERE username = #{username} " +
+            " WHERE username = #{username} limit 0,1 " +
             "</script>")
     StaffEntity getByUsername(@Param("username") String username);
 
