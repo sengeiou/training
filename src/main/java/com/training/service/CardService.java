@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * card 核心业务操作类
- * Created by huai23 on 2018-05-26 13:53:45.
+ * Created by huai23 on 2018-06-06 18:46:26.
  */ 
 @Service
 public class CardService {
@@ -29,7 +29,7 @@ public class CardService {
     /**
      * 新增实体
      * @param card
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public ResponseEntity<String> add(CardEntity card){
         User user = RequestContextHelper.getUser();
@@ -44,7 +44,7 @@ public class CardService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public Page<CardEntity> find(CardQuery query , PageRequest page){
         List<CardEntity> cardList = cardDao.find(query,page);
@@ -60,7 +60,7 @@ public class CardService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public Long count(CardQuery query){
         Long count = cardDao.count(query);
@@ -70,7 +70,7 @@ public class CardService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public CardEntity getById(String id){
         CardEntity cardDB = cardDao.getById(id);
@@ -80,7 +80,7 @@ public class CardService {
     /**
      * 根据实体更新
      * @param card
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public  ResponseEntity<String> update(CardEntity card){
         int n = cardDao.update(card);
@@ -93,7 +93,7 @@ public class CardService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:26.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = cardDao.delete(id);

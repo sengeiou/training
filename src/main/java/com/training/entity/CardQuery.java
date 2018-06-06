@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * card 查询类
- * Created by huai23 on 2018-05-26 13:53:45.
+ * Created by huai23 on 2018-06-06 18:46:25.
  */ 
 @Data
 public class CardQuery {
@@ -35,6 +35,8 @@ public class CardQuery {
     private String remark;
 
     private Integer status;
+
+    private String processId;
 
     private String creater;
 

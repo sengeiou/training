@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * card 数据库操作类
- * Created by huai23 on 2018-05-26 13:53:45.
+ * Created by huai23 on 2018-06-06 18:46:25.
  */ 
 @Service
 public class CardDao {
@@ -25,7 +25,7 @@ public class CardDao {
     /**
      * 新增实体
      * @param card
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public int add(CardEntity card){
         int n = cardRepository.add(card);
@@ -36,7 +36,7 @@ public class CardDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public List<CardEntity> find(CardQuery query , PageRequest page){
         List<CardEntity> cardList = cardRepository.find(query,page);
@@ -46,7 +46,7 @@ public class CardDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public Long count(CardQuery query){
         Long n = cardRepository.count(query);
@@ -56,7 +56,7 @@ public class CardDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public CardEntity getById(String id){
         CardEntity cardDB = cardRepository.getById(id);
@@ -66,7 +66,7 @@ public class CardDao {
     /**
      * 根据实体更新
      * @param card
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public int update(CardEntity card){
         int n = cardRepository.update(card);
@@ -76,7 +76,7 @@ public class CardDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:53:45.
+     * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public int delete(String id){
         int n = cardRepository.delete(id);

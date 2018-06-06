@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * card 数据库操作类
- * Created by huai23 on 2018-05-26 13:53:45.
+ * Created by huai23 on 2018-06-06 18:46:25.
  */ 
 @Mapper
 public interface CardRepository {
@@ -26,6 +26,7 @@ public interface CardRepository {
                 " <if test=\"card.feature != null\"> feature, </if>" +
                 " <if test=\"card.remark != null\"> remark, </if>" +
                 " <if test=\"card.status != null\"> status, </if>" +
+                " <if test=\"card.processId != null\"> process_id, </if>" +
                 " <if test=\"card.creater != null\"> creater, </if>" +
                 " created , " +
                 " modified " +
@@ -42,6 +43,7 @@ public interface CardRepository {
                 " <if test=\"card.feature != null\"> #{card.feature}, </if>" +
                 " <if test=\"card.remark != null\"> #{card.remark}, </if>" +
                 " <if test=\"card.status != null\"> #{card.status}, </if>" +
+                " <if test=\"card.processId != null\"> #{card.processId}, </if>" +
                 " <if test=\"card.creater != null\"> #{card.creater}, </if>" +
                 " now() , " +
                 " now() " +
@@ -49,7 +51,7 @@ public interface CardRepository {
             "</script>")
     int add(@Param("card") CardEntity card);
 
-    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,process_id,creater,created,modified " +
             " FROM card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
@@ -64,6 +66,7 @@ public interface CardRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.processId != null\"> AND process_id = #{query.processId} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
@@ -83,11 +86,12 @@ public interface CardRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.processId != null\"> AND process_id = #{query.processId} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             "</script>")
     Long count(@Param("query") CardQuery card);
 
-    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,process_id,creater,created,modified " +
             " FROM card " +
             " WHERE card_id = #{id} " +
             "</script>")
@@ -106,6 +110,7 @@ public interface CardRepository {
                 " <if test=\"card.feature != null\"> feature = #{card.feature} , </if>" +
                 " <if test=\"card.remark != null\"> remark = #{card.remark} , </if>" +
                 " <if test=\"card.status != null\"> status = #{card.status} , </if>" +
+                " <if test=\"card.processId != null\"> process_id = #{card.processId} , </if>" +
                 " <if test=\"card.creater != null\"> creater = #{card.creater} , </if>" +
                 " modified = now() " +
             " WHERE card_id = #{card.cardId} " +
