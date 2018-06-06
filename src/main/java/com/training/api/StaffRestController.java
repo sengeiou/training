@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.Staff;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -49,7 +50,7 @@ public class StaffRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute StaffQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<StaffEntity> page = staffService.find(query,pageRequest);
+        Page<Staff> page = staffService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
@@ -73,7 +74,7 @@ public class StaffRestController {
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        StaffEntity staffDB = staffService.getById(id);
+        Staff staffDB = staffService.getById(id);
         if(staffDB==null){
             return ResponseUtil.exception("查无数据");
         }

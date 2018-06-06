@@ -17,6 +17,8 @@ public class Staff {
 
     private String storeId;
 
+    private String storName;
+
     private String roleId;
 
     private String username;
@@ -45,6 +47,9 @@ public class Staff {
 
     private Date modified;
 
+    private Integer memberCount;
+
+    private Integer kpi;
 
 }
 

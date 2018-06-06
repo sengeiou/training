@@ -1,17 +1,20 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,15 +49,28 @@ public class StaffService {
      * @param page
      * Created by huai23 on 2018-05-26 13:55:30.
      */ 
-    public Page<StaffEntity> find(StaffQuery query , PageRequest page){
+    public Page<Staff> find(StaffQuery query , PageRequest page){
+        List<Staff> staffs = new ArrayList();
         List<StaffEntity> staffList = staffDao.find(query,page);
+        for (StaffEntity staffEntity : staffList) {
+            Staff staff = convertEntityToStaff(staffEntity);
+            staffs.add(staff);
+        }
         Long count = staffDao.count(query);
-        Page<StaffEntity> returnPage = new Page<>();
-        returnPage.setContent(staffList);
+        Page<Staff> returnPage = new Page<>();
+        returnPage.setContent(staffs);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+    private Staff convertEntityToStaff(StaffEntity staffEntity) {
+        Staff staff = new Staff();
+        BeanUtils.copyProperties(staffEntity,staff);
+        staff.setMemberCount(10);
+        staff.setKpi(98);
+        return staff;
     }
 
     /**
@@ -72,9 +88,10 @@ public class StaffService {
      * @param id
      * Created by huai23 on 2018-05-26 13:55:30.
      */ 
-    public StaffEntity getById(String id){
+    public Staff getById(String id){
         StaffEntity staffDB = staffDao.getById(id);
-        return staffDB;
+        Staff staff = convertEntityToStaff(staffDB);
+        return staff;
     }
 
     /**
