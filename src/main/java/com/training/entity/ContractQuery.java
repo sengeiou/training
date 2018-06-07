@@ -5,12 +5,14 @@ import java.util.Date;
 
 /**
  * contract 查询类
- * Created by huai23 on 2018-06-06 21:52:04.
+ * Created by huai23 on 2018-06-07 23:34:46.
  */ 
 @Data
 public class ContractQuery {
 
     private Long pkId;
+
+    private String processInstanceId;
 
     private String contractId;
 
@@ -22,11 +24,13 @@ public class ContractQuery {
 
     private String phone;
 
+    private String cardType;
+
     private String type;
 
     private String money;
 
-    private Integer total;
+    private String total;
 
     private String payType;
 

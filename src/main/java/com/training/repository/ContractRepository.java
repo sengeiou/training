@@ -8,17 +8,19 @@ import java.util.List;
 
 /**
  * contract 数据库操作类
- * Created by huai23 on 2018-06-06 21:52:04.
+ * Created by huai23 on 2018-06-07 23:34:46.
  */ 
 @Mapper
 public interface ContractRepository {
 
     @Insert("<script> INSERT INTO contract ( " +
+                " <if test=\"contract.processInstanceId != null\"> process_instance_id, </if>" +
                 " <if test=\"contract.contractId != null\"> contract_id, </if>" +
                 " <if test=\"contract.contractName != null\"> contract_name, </if>" +
                 " <if test=\"contract.memberName != null\"> member_name, </if>" +
                 " <if test=\"contract.gender != null\"> gender, </if>" +
                 " <if test=\"contract.phone != null\"> phone, </if>" +
+                " <if test=\"contract.cardType != null\"> card_type, </if>" +
                 " <if test=\"contract.type != null\"> type, </if>" +
                 " <if test=\"contract.money != null\"> money, </if>" +
                 " <if test=\"contract.total != null\"> total, </if>" +
@@ -35,11 +37,13 @@ public interface ContractRepository {
                 " created , " +
                 " modified " +
             " ) VALUES ( " +
+                " <if test=\"contract.processInstanceId != null\"> #{contract.processInstanceId}, </if>" +
                 " <if test=\"contract.contractId != null\"> #{contract.contractId}, </if>" +
                 " <if test=\"contract.contractName != null\"> #{contract.contractName}, </if>" +
                 " <if test=\"contract.memberName != null\"> #{contract.memberName}, </if>" +
                 " <if test=\"contract.gender != null\"> #{contract.gender}, </if>" +
                 " <if test=\"contract.phone != null\"> #{contract.phone}, </if>" +
+                " <if test=\"contract.cardType != null\"> #{contract.cardType}, </if>" +
                 " <if test=\"contract.type != null\"> #{contract.type}, </if>" +
                 " <if test=\"contract.money != null\"> #{contract.money}, </if>" +
                 " <if test=\"contract.total != null\"> #{contract.total}, </if>" +
@@ -59,14 +63,16 @@ public interface ContractRepository {
             "</script>")
     int add(@Param("contract") ContractEntity contract);
 
-    @Select("<script> SELECT pk_id,contract_id,contract_name,member_name,gender,phone,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
             " FROM contract " +
             " WHERE 1 = 1 " +
+            " <if test=\"query.processInstanceId != null\"> AND process_instance_id = #{query.processInstanceId} </if>" +
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.contractName != null\"> AND contract_name = #{query.contractName} </if>" +
             " <if test=\"query.memberName != null\"> AND member_name = #{query.memberName} </if>" +
             " <if test=\"query.gender != null\"> AND gender = #{query.gender} </if>" +
             " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.cardType != null\"> AND card_type = #{query.cardType} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
@@ -86,11 +92,13 @@ public interface ContractRepository {
 
     @Select("<script> SELECT COUNT(1) FROM contract " +
             " WHERE 1 = 1 " +
+            " <if test=\"query.processInstanceId != null\"> AND process_instance_id = #{query.processInstanceId} </if>" +
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.contractName != null\"> AND contract_name = #{query.contractName} </if>" +
             " <if test=\"query.memberName != null\"> AND member_name = #{query.memberName} </if>" +
             " <if test=\"query.gender != null\"> AND gender = #{query.gender} </if>" +
             " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.cardType != null\"> AND card_type = #{query.cardType} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
@@ -107,18 +115,20 @@ public interface ContractRepository {
             "</script>")
     Long count(@Param("query") ContractQuery contract);
 
-    @Select("<script> SELECT pk_id,contract_id,contract_name,member_name,gender,phone,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
             " FROM contract " +
-            " WHERE contract_id = #{id} " +
+            " WHERE process_instance_id = #{id} " +
             "</script>")
     ContractEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE contract SET " +
+                " <if test=\"contract.processInstanceId != null\"> process_instance_id = #{contract.processInstanceId} , </if>" +
                 " <if test=\"contract.contractId != null\"> contract_id = #{contract.contractId} , </if>" +
                 " <if test=\"contract.contractName != null\"> contract_name = #{contract.contractName} , </if>" +
                 " <if test=\"contract.memberName != null\"> member_name = #{contract.memberName} , </if>" +
                 " <if test=\"contract.gender != null\"> gender = #{contract.gender} , </if>" +
                 " <if test=\"contract.phone != null\"> phone = #{contract.phone} , </if>" +
+                " <if test=\"contract.cardType != null\"> card_type = #{contract.cardType} , </if>" +
                 " <if test=\"contract.type != null\"> type = #{contract.type} , </if>" +
                 " <if test=\"contract.money != null\"> money = #{contract.money} , </if>" +
                 " <if test=\"contract.total != null\"> total = #{contract.total} , </if>" +
@@ -133,12 +143,12 @@ public interface ContractRepository {
                 " <if test=\"contract.image != null\"> image = #{contract.image} , </if>" +
                 " <if test=\"contract.status != null\"> status = #{contract.status} , </if>" +
                 " modified = now() " +
-            " WHERE contract_id = #{contract.contractId} " +
+            " WHERE process_instance_id = #{contract.processInstanceId} " +
             "</script>")
     int update(@Param("contract") ContractEntity contract);
 
     @Update("<script> DELETE  FROM contract " +
-            " WHERE contract_id = #{id} " +
+            " WHERE process_instance_id = #{id} " +
             "</script>")
     int delete(@Param("id") String id);
 

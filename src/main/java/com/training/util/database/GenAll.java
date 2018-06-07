@@ -13,11 +13,11 @@ public class GenAll {
         genEntityMysql.genEntityByOne(table_name);
         GenRepositoryMysql gen = new GenRepositoryMysql();
         gen.genRepositoryByOne(table_name);
-        GenDao genDao = new GenDao();
-        genDao.genDaoByOne(table_name);
-        GenService genService = new GenService();
-        genService.genServiceByOne(table_name);
-        GenController genController = new GenController();
-        genController.genControllerByOne(table_name);
+//        GenDao genDao = new GenDao();
+//        genDao.genDaoByOne(table_name);
+//        GenService genService = new GenService();
+//        genService.genServiceByOne(table_name);
+//        GenController genController = new GenController();
+//        genController.genControllerByOne(table_name);
     }
 }

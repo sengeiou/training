@@ -8,7 +8,9 @@ import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
 import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
 import com.training.util.HttpHelper;
 import com.training.util.OApiException;
+import com.training.util.ut;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,16 +48,30 @@ public class GetInfoTest {
         req.setProcessCode("PROC-FF6YQLE1N2-HESQB9ZYOW7FOIN97KIL1-84X7L0BJ-E");  // 新签合同（月卡私教）
 
 
-        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
-        req.setEndTime(System.currentTimeMillis());
+        Long start = System.currentTimeMillis()-1000*60*60*24*35;
+        Long end = System.currentTimeMillis()-1000*60*60*24*30;
+
+        System.out.println(" ================================ start "+start);
+        System.out.println(" ================================ end "+end);
+
+        System.out.println(" ================================ start = "+ ut.df_day.format(new Date(start)) );
+        System.out.println(" ================================ start2 "+ut.df_day.parse("2018-04-01").getTime());
+
+        start = ut.df_day.parse("2011-12-21").getTime();
+
+        req.setStartTime(start);
+//        req.setEndTime(System.currentTimeMillis());
         req.setSize(10L);
-        req.setCursor(1L);
+        req.setCursor(41L);
         SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
         JSONObject result = JSON.parseObject(rsp.getBody());
         SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
         SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
 
+
+
         System.out.println(" ================================  "+result);
+        System.out.println(" ================================  result2.getNextCursor() = "+result2.getNextCursor());
 
 
         List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
@@ -63,7 +79,9 @@ public class GetInfoTest {
 
         for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
             System.out.println(" ================================  ");
-            System.out.println(""+item.getTitle());
+            System.out.println("标题 : "+item.getTitle());
+            System.out.println("流程实例ID : "+item.getProcessInstanceId());
+
             List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = item.getFormComponentValues();
             for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
                 System.out.println(form.getName()+" : "+form.getValue());
