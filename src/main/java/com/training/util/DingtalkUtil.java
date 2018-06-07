@@ -127,8 +127,8 @@ public class DingtalkUtil {
         DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
         SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
         req.setProcessCode(processCode);
-        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*15);
-        req.setEndTime(System.currentTimeMillis());
+        req.setStartTime(System.currentTimeMillis()-1000*60*60*24*50);
+//        req.setEndTime(System.currentTimeMillis()-1000*60*60*24*0);
         req.setSize(10L);
         req.setCursor(cursor);
         SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
@@ -137,13 +137,18 @@ public class DingtalkUtil {
         SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
         System.out.println(" ================================  "+result);
         List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
-        System.out.println(" ================================  data = "+data.size());
         List<ContractEntity> contractEntityList = new ArrayList<>();
-        for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-            System.out.println(" ================================  ");
-            System.out.println(""+item.getTitle());
-            ContractEntity contractEntity = converProcessinstance(item);
-            contractEntityList.add(contractEntity);
+        if(data!=null){
+            System.out.println(" ================================  data = "+data.size());
+            for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
+                System.out.println(" ================================  ");
+                System.out.println(""+item.getTitle());
+                ContractEntity contractEntity = converProcessinstance(item);
+                contractEntityList.add(contractEntity);
+
+            }
+        }else{
+            System.out.println(" ================================  data = null : "+data);
 
         }
         return contractEntityList;
@@ -164,7 +169,7 @@ public class DingtalkUtil {
         contractEntity.setGender(contractMap.get("会员性别"));
         contractEntity.setPhone(contractMap.get("会员电话"));
         contractEntity.setType(contractMap.get("合同属性"));
-        contractEntity.setTotal(Integer.parseInt(contractMap.get("购买课程")));
+        contractEntity.setTotal(contractMap.get("购买课程"));
         contractEntity.setMoney(contractMap.get("金额（元）"));
         contractEntity.setPayType(contractMap.get("付款方式"));
         String dateStr = contractMap.get("[\"开始时间\",\"结束时间\"]").replace("[","").replace("]","");

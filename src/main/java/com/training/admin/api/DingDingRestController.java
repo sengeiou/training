@@ -10,6 +10,7 @@ import com.training.service.StaffService;
 import com.training.service.StoreService;
 import com.training.util.DingtalkUtil;
 import com.training.util.IDUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,30 +112,26 @@ public class DingDingRestController {
         return "执行成功";
     }
 
-
-
     @GetMapping("member")
     public Object member(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   member  ");
         String processCode = "PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19"; // 新签合同（次卡私教）
 //        String processCode = "PROC-FF6YQLE1N2-HESQB9ZYOW7FOIN97KIL1-84X7L0BJ-E"; // 新签合同（月卡私教）
-
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
-        contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
-        for (int i = 0; i < contractEntityList.size(); i++) {
-            ContractEntity contractEntity = contractEntityList.get(i);
-            contractService.add(contractEntity);
-        }
-
-//        do{
-//            contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
-//            for (int i = 0; i < contractEntityList.size(); i++) {
-//                ContractEntity contractEntity = contractEntityList.get(i);
-//                contractService.add(contractEntity);
-//            }
-//            cursor++;
-//        }while(contractEntityList!=null);
+        do{
+            contractEntityList = DingtalkUtil.getContracts(processCode,cursor);
+            for (int i = 0; i < contractEntityList.size(); i++) {
+                ContractEntity contractEntity = contractEntityList.get(i);
+                ContractEntity contractEntityDB = contractService.getById(contractEntity.getContractId());
+                if(contractEntityDB!=null){
+                    logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+                    continue;
+                }
+                contractService.add(contractEntity);
+            }
+            cursor++;
+        }while(CollectionUtils.isNotEmpty(contractEntityList));
         return "执行成功 : cursor = "+cursor;
     }
 

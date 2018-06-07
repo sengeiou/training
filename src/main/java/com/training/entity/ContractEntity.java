@@ -26,7 +26,7 @@ public class ContractEntity {
 
     private String money;
 
-    private Integer total;
+    private String total;
 
     private String payType;
 
