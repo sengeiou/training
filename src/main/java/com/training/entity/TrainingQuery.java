@@ -52,5 +52,7 @@ public class TrainingQuery {
 
     private String endDate;
 
+    private String staffId;
+
 }
 

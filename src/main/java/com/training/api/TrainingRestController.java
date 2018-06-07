@@ -118,5 +118,18 @@ public class TrainingRestController {
         return trainingService.list(query);
     }
 
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "findByStaff", method = RequestMethod.GET)
+    public ResponseEntity<String> findByStaff(@ModelAttribute TrainingQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<Training> page = trainingService.findByStaff(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
 }
 
