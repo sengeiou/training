@@ -1,9 +1,9 @@
 package com.training.admin.api;
 
+import com.training.common.Page;
+import com.training.common.PageRequest;
 import com.training.domain.Member;
-import com.training.entity.ContractEntity;
-import com.training.entity.StaffEntity;
-import com.training.entity.StoreEntity;
+import com.training.entity.*;
 import com.training.service.*;
 import com.training.util.DingtalkUtil;
 import com.training.util.IDUtils;
@@ -144,6 +144,25 @@ public class DingDingRestController {
     public Object member2(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   member2  ");
 
+        ContractQuery query = new ContractQuery();
+//        PageRequest page = new
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(50);
+        Page<ContractEntity> page = contractService.find(query,pageRequest);
+        for (ContractEntity contractEntity : page.getContent()){
+            MemberEntity memberEntityDB = memberService.getByPhone(contractEntity.getPhone());
+            if(memberEntityDB!=null){
+                logger.info(" ============   "+contractEntity.getPhone() +" 已存在 ");
+                continue;
+            }
+            MemberEntity member = new MemberEntity();
+            member.setMemberId(IDUtils.getId());
+            member.setType("M");
+            member.setName(contractEntity.getMemberName());
+            member.setPhone(contractEntity.getPhone());
+            member.setSalesman(contractEntity.getSalesman());
+            memberService.add(member);
+        }
         return "member2执行成功";
     }
 

@@ -101,6 +101,19 @@ public class MemberService {
     }
 
     /**
+     * 根据ID查询实体
+     * @param phone
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public MemberEntity getByPhone(String phone){
+        if(StringUtils.isEmpty(phone)){
+            return null;
+        }
+        MemberEntity memberDB = memberDao.getByPhone(phone);
+        return memberDB;
+    }
+
+    /**
      * 根据实体更新
      * @param member
      * Created by huai23 on 2018-05-26 13:33:17.
