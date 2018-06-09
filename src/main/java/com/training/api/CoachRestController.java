@@ -57,7 +57,7 @@ public class CoachRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<MemberEntity> page = memberService.find(query,pageRequest);
+        Page<Member> page = memberService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
@@ -123,7 +123,7 @@ public class CoachRestController {
     public ResponseEntity<String> memberList(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         logger.info("  memberList  MemberQuery = {}",query);
         query.setType("M");
-        Page<MemberEntity> page = memberService.find(query,pageRequest);
+        Page<Member> page = memberService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 

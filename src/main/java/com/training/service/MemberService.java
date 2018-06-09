@@ -5,6 +5,7 @@ import com.training.common.*;
 import com.training.dao.MemberDao;
 import com.training.domain.Lesson;
 import com.training.domain.Member;
+import com.training.domain.Training;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
@@ -12,6 +13,7 @@ import com.training.util.JwtUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,15 +58,29 @@ public class MemberService {
      * @param page
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
-    public Page<MemberEntity> find(MemberQuery query , PageRequest page){
+    public Page<Member> find(MemberQuery query , PageRequest page){
         List<MemberEntity> memberList = memberDao.find(query,page);
+        List<Member> data = new ArrayList<>();
+        for (MemberEntity trainingEntity : memberList){
+            Member member = transferMember(trainingEntity);
+            data.add(member);
+        }
         Long count = memberDao.count(query);
-        Page<MemberEntity> returnPage = new Page<>();
-        returnPage.setContent(memberList);
+        Page<Member> returnPage = new Page<>();
+        returnPage.setContent(data);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+    private Member transferMember(MemberEntity memberEntity) {
+        if(memberEntity==null){
+            return null;
+        }
+        Member member = new Member();
+        BeanUtils.copyProperties(memberEntity,member);
+        return member;
     }
 
     /**

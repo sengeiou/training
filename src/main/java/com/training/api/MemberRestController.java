@@ -51,7 +51,7 @@ public class MemberRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<MemberEntity> page = memberService.find(query,pageRequest);
+        Page<Member> page = memberService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
