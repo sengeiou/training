@@ -9,6 +9,7 @@ import com.training.domain.Training;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
+import com.training.util.IDUtils;
 import com.training.util.JwtUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ public class MemberService {
      */ 
     public ResponseEntity<String> add(MemberEntity member){
         User user = RequestContextHelper.getUser();
+        member.setMemberId(IDUtils.getId());
         int n = memberDao.add(member);
         if(n==1){
             return ResponseUtil.success("添加成功");
