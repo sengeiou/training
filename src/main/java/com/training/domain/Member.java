@@ -63,5 +63,7 @@ public class Member {
 
     private String code;
 
+    private String cardType;
+
 }
 

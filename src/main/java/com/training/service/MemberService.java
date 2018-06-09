@@ -65,6 +65,7 @@ public class MemberService {
         List<Member> data = new ArrayList<>();
         for (MemberEntity trainingEntity : memberList){
             Member member = transferMember(trainingEntity);
+            member.setCardType("私教次卡,团体月卡");
             data.add(member);
         }
         Long count = memberDao.count(query);

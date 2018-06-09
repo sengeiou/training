@@ -151,6 +151,7 @@ public class TrainingService {
         }
         Training training = new Training();
         BeanUtils.copyProperties(trainingEntity,training);
+        training.setStoreName("测试场馆123");
         MemberEntity memberEntity = memberService.getById(trainingEntity.getMemberId());
         Member member = new Member();
         BeanUtils.copyProperties(memberEntity,member);

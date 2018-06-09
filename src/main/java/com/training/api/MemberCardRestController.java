@@ -74,11 +74,11 @@ public class MemberCardRestController {
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        MemberCardEntity memberCardDB = memberCardService.getById(id);
-        if(memberCardDB==null){
+        MemberCard memberCard = memberCardService.getById(id);
+        if(memberCard==null){
             return ResponseUtil.exception("查无数据");
         }
-        return ResponseUtil.success(memberCardDB);
+        return ResponseUtil.success(memberCard);
     }
 
     /**

@@ -53,9 +53,7 @@ public class MemberCardService {
         List<MemberCardEntity> memberCardList = memberCardDao.find(query,page);
         List<MemberCard> content = new ArrayList<>();
         for(MemberCardEntity memberCardEntity : memberCardList){
-            MemberCard memberCard = new MemberCard();
-            BeanUtils.copyProperties(memberCardEntity,memberCard);
-            memberCard.setCardName("私教次卡");
+            MemberCard memberCard = transfer(memberCardEntity);
             content.add(memberCard);
         }
         Long count = memberCardDao.count(query);
@@ -66,6 +64,21 @@ public class MemberCardService {
         returnPage.setTotalElements(count);
         return returnPage;
     }
+
+    private MemberCard transfer(MemberCardEntity memberCardEntity) {
+        if(memberCardEntity==null){
+            return null;
+        }
+        MemberCard memberCard = new MemberCard();
+        BeanUtils.copyProperties(memberCardEntity,memberCard);
+        memberCard.setCardName("私教次卡");
+        memberCard.setMemberName("测试会员名称3");
+        memberCard.setCoachName("测试教练2");
+        memberCard.setStoreName("测试门店1");
+        memberCard.setCardType("私教次卡");
+        return memberCard;
+    }
+
 
     /**
      * 查询总数
@@ -82,9 +95,10 @@ public class MemberCardService {
      * @param id
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
-    public MemberCardEntity getById(String id){
+    public MemberCard getById(String id){
         MemberCardEntity memberCardDB = memberCardDao.getById(id);
-        return memberCardDB;
+        MemberCard memberCard = transfer(memberCardDB);
+        return memberCard;
     }
 
     /**

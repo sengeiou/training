@@ -20,6 +20,8 @@ public class Training {
 
     private String storeId;
 
+    private String storeName;
+
     private String type;
 
     private String memberId;

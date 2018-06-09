@@ -21,11 +21,19 @@ public class MemberCard {
 
     private String memberId;
 
+    private String memberName;
+
     private String coachId;
+
+    private String coachName;
 
     private String storeId;
 
+    private String storeName;
+
     private String type;
+
+    private String cardType;
 
     private String money;
 
