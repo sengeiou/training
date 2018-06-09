@@ -1,0 +1,1 @@
+webpackJsonp([36],{"+ZU3":function(e,t,a){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=void 0;var n=a("F8kA"),r=n.Redirect;t.default=r},"04qB":function(e,t,a){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n=a("GiK3"),r=a.n(n),u=a("+ZU3"),d=a.n(u),o=r.a.createElement(d.a,{to:"/dashboard"});t.default=function(){return o}}});
