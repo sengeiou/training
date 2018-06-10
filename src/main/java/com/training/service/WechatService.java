@@ -9,6 +9,7 @@ import com.training.dao.MemberDao;
 import com.training.domain.Member;
 import com.training.domain.PrePayOrder;
 import com.training.domain.User;
+import com.training.entity.CardEntity;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.util.*;
@@ -37,11 +38,17 @@ public class WechatService {
     private MemberService memberService;
 
     @Autowired
+    private CardService cardService;
+
+    @Autowired
+    private WechatUtils wechatUtils;
+
+    @Autowired
     private JwtUtil jwt;
 
     public ResponseEntity<String> getMemberByCode(String code) {
         JSONObject jo = new JSONObject();
-        String openId = WechatUtils.getOpenIdByCode(code);
+        String openId = wechatUtils.getOpenIdByCode(code);
 //        String openId = "oFg700C3DCUghR7lpn4mJpFAZQvU";
         if(StringUtils.isEmpty(openId)){
             return ResponseUtil.exception("获取openId异常");
@@ -72,9 +79,11 @@ public class WechatService {
         Member memberRequest = RequestContextHelper.getMember();
         String openId = memberRequest.getOpenId();
 //        String openId = "odERo5IjbhDlNzqBbjWKi39eUEcY";
+        CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
         Map<String, String> param = new HashMap<>();
         param.put("openId",openId);
-        Map<String, String> result = WechatUtils.prePayOrder(param);
+        param.put("card",JSON.toJSONString(card));
+        Map<String, String> result = wechatUtils.prePayOrder(param);
         if(MapUtils.isEmpty(result)){
             return ResponseUtil.exception("发起支付请求异常");
         }

@@ -3,12 +3,14 @@ package com.training.service;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.*;
 import com.training.dao.MemberDao;
+import com.training.dao.StaffDao;
 import com.training.domain.Lesson;
 import com.training.domain.Member;
 import com.training.domain.Training;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
 import com.training.domain.User;
+import com.training.entity.StaffEntity;
 import com.training.util.IDUtils;
 import com.training.util.JwtUtil;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +37,9 @@ public class MemberService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private StaffDao staffDao;
 
     @Autowired
     private JwtUtil jwt;
@@ -198,6 +203,14 @@ public class MemberService {
                 memberEntity.setPhone(member.getPhone());
                 memberEntity.setOpenId(openId);
                 memberEntity.setType("M");
+                StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
+                if(staffDB!=null){
+                    memberEntity.setType("C");
+                    memberEntity.setStoreId(staffDB.getStoreId());
+                    staffDB.setOpenId(openId);
+                    int n = staffDao.bind(staffDB);
+                    logger.info("  bind  staffDao.bind  n = {} ",n);
+                }
                 memberEntity.setOrigin("自动生成");
                 int n = memberDao.add(memberEntity);
                 if(n!=1){

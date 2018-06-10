@@ -50,6 +50,7 @@ public class MemberCardRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberCardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" member_cardRestController  find  query = {}",query);
         Page<MemberCard> page = memberCardService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }

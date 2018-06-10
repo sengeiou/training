@@ -3,8 +3,11 @@ package com.training.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.training.entity.CardEntity;
+import com.training.service.MemberCardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +28,15 @@ public class WechatUtils {
 
     private static String notify_url = "https://trainingbj.huai23.com/wechat/pay/callback";
 
+    @Autowired
+    private MemberCardService memberCardService;
+
     /**
      * 新增实体
      * @param code
      * Created by huai23 on 2018-05-26 13:33:17.
      */
-    public static String getOpenIdByCode(String code){
+    public String getOpenIdByCode(String code){
         System.out.println(" getOpenIdByCode  code = {}"+code);
         String openId = null;
         try {
@@ -56,10 +62,11 @@ public class WechatUtils {
         return openId;
     }
 
-    public static Map<String, String> prePayOrder(Map<String, String> input) {
+    public Map<String, String> prePayOrder(Map<String, String> input) {
         try {
             String openid = input.get("openId");
-            String body = "健身会员卡1分钱购买";
+            CardEntity card = JSON.parseObject(input.get("card"),CardEntity.class);
+            String body = card.getCardName();
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
@@ -72,7 +79,7 @@ public class WechatUtils {
             param.put("sign_type",signType);
             param.put("body",body);
             param.put("detail","detail123");
-            param.put("attach","这是中文的attach");
+            param.put("attach",card.getCardId());
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
             param.put("total_fee","1");

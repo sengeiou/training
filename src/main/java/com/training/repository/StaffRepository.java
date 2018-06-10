@@ -128,5 +128,14 @@ public interface StaffRepository {
             "</script>")
     StaffEntity getByUsername(@Param("username") String username);
 
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+            " FROM staff " +
+            " WHERE phone = #{phone} limit 0,1 " +
+            "</script>")
+    StaffEntity getByPhone(@Param("phone") String phone);
+
+    @Update("<script> UPDATE staff SET open_id = #{staff.openId} , modified = now() WHERE staff_id = #{staff.staffId}  </script>")
+    int bind(@Param("staff") StaffEntity staff);
+
 }
 

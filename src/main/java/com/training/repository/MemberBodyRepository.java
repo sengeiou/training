@@ -86,7 +86,7 @@ public interface MemberBodyRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberBodyEntity> find(@Param("query") MemberBodyQuery memberBody , @Param("page") PageRequest page);
 

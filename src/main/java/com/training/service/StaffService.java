@@ -126,5 +126,20 @@ public class StaffService {
     }
 
 
+    public StaffEntity getByPhone(String phone){
+        StaffEntity staffDB = staffDao.getByPhone(phone);
+        return staffDB;
+    }
+
+    /**
+     * 新增实体
+     * @param staff
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public int bind(StaffEntity staff){
+        int n = staffDao.bind(staff);
+        return n;
+    }
+
 }
 

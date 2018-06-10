@@ -85,12 +85,32 @@ public class StaffDao {
 
     /**
      * 根据ID查询实体
-     * @param id
+     * @param username
      * Created by huai23 on 2018-05-26 13:55:30.
      */
-    public StaffEntity getByUsername(String id){
-        StaffEntity staffDB = staffRepository.getByUsername(id);
+    public StaffEntity getByUsername(String username){
+        StaffEntity staffDB = staffRepository.getByUsername(username);
         return staffDB;
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param phone
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    public StaffEntity getByPhone(String phone){
+        StaffEntity staffDB = staffRepository.getByPhone(phone);
+        return staffDB;
+    }
+
+    /**
+     * 新增实体
+     * @param staff
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public int bind(StaffEntity staff){
+        int n = staffRepository.bind(staff);
+        return n;
     }
 
 }

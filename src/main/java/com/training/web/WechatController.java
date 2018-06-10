@@ -2,9 +2,16 @@ package com.training.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.training.entity.CardEntity;
+import com.training.entity.MemberCardEntity;
+import com.training.entity.MemberEntity;
 import com.training.entity.SysLogEntity;
+import com.training.service.CardService;
+import com.training.service.MemberCardService;
+import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +35,15 @@ public class WechatController {
 
     @Autowired
     private SysLogService sysLogService;
+
+    @Autowired
+    private CardService cardService;
+
+    @Autowired
+    private MemberCardService memberCardService;
+
+    @Autowired
+    private MemberService memberService;
 
     /**
      * 首页
@@ -63,6 +79,33 @@ public class WechatController {
 //            System.out.println("callback接收到的报文："+new String(result.getBytes("UTF-8"),"gbk"));
             Map<String, String> data  = WXPayUtil.xmlToMap(result);
             logger.info("----data---  {}" ,data);
+            logger.info("----return_code---  {}" ,data.get("return_code"));
+            logger.info("----openid---  {}" ,data.get("openid"));
+            logger.info("----attach---  {}" ,data.get("attach"));
+            String openId = data.get("openid");
+            String cardId = data.get("attach");
+
+            CardEntity card = cardService.getById(cardId);
+            MemberEntity memberEntity = memberService.getByOpenId(openId);
+            String coachId = "15286294636688c76e35ebe6448be8b84c64bd7fca9cc";
+
+            MemberEntity coachEntity = memberService.getById(coachId);
+
+            MemberCardEntity memberCardEntity = new MemberCardEntity();
+            memberCardEntity.setCardNo(IDUtils.getId());
+            memberCardEntity.setCardId(cardId);
+            memberCardEntity.setCoachId(coachId);
+            memberCardEntity.setStoreId(coachEntity.getStoreId());
+            memberCardEntity.setMemberId(memberEntity.getMemberId());
+            memberCardEntity.setType(card.getType());
+            memberCardEntity.setCount(card.getTotal());
+            memberCardEntity.setTotal(card.getTotal());
+            memberCardEntity.setDays(card.getDays());
+            memberCardEntity.setMoney(card.getPrice());
+            memberCardEntity.setStartDate(ut.currentDate());
+            memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
+            memberCardService.add(memberCardEntity);
+
             String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
