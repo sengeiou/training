@@ -1,17 +1,21 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Card;
+import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +59,37 @@ public class CardService {
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-06-06 18:46:26.
+     */
+    public Page<Card> list(CardQuery query , PageRequest page){
+        List<CardEntity> cardList = cardDao.find(query,page);
+        List<Card> content = new ArrayList<>();
+        for(CardEntity cardEntity : cardList){
+            Card card = transfer(cardEntity);
+            content.add(card);
+        }
+        Long count = cardDao.count(query);
+        Page<Card> returnPage = new Page<>();
+        returnPage.setContent(content);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    private Card transfer(CardEntity cardEntity) {
+        if(cardEntity==null){
+            return null;
+        }
+        Card card = new Card();
+        BeanUtils.copyProperties(cardEntity,card);
+        return card;
     }
 
     /**

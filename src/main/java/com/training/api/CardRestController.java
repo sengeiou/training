@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.Card;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -50,6 +51,18 @@ public class CardRestController {
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute CardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         Page<CardEntity> page = cardService.find(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-06 18:46:26.
+     */
+    @RequestMapping (value = "list", method = RequestMethod.GET)
+    public ResponseEntity<String> list(@ModelAttribute CardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<Card> page = cardService.list(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
