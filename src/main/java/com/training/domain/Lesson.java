@@ -53,4 +53,6 @@ public class Lesson {
 
     private List<Training> trainingList;
 
+    private String trainingId;
+
 }

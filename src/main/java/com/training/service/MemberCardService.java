@@ -5,6 +5,7 @@ import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +29,18 @@ public class MemberCardService {
 
     @Autowired
     private MemberCardDao memberCardDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private CardDao cardDao;
 
     /**
      * 新增实体
@@ -69,13 +82,21 @@ public class MemberCardService {
         if(memberCardEntity==null){
             return null;
         }
+        CardEntity cardEntity = cardDao.getById(memberCardEntity.getCardId());
         MemberCard memberCard = new MemberCard();
         BeanUtils.copyProperties(memberCardEntity,memberCard);
-        memberCard.setCardName("私教次卡");
-        memberCard.setMemberName("测试会员名称3");
-        memberCard.setCoachName("测试教练2");
-        memberCard.setStoreName("测试门店1");
-        memberCard.setCardType("私教次卡");
+        MemberEntity memberEntity = memberDao.getById(memberCardEntity.getMemberId());
+        MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
+        memberCard.setCardName(cardEntity.getCardName());
+        memberCard.setMemberName(memberEntity.getName());
+        memberCard.setCoachName(coachEntity.getName());
+        StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());
+        memberCard.setStoreName(storeEntity.getName());
+        String cardType = "";
+        if(CardTypeEnum.getEnumByKey(memberCard.getType())!=null){
+            cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
+        }
+        memberCard.setCardType(cardType);
         return memberCard;
     }
 
@@ -127,6 +148,41 @@ public class MemberCardService {
         return ResponseUtil.exception("删除失败");
     }
 
-
+    /**
+     * 分页查询
+     * @param memberId
+     * @param type
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public MemberCardEntity getCurrentUseCard(String memberId , String type){
+        MemberCardQuery query = new MemberCardQuery();
+        query.setMemberId(memberId);
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<MemberCardEntity> memberCardList = memberCardDao.find(query,page);
+        MemberCardEntity memberCardEntity = null;
+        if(type.equals("P")){
+            for (MemberCardEntity memberCard:memberCardList){
+                if(memberCard.getType().startsWith("P")||memberCard.getType().equals("TY")){
+                    if(memberCard.getCount()>0){
+                        memberCardEntity = memberCard;
+                        break;
+                    }
+                }
+            }
+        }
+        if(type.equals("T")){
+            for (MemberCardEntity memberCard:memberCardList){
+                if(memberCard.getType().startsWith("T")&&!memberCard.getType().equals("TY")){
+                    int passDays = ut.passDayByDate(ut.currentDate(),memberCard.getEndDate());
+                    if( passDays > 0){
+                        memberCardEntity = memberCard;
+                        break;
+                    }
+                }
+            }
+        }
+        return memberCardEntity;
+    }
 }
 

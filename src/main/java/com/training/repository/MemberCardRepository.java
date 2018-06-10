@@ -83,7 +83,7 @@ public interface MemberCardRepository {
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCardEntity> find(@Param("query") MemberCardQuery memberCard , @Param("page") PageRequest page);
 

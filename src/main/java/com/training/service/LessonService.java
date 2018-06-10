@@ -7,6 +7,8 @@ import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,21 @@ public class LessonService {
 
     @Autowired
     private LessonDao lessonDao;
+
+    @Autowired
+    private TrainingDao trainingDao;
+
+    @Autowired
+    private MemberCardService memberCardService;
+
+    @Autowired
+    private MemberCardDao memberCardDao;
+
+    @Autowired
+    private CardDao cardDao;
+
+    @Autowired
+    private TrainingService trainingService;
 
     /**
      * 新增实体
@@ -108,48 +125,92 @@ public class LessonService {
     }
 
     public ResponseEntity<String> schedule(LessonQuery query) {
-        Member memberRequest = RequestContextHelper.getMember();
-        logger.info(" schedule  memberRequest = {}",memberRequest);
-        if(query.getType().equals("T")){
-            return quertTeamSchedule(query);
-        }
-        if(query.getType().startsWith("S")){
-            return quertSpecialSchedule(query);
+        if(StringUtils.isEmpty(query.getCoachId())){
+            return ResponseUtil.exception("教练信息缺失,查询课程时间表异常!");
         }
         List<Lesson> lessonList = new ArrayList();
-        for (int i = 9; i < 22; i++) {
-            Lesson lesson = new Lesson();
-            lesson.setLessonId(System.currentTimeMillis()+"");
-            lesson.setStartHour(i);
-            lesson.setEndHour(i+1);
-            lesson.setCoachId("1");
-            lesson.setLessonDate(query.getLessonDate());
-            lesson.setMyOrder("0");
-            if(i%5==0){
-                lesson.setQuota(0);
-                if(i==10){
-                    lesson.setMyOrder("1");
-                }
-            }else{
-                lesson.setQuota(1);
-            }
-            if(i%3==0){
-                lesson.setStatus(-1);
-            }else{
-                lesson.setStatus(0);
-            }
-            lessonList.add(lesson);
+        if(query.getType().equals("T")){
+            lessonList = quertTeamSchedule(query);
+        }
+        if(query.getType().startsWith("S")){
+            lessonList = quertSpecialSchedule(query);
+        }
+        if(query.getType().startsWith("P")){
+            lessonList = quertPersonalSchedule(query);
         }
         JSONObject jo = new JSONObject();
         jo.put("lessonList", lessonList);
         return ResponseUtil.success("查询课程时间表成功",lessonList);
     }
 
-    public ResponseEntity<String> quertTeamSchedule(LessonQuery query) {
-        Member memberRequest = RequestContextHelper.getMember();
-        logger.info(" schedule  memberRequest = {}",memberRequest);
+    private List<Lesson> quertPersonalSchedule(LessonQuery query) {
         List<Lesson> lessonList = new ArrayList();
-        for (int i = 0; i < 3; i++) {
+        if(StringUtils.isEmpty(query.getCoachId())){
+            return lessonList;
+        }
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" quertPersonalSchedule  memberRequest = {} ",memberRequest);
+        logger.info(" quertPersonalSchedule  query = {} ",query);
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setLessonDate(query.getLessonDate());
+        trainingQuery.setCoachId(query.getCoachId());
+        trainingQuery.setStatus(0);
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
+        logger.info(" quertPersonalSchedule  trainingEntityList.size() = {} ",trainingEntityList.size());
+        for (TrainingEntity trainingEntity:trainingEntityList){
+            logger.info(" trainingEntity = {} ",trainingEntity);
+        }
+        for (int i = 9; i < 22; i++) {
+            Lesson lesson = new Lesson();
+            lesson.setType("P");
+            lesson.setStartHour(i);
+            lesson.setEndHour(i+1);
+            lesson.setCoachId(query.getCoachId());
+            lesson.setLessonDate(query.getLessonDate());
+            lesson.setLessonId(createLessonId(lesson));
+            lesson.setMyOrder("0");
+            lesson.setQuota(1);
+            lesson.setTrainingId("");
+            lesson.setTrainingList(new ArrayList<>());
+            for (TrainingEntity trainingEntity:trainingEntityList){
+//                logger.info(" trainingEntity = {} ",trainingEntity);
+                if(trainingEntity.getStartHour()==lesson.getStartHour()){
+                    lesson.setQuota(0);
+                    if(trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
+                        lesson.setMyOrder("1");
+                        lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
+                        lesson.setTrainingId(trainingEntity.getTrainingId());
+                    }
+                }
+            }
+            lesson.setStatus(0);
+//            if(i%3==0){
+//                lesson.setStatus(-1);
+//            }
+            lessonList.add(lesson);
+        }
+
+        for (Lesson lesson:lessonList){
+            logger.info(" lesson = {} ",lesson);
+        }
+
+        return lessonList;
+    }
+
+    private String createLessonId(Lesson lesson) {
+//        logger.info(" lesson = {} ",lesson);
+        String lessonId = ""+lesson.getType()+","+lesson.getLessonDate()+","+lesson.getStartHour()+","+lesson.getEndHour()+","+lesson.getCoachId();
+//        logger.info(" lessonId = {} ",lessonId);
+        return lessonId;
+    }
+
+    public List<Lesson> quertTeamSchedule(LessonQuery query) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info(" quertTeamSchedule  memberRequest = {}",memberRequest);
+        List<Lesson> lessonList = new ArrayList();
+        for (int i = 0; i < 0; i++) {
             Lesson lesson = new Lesson();
             lesson.setLessonId(System.currentTimeMillis()+"");
             lesson.setTitle("肌肉训练+"+i);
@@ -163,14 +224,12 @@ public class LessonService {
             lesson.setMinCount(3);
             lessonList.add(lesson);
         }
-        JSONObject jo = new JSONObject();
-        jo.put("lessonList", lessonList);
-        return ResponseUtil.success("查询课程时间表成功",lessonList);
+       return lessonList;
     }
 
-    public ResponseEntity<String> quertSpecialSchedule(LessonQuery query) {
+    public List<Lesson> quertSpecialSchedule(LessonQuery query) {
         Member memberRequest = RequestContextHelper.getMember();
-        logger.info(" schedule  memberRequest = {}",memberRequest);
+        logger.info(" quertSpecialSchedule  memberRequest = {}",memberRequest);
         List<Lesson> lessonList = new ArrayList();
         for (int i = 9; i < 22; i++) {
             Lesson lesson = new Lesson();
@@ -192,28 +251,69 @@ public class LessonService {
             }
             lessonList.add(lesson);
         }
-        JSONObject jo = new JSONObject();
-        jo.put("lessonList", lessonList);
-        return ResponseUtil.success("查询课程时间表成功",lessonList);
+        return lessonList;
     }
 
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
-        logger.info(" order  memberRequest = {}",memberRequest);
-        if(false){
-            return ResponseUtil.success("约课失败!该时段课程已约满!");
+        logger.info(" order  lesson = {}",lesson);
+        String lessonId = lesson.getLessonId();
+        String[] ids = lessonId.split(",");
+        String type = ids[0];
+        String lessonDate = ids[1];
+        String startHour = ids[2];
+        String endHour = ids[3];
+        String coachId = ids[4];
+
+        MemberCardEntity memberCardEntity = memberCardService.getCurrentUseCard(memberRequest.getMemberId(),type);
+        if(memberCardEntity==null){
+            return ResponseUtil.exception("约课失败!无可用课程卡!请先购卡");
         }
-        return ResponseUtil.success("约课成功");
+        TrainingEntity  trainingEntity = new TrainingEntity();
+        trainingEntity.setTrainingId(IDUtils.getId());
+        trainingEntity.setMemberId(memberRequest.getMemberId());
+        trainingEntity.setCoachId(coachId);
+        trainingEntity.setStartHour(Integer.parseInt(startHour));
+        trainingEntity.setEndHour(Integer.parseInt(endHour));
+        trainingEntity.setLessonDate(lessonDate);
+        trainingEntity.setLessonId(lessonId);
+        trainingEntity.setType(type);
+        trainingEntity.setTitle("私教课");
+        trainingEntity.setStoreId(memberCardEntity.getStoreId());
+        trainingEntity.setCardNo(memberCardEntity.getCardNo());
+        trainingEntity.setCardType(memberCardEntity.getType());
+        int n = trainingDao.add(trainingEntity);
+        if(n > 0){
+            return ResponseUtil.success("约课成功");
+        }
+        return ResponseUtil.exception("约课失败!该时段课程已约满!");
     }
 
     public ResponseEntity<String> cancel(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" cancel  memberRequest = {}",memberRequest);
-        if(true){
-            return ResponseUtil.success("取消约课失败!");
+        logger.info(" cancel  memberRequest = {}",lesson);
+
+
+        TrainingEntity trainingEntity = trainingDao.getById(lesson.getTrainingId());
+        if(trainingEntity==null){
+            return ResponseUtil.exception("取消约课异常!");
         }
-        return ResponseUtil.success("取消成功");
+
+        if(trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
+            TrainingEntity trainingUpdate = new TrainingEntity();
+            trainingUpdate.setTrainingId(trainingEntity.getTrainingId());
+            trainingUpdate.setStatus(-1);
+            int n = trainingDao.update(trainingUpdate);
+            if(n==1){
+                return ResponseUtil.success("取消成功!");
+            }
+        }
+        return ResponseUtil.exception("取消约课失败!");
+
     }
+
+
 
 }
 

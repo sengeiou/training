@@ -145,7 +145,7 @@ public class TrainingService {
         return returnPage;
     }
 
-    private Training transferTraining(TrainingEntity trainingEntity) {
+    public Training transferTraining(TrainingEntity trainingEntity) {
         if(trainingEntity==null){
             return null;
         }

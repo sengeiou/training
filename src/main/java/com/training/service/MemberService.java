@@ -2,17 +2,18 @@ package com.training.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.*;
+import com.training.dao.CardDao;
+import com.training.dao.MemberCardDao;
 import com.training.dao.MemberDao;
 import com.training.dao.StaffDao;
 import com.training.domain.Lesson;
 import com.training.domain.Member;
 import com.training.domain.Training;
-import com.training.entity.MemberEntity;
-import com.training.entity.MemberQuery;
+import com.training.entity.*;
 import com.training.domain.User;
-import com.training.entity.StaffEntity;
 import com.training.util.IDUtils;
 import com.training.util.JwtUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,9 @@ import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * member 核心业务操作类
@@ -42,7 +45,13 @@ public class MemberService {
     private StaffDao staffDao;
 
     @Autowired
+    private CardDao cardDao;
+
+    @Autowired
     private JwtUtil jwt;
+
+    @Autowired
+    private MemberCardDao memberCardDao;
 
     /**
      * 新增实体
@@ -206,6 +215,7 @@ public class MemberService {
                 StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
                 if(staffDB!=null){
                     memberEntity.setType("C");
+                    memberEntity.setName(staffDB.getCustname());
                     memberEntity.setStoreId(staffDB.getStoreId());
                     staffDB.setOpenId(openId);
                     int n = staffDao.bind(staffDB);
@@ -244,48 +254,121 @@ public class MemberService {
         if(StringUtils.isEmpty(memberId)){
             return ResponseUtil.exception("会员信息查询异常");
         }
-        if(!memberId.equals("1")){
+
+        MemberCardQuery query = new MemberCardQuery();
+        query.setMemberId(memberId);
+        query.setStatus(0);
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+
+        if(CollectionUtils.isEmpty(cardList)){
             return ResponseUtil.exception("无可用课时,请先购卡!");
         }
+
+        Set<String> cardTypeSet = new HashSet();
         List<Lesson>  types = new ArrayList<>();
-        Lesson p = new Lesson();
-        p.setType("P");
-        p.setCoachId("1");
-        p.setTitle("私教课");
-        p.setCoachName("张三");
+        for (MemberCardEntity memberCardEntity : cardList){
+            String cardType = memberCardEntity.getType().substring(0,1);
+            if(!cardType.equals("P")){
+                continue;
+            }
+            if(cardTypeSet.contains(cardType)){
+                continue;
+            }
+            cardTypeSet.add(cardType);
+            Lesson lesson = new Lesson();
+            lesson.setType(cardType);
+            MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
+            lesson.setCoachId(memberCardEntity.getCoachId());
+            lesson.setTitle("私教课");
+            lesson.setCoachName(coachEntity.getName());
+            types.add(lesson);
+        }
 
-        types.add(p);
+        for (MemberCardEntity memberCardEntity : cardList){
+            if(memberCardEntity.getType().equals("TY")){
+                continue;
+            }
+            String cardType = memberCardEntity.getType().substring(0,1);
+            if(!cardType.equals("T")){
+                continue;
+            }
+            if(cardTypeSet.contains(cardType)){
+                continue;
+            }
+            cardTypeSet.add(cardType);
+            Lesson lesson = new Lesson();
+            lesson.setType(cardType);
+//            CardEntity cardEntity = cardDao.getById(memberCardEntity.getCardId());
+//            MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
+            lesson.setCoachId("");
+            lesson.setTitle("团体课");
+            lesson.setCoachName("");
+            types.add(lesson);
+        }
 
-        Lesson t = new Lesson();
-        t.setType("T");
-        t.setCoachId("1");
-        t.setTitle("团体课");
-        t.setCoachName("张三");
+        for (MemberCardEntity memberCardEntity : cardList){
+            String cardType = memberCardEntity.getType().substring(0,1);
+            if(!cardType.equals("S")){
+                continue;
+            }
+            if(cardTypeSet.contains(cardType)){
+                continue;
+            }
+            cardTypeSet.add(cardType);
+            Lesson lesson = new Lesson();
+            lesson.setType(cardType);
+            MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
+            lesson.setCoachId(memberCardEntity.getCoachId());
+            lesson.setTitle("特色课");
+            lesson.setCoachName(coachEntity.getName());
+            types.add(lesson);
+        }
 
-        types.add(t);
+//        Lesson p = new Lesson();
+//        p.setType("P");
+//        p.setCoachId("1");
+//        p.setTitle("私教课");
+//        p.setCoachName("张三");
+//
+//        types.add(p);
+//
+//        Lesson t = new Lesson();
+//        t.setType("T");
+//        t.setCoachId("1");
+//        t.setTitle("团体课");
+//        t.setCoachName("张三");
+//
+//        types.add(t);
+//
+//        Lesson s1 = new Lesson();
+//        s1.setType("S1");
+//        s1.setCoachId("1");
+//        s1.setTitle("肌肉强化");
+//        s1.setCoachName("张三");
+//        types.add(s1);
+//
+//        Lesson s2 = new Lesson();
+//        s2.setType("S2");
+//        s2.setCoachId("1");
+//        s2.setTitle("瘦身训练");
+//        s2.setCoachName("张三");
+//
+//        types.add(s2);
+//
+//        Lesson s3 = new Lesson();
+//        s3.setType("S3");
+//        s3.setCoachId("1");
+//        s3.setTitle("产后恢复");
+//        s3.setCoachName("张三");
+//
+//        types.add(s3);
 
-        Lesson s1 = new Lesson();
-        s1.setType("S1");
-        s1.setCoachId("1");
-        s1.setTitle("肌肉强化");
-        s1.setCoachName("张三");
-        types.add(s1);
-
-        Lesson s2 = new Lesson();
-        s2.setType("S2");
-        s2.setCoachId("1");
-        s2.setTitle("瘦身训练");
-        s2.setCoachName("张三");
-
-        types.add(s2);
-
-        Lesson s3 = new Lesson();
-        s3.setType("S3");
-        s3.setCoachId("1");
-        s3.setTitle("产后恢复");
-        s3.setCoachName("张三");
-
-        types.add(s3);
+        for (int i = 0; i < types.size(); i++) {
+            Lesson lesson = types.get(i);
+            logger.info("  lesson"+i+" = {} ",lesson );
+        }
 
         return ResponseUtil.success(types);
     }
