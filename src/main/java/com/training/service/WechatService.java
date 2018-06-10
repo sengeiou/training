@@ -46,8 +46,7 @@ public class WechatService {
         if(StringUtils.isEmpty(openId)){
             return ResponseUtil.exception("获取openId异常");
         }
-        MemberEntity memberEntity = memberService.getByOpenId("2");
-        memberEntity = memberService.getById("2");
+        MemberEntity memberEntity = memberService.getByOpenId(openId);
         Member member = new Member();
         if(memberEntity!=null){
             member = new Member();
@@ -70,7 +69,8 @@ public class WechatService {
 
     public ResponseEntity<String> prePayOrder(PrePayOrder prePayOrder) {
         JSONObject jo = new JSONObject();
-        String openId = WechatUtils.getOpenIdByCode(prePayOrder.getCode());
+        Member memberRequest = RequestContextHelper.getMember();
+        String openId = memberRequest.getOpenId();
 //        String openId = "odERo5IjbhDlNzqBbjWKi39eUEcY";
         Map<String, String> param = new HashMap<>();
         param.put("openId",openId);
@@ -81,5 +81,6 @@ public class WechatService {
         jo.putAll(result);
         return  ResponseUtil.success(jo);
     }
+
 }
 

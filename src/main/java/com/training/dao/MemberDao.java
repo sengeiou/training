@@ -104,6 +104,15 @@ public class MemberDao {
         return n;
     }
 
+    /**
+     * 新增实体
+     * @param member
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public int bind(MemberEntity member){
+        int n = memberRepository.bind(member);
+        return n;
+    }
 
 }
 

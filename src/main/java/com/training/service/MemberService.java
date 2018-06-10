@@ -164,14 +164,12 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:39:33.
      */
     public ResponseEntity<String> sendCode(Member member) {
-
-        if(!StringUtils.isEmpty(member.getPhone())||member.getPhone().equals("1")){
-            return ResponseUtil.exception("手机号码异常");
-
+        Member memberToken = RequestContextHelper.getMember();
+        logger.info(" memberRestController  sendCode  getOpenId = {}",memberToken.getOpenId());
+        logger.info(" memberRestController  sendCode  getPhone = {}",member.getPhone());
+        if(StringUtils.isEmpty(member.getPhone())||member.getPhone().length()!=11){
+            return ResponseUtil.exception("手机号码输入有误!");
         }
-
-
-
 
         return ResponseUtil.success("发送验证码成功");
     }
@@ -188,27 +186,45 @@ public class MemberService {
             return ResponseUtil.exception("手机验证码错误!");
         }
         Member memberRequest = RequestContextHelper.getMember();
-        memberRequest.setOpenId("1");
-        logger.info(" memberRestController  bind  memberRequest = {}",memberRequest);
-        MemberEntity memberEntity = getByOpenId(memberRequest.getOpenId());
-        Member memberResult = new Member();
-        if(memberEntity!=null){
-            memberResult = new Member();
-            memberResult.setMemberId(memberEntity.getMemberId());
-            memberResult.setType(memberEntity.getType());
-            jo.put("member", memberEntity);
-        }else{
-            memberResult.setMemberId("");
-            memberResult.setType("");
+        String openId = memberRequest.getOpenId();
+        logger.info("  bind  getOpenId = {} , getPhone = {} , code = {} ",openId,member.getPhone(),member.getCode());
+        MemberEntity memberEntity = getByOpenId(openId);
+        if(memberEntity==null){
+            memberEntity = getByPhone(member.getPhone());
+            if(memberEntity==null){
+                memberEntity = new MemberEntity();
+                memberEntity.setMemberId(IDUtils.getId());
+                memberEntity.setName(member.getPhone());
+                memberEntity.setPhone(member.getPhone());
+                memberEntity.setOpenId(openId);
+                memberEntity.setType("M");
+                memberEntity.setOrigin("自动生成");
+                int n = memberDao.add(memberEntity);
+                if(n!=1){
+                    return ResponseUtil.exception("创建新会员失败!");
+                }
+                memberEntity = this.getById(memberEntity.getMemberId());
+            }else{
+                memberEntity.setOpenId(openId);
+                int n = memberDao.bind(memberEntity);
+            }
         }
+        Member memberResult = new Member();
+        memberResult = new Member();
+        memberResult.setMemberId(memberEntity.getMemberId());
+        memberResult.setType(memberEntity.getType());
+        jo.put("member", memberEntity);
         String subject = JwtUtil.generalSubject(memberRequest.getOpenId(),memberResult);
         try {
             String token = jwt.createJWT(Const.JWT_ID, subject, Const.JWT_TTL);
             jo.put("token", token);
+            logger.info("  bind  token = {} ",token);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseUtil.success(jo);
+//        return ResponseUtil.exception("手机验证码错误!");
     }
 
     public ResponseEntity<String> getValidLessonType(String memberId) {

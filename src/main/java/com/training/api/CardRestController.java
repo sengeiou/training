@@ -62,6 +62,9 @@ public class CardRestController {
      */
     @RequestMapping (value = "list", method = RequestMethod.GET)
     public ResponseEntity<String> list(@ModelAttribute CardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        pageRequest = new PageRequest();
+        pageRequest.setPageSize(100);
+        pageRequest.setPage(1);
         Page<Card> page = cardService.list(query,pageRequest);
         return ResponseUtil.success(page);
     }

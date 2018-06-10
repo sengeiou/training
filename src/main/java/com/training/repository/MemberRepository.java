@@ -179,6 +179,8 @@ public interface MemberRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Update("<script> UPDATE member SET open_id = #{member.openId} , modified = now() WHERE member_id = #{member.memberId}  </script>")
+    int bind(@Param("member") MemberEntity member);
 
 }
 

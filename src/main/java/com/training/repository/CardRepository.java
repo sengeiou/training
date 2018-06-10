@@ -22,7 +22,7 @@ public interface CardRepository {
                 " <if test=\"card.days != null\"> days, </if>" +
                 " <if test=\"card.startDate != null\"> start_date, </if>" +
                 " <if test=\"card.endDate != null\"> end_date, </if>" +
-                " <if test=\"card.desc != null\"> desc, </if>" +
+                " <if test=\"card.desc != null\"> `desc`, </if>" +
                 " <if test=\"card.feature != null\"> feature, </if>" +
                 " <if test=\"card.remark != null\"> remark, </if>" +
                 " <if test=\"card.status != null\"> status, </if>" +
@@ -51,7 +51,7 @@ public interface CardRepository {
             "</script>")
     int add(@Param("card") CardEntity card);
 
-    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,process_id,creater,created,modified " +
+    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,`desc`,feature,remark,status,process_id,creater,created,modified " +
             " FROM card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
@@ -62,7 +62,7 @@ public interface CardRepository {
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
             " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
             " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
-            " <if test=\"query.desc != null\"> AND desc = #{query.desc} </if>" +
+            " <if test=\"query.desc != null\"> AND `desc` = #{query.desc} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -82,7 +82,7 @@ public interface CardRepository {
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
             " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
             " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
-            " <if test=\"query.desc != null\"> AND desc = #{query.desc} </if>" +
+            " <if test=\"query.desc != null\"> AND `desc` = #{query.desc} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -91,7 +91,7 @@ public interface CardRepository {
             "</script>")
     Long count(@Param("query") CardQuery card);
 
-    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,desc,feature,remark,status,process_id,creater,created,modified " +
+    @Select("<script> SELECT pk_id,card_id,card_name,type,price,total,days,start_date,end_date,`desc`,feature,remark,status,process_id,creater,created,modified " +
             " FROM card " +
             " WHERE card_id = #{id} " +
             "</script>")
@@ -106,7 +106,7 @@ public interface CardRepository {
                 " <if test=\"card.days != null\"> days = #{card.days} , </if>" +
                 " <if test=\"card.startDate != null\"> start_date = #{card.startDate} , </if>" +
                 " <if test=\"card.endDate != null\"> end_date = #{card.endDate} , </if>" +
-                " <if test=\"card.desc != null\"> desc = #{card.desc} , </if>" +
+                " <if test=\"card.desc != null\"> `desc` = #{card.desc} , </if>" +
                 " <if test=\"card.feature != null\"> feature = #{card.feature} , </if>" +
                 " <if test=\"card.remark != null\"> remark = #{card.remark} , </if>" +
                 " <if test=\"card.status != null\"> status = #{card.status} , </if>" +

@@ -59,7 +59,7 @@ public class WechatUtils {
     public static Map<String, String> prePayOrder(Map<String, String> input) {
         try {
             String openid = input.get("openId");
-            String body = "健身会员卡购买";
+            String body = "健身会员卡1分钱购买";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
