@@ -13,13 +13,13 @@ public class ProcessInstanceTaskService {
 
     @Scheduled(cron = "* * * * * *")
     public void getProcessInstance(){
-        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
+//        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
         try {
             Thread.sleep(2100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.info("end getProcessInstance scheduled!");
+//        logger.info("end getProcessInstance scheduled!");
     }
 
 }
