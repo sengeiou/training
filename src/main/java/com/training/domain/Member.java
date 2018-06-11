@@ -65,5 +65,7 @@ public class Member {
 
     private String cardType;
 
+    private String staffId;
+
 }
 

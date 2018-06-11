@@ -213,7 +213,7 @@ public class MemberService {
                 memberEntity.setOpenId(openId);
                 memberEntity.setType("M");
                 StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
-                if(staffDB!=null){
+                if( staffDB!=null && StringUtils.isEmpty(staffDB.getOpenId())){
                     memberEntity.setType("C");
                     memberEntity.setName(staffDB.getCustname());
                     memberEntity.setStoreId(staffDB.getStoreId());
@@ -371,6 +371,39 @@ public class MemberService {
         }
 
         return ResponseUtil.success(types);
+    }
+
+
+    /**
+     * 将微信用户设置成教练
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    public ResponseEntity<String> bindCoach(Member member) {
+        if(member==null||StringUtils.isEmpty(member.getMemberId())||StringUtils.isEmpty(member.getStaffId())) {
+            return ResponseUtil.exception("参数错误!");
+        }
+        logger.info("  bindCoach  getMemberId = {} , getStaffId = {} ",member.getMemberId(),member.getStaffId());
+        MemberEntity memberEntity = this.getById(member.getMemberId());
+        StaffEntity staffEntity = staffDao.getByPhone(member.getStaffId());
+        if(memberEntity==null||staffEntity==null) {
+            return ResponseUtil.exception("设置教练异常!");
+        }
+        staffEntity.setOpenId(member.getOpenId());
+        int n = staffDao.bind(staffEntity);
+        logger.info("  bindCoach  staffDao.bind  n = {} ",n);
+        MemberEntity memberUpdate = new MemberEntity();
+        memberUpdate.setMemberId(memberEntity.getMemberId());
+        memberUpdate.setPhone(staffEntity.getPhone());
+        memberUpdate.setName(staffEntity.getCustname());
+        memberUpdate.setStoreId(staffEntity.getStoreId());
+        memberUpdate.setType("C");
+        n = memberDao.update(memberUpdate);
+        logger.info("  bindCoach  memberDao.update  n = {} ",n);
+        if(n>1){
+            return ResponseUtil.success("设置教练成功");
+        }
+        return ResponseUtil.exception("设置教练失败!");
     }
 
 }
