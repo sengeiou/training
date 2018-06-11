@@ -159,9 +159,9 @@ public class LessonService {
         page.setPageSize(100);
         List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
         logger.info(" quertPersonalSchedule  trainingEntityList.size() = {} ",trainingEntityList.size());
-        for (TrainingEntity trainingEntity:trainingEntityList){
-            logger.info(" trainingEntity = {} ",trainingEntity);
-        }
+//        for (TrainingEntity trainingEntity:trainingEntityList){
+//            logger.info(" trainingEntity = {} ",trainingEntity);
+//        }
         for (int i = 9; i < 22; i++) {
             Lesson lesson = new Lesson();
             lesson.setType("P");
@@ -175,7 +175,7 @@ public class LessonService {
             lesson.setTrainingId("");
             lesson.setTrainingList(new ArrayList<>());
             for (TrainingEntity trainingEntity:trainingEntityList){
-//                logger.info(" trainingEntity = {} ",trainingEntity);
+                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , memberRequest.getMemberId() , trainingEntity.getMemberId());
                 if(trainingEntity.getStartHour()==lesson.getStartHour()){
                     lesson.setQuota(0);
                     if(trainingEntity.getMemberId().equals(memberRequest.getMemberId())){

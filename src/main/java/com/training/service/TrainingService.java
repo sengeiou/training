@@ -123,11 +123,14 @@ public class TrainingService {
             return ResponseUtil.success("参数错误type is null");
         }
         query.setMemberId(memberToken.getMemberId());
+        query.setStatus(0);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(1000);
         List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
         logger.info(" =================    list  trainingList = {}",trainingList.size());
-
+        for (TrainingEntity trainingEntity:trainingList){
+            logger.info(" =================   trainingEntity = {} ",trainingEntity);
+        }
         return ResponseUtil.success(trainingList);
     }
 
