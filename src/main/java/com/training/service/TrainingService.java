@@ -34,6 +34,8 @@ public class TrainingService {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private StoreDao storeDao;
     /**
      * 新增实体
      * @param training
@@ -155,7 +157,11 @@ public class TrainingService {
         }
         Training training = new Training();
         BeanUtils.copyProperties(trainingEntity,training);
-        training.setStoreName("测试场馆123");
+        StoreEntity storeEntity = storeDao.getById(trainingEntity.getStoreId());
+        training.setStoreName("未知场馆");
+        if(storeEntity!=null){
+            training.setStoreName(storeEntity.getName());
+        }
         MemberEntity memberEntity = memberService.getById(trainingEntity.getMemberId());
         Member member = new Member();
         BeanUtils.copyProperties(memberEntity,member);
