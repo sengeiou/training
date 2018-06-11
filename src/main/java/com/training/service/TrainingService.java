@@ -113,13 +113,17 @@ public class TrainingService {
     }
 
     public ResponseEntity<String> list(TrainingQuery query) {
+        Member memberToken = RequestContextHelper.getMember();
         if(StringUtils.isEmpty(query.getStartDate())||StringUtils.isEmpty(query.getEndDate())){
             return ResponseUtil.success("请输入起始日期和结束日期");
         }
-        List<Training> trainingList = new ArrayList<>();
-        Training training = new Training();
-        training.setLessonDate(query.getStartDate());
-        trainingList.add(training);
+        if(StringUtils.isEmpty(query.getType())){
+            return ResponseUtil.success("参数错误type is null");
+        }
+        query.setMemberId(memberToken.getMemberId());
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(1000);
+        List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
         return ResponseUtil.success(trainingList);
     }
 

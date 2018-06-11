@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -379,17 +380,21 @@ public class MemberService {
      * @param member
      * Created by huai23 on 2018-05-26 13:39:33.
      */
+    @Transactional
     public ResponseEntity<String> bindCoach(Member member) {
         if(member==null||StringUtils.isEmpty(member.getMemberId())||StringUtils.isEmpty(member.getStaffId())) {
             return ResponseUtil.exception("参数错误!");
         }
         logger.info("  bindCoach  getMemberId = {} , getStaffId = {} ",member.getMemberId(),member.getStaffId());
         MemberEntity memberEntity = this.getById(member.getMemberId());
-        StaffEntity staffEntity = staffDao.getByPhone(member.getStaffId());
+        if(StringUtils.isEmpty(memberEntity.getOpenId())){
+            return ResponseUtil.exception("该会员不是微信用户，不能设置成教练!");
+        }
+        StaffEntity staffEntity = staffDao.getById(member.getStaffId());
         if(memberEntity==null||staffEntity==null) {
             return ResponseUtil.exception("设置教练异常!");
         }
-        staffEntity.setOpenId(member.getOpenId());
+        staffEntity.setOpenId(memberEntity.getOpenId());
         int n = staffDao.bind(staffEntity);
         logger.info("  bindCoach  staffDao.bind  n = {} ",n);
         MemberEntity memberUpdate = new MemberEntity();
@@ -400,7 +405,7 @@ public class MemberService {
         memberUpdate.setType("C");
         n = memberDao.update(memberUpdate);
         logger.info("  bindCoach  memberDao.update  n = {} ",n);
-        if(n>1){
+        if(n>0){
             return ResponseUtil.success("设置教练成功");
         }
         return ResponseUtil.exception("设置教练失败!");

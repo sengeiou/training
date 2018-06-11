@@ -71,6 +71,8 @@ public interface TrainingRepository {
             " <if test=\"query.startHour != null\"> AND start_hour = #{query.startHour} </if>" +
             " <if test=\"query.endHour != null\"> AND end_hour = #{query.endHour} </if>" +
             " <if test=\"query.trainingData != null\"> AND training_data = #{query.trainingData} </if>" +
+            " <if test=\"query.startDate != null\"> AND lessonDate &gt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND lessonDate &lt;= #{query.endDate} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -90,6 +92,8 @@ public interface TrainingRepository {
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.cardType != null\"> AND card_type = #{query.cardType} </if>" +
             " <if test=\"query.lessonDate != null\"> AND lesson_date = #{query.lessonDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND lessonDate &gt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND lessonDate &lt;= #{query.endDate} </if>" +
             " <if test=\"query.startHour != null\"> AND start_hour = #{query.startHour} </if>" +
             " <if test=\"query.endHour != null\"> AND end_hour = #{query.endHour} </if>" +
             " <if test=\"query.trainingData != null\"> AND training_data = #{query.trainingData} </if>" +
