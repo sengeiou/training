@@ -8,6 +8,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -17,6 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableTransactionManagement
 @ImportResource("classpath:META-INF/spring/spring-config.xml")
 @EnableCaching
+@EnableScheduling
 public class ManApplication extends SpringBootServletInitializer {
 
     @Override
