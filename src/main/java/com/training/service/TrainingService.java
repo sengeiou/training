@@ -126,6 +126,8 @@ public class TrainingService {
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(1000);
         List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
+        logger.info(" =================    list  trainingList = {}",trainingList.size());
+
         return ResponseUtil.success(trainingList);
     }
 

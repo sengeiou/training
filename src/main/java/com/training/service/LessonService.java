@@ -193,7 +193,7 @@ public class LessonService {
         }
 
         for (Lesson lesson:lessonList){
-            logger.info(" lesson = {} ",lesson);
+//            logger.info(" lesson = {} ",lesson);
         }
 
         return lessonList;
