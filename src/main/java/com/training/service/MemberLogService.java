@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -32,7 +33,8 @@ public class MemberLogService {
      * Created by huai23 on 2018-06-09 09:16:23.
      */ 
     public ResponseEntity<String> add(MemberLogEntity memberLog){
-        User user = RequestContextHelper.getUser();
+        Staff staff = RequestContextHelper.getStaff();
+        memberLog.setStaffId(staff.getStaffId());
         int n = memberLogDao.add(memberLog);
         if(n==1){
             return ResponseUtil.success("添加成功");
