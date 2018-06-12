@@ -19,6 +19,8 @@ public class Card {
 
     private String type;
 
+    private String typeName;
+
     private String price;
 
     private Integer total;

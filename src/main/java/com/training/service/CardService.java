@@ -89,6 +89,11 @@ public class CardService {
         }
         Card card = new Card();
         BeanUtils.copyProperties(cardEntity,card);
+        String type = "-";
+        if(CardTypeEnum.getEnumByKey(card.getType())!=null){
+            type = CardTypeEnum.getEnumByKey(card.getType()).getDesc();
+        }
+        card.setTypeName(type);
         return card;
     }
 

@@ -88,6 +88,7 @@ public class WechatController {
             CardEntity card = cardService.getById(cardId);
             MemberEntity memberEntity = memberService.getByOpenId(openId);
             String coachId = "15286294636688c76e35ebe6448be8b84c64bd7fca9cc";
+            coachId = "1";
 
             MemberEntity coachEntity = memberService.getById(coachId);
 
