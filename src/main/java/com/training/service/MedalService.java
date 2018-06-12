@@ -4,6 +4,7 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class MedalService {
      */ 
     public ResponseEntity<String> add(MedalEntity medal){
         User user = RequestContextHelper.getUser();
+        medal.setMedalId(IDUtils.getId());
         int n = medalDao.add(medal);
         if(n==1){
             return ResponseUtil.success("添加成功");
