@@ -10,7 +10,7 @@ import java.util.Map;
 public enum CardTypeEnum {
 
     PT("PT","私教次卡"),
-    PM("PT","私教月卡"),
+    PM("PM","私教月卡"),
     TT("TT","团体次卡"),
     TM("TM","团体月卡"),
     TY("TY","体验卡"),
