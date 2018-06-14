@@ -143,5 +143,16 @@ public class MemberRestController {
         return memberService.getValidLessonType(memberId);
     }
 
+    /**
+     * 根据实体更新
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "modify", method = RequestMethod.POST)
+    public ResponseEntity<String> modify(@RequestBody MemberEntity member,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  modify  member = {}",member);
+        return memberService.modify(member);
+    }
+
 }
 

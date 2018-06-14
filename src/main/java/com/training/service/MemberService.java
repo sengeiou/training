@@ -411,5 +411,40 @@ public class MemberService {
         return ResponseUtil.exception("设置教练失败!");
     }
 
+    /**
+     * 根据实体更新
+     * @param member
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public  ResponseEntity<String> modify(MemberEntity member){
+        Member memberRequest = RequestContextHelper.getMember();
+        if(memberRequest==null||StringUtils.isEmpty(memberRequest.getMemberId())){
+            return ResponseUtil.exception("修改异常");
+        }
+        boolean flag = false;
+        MemberEntity memberUpdate = new MemberEntity();
+        memberUpdate.setMemberId(member.getMemberId());
+        if(memberRequest.getHeight()!=null){
+            memberUpdate.setHeight(member.getHeight());
+            flag = true;
+        }
+        if(memberRequest.getAge()!=null){
+            memberUpdate.setAge(member.getAge());
+            flag = true;
+        }
+        if(memberRequest.getGender()!=null){
+            memberUpdate.setGender(member.getGender());
+            flag = true;
+        }
+
+        if(flag){
+            int n = memberDao.update(memberUpdate);
+            if(n==1){
+                return ResponseUtil.success("修改成功");
+            }
+        }
+        return ResponseUtil.exception("修改完成");
+    }
+
 }
 
