@@ -51,5 +51,7 @@ public class Staff {
 
     private Integer kpi;
 
+    private String newPassword;
+
 }
 

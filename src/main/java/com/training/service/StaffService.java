@@ -5,6 +5,7 @@ import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -139,6 +140,39 @@ public class StaffService {
     public int bind(StaffEntity staff){
         int n = staffDao.bind(staff);
         return n;
+    }
+
+    /**
+     * 根据实体更新
+     * @param staff
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    public  ResponseEntity<String> updatePwd(Staff staff){
+        Staff staffRequest = RequestContextHelper.getStaff();
+        if(staffRequest==null||staff==null|| StringUtils.isEmpty(staff.getPassword())){
+            return ResponseUtil.exception("修改异常");
+        }
+        if(StringUtils.isEmpty(staff.getPassword())){
+            return ResponseUtil.exception("原密码不能为空");
+        }
+        if(StringUtils.isEmpty(staff.getNewPassword())){
+            return ResponseUtil.exception("新密码不能为空");
+        }
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        if(staffDB==null){
+            return ResponseUtil.exception("修改异常");
+        }
+        if(!staffDB.getPassword().equals(staff.getPassword())){
+            return ResponseUtil.exception("原密码错误");
+        }
+        StaffEntity staffUpdate = new StaffEntity();
+        staffUpdate.setStaffId(staffRequest.getStaffId());
+        staffUpdate.setPassword(staff.getNewPassword());
+        int n = staffDao.update(staffUpdate);
+        if(n==1){
+            return ResponseUtil.success("修改成功");
+        }
+        return ResponseUtil.exception("修改失败");
     }
 
 }
