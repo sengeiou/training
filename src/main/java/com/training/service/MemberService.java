@@ -418,25 +418,27 @@ public class MemberService {
      */
     public  ResponseEntity<String> modify(MemberEntity member){
         Member memberRequest = RequestContextHelper.getMember();
+        logger.info("  modify  memberRequest = {}",memberRequest);
+        logger.info("  modify  member = {}",member);
         if(memberRequest==null||StringUtils.isEmpty(memberRequest.getMemberId())){
             return ResponseUtil.exception("修改异常");
         }
         boolean flag = false;
         MemberEntity memberUpdate = new MemberEntity();
-        memberUpdate.setMemberId(member.getMemberId());
-        if(memberRequest.getHeight()!=null){
+        memberUpdate.setMemberId(memberRequest.getMemberId());
+        if(member.getHeight()!=null){
             memberUpdate.setHeight(member.getHeight());
             flag = true;
         }
-        if(memberRequest.getAge()!=null){
+        if(member.getAge()!=null){
             memberUpdate.setAge(member.getAge());
             flag = true;
         }
-        if(memberRequest.getGender()!=null){
+        if(member.getGender()!=null){
             memberUpdate.setGender(member.getGender());
             flag = true;
         }
-
+        logger.info("  modify  memberUpdate = {}",memberUpdate);
         if(flag){
             int n = memberDao.update(memberUpdate);
             if(n==1){
