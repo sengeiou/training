@@ -443,7 +443,7 @@ public class MemberService {
                 return ResponseUtil.success("修改成功");
             }
         }
-        return ResponseUtil.exception("修改完成");
+        return ResponseUtil.success("修改完成");
     }
 
 }
