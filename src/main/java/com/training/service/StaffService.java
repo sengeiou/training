@@ -149,7 +149,9 @@ public class StaffService {
      */
     public  ResponseEntity<String> updatePwd(Staff staff){
         Staff staffRequest = RequestContextHelper.getStaff();
-        if(staffRequest==null||staff==null|| StringUtils.isEmpty(staff.getPassword())){
+        logger.info("  updatePwd  staffRequest = {}",staffRequest);
+        logger.info("  updatePwd  staff = {}",staff);
+        if(staffRequest==null||staff==null){
             return ResponseUtil.exception("修改异常");
         }
         if(StringUtils.isEmpty(staff.getPassword())){
