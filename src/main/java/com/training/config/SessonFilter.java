@@ -90,7 +90,7 @@ public class SessonFilter implements Filter {
                     return;
                 }
                 String json = claims.getSubject();
-                if(uri.indexOf("/manage/")>=0){
+                if(uri.indexOf("/manage/")>=0||uri.indexOf("/lessonSetting/")>=0){
                     Staff staff = JSONObject.parseObject(json, Staff.class);
                     req.setAttribute("staff",staff);
                 }else{

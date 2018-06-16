@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.LessonSetting;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -49,7 +50,7 @@ public class LessonSettingRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute LessonSettingQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<LessonSettingEntity> page = lessonSettingService.find(query,pageRequest);
+        Page<LessonSetting> page = lessonSettingService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
