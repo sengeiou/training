@@ -149,6 +149,9 @@ public class LessonService {
             return lessonList;
         }
         Member memberRequest = RequestContextHelper.getMember();
+        if(StringUtils.isEmpty(query.getMemberId())){
+            query.setMemberId(memberRequest.getMemberId());
+        }
         logger.info(" quertPersonalSchedule  memberRequest = {} ",memberRequest);
         logger.info(" quertPersonalSchedule  query = {} ",query);
         TrainingQuery trainingQuery = new TrainingQuery();
@@ -175,10 +178,10 @@ public class LessonService {
             lesson.setTrainingId("");
             lesson.setTrainingList(new ArrayList<>());
             for (TrainingEntity trainingEntity:trainingEntityList){
-                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , memberRequest.getMemberId() , trainingEntity.getMemberId());
+                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
                 if(trainingEntity.getStartHour()==lesson.getStartHour()){
                     lesson.setQuota(0);
-                    if(trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
+                    if(trainingEntity.getMemberId().equals(query.getMemberId())){
                         lesson.setMyOrder("1");
                         lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
                         lesson.setTrainingId(trainingEntity.getTrainingId());
@@ -257,6 +260,9 @@ public class LessonService {
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" order  lesson = {}",lesson);
+        if(StringUtils.isEmpty(lesson.getMemberId())){
+            lesson.setMemberId(memberRequest.getMemberId());
+        }
         String lessonId = lesson.getLessonId();
         String[] ids = lessonId.split(",");
         String type = ids[0];
@@ -265,13 +271,13 @@ public class LessonService {
         String endHour = ids[3];
         String coachId = ids[4];
 
-        MemberCardEntity memberCardEntity = memberCardService.getCurrentUseCard(memberRequest.getMemberId(),type);
+        MemberCardEntity memberCardEntity = memberCardService.getCurrentUseCard(lesson.getMemberId(),type);
         if(memberCardEntity==null){
             return ResponseUtil.exception("约课失败!无可用课程卡!请先购卡");
         }
         TrainingEntity  trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(IDUtils.getId());
-        trainingEntity.setMemberId(memberRequest.getMemberId());
+        trainingEntity.setMemberId(lesson.getMemberId());
         trainingEntity.setCoachId(coachId);
         trainingEntity.setStartHour(Integer.parseInt(startHour));
         trainingEntity.setEndHour(Integer.parseInt(endHour));
@@ -294,13 +300,16 @@ public class LessonService {
         logger.info(" cancel  memberRequest = {}",memberRequest);
         logger.info(" cancel  memberRequest = {}",lesson);
 
+        if(StringUtils.isEmpty(lesson.getMemberId())){
+            lesson.setMemberId(memberRequest.getMemberId());
+        }
 
         TrainingEntity trainingEntity = trainingDao.getById(lesson.getTrainingId());
         if(trainingEntity==null){
             return ResponseUtil.exception("取消约课异常!");
         }
 
-        if(trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
+        if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
             TrainingEntity trainingUpdate = new TrainingEntity();
             trainingUpdate.setTrainingId(trainingEntity.getTrainingId());
             trainingUpdate.setStatus(-1);

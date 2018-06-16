@@ -46,6 +46,7 @@ public class LessonQuery {
 
     private Date modified;
 
+    private String memberId;
 
 }
 

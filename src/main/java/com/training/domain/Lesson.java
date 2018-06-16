@@ -55,4 +55,6 @@ public class Lesson {
 
     private String trainingId;
 
+    private String memberId;
+
 }

@@ -139,7 +139,6 @@ public class MemberRestController {
     @RequestMapping (value = "getValidLessonType/{memberId}", method = RequestMethod.GET)
     public ResponseEntity<String> getValidLessonType(@PathVariable String memberId,HttpServletRequest request, HttpServletResponse response){
         logger.info(" memberRestController  getValidLessonType  memberId = {}",memberId);
-        Member memberRequest = RequestContextHelper.getMember();
         return memberService.getValidLessonType(memberId);
     }
 
