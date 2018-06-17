@@ -301,6 +301,7 @@ public class MemberService {
             cardTypeSet.add(cardType);
             Lesson lesson = new Lesson();
             lesson.setType(cardType);
+            lesson.setCardNo(memberCardEntity.getCardNo());
 //            CardEntity cardEntity = cardDao.getById(memberCardEntity.getCardId());
 //            MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
             lesson.setCoachId("");

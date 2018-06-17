@@ -64,8 +64,8 @@ public interface LessonSettingRepository {
             " <if test=\"query.classroom != null\"> AND classroom = #{query.classroom} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.startHour != null\"> AND start_hour = #{query.startHour} </if>" +
             " <if test=\"query.endHour != null\"> AND end_hour = #{query.endHour} </if>" +
             " <if test=\"query.quotaMin != null\"> AND quota_min = #{query.quotaMin} </if>" +
