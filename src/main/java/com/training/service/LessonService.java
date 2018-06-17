@@ -54,6 +54,9 @@ public class LessonService {
     @Autowired
     private StaffDao staffDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
     /**
      * 新增实体
      * @param lesson
@@ -363,7 +366,17 @@ public class LessonService {
         TrainingEntity  trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(IDUtils.getId());
         trainingEntity.setMemberId(lesson.getMemberId());
-        trainingEntity.setCoachId(lessonSettingEntity.getCoachId()); //这里是staffId
+
+        StaffEntity staffEntity = staffDao.getById(lessonSettingEntity.getCoachId());
+
+        if(StringUtils.isEmpty(staffEntity.getOpenId())){
+            return ResponseUtil.exception("约课失败!教练设置异常!");
+        }
+        MemberEntity memberEntity = memberDao.getByOpenId(staffEntity.getOpenId());
+        if(memberEntity==null){
+            return ResponseUtil.exception("约课失败!教练设置异常");
+        }
+        trainingEntity.setCoachId(memberEntity.getMemberId());
         trainingEntity.setStartHour(lessonSettingEntity.getStartHour());
         trainingEntity.setEndHour(lessonSettingEntity.getEndHour());
         trainingEntity.setLessonDate(lesson.getLessonDate());
