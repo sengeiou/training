@@ -52,5 +52,7 @@ public class Training {
 
     private Member member;
 
+    private String qrCode;
+
 }
 

@@ -1,6 +1,7 @@
 package com.training.api;
 
 import com.training.domain.Member;
+import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -130,7 +131,6 @@ public class MemberRestController {
         return memberService.bind(member);
     }
 
-
     /**
      * 根据ID查询实体
      * @param memberId
@@ -151,6 +151,17 @@ public class MemberRestController {
     public ResponseEntity<String> modify(@RequestBody MemberEntity member,HttpServletRequest request, HttpServletResponse response){
         logger.info("  modify  member = {}",member);
         return memberService.modify(member);
+    }
+
+    /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "signIn", method = RequestMethod.POST)
+    public ResponseEntity<String> signIn(@RequestBody Training training, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  signIn  training = {}",training);
+        return memberService.signIn(training);
     }
 
 }

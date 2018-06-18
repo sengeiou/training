@@ -6,6 +6,7 @@ import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.QrCodeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +86,7 @@ public class TrainingService {
     public Training getById(String id){
         TrainingEntity trainingDB = trainingDao.getById(id);
         Training training = transferTraining(trainingDB);
+        training.setQrCode(QrCodeUtils.getBase64Str(training.getTrainingId()));
         return training;
     }
 

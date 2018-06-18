@@ -449,5 +449,23 @@ public class MemberService {
         return ResponseUtil.success("修改完成");
     }
 
+    /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public  ResponseEntity<String> signIn(Training training) {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info("  signIn  memberRequest = {}", memberRequest);
+        logger.info("  signIn  training = {}", training);
+
+
+//        int n = memberDao.update(memberUpdate);
+//        if(n==1){
+            return ResponseUtil.success("签到成功");
+//        }
+//        return ResponseUtil.exception("签到失败");
+    }
+
 }
 
