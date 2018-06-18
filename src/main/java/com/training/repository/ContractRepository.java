@@ -77,8 +77,8 @@ public interface ContractRepository {
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.payType != null\"> AND pay_type = #{query.payType} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.coach != null\"> AND coach = #{query.coach} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
@@ -103,8 +103,8 @@ public interface ContractRepository {
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.payType != null\"> AND pay_type = #{query.payType} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.coach != null\"> AND coach = #{query.coach} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +

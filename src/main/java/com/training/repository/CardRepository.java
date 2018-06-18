@@ -60,8 +60,8 @@ public interface CardRepository {
             " <if test=\"query.price != null\"> AND price = #{query.price} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.desc != null\"> AND `desc` = #{query.desc} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
@@ -80,8 +80,8 @@ public interface CardRepository {
             " <if test=\"query.price != null\"> AND price = #{query.price} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.desc != null\"> AND `desc` = #{query.desc} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +

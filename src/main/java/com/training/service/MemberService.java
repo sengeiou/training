@@ -11,8 +11,7 @@ import com.training.domain.Member;
 import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
-import com.training.util.IDUtils;
-import com.training.util.JwtUtil;
+import com.training.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -21,8 +20,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.training.util.ResponseUtil;
-import com.training.util.RequestContextHelper;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -261,22 +258,37 @@ public class MemberService {
         MemberCardQuery query = new MemberCardQuery();
         query.setMemberId(memberId);
         query.setStatus(0);
+        query.setStartDate(ut.currentDate());
+        query.setEndDate(ut.currentDate());
         PageRequest page = new PageRequest();
         page.setPageSize(100);
         List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+        List<MemberCardEntity> validCardList = new ArrayList<>();
+        for (MemberCardEntity memberCardEntity : cardList){
 
-        if(CollectionUtils.isEmpty(cardList)){
+
+            validCardList.add(memberCardEntity);
+        }
+
+        if(CollectionUtils.isEmpty(validCardList)){
             return ResponseUtil.exception("无可用课时,请先购卡!");
         }
 
         Set<String> cardTypeSet = new HashSet();
         List<Lesson>  types = new ArrayList<>();
-        for (MemberCardEntity memberCardEntity : cardList){
+        for (MemberCardEntity memberCardEntity : validCardList){
             String cardType = memberCardEntity.getType().substring(0,1);
+            // 体验卡等同于私教次卡
+            if(memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                cardType = "P";
+            }
             if(!cardType.equals("P")){
                 continue;
             }
             if(cardTypeSet.contains(cardType)){
+                continue;
+            }
+            if(memberCardEntity.getCount()<1){
                 continue;
             }
             cardTypeSet.add(cardType);
@@ -289,11 +301,12 @@ public class MemberService {
             types.add(lesson);
         }
 
-        for (MemberCardEntity memberCardEntity : cardList){
-            if(memberCardEntity.getType().equals("TY")){
-                continue;
-            }
+        for (MemberCardEntity memberCardEntity : validCardList){
             String cardType = memberCardEntity.getType().substring(0,1);
+            // 体验卡等同于团体次卡
+            if(memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                cardType = "T";
+            }
             if(!cardType.equals("T")){
                 continue;
             }
@@ -312,7 +325,7 @@ public class MemberService {
             types.add(lesson);
         }
 
-        for (MemberCardEntity memberCardEntity : cardList){
+        for (MemberCardEntity memberCardEntity : validCardList){
             String cardType = memberCardEntity.getType().substring(0,1);
             if(!cardType.equals("S")){
                 continue;

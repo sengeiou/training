@@ -74,8 +74,8 @@ public interface MemberCardRepository {
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.delay != null\"> AND delay = #{query.delay} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
@@ -83,7 +83,7 @@ public interface MemberCardRepository {
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id asc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCardEntity> find(@Param("query") MemberCardQuery memberCard , @Param("page") PageRequest page);
 
@@ -99,8 +99,8 @@ public interface MemberCardRepository {
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.delay != null\"> AND delay = #{query.delay} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
