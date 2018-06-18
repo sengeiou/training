@@ -57,6 +57,9 @@ public class LessonService {
     @Autowired
     private MemberDao memberDao;
 
+    @Autowired
+    private CoachRestDao coachRestDao;
+
     /**
      * 新增实体
      * @param lesson
@@ -175,6 +178,37 @@ public class LessonService {
 //        for (TrainingEntity trainingEntity:trainingEntityList){
 //            logger.info(" trainingEntity = {} ",trainingEntity);
 //        }
+
+        CoachRestQuery coachRestQuery = new CoachRestQuery();
+        coachRestQuery.setCoachId(query.getCoachId());
+
+        List<CoachRestEntity> coachRestEntityList = coachRestDao.find(coachRestQuery,page);
+        List<CoachRestEntity> filterCoachRestEntityList = new ArrayList<>();
+        for (CoachRestEntity coachRestEntity:coachRestEntityList){
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.ONCE.getKey())){
+                if(coachRestEntity.getRestDate().equals(query.getLessonDate())){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.DAY.getKey())){
+                filterCoachRestEntityList.add(coachRestEntity);
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.WEEK.getKey())){
+                int index1 = ut.daysOfWeek(coachRestEntity.getRestDate());
+                int index2 = ut.daysOfWeek(query.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.MONTH.getKey())){
+                int index1 = ut.daysOfMonth(coachRestEntity.getRestDate());
+                int index2 = ut.daysOfMonth(query.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+        }
+        logger.info(" quertPersonalSchedule  filterCoachRestEntityList.size() = {} ",filterCoachRestEntityList.size());
         for (int i = 9; i < 22; i++) {
             Lesson lesson = new Lesson();
             lesson.setType("P");
@@ -199,9 +233,14 @@ public class LessonService {
                     }
                 }
             }
-            lesson.setStatus(0);
+            lesson.setStatus(0);  // 0 - 正常 ，   -1 - 不可约
+            for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
+                if(coachRestEntity.getStartHour() <= i && coachRestEntity.getEndHour() >= i){
+                    lesson.setStatus(-1);
+                    break;
+                }
+            }
             lesson.setType(LessonTypeEnum.P.getKey());
-
 //            if(i%3==0){
 //                lesson.setStatus(-1);
 //            }
@@ -368,6 +407,13 @@ public class LessonService {
             return ResponseUtil.exception("约课失败!无可用课程卡!请先购卡");
         }
 
+        if(lesson.getLessonDate().equals(ut.currentDate())){
+            int currentHour = ut.currentHour();
+            if(currentHour>2100||currentHour>=(lesson.getStartHour()-600)){
+                return ResponseUtil.exception("约课失败!已过约课时间!");
+            }
+        }
+
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(lesson.getLessonDate());
         trainingQuery.setLessonId(lessonId);
@@ -425,19 +471,42 @@ public class LessonService {
             return ResponseUtil.exception("约课失败!无可用课程卡!请先购卡");
         }
 
+        if(lesson.getLessonDate()==null){
+            return ResponseUtil.exception("约课失败!约课日期异常");
+        }
+
+        if(lesson.getLessonDate().equals(ut.currentDate())){
+            int currentHour = ut.currentHour();
+            if(currentHour>2100||currentHour>=lesson.getStartHour()){
+                return ResponseUtil.exception("约课失败!已过约课时间!");
+            }
+        }
 
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(lesson.getLessonDate());
         trainingQuery.setLessonId(lessonId);
-        trainingQuery.setMemberId(lesson.getMemberId());
+//        trainingQuery.setMemberId(lesson.getMemberId());
         trainingQuery.setType(LessonTypeEnum.P.getKey());
         trainingQuery.setStatus(0);
         PageRequest page = new PageRequest();
         page.setPageSize(100);
         List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
         logger.info(" orderPersonal  trainingEntityList.size() = {} ",trainingEntityList.size());
-        if(trainingEntityList.size()>0){
-            return ResponseUtil.exception("约课失败!您已预约此时段的课程!不能重复预约!");
+
+        for (TrainingEntity trainingEntity : trainingEntityList){
+            if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
+                return ResponseUtil.exception("约课失败!您已预约此时段的课程!不能重复预约!");
+            }
+        }
+        if(trainingEntityList.size()==1){
+            if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
+                return ResponseUtil.exception("该时段课程因属于双学员课程，只能再由一个私教月卡会员预约!您为私教次卡不能预约!");
+            }
+            TrainingEntity trainingEntity = trainingEntityList.get(0);
+            MemberCardEntity memberCard = memberCardDao.getById(trainingEntity.getCardNo());
+            if(memberCard.getType().equals(CardTypeEnum.PT.getKey())){
+                return ResponseUtil.exception("约课失败!该时段课程已约满!");
+            }
         }
 
         TrainingEntity  trainingEntity = new TrainingEntity();

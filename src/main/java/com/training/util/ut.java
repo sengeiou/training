@@ -107,6 +107,21 @@ public class ut {
 	public static String currentTime(){
 		return df_time.format(new Date());
 	};
+
+	/**
+	 *  获取当前系统时间
+	 *  字符串的格式�? �? yyyy-MM-dd HH:mm:ss
+	 * @param
+	 * @return
+	 *     add time �?2011-10-07
+	 *  modify time �?2011-10-07
+	 */
+	public static int currentHour(){
+		Calendar c = Calendar.getInstance();
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int minute = c.get(Calendar.MINUTE);
+		return hour*100+minute;
+	};
 	
 	public static String currentFileTime(){
 		return df_file_time.format(new Date());

@@ -124,8 +124,8 @@ public class TrainingService {
         if(StringUtils.isEmpty(query.getStartDate())||StringUtils.isEmpty(query.getEndDate())){
             return ResponseUtil.success("请输入起始日期和结束日期");
         }
-        if(StringUtils.isEmpty(query.getType())){
-            return ResponseUtil.success("参数错误type is null");
+        if(StringUtils.isNotEmpty(query.getMemberId())&&StringUtils.isEmpty(query.getType())){
+//            return ResponseUtil.success("参数错误type is null");
         }
         query.setMemberId(memberToken.getMemberId());
         query.setStatus(0);
