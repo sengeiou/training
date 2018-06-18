@@ -15,6 +15,7 @@ import java.util.UUID;
 public class QrCodeUtils {
 
     public static String getBase64Str(String text) {
+        System.out.println(" getBase64Str text = "+text);
         String base64Img = "";
         try {
             Qrcode testQrcode =new Qrcode();
@@ -22,6 +23,8 @@ public class QrCodeUtils {
             testQrcode.setQrcodeEncodeMode('B');
             testQrcode.setQrcodeVersion(7);
             byte[] d = text.getBytes("utf-8");
+            System.out.println(" getBase64Str d.length = "+d.length);
+
             BufferedImage image = new BufferedImage(98, 98, BufferedImage.TYPE_BYTE_BINARY);
             Graphics2D g = image.createGraphics();
             g.setBackground(Color.WHITE);
@@ -44,13 +47,18 @@ public class QrCodeUtils {
             ImageIO.write(image, "jpg", outputStream);
             BASE64Encoder encoder = new BASE64Encoder();
             base64Img = encoder.encode(outputStream.toByteArray());
+//            System.out.println(" base64Img="+base64Img);
 //            String html = "<img src= \"data:image/png;base64," + base64Img + "\" width=\"400\" height=\"400\"/>";
-//            System.out.println(html);
-            //        ImageIO.write(image,"jpg",new File("d:/qrcode.jpg")); //将其保存在C:/imageSort/targetPIC/下
+//            System.out.println(" html = "+html);
+//            ImageIO.write(image,"jpg",new File("d:/qrcode.jpg"));  //将其保存在C:/imageSort/targetPIC/下
         }catch (Exception e){
             e.printStackTrace();
         }
         return base64Img;
+    }
+
+    public static void main(String[] args) {
+        getBase64Str("https://trainingbj.huai23.com/sign_in?id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
 }

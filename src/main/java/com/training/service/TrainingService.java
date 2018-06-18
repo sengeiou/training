@@ -86,7 +86,10 @@ public class TrainingService {
     public Training getById(String id){
         TrainingEntity trainingDB = trainingDao.getById(id);
         Training training = transferTraining(trainingDB);
-        training.setQrCode(QrCodeUtils.getBase64Str(training.getTrainingId()));
+        String text = "https://trainingbj.huai23.com/sign_in?id="+training.getTrainingId();
+        String qrcode = QrCodeUtils.getBase64Str(text);
+        logger.info("  qrcode   indexOf = {} ",  qrcode.indexOf("\\r\\n"));
+        training.setQrCode(qrcode);
         return training;
     }
 
