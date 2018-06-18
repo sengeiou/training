@@ -1,13 +1,23 @@
 package com.training.admin.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.training.common.CardTypeEnum;
 import com.training.common.Const;
 import com.training.dao.*;
 import com.training.domain.MemberCard;
 import com.training.domain.Staff;
+import com.training.entity.MemberCardEntity;
+import com.training.entity.MemberEntity;
 import com.training.entity.StaffEntity;
+import com.training.service.CardService;
+import com.training.service.MemberCardService;
+import com.training.service.MemberService;
+import com.training.service.SysLogService;
+import com.training.util.IDUtils;
 import com.training.util.JwtUtil;
 import com.training.util.ResponseUtil;
+import com.training.util.ut;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +49,55 @@ public class AdminService {
     @Autowired
     private CardDao cardDao;
 
+    @Autowired
+    private SysLogService sysLogService;
+
+    @Autowired
+    private CardService cardService;
+
+    @Autowired
+    private MemberService memberService;
+
     public ResponseEntity<String> giveCard(MemberCard card) {
         logger.info(" AdminService  giveCard  card = {}",card);
-
-
-
-        return ResponseUtil.success("发卡成功");
+        if(StringUtils.isEmpty(card.getStaffId())){
+            return ResponseUtil.exception("获取教练员工ID异常");
+        }
+        if(StringUtils.isEmpty(card.getStartDate())||StringUtils.isEmpty(card.getEndDate())){
+            return ResponseUtil.exception("会员卡有效期不能为空！");
+        }
+        if(null==card.getTotal()){
+            return ResponseUtil.exception("会员卡可用次数不能为空！");
+        }
+        StaffEntity staffEntity = staffDao.getById(card.getStaffId());
+        if(staffEntity==null){
+            return ResponseUtil.exception("获取教练员工信息异常");
+        }
+        if(StringUtils.isEmpty(staffEntity.getOpenId())){
+            return ResponseUtil.exception("教练"+staffEntity.getCustname()+"未绑定微信账号，不能发卡");
+        }
+        MemberEntity coachEntity = memberService.getByOpenId(staffEntity.getOpenId());
+        if(coachEntity==null){
+            return ResponseUtil.exception("获取教练信息异常");
+        }
+        MemberCardEntity memberCardEntity = new MemberCardEntity();
+        memberCardEntity.setCardNo(IDUtils.getId());
+        memberCardEntity.setCardId("");
+        memberCardEntity.setCoachId(coachEntity.getMemberId());
+        memberCardEntity.setStoreId(coachEntity.getStoreId());
+        memberCardEntity.setMemberId(card.getMemberId());
+        memberCardEntity.setType(CardTypeEnum.TY.getKey());
+        memberCardEntity.setCount(card.getTotal());
+        memberCardEntity.setTotal(card.getTotal());
+        memberCardEntity.setDays(card.getDays());
+        memberCardEntity.setMoney("0");
+        memberCardEntity.setStartDate(card.getStartDate());
+        memberCardEntity.setEndDate(card.getEndDate());
+        int n = memberCardDao.add(memberCardEntity);
+        if(n > 0){
+            return ResponseUtil.exception("发卡成功");
+        }
+        return ResponseUtil.exception("发卡失败");
     }
 }
 
