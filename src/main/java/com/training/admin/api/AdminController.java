@@ -1,6 +1,8 @@
 package com.training.admin.api;
 
+import com.training.admin.service.AdminService;
 import com.training.domain.Member;
+import com.training.domain.MemberCard;
 import com.training.domain.Staff;
 import com.training.service.MemberService;
 import com.training.service.StaffService;
@@ -29,6 +31,9 @@ public class AdminController {
     @Autowired
     private StaffService staffService;
 
+    @Autowired
+    private AdminService adminService;
+
     /**
      * 根据手机号码绑定会员
      * @param member
@@ -51,6 +56,18 @@ public class AdminController {
     public ResponseEntity<String> updatePwd(@RequestBody Staff staff, HttpServletRequest request, HttpServletResponse response){
         logger.info("  update  staff = {}",staff);
         return staffService.updatePwd(staff);
+    }
+
+
+    /**
+     * 根据实体更新
+     * @param card
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "giveCard", method = RequestMethod.POST)
+    public ResponseEntity<String> giveCard(@RequestBody MemberCard card, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  giveCard  card = {}",card);
+        return adminService.giveCard(card);
     }
 
 }
