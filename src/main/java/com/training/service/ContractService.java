@@ -32,7 +32,6 @@ public class ContractService {
      * Created by huai23 on 2018-06-06 21:52:04.
      */ 
     public ResponseEntity<String> add(ContractEntity contract){
-        User user = RequestContextHelper.getUser();
         int n = contractDao.add(contract);
         if(n==1){
             return ResponseUtil.success("添加成功");

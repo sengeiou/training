@@ -12,18 +12,27 @@ public class RequestContextHelper {
 
     public static User getUser(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        if(request.getAttribute("user")==null){
+            return null;
+        }
         User user = (User)request.getAttribute("user");
         return user;
     }
 
     public static Member getMember(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        if(request.getAttribute("member")==null){
+            return null;
+        }
         Member member = (Member)request.getAttribute("member");
         return member;
     }
 
     public static Staff getStaff(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        if(request.getAttribute("staff")==null){
+            return null;
+        }
         Staff staff = (Staff)request.getAttribute("staff");
         return staff;
     }
