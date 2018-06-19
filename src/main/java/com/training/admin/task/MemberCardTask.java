@@ -1,5 +1,6 @@
 package com.training.admin.task;
 
+import com.training.admin.service.CreateCardService;
 import com.training.admin.service.ProcessInstanceService;
 import com.training.common.ProcessCodeEnum;
 import com.training.util.ut;
@@ -10,20 +11,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProcessInstanceTask {
+public class MemberCardTask {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    ProcessInstanceService processInstanceService;
+    CreateCardService createCardService;
 
-    @Scheduled(cron = "0 0/30 * * * *")
-    public void getProcessInstance(){
-//        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
-        for (ProcessCodeEnum processCodeEnum : ProcessCodeEnum.values()){
-            processInstanceService.getConcract(processCodeEnum);
-        }
-//        logger.info("end getProcessInstance scheduled!");
+    @Scheduled(cron = "0 0/5 * * * *")
+    public void createCard(){
+        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
+        createCardService.createCard();
+        logger.info("end getProcessInstance scheduled!  time = {} ", ut.currentTime());
     }
 
 }

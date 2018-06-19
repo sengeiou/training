@@ -147,6 +147,9 @@ public interface MemberCardRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Update("<script> UPDATE member_card SET count = #{memberCard.count} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
+            "</script>")
+    int updateCount(@Param("memberCard") MemberCardEntity memberCard);
 
 }
 

@@ -451,6 +451,7 @@ public class LessonService {
         trainingEntity.setCardType(memberCardEntity.getType());
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
+            n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!");
@@ -524,6 +525,7 @@ public class LessonService {
         trainingEntity.setCardType(memberCardEntity.getType());
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
+            n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!该时段课程已约满!");
@@ -549,6 +551,7 @@ public class LessonService {
             trainingUpdate.setStatus(-1);
             int n = trainingDao.update(trainingUpdate);
             if(n==1){
+                n = memberCardDao.addCount(trainingEntity.getCardNo());
                 return ResponseUtil.success("取消成功!");
             }
         }

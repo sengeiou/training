@@ -83,5 +83,21 @@ public class MemberCardDao {
         return n;
     }
 
+    public int reduceCount(String cardNo) {
+        MemberCardEntity memberCardDB = memberCardRepository.getById(cardNo);
+        int count = memberCardDB.getCount()-1;
+        memberCardDB.setCount(count);
+        int n = memberCardRepository.updateCount(memberCardDB);
+        return n;
+    }
+
+    public int addCount(String cardNo) {
+        MemberCardEntity memberCardDB = memberCardRepository.getById(cardNo);
+        int count = memberCardDB.getCount()+1;
+        memberCardDB.setCount(count);
+        int n = memberCardRepository.updateCount(memberCardDB);
+        return n;
+    }
+
 }
 

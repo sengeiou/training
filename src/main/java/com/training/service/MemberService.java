@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.exceptions.ClientException;
 import com.training.common.*;
 import com.training.dao.CardDao;
 import com.training.dao.MemberCardDao;
@@ -182,11 +183,16 @@ public class MemberService {
         if(StringUtils.isEmpty(member.getPhone())||member.getPhone().length()!=11){
             return ResponseUtil.exception("手机号码输入有误!");
         }
-
         // todo 发送手机验证码
-
-
-        return ResponseUtil.success("发送验证码成功");
+        String code = IDUtils.getVerifyCode();
+        code = "1234";
+        try {
+            SmsUtil.sendCode(member.getPhone(),code);
+            return ResponseUtil.success("发送验证码成功");
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return ResponseUtil.exception("发送验证码失败");
+        }
     }
 
 
