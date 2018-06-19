@@ -48,8 +48,9 @@ public class LessonSettingService {
         User user = RequestContextHelper.getUser();
         StaffEntity staffEntity = staffDao.getById(lessonSetting.getCoachId());
         if(!staffEntity.getStoreId().equals(lessonSetting.getStoreId())){
-            return ResponseUtil.exception("教练与门店不匹配,请重新选择");
+            //return ResponseUtil.exception("教练与门店不匹配,请重新选择");
         }
+        lessonSetting.setStoreId(staffEntity.getStoreId());
         lessonSetting.setLessonId(IDUtils.getId());
         int n = lessonSettingDao.add(lessonSetting);
         if(n==1){

@@ -377,6 +377,12 @@ public class MemberService {
         if(memberEntity==null||staffEntity==null) {
             return ResponseUtil.exception("设置教练异常!");
         }
+
+        if(StringUtils.isNotEmpty(staffEntity.getOpenId())) {
+            MemberEntity memberNow = memberDao.getByOpenId(staffEntity.getOpenId());
+            return ResponseUtil.exception("设置教练异常!该员工已经绑定微信用户:"+memberNow.getName());
+        }
+
         staffEntity.setOpenId(memberEntity.getOpenId());
         int n = staffDao.bind(staffEntity);
         logger.info("  bindCoach  staffDao.bind  n = {} ",n);
