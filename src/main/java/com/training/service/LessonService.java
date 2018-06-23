@@ -60,6 +60,12 @@ public class LessonService {
     @Autowired
     private CoachRestDao coachRestDao;
 
+    @Autowired
+    private StaffService staffService;
+
+    @Autowired
+    private MemberService memberService;
+
     /**
      * 新增实体
      * @param lesson
@@ -169,7 +175,7 @@ public class LessonService {
         logger.info(" quertPersonalSchedule  query = {} ",query);
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(query.getLessonDate());
-        trainingQuery.setCoachId(query.getCoachId());
+        trainingQuery.setCoachId(memberService.getCoachIdByMemberId(query.getMemberId()));
         trainingQuery.setStatus(0);
         PageRequest page = new PageRequest();
         page.setPageSize(100);
@@ -180,9 +186,11 @@ public class LessonService {
 //        }
 
         CoachRestQuery coachRestQuery = new CoachRestQuery();
-        coachRestQuery.setCoachId(query.getCoachId());
+        coachRestQuery.setCoachId(memberService.getCoachIdByMemberId(query.getMemberId()));
 
         List<CoachRestEntity> coachRestEntityList = coachRestDao.find(coachRestQuery,page);
+        logger.info(" quertPersonalSchedule  coachRestEntityList.size() = {} ",coachRestEntityList.size());
+
         List<CoachRestEntity> filterCoachRestEntityList = new ArrayList<>();
         for (CoachRestEntity coachRestEntity:coachRestEntityList){
             if(coachRestEntity.getType().equals(CoachRestTypeEnum.ONCE.getKey())){
@@ -455,7 +463,6 @@ public class LessonService {
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!");
-
     }
 
     private ResponseEntity<String> orderPersonal(Lesson lesson) {
@@ -467,20 +474,34 @@ public class LessonService {
         String endHour = ids[3];
         String coachId = ids[4];
 
-        MemberCardEntity memberCardEntity = memberCardService.getCurrentUseCard(lesson.getMemberId(),type);
-        if(memberCardEntity==null){
-            return ResponseUtil.exception("约课失败!无可用课程卡!请先购卡");
+        if(StringUtils.isEmpty(lesson.getCardNo())){
+            return ResponseUtil.exception("约课失败!无课程卡ID!");
         }
-
         if(lesson.getLessonDate()==null){
             return ResponseUtil.exception("约课失败!约课日期异常");
         }
-
         if(lesson.getLessonDate().equals(ut.currentDate())){
             int currentHour = ut.currentHour();
             if(currentHour>2100||currentHour>=lesson.getStartHour()){
                 return ResponseUtil.exception("约课失败!已过约课时间!");
             }
+        }
+
+        MemberCardEntity memberCardEntity = memberCardDao.getById(lesson.getCardNo());
+        if(memberCardEntity==null){
+            return ResponseUtil.exception("约课失败!无此课程卡!");
+        }
+
+        if(ut.passDayByDate(ut.currentDate(),memberCardEntity.getStartDate())>0){
+            return ResponseUtil.exception("约课失败!课程卡未到使用期!");
+        }
+
+        if(ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())<0){
+            return ResponseUtil.exception("约课失败!课程卡已过期!");
+        }
+
+        if(memberCardEntity.getCount()<=0){
+            return ResponseUtil.exception("约课失败!课程卡已无可用次数!");
         }
 
         TrainingQuery trainingQuery = new TrainingQuery();
@@ -513,6 +534,11 @@ public class LessonService {
         TrainingEntity  trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(IDUtils.getId());
         trainingEntity.setMemberId(lesson.getMemberId());
+
+        coachId = memberService.getCoachIdByMemberId(lesson.getMemberId());
+        if(coachId==null){
+            return ResponseUtil.exception("约课失败!教练信息获取失败!");
+        }
         trainingEntity.setCoachId(coachId);
         trainingEntity.setStartHour(Integer.parseInt(startHour));
         trainingEntity.setEndHour(Integer.parseInt(endHour));
@@ -544,6 +570,19 @@ public class LessonService {
         if(trainingEntity==null){
             return ResponseUtil.exception("取消约课异常!");
         }
+
+        if(ut.passDayByDate(ut.currentDate(),trainingEntity.getLessonDate())<0){
+            return ResponseUtil.exception("取消约课失败!该课程已过期");
+        }
+
+        if(ut.currentDate().equals(trainingEntity.getLessonDate())){
+
+            if((trainingEntity.getStartHour()-ut.currentHour())<600){
+                return ResponseUtil.exception("取消约课失败!上课前6小时无法取消预约!");
+            }
+
+        }
+
 
         if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
             TrainingEntity trainingUpdate = new TrainingEntity();

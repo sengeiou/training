@@ -78,10 +78,16 @@ public class WechatService {
         JSONObject jo = new JSONObject();
         Member memberRequest = RequestContextHelper.getMember();
         String openId = memberRequest.getOpenId();
-//        String openId = "odERo5IjbhDlNzqBbjWKi39eUEcY";
+
+        String money = prePayOrder.getMoney();
+        double fee = ut.doubled(money);
+        int total_fee = (int)(fee*100);
         CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
+
         Map<String, String> param = new HashMap<>();
         param.put("openId",openId);
+        param.put("total_fee",""+total_fee);
+
         param.put("card",JSON.toJSONString(card));
         Map<String, String> result = wechatUtils.prePayOrder(param);
         if(MapUtils.isEmpty(result)){

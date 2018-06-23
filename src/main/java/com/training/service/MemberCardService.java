@@ -77,7 +77,7 @@ public class MemberCardService {
         return returnPage;
     }
 
-    private MemberCard transfer(MemberCardEntity memberCardEntity) {
+    public MemberCard transfer(MemberCardEntity memberCardEntity) {
         if(memberCardEntity==null){
             return null;
         }
@@ -85,12 +85,14 @@ public class MemberCardService {
         MemberCard memberCard = new MemberCard();
         BeanUtils.copyProperties(memberCardEntity,memberCard);
         MemberEntity memberEntity = memberDao.getById(memberCardEntity.getMemberId());
-        MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
         memberCard.setCardName(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
         memberCard.setMemberName(memberEntity.getName());
-        memberCard.setCoachName(coachEntity.getName());
         StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());
-        memberCard.setStoreName(storeEntity.getName());
+        if(storeEntity!=null){
+            memberCard.setStoreName(storeEntity.getName());
+        }else{
+            memberCard.setStoreName("");
+        }
         String cardType = "";
         if(CardTypeEnum.getEnumByKey(memberCard.getType())!=null){
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();

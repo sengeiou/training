@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.Lesson;
 import com.training.domain.Member;
 import com.training.domain.Training;
 import com.training.service.*;
@@ -162,6 +163,16 @@ public class MemberRestController {
     public ResponseEntity<String> signIn(@RequestBody Training training, HttpServletRequest request, HttpServletResponse response){
         logger.info("  signIn  training = {}",training);
         return memberService.signIn(training);
+    }
+
+    /**
+     * 根据ID查询实体
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "getCanUseCardList", method = RequestMethod.GET)
+    public ResponseEntity<String> getCanUseCardList(@ModelAttribute Lesson lesson, HttpServletRequest request, HttpServletResponse response){
+        logger.info(" memberRestController  getCanUseCardList  lesson = {}",lesson);
+        return memberService.getCanUseCardList(lesson);
     }
 
 }

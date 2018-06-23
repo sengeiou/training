@@ -87,16 +87,13 @@ public class WechatController {
 
             CardEntity card = cardService.getById(cardId);
             MemberEntity memberEntity = memberService.getByOpenId(openId);
-            String coachId = "15286294636688c76e35ebe6448be8b84c64bd7fca9cc";
-            coachId = "1";
-
-            MemberEntity coachEntity = memberService.getById(coachId);
+            String coachId = "123";
 
             MemberCardEntity memberCardEntity = new MemberCardEntity();
             memberCardEntity.setCardNo(IDUtils.getId());
             memberCardEntity.setCardId(cardId);
             memberCardEntity.setCoachId(coachId);
-            memberCardEntity.setStoreId(coachEntity.getStoreId());
+//            memberCardEntity.setStoreId(coachEntity.getStoreId());
             memberCardEntity.setMemberId(memberEntity.getMemberId());
             memberCardEntity.setType(card.getType());
             memberCardEntity.setCount(card.getTotal());
@@ -105,7 +102,7 @@ public class WechatController {
             memberCardEntity.setMoney(card.getPrice());
             memberCardEntity.setStartDate(ut.currentDate());
             memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
-//            memberCardService.add(memberCardEntity);
+            memberCardService.add(memberCardEntity);
 
             String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();

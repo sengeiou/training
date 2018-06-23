@@ -2,11 +2,15 @@ package com.training.common;
 
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Component
 public class Const {
 
 
     public static final String DOMAIN = "http://localhost:8080";
+
+    public static ConcurrentHashMap<String,String> validCodeMap = new ConcurrentHashMap();
 
     /**
      * 数据请求返回码

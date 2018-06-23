@@ -1,18 +1,18 @@
 package com.training.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.corba.se.impl.presentation.rmi.IDLTypesUtil;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.domain.Member;
 import com.training.domain.Training;
-import com.training.entity.MemberEntity;
-import com.training.entity.MemberQuery;
-import com.training.entity.TrainingEntity;
-import com.training.entity.TrainingQuery;
+import com.training.entity.*;
 import com.training.service.MemberService;
 import com.training.service.TrainingService;
+import com.training.util.IDUtils;
 import com.training.util.RequestContextHelper;
 import com.training.util.ResponseUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,9 +122,8 @@ public class CoachRestController {
     @RequestMapping (value = "memberList", method = RequestMethod.GET)
     public ResponseEntity<String> memberList(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         logger.info("  memberList  MemberQuery = {}",query);
-        query.setType("M");
-        Page<Member> page = memberService.find(query,pageRequest);
-        return ResponseUtil.success(page);
+        Page<Member> page = memberService.memberList(query);
+        return  ResponseUtil.success(page);
     }
 
     /**
@@ -136,6 +135,7 @@ public class CoachRestController {
     @RequestMapping (value = "trainingList", method = RequestMethod.GET)
     public ResponseEntity<String> trainingList(@ModelAttribute TrainingQuery query , @ModelAttribute PageRequest pageRequest, HttpServletRequest request, HttpServletResponse response){
         logger.info("  trainingList  TrainingQuery = {}",query);
+        query.setStatus(0);
         Page<Training> page = trainingService.trainingList(query,pageRequest);
         return ResponseUtil.success(page);
     }

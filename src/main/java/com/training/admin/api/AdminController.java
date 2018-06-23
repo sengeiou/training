@@ -4,6 +4,7 @@ import com.training.admin.service.AdminService;
 import com.training.domain.Member;
 import com.training.domain.MemberCard;
 import com.training.domain.Staff;
+import com.training.entity.MemberEntity;
 import com.training.service.MemberService;
 import com.training.service.StaffService;
 import com.training.util.RequestContextHelper;
@@ -68,6 +69,17 @@ public class AdminController {
     public ResponseEntity<String> giveCard(@RequestBody MemberCard card, HttpServletRequest request, HttpServletResponse response){
         logger.info("  giveCard  card = {}",card);
         return adminService.giveCard(card);
+    }
+
+    /**
+     * 根据实体更新
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "changeCoach", method = RequestMethod.POST)
+    public ResponseEntity<String> changeCoach(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  changeCoach  member = {}",member);
+        return memberService.changeCoach(member);
     }
 
 }

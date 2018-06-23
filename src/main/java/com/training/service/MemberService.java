@@ -7,11 +7,8 @@ import com.training.dao.CardDao;
 import com.training.dao.MemberCardDao;
 import com.training.dao.MemberDao;
 import com.training.dao.StaffDao;
-import com.training.domain.Lesson;
-import com.training.domain.Member;
-import com.training.domain.Training;
+import com.training.domain.*;
 import com.training.entity.*;
-import com.training.domain.User;
 import com.training.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -52,6 +49,9 @@ public class MemberService {
     @Autowired
     private MemberCardDao memberCardDao;
 
+    @Autowired
+    private MemberCardService memberCardService;
+
     /**
      * 新增实体
      * @param member
@@ -74,6 +74,7 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public Page<Member> find(MemberQuery query , PageRequest page){
+        logger.info("  find  MemberQuery = {}",query);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();
         for (MemberEntity trainingEntity : memberList){
@@ -96,6 +97,13 @@ public class MemberService {
         }
         Member member = new Member();
         BeanUtils.copyProperties(memberEntity,member);
+        StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+        if(staffEntity==null){
+            member.setCoachName("暂无教练");
+        }else{
+            member.setCoachName(staffEntity.getCustname());
+        }
+        member.setCardType("私教次卡,团体月卡");
         return member;
     }
 
@@ -300,10 +308,11 @@ public class MemberService {
             cardTypeSet.add(cardType);
             Lesson lesson = new Lesson();
             lesson.setType(cardType);
-            MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            StaffEntity staff = staffDao.getById(memberEntity.getCoachStaffId());
             lesson.setCoachId(memberCardEntity.getCoachId());
             lesson.setTitle("私教课");
-            lesson.setCoachName(coachEntity.getName());
+            lesson.setCoachName(staff.getCustname());
             types.add(lesson);
         }
 
@@ -455,5 +464,117 @@ public class MemberService {
 //        return ResponseUtil.exception("签到失败");
     }
 
+    public ResponseEntity<String> changeCoach(Member member) {
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info("  changeCoach  staffRequest = {}", staffRequest);
+        logger.info("  changeCoach  member = {}", member);
+        StaffEntity staffEntity = staffDao.getById(member.getStaffId());
+        logger.info("  changeCoach  staffEntity = {}", staffEntity);
+        MemberEntity memberUpdate = new MemberEntity();
+        memberUpdate.setMemberId(member.getMemberId());
+        memberUpdate.setCoachStaffId(staffEntity.getStaffId());
+        logger.info("  changeCoach  memberUpdate = {}",memberUpdate);
+        int n = memberDao.update(memberUpdate);
+        if(n==1){
+            return ResponseUtil.success("更换教练成功");
+        }
+        return ResponseUtil.exception("更换教练失败");
+    }
+
+    public Page<Member> memberList(MemberQuery query) {
+        Member memberRequest = RequestContextHelper.getMember();
+        MemberEntity memberDB = memberDao.getById(memberRequest.getMemberId());
+        StaffEntity staffEntity = staffDao.getByPhone(memberDB.getPhone());
+        if(staffEntity==null){
+            query.setCoachStaffId(IDUtils.getId());
+        }else{
+            query.setCoachStaffId(staffEntity.getStaffId());
+        }
+        query.setType("M");
+        PageRequest page = new PageRequest();
+        page.setPageSize(1000);
+        List<MemberEntity> memberList = memberDao.find(query,page);
+        List<Member> data = new ArrayList<>();
+        for (MemberEntity trainingEntity : memberList){
+            Member member = transferMember(trainingEntity);
+            data.add(member);
+        }
+        Long count = memberDao.count(query);
+        Page<Member> returnPage = new Page<>();
+        returnPage.setContent(data);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    public ResponseEntity<String> getCanUseCardList(Lesson lesson) {
+        logger.info("  getCanUseCardList  lesson = {}", lesson);
+        MemberCardQuery query = new MemberCardQuery();
+        query.setMemberId(lesson.getMemberId());
+        query.setStatus(0);
+        query.setStartDate(ut.currentDate());
+        query.setEndDate(ut.currentDate());
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+        List<MemberCardEntity> validCardList = new ArrayList<>();
+        for (MemberCardEntity memberCardEntity : cardList){
+            if(LessonTypeEnum.P.getKey().equals(lesson.getType())){
+                if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())
+                        ||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+
+                    if(memberCardEntity.getCount()>0){
+                        validCardList.add(memberCardEntity);
+                    }
+                }
+
+                if(memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())){
+                    validCardList.add(memberCardEntity);
+                }
+
+            }
+
+            if(LessonTypeEnum.P.getKey().equals(lesson.getType())){
+                if(memberCardEntity.getType().equals(CardTypeEnum.TT.getKey())
+                        ||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+
+                    if(memberCardEntity.getCount()>0){
+                        validCardList.add(memberCardEntity);
+                    }
+                }
+
+                if(memberCardEntity.getType().equals(CardTypeEnum.TM.getKey())){
+                    validCardList.add(memberCardEntity);
+                }
+            }
+
+        }
+
+        List cards = new ArrayList();
+        for (MemberCardEntity memberCardEntity : cardList){
+            MemberCard card = memberCardService.transfer(memberCardEntity);
+            cards.add(card);
+        }
+
+        return ResponseUtil.success(cards);
+
+    }
+
+    public String getCoachIdByMemberId(String memberId) {
+        MemberEntity memberEntity = this.getById(memberId);
+        if(memberEntity==null){
+            return null;
+        }
+        StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+        if(staffEntity==null){
+            return null;
+        }
+        MemberEntity coach = this.getByOpenId(staffEntity.getOpenId());
+        if(coach==null){
+            return null;
+        }
+        return coach.getMemberId();
+    }
 }
 

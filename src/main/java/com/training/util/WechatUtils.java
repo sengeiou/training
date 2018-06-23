@@ -82,7 +82,7 @@ public class WechatUtils {
             param.put("attach",card.getCardId());
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
-            param.put("total_fee","1");
+            param.put("total_fee",input.get("total_fee"));
             param.put("spbill_create_ip","127.0.0.1");
             param.put("notify_url",notify_url);
             param.put("trade_type","JSAPI");

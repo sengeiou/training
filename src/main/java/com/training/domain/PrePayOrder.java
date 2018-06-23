@@ -13,4 +13,7 @@ public class PrePayOrder {
 
     private String cardId;
 
+    private String money;
+
+
 }

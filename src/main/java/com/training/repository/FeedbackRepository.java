@@ -43,10 +43,10 @@ public interface FeedbackRepository {
             " <if test=\"query.feedbackId != null\"> AND feedback_id = #{query.feedbackId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
-            " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
-            " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.title != null\"> AND title like CONCAT('%',#{query.title},'%')  </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<FeedbackEntity> find(@Param("query") FeedbackQuery feedback , @Param("page") PageRequest page);
@@ -56,10 +56,10 @@ public interface FeedbackRepository {
             " <if test=\"query.feedbackId != null\"> AND feedback_id = #{query.feedbackId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
-            " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
-            " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.title != null\"> AND title like CONCAT('%',#{query.title},'%')  </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
             "</script>")
     Long count(@Param("query") FeedbackQuery feedback);
 

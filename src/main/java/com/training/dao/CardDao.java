@@ -39,6 +39,7 @@ public class CardDao {
      * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public List<CardEntity> find(CardQuery query , PageRequest page){
+        query.setStatus(1);
         List<CardEntity> cardList = cardRepository.find(query,page);
         return cardList;
     }
@@ -49,6 +50,7 @@ public class CardDao {
      * Created by huai23 on 2018-06-06 18:46:25.
      */ 
     public Long count(CardQuery query){
+        query.setStatus(1);
         Long n = cardRepository.count(query);
         return n;
     }

@@ -38,6 +38,8 @@ public class MemberQuery {
 
     private String address;
 
+    private String coachStaffId;
+
     private String cardNo;
 
     private Integer trainingHours;

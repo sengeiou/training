@@ -67,5 +67,9 @@ public class Member {
 
     private String staffId;
 
+    private String coachStaffId;
+
+    private String coachName;
+
 }
 

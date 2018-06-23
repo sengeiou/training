@@ -7,6 +7,7 @@ import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.IDUtils;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,16 @@ public class FeedbackService {
      * Created by huai23 on 2018-05-26 13:54:54.
      */ 
     public ResponseEntity<String> add(FeedbackEntity feedback){
+        if(StringUtils.isEmpty(feedback.getContent())){
+            return ResponseUtil.exception("请输入反馈内容");
+        }
+        Member member = RequestContextHelper.getMember();
+        MemberEntity memberEntity = memberDao.getById(member.getMemberId());
         feedback.setFeedbackId(IDUtils.getId());
+        feedback.setMemberId(memberEntity.getMemberId());
+        feedback.setType("feedback");
+        String title = memberEntity.getName()+"的反馈";
+        feedback.setTitle(title);
         int n = feedbackDao.add(feedback);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -55,8 +65,9 @@ public class FeedbackService {
         Member member = RequestContextHelper.getMember();
         MemberEntity memberEntity = memberDao.getById(member.getMemberId());
         feedback.setFeedbackId(IDUtils.getId());
+        feedback.setMemberId(memberEntity.getMemberId());
         feedback.setType("change_coach");
-        feedback.setTitle("更换教练申请");
+        feedback.setTitle(memberEntity.getName()+"更换教练申请");
         feedback.setContent(memberEntity.getName()+"于"+ ut.currentDate()+"请求更换教练");
         int n = feedbackDao.add(feedback);
         if(n==1){

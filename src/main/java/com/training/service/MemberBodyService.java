@@ -49,6 +49,7 @@ public class MemberBodyService {
      * Created by huai23 on 2018-05-26 13:54:03.
      */ 
     public Page<MemberBodyEntity> find(MemberBodyQuery query , PageRequest page){
+        logger.info("  MemberBody find  MemberQuery = {} , page = {} ",query,page);
         List<MemberBodyEntity> memberBodyList = memberBodyDao.find(query,page);
         Long count = memberBodyDao.count(query);
         Page<MemberBodyEntity> returnPage = new Page<>();
