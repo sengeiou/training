@@ -16,6 +16,8 @@ public class FeedbackQuery {
 
     private String memberId;
 
+    private String type;
+
     private String title;
 
     private String content;

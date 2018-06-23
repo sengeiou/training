@@ -16,6 +16,7 @@ public interface FeedbackRepository {
     @Insert("<script> INSERT INTO feedback ( " +
                 " <if test=\"feedback.feedbackId != null\"> feedback_id, </if>" +
                 " <if test=\"feedback.memberId != null\"> member_id, </if>" +
+                " <if test=\"feedback.type != null\"> type, </if>" +
                 " <if test=\"feedback.title != null\"> title, </if>" +
                 " <if test=\"feedback.content != null\"> content, </if>" +
                 " <if test=\"feedback.image != null\"> image, </if>" +
@@ -25,6 +26,7 @@ public interface FeedbackRepository {
             " ) VALUES ( " +
                 " <if test=\"feedback.feedbackId != null\"> #{feedback.feedbackId}, </if>" +
                 " <if test=\"feedback.memberId != null\"> #{feedback.memberId}, </if>" +
+                " <if test=\"feedback.type != null\"> #{feedback.type}, </if>" +
                 " <if test=\"feedback.title != null\"> #{feedback.title}, </if>" +
                 " <if test=\"feedback.content != null\"> #{feedback.content}, </if>" +
                 " <if test=\"feedback.image != null\"> #{feedback.image}, </if>" +
@@ -35,11 +37,12 @@ public interface FeedbackRepository {
             "</script>")
     int add(@Param("feedback") FeedbackEntity feedback);
 
-    @Select("<script> SELECT pk_id,feedback_id,member_id,title,content,image,remark,created,modified " +
+    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,created,modified " +
             " FROM feedback " +
             " WHERE 1 = 1 " +
             " <if test=\"query.feedbackId != null\"> AND feedback_id = #{query.feedbackId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
@@ -52,6 +55,7 @@ public interface FeedbackRepository {
             " WHERE 1 = 1 " +
             " <if test=\"query.feedbackId != null\"> AND feedback_id = #{query.feedbackId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
@@ -59,7 +63,7 @@ public interface FeedbackRepository {
             "</script>")
     Long count(@Param("query") FeedbackQuery feedback);
 
-    @Select("<script> SELECT pk_id,feedback_id,member_id,title,content,image,remark,created,modified " +
+    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,created,modified " +
             " FROM feedback " +
             " WHERE feedback_id = #{id} " +
             "</script>")
