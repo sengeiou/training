@@ -1,10 +1,12 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class FeedbackService {
     @Autowired
     private FeedbackDao feedbackDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
     /**
      * 新增实体
      * @param feedback
@@ -47,7 +52,12 @@ public class FeedbackService {
      * Created by huai23 on 2018-05-26 13:54:54.
      */
     public ResponseEntity<String> changeCoach(FeedbackEntity feedback){
+        Member member = RequestContextHelper.getMember();
+        MemberEntity memberEntity = memberDao.getById(member.getMemberId());
         feedback.setFeedbackId(IDUtils.getId());
+        feedback.setType("change_coach");
+        feedback.setTitle("更换教练申请");
+        feedback.setContent(memberEntity.getName()+"于"+ ut.currentDate()+"请求更换教练");
         int n = feedbackDao.add(feedback);
         if(n==1){
             return ResponseUtil.success("您的请求已经收到，稍后会有客服与您联系");
