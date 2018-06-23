@@ -28,6 +28,7 @@ public class TrainingDao {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public int add(TrainingEntity training){
+        System.out.println(" ===========     "+training.getLessonId());
         int n = trainingRepository.add(training);
         return n;
     }

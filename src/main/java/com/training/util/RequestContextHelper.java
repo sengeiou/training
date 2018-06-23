@@ -12,7 +12,7 @@ public class RequestContextHelper {
 
     public static User getUser(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        if(request.getAttribute("user")==null){
+        if(request==null||request.getAttribute("user")==null){
             return null;
         }
         User user = (User)request.getAttribute("user");
@@ -21,7 +21,7 @@ public class RequestContextHelper {
 
     public static Member getMember(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        if(request.getAttribute("member")==null){
+        if(request==null||request.getAttribute("member")==null){
             return null;
         }
         Member member = (Member)request.getAttribute("member");
@@ -30,7 +30,7 @@ public class RequestContextHelper {
 
     public static Staff getStaff(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        if(request.getAttribute("staff")==null){
+        if(request==null||request.getAttribute("staff")==null){
             return null;
         }
         Staff staff = (Staff)request.getAttribute("staff");

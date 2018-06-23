@@ -48,7 +48,6 @@ public class MemberCardService {
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
     public ResponseEntity<String> add(MemberCardEntity memberCard){
-        User user = RequestContextHelper.getUser();
         int n = memberCardDao.add(memberCard);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -82,12 +81,12 @@ public class MemberCardService {
         if(memberCardEntity==null){
             return null;
         }
-        CardEntity cardEntity = cardDao.getById(memberCardEntity.getCardId());
+//        CardEntity cardEntity = cardDao.getById(memberCardEntity.getCardId());
         MemberCard memberCard = new MemberCard();
         BeanUtils.copyProperties(memberCardEntity,memberCard);
         MemberEntity memberEntity = memberDao.getById(memberCardEntity.getMemberId());
         MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
-        memberCard.setCardName(cardEntity.getCardName());
+        memberCard.setCardName(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
         memberCard.setMemberName(memberEntity.getName());
         memberCard.setCoachName(coachEntity.getName());
         StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());
