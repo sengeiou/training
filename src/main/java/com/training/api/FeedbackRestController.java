@@ -42,6 +42,17 @@ public class FeedbackRestController {
     }
 
     /**
+     * 新增实体
+     * @param feedback
+     * Created by huai23 on 2018-05-26 13:54:54.
+     */
+    @RequestMapping (value = "changeCoach", method = RequestMethod.POST)
+    public ResponseEntity<String> changeCoach(@RequestBody FeedbackEntity feedback,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" feedbackRestController  changeCoach  feedback = {}",feedback);
+        return feedbackService.changeCoach(feedback);
+    }
+
+    /**
      * 分页查询
      * @param query
      * @param pageRequest

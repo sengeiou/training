@@ -4,6 +4,7 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,26 @@ public class FeedbackService {
      * Created by huai23 on 2018-05-26 13:54:54.
      */ 
     public ResponseEntity<String> add(FeedbackEntity feedback){
-        User user = RequestContextHelper.getUser();
+        feedback.setFeedbackId(IDUtils.getId());
         int n = feedbackDao.add(feedback);
         if(n==1){
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");
+    }
+
+    /**
+     * 新增实体
+     * @param feedback
+     * Created by huai23 on 2018-05-26 13:54:54.
+     */
+    public ResponseEntity<String> changeCoach(FeedbackEntity feedback){
+        feedback.setFeedbackId(IDUtils.getId());
+        int n = feedbackDao.add(feedback);
+        if(n==1){
+            return ResponseUtil.success("您的请求已经收到，稍后会有客服与您联系");
+        }
+        return ResponseUtil.exception("请求失败，请稍后再试");
     }
 
     /**
