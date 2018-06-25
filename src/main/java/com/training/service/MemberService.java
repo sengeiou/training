@@ -3,10 +3,7 @@ package com.training.service;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.exceptions.ClientException;
 import com.training.common.*;
-import com.training.dao.CardDao;
-import com.training.dao.MemberCardDao;
-import com.training.dao.MemberDao;
-import com.training.dao.StaffDao;
+import com.training.dao.*;
 import com.training.domain.*;
 import com.training.entity.*;
 import com.training.util.*;
@@ -51,6 +48,9 @@ public class MemberService {
 
     @Autowired
     private MemberCardService memberCardService;
+
+    @Autowired
+    private TrainingDao trainingDao;
 
     /**
      * 新增实体
@@ -194,6 +194,7 @@ public class MemberService {
         // todo 发送手机验证码
         String code = IDUtils.getVerifyCode();
         code = "1234";
+        Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
         try {
             SmsUtil.sendCode(member.getPhone(),code);
             return ResponseUtil.success("发送验证码成功");
@@ -211,9 +212,33 @@ public class MemberService {
      */
     public ResponseEntity<String> bind(Member member) {
         JSONObject jo = new JSONObject();
-        if(StringUtils.isEmpty(member.getCode()) || !member.getCode().equals("1234")){
+
+        logger.info(" bind    member : {} " , member);
+
+        logger.info(" validCodeMap : {} " , Const.validCodeMap);
+
+        if(StringUtils.isEmpty(member.getCode())){
+            return ResponseUtil.exception("请输入手机验证码");
+        }
+        if(!Const.validCodeMap.containsKey(member.getPhone())){
+            return ResponseUtil.exception("验证码无效");
+        }
+        String[] codes = Const.validCodeMap.get(member.getPhone()).split("_");
+        logger.info(" code : {} " ,codes[0]);
+        logger.info(" time : {} " ,codes[1]);
+
+        long time = Long.parseLong(codes[1]);
+        long now = System.currentTimeMillis();
+
+        logger.info(" time : {} " ,time);
+        logger.info(" now : {} " ,now);
+
+        if(!member.getCode().equals(codes[0])){
             return ResponseUtil.exception("手机验证码错误!");
         }
+
+        Const.validCodeMap.remove(member.getPhone());
+
         Member memberRequest = RequestContextHelper.getMember();
         String openId = memberRequest.getOpenId();
         logger.info("  bind  getOpenId = {} , getPhone = {} , code = {} ",openId,member.getPhone(),member.getCode());
@@ -279,11 +304,13 @@ public class MemberService {
         List<MemberCardEntity> cardList = memberCardDao.find(query,page);
         List<MemberCardEntity> validCardList = new ArrayList<>();
         for (MemberCardEntity memberCardEntity : cardList){
-
-
+            if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                if(memberCardEntity.getCount()<=0){
+                    continue;
+                }
+            }
             validCardList.add(memberCardEntity);
         }
-
         if(CollectionUtils.isEmpty(validCardList)){
             return ResponseUtil.exception("无可用课时,请先购卡!");
         }
@@ -310,6 +337,11 @@ public class MemberService {
             lesson.setType(cardType);
             MemberEntity memberEntity = memberDao.getById(memberId);
             StaffEntity staff = staffDao.getById(memberEntity.getCoachStaffId());
+            logger.info(" ============ staff = {}",staff);
+
+            if(staff == null){
+                return ResponseUtil.exception("还未给您分配教练，请稍后再试");
+            }
             lesson.setCoachId(memberCardEntity.getCoachId());
             lesson.setTitle("私教课");
             lesson.setCoachName(staff.getCustname());
@@ -389,7 +421,7 @@ public class MemberService {
 
         if(StringUtils.isNotEmpty(staffEntity.getOpenId())) {
             MemberEntity memberNow = memberDao.getByOpenId(staffEntity.getOpenId());
-            return ResponseUtil.exception("设置教练异常!该员工已经绑定微信用户:"+memberNow.getName());
+//            return ResponseUtil.exception("设置教练异常!该员工已经绑定微信用户:"+memberNow.getName());
         }
 
         staffEntity.setOpenId(memberEntity.getOpenId());
@@ -468,6 +500,25 @@ public class MemberService {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  changeCoach  staffRequest = {}", staffRequest);
         logger.info("  changeCoach  member = {}", member);
+
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setStartDate(ut.currentDate());
+        trainingQuery.setMemberId(member.getMemberId());
+        trainingQuery.setStatus(0);
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
+        logger.info(" changeCoach  trainingEntityList.size() = {} ",trainingEntityList.size());
+        for (TrainingEntity trainingEntity:trainingEntityList){
+            logger.info(" trainingEntity = {} ",trainingEntity);
+            if(trainingEntity.getLessonDate().equals(ut.currentDate())){
+                if(trainingEntity.getStartHour()>ut.currentHour()){
+                    return ResponseUtil.exception("更换教练失败,请先取消当前的所有预约课程");
+                }
+            }else{
+                return ResponseUtil.exception("更换教练失败,请先取消现有教练的预约课程");
+            }
+        }
         StaffEntity staffEntity = staffDao.getById(member.getStaffId());
         logger.info("  changeCoach  staffEntity = {}", staffEntity);
         MemberEntity memberUpdate = new MemberEntity();
@@ -576,5 +627,39 @@ public class MemberService {
         }
         return coach.getMemberId();
     }
+
+    /**
+     * 根据实体更新
+     * @param member
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public  ResponseEntity<String> updateImage(MemberEntity member){
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info("  updateImage  memberRequest = {}",memberRequest);
+        logger.info("  updateImage  member = {}",member);
+        if(memberRequest==null||StringUtils.isEmpty(memberRequest.getMemberId())){
+            return ResponseUtil.exception("修改异常");
+        }
+        boolean flag = false;
+        MemberEntity memberUpdate = new MemberEntity();
+        memberUpdate.setMemberId(memberRequest.getMemberId());
+        if(StringUtils.isNotEmpty(member.getNickname())){
+            memberUpdate.setNickname(member.getNickname());
+            flag = true;
+        }
+        if(StringUtils.isNotEmpty(member.getImage())){
+            memberUpdate.setImage(member.getImage());
+            flag = true;
+        }
+        logger.info("  updateImage  memberUpdate = {}",memberUpdate);
+        if(flag){
+            int n = memberDao.update(memberUpdate);
+            if(n==1){
+                return ResponseUtil.success("修改成功");
+            }
+        }
+        return ResponseUtil.success("修改完成");
+    }
+
 }
 

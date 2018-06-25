@@ -79,9 +79,19 @@ public class WechatService {
         Member memberRequest = RequestContextHelper.getMember();
         String openId = memberRequest.getOpenId();
 
+        double fee = 0;
         String money = prePayOrder.getMoney();
-        double fee = ut.doubled(money);
+        if(StringUtils.isEmpty(money)){
+            ResponseUtil.exception("支付金额异常，请稍后重试");
+        }
+        try{
+            fee = ut.doubled(money);
+        }catch (Exception e){
+            logger.error(" 支付金额含有非法字符 : {} " , money,e);
+            ResponseUtil.exception("支付金额含有非法字符，请重试");
+        }
         int total_fee = (int)(fee*100);
+        total_fee = 1;
         CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
 
         Map<String, String> param = new HashMap<>();

@@ -89,13 +89,13 @@ public class AdminService {
         memberCardEntity.setType(CardTypeEnum.TY.getKey());
         memberCardEntity.setCount(card.getTotal());
         memberCardEntity.setTotal(card.getTotal());
-        memberCardEntity.setDays(card.getDays());
+        memberCardEntity.setDays(ut.passDay(card.getStartDate(),card.getEndDate()));
         memberCardEntity.setMoney("0");
         memberCardEntity.setStartDate(card.getStartDate());
         memberCardEntity.setEndDate(card.getEndDate());
         int n = memberCardDao.add(memberCardEntity);
         if(n > 0){
-            return ResponseUtil.exception("发卡成功");
+            return ResponseUtil.success("发卡成功");
         }
         return ResponseUtil.exception("发卡失败");
     }

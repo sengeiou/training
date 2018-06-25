@@ -105,5 +105,16 @@ public class MemberCardRestController {
     }
 
 
+    /**
+     * 根据ID删除
+     * @param memberCard
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    @RequestMapping (value = "freeDelay", method = RequestMethod.POST)
+    public ResponseEntity<String> freeDelay(@RequestBody MemberCard memberCard,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  freeDelay  memberCard = {}",memberCard);
+        return memberCardService.freeDelay(memberCard);
+    }
+
 }
 

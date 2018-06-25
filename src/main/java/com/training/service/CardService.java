@@ -68,7 +68,12 @@ public class CardService {
      * Created by huai23 on 2018-06-06 18:46:26.
      */
     public Page<Card> list(CardQuery query , PageRequest page){
+        logger.info(" card.list    query : {} " , query);
+
         List<CardEntity> cardList = cardDao.find(query,page);
+
+        logger.info(" card.list    cardList.size() : {} " , cardList.size());
+
         List<Card> content = new ArrayList<>();
         for(CardEntity cardEntity : cardList){
             Card card = transfer(cardEntity);

@@ -348,6 +348,22 @@ public class ut {
 		int maxDay = c.getActualMaximum(Calendar.DATE); 
 		return maxDay;
 	};
+
+	public static int indexOfMonth(String day){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		try {
+			Date date = sdf.parse(day);
+			c.setTime(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		//获得当前月的�?大日期数
+		int dayofweek = c.get(Calendar.DAY_OF_MONTH)-1;
+		return dayofweek;
+	};
 	
 	/**
 	 *  获取本月的最后一�?
@@ -356,7 +372,7 @@ public class ut {
 	 *     add time �?2011-10-07
 	 *  modify time �?2011-10-07
 	 */
-	public static int daysOfWeek(String day){
+	public static int indexOfWeek(String day){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar c = Calendar.getInstance();
 		try {

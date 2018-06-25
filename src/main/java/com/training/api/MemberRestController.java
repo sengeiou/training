@@ -175,5 +175,17 @@ public class MemberRestController {
         return memberService.getCanUseCardList(lesson);
     }
 
+
+    /**
+     * 根据实体更新
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "updateImage", method = RequestMethod.POST)
+    public ResponseEntity<String> updateImage(@RequestBody MemberEntity member,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  updateImage  member = {}",member);
+        return memberService.updateImage(member);
+    }
+
 }
 

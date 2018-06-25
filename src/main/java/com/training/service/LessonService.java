@@ -202,15 +202,15 @@ public class LessonService {
                 filterCoachRestEntityList.add(coachRestEntity);
             }
             if(coachRestEntity.getType().equals(CoachRestTypeEnum.WEEK.getKey())){
-                int index1 = ut.daysOfWeek(coachRestEntity.getRestDate());
-                int index2 = ut.daysOfWeek(query.getLessonDate());
+                int index1 = ut.indexOfWeek(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfWeek(query.getLessonDate());
                 if(index1==index2){
                     filterCoachRestEntityList.add(coachRestEntity);
                 }
             }
             if(coachRestEntity.getType().equals(CoachRestTypeEnum.MONTH.getKey())){
-                int index1 = ut.daysOfMonth(coachRestEntity.getRestDate());
-                int index2 = ut.daysOfMonth(query.getLessonDate());
+                int index1 = ut.indexOfMonth(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfMonth(query.getLessonDate());
                 if(index1==index2){
                     filterCoachRestEntityList.add(coachRestEntity);
                 }
@@ -226,14 +226,23 @@ public class LessonService {
             lesson.setLessonDate(query.getLessonDate());
             lesson.setLessonId(createLessonId(lesson));
             lesson.setMyOrder("0");
-            lesson.setQuota(1);
+            lesson.setQuota(2);
             lesson.setTrainingId("");
             lesson.setTrainingList(new ArrayList<>());
             for (TrainingEntity trainingEntity:trainingEntityList){
                 logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
                 logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
                 if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
-                    lesson.setQuota(0);
+                    if(trainingEntity.getCardType().equals(CardTypeEnum.PT.getKey())||trainingEntity.getCardType().equals(CardTypeEnum.TY.getKey())){
+                        lesson.setQuota(0);
+                    }
+                    if(trainingEntity.getCardType().equals(CardTypeEnum.PM.getKey())){
+                        lesson.setQuota(lesson.getQuota()-1);
+                    }
+
+                    if(lesson.getQuota()<0){
+                        lesson.setQuota(0);
+                    }
                     if(trainingEntity.getMemberId().equals(query.getMemberId())){
                         lesson.setMyOrder("1");
                         lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
@@ -243,7 +252,11 @@ public class LessonService {
             }
             lesson.setStatus(0);  // 0 - 正常 ，   -1 - 不可约
             for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
-                if(coachRestEntity.getStartHour() <= i && coachRestEntity.getEndHour() >= i){
+                int startHour = i*100;
+                int endHour = i*100+100;
+                if(coachRestEntity.getStartHour() >= endHour || coachRestEntity.getEndHour() <= startHour){
+
+                }else{
                     lesson.setStatus(-1);
                     break;
                 }
@@ -305,7 +318,7 @@ public class LessonService {
         for (LessonSettingEntity lessonSettingEntity : lessonSettingList) {
             if(StringUtils.isNotEmpty(lessonSettingEntity.getWeekRepeat())){
                 String[] weekDays = lessonSettingEntity.getWeekRepeat().split(",");
-                int weekIndex = ut.daysOfWeek(query.getLessonDate());
+                int weekIndex = ut.indexOfWeek(query.getLessonDate());
                 if(weekDays.length<weekIndex){
                     continue;
                 }
@@ -504,6 +517,20 @@ public class LessonService {
             return ResponseUtil.exception("约课失败!课程卡已无可用次数!");
         }
 
+        if(memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())) {
+            TrainingQuery trainingQuery = new TrainingQuery();
+            trainingQuery.setLessonDate(lesson.getLessonDate());
+            trainingQuery.setCardNo(lesson.getCardNo());
+            trainingQuery.setType(LessonTypeEnum.P.getKey());
+            trainingQuery.setStatus(0);
+            PageRequest page = new PageRequest();
+            page.setPageSize(100);
+            List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
+            if(trainingEntityList.size()>0){
+                return ResponseUtil.exception("私教月卡每日限约课一次，您本日已经预约课程，不能再次预约!");
+            }
+        }
+
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(lesson.getLessonDate());
         trainingQuery.setLessonId(lessonId);
@@ -521,16 +548,22 @@ public class LessonService {
             }
         }
         if(trainingEntityList.size()==1){
-            if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
-                return ResponseUtil.exception("该时段课程因属于双学员课程，只能再由一个私教月卡会员预约!您为私教次卡不能预约!");
-            }
             TrainingEntity trainingEntity = trainingEntityList.get(0);
-            MemberCardEntity memberCard = memberCardDao.getById(trainingEntity.getCardNo());
-            if(memberCard.getType().equals(CardTypeEnum.PT.getKey())){
+
+            MemberCardEntity memberCardOther = memberCardDao.getById(trainingEntity.getCardNo());
+            logger.info(" *****   memberCardOther = {} ",memberCardOther);
+            if(memberCardOther.getType().equals(CardTypeEnum.PT.getKey())){
                 return ResponseUtil.exception("约课失败!该时段课程已约满!");
+            }else{
+                //如果已经预约的会员 是用月卡约的 ， 需要判断本次是否也是月卡  ，如果是月卡可以预约 ， 如果是次卡  不能预约
+                if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
+                    return ResponseUtil.exception("该时段课程因属于双学员课程，只能再由一个私教月卡会员预约!您为私教次卡不能预约!");
+                }
             }
         }
-
+        if(trainingEntityList.size()>1){
+            return ResponseUtil.exception("该时段课程属于双学员课程，且已经约满，不能预约!");
+        }
         TrainingEntity  trainingEntity = new TrainingEntity();
         trainingEntity.setTrainingId(IDUtils.getId());
         trainingEntity.setMemberId(lesson.getMemberId());
@@ -578,7 +611,7 @@ public class LessonService {
         if(ut.currentDate().equals(trainingEntity.getLessonDate())){
 
             if((trainingEntity.getStartHour()-ut.currentHour())<600){
-                return ResponseUtil.exception("取消约课失败!上课前6小时无法取消预约!");
+                return ResponseUtil.exception("取消约课失败!上课前6小时无法取消预约!如需取消请联系你的教练");
             }
 
         }

@@ -67,5 +67,11 @@ public class MemberCard {
 
     private String staffId;
 
+    private Integer canDelay;
+
+    private String delayFee;
+
+    private Integer delayDays;
+
 }
 

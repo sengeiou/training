@@ -1,11 +1,13 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Member;
 import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -98,6 +100,10 @@ public class MemberCardService {
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
         }
         memberCard.setCardType(cardType);
+
+        memberCard.setCanDelay(1);
+        memberCard.setDelayFee("0");
+        memberCard.setDelayDays(45);
         return memberCard;
     }
 
@@ -185,5 +191,24 @@ public class MemberCardService {
         }
         return memberCardEntity;
     }
+
+    /**
+     * 根据ID删除
+     * @param memberCard
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public ResponseEntity<String> freeDelay(MemberCard memberCard){
+        Member member = RequestContextHelper.getMember();
+        logger.info(" =================    freeDelay  member = {}",member);
+        logger.info(" =================    freeDelay  memberCard = {}",memberCard);
+        if(StringUtils.isEmpty(memberCard.getCardNo())){
+            return ResponseUtil.exception("卡号不能为空");
+        }
+
+        return ResponseUtil.success("延期成功");
+
+//        return ResponseUtil.exception("延期失败");
+    }
+
 }
 

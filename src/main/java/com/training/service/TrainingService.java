@@ -43,7 +43,6 @@ public class TrainingService {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public ResponseEntity<String> add(TrainingEntity training){
-        User user = RequestContextHelper.getUser();
         int n = trainingDao.add(training);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -58,6 +57,7 @@ public class TrainingService {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public Page<TrainingEntity> find(TrainingQuery query , PageRequest page){
+        logger.info(" find   query = {} , page = {} ",query,page);
         List<TrainingEntity> trainingList = trainingDao.find(query,page);
         Long count = trainingDao.count(query);
         Page<TrainingEntity> returnPage = new Page<>();

@@ -47,7 +47,7 @@ public interface FeedbackRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<FeedbackEntity> find(@Param("query") FeedbackQuery feedback , @Param("page") PageRequest page);
 

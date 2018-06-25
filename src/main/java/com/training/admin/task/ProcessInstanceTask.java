@@ -17,7 +17,7 @@ public class ProcessInstanceTask {
     @Autowired
     ProcessInstanceService processInstanceService;
 
-//    @Scheduled(cron = "0 0/20 * * * *")
+    @Scheduled(cron = "0 0/50 * * * *")
     public void getProcessInstance(){
 //        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
         for (ProcessCodeEnum processCodeEnum : ProcessCodeEnum.values()){
