@@ -57,10 +57,15 @@ public class LoginService {
             return ResponseUtil.exception("暂无角色，不能登陆");
         }
 
-        RoleEntity roleEntity = roleDao.getById(staffEntity.getRoleId());
-        if(roleEntity==null){
-            return ResponseUtil.exception("角色无效，不能登陆");
+        if(staffEntity.getUsername().equals("admin")){
+
+        }else{
+            RoleEntity roleEntity = roleDao.getById(staffEntity.getRoleId());
+            if(roleEntity==null){
+                return ResponseUtil.exception("角色无效，不能登陆");
+            }
         }
+
 
         JSONObject jo = new JSONObject();
         String subject = JwtUtil.generalAdminSubject(staffEntity);
