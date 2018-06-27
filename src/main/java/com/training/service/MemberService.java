@@ -679,6 +679,16 @@ public class MemberService {
         return ResponseUtil.success("恢复会员成功");
     }
 
+    public ResponseEntity<String> changeRole(Staff staff) {
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info("  restoreMember  staffRequest = {}", staffRequest);
+        logger.info("  restoreMember  staff = {}", staff);
+
+
+
+        return ResponseUtil.success("设置角色成功");
+    }
+
 
 }
 

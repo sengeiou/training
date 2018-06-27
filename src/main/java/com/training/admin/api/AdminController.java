@@ -104,6 +104,16 @@ public class AdminController {
         return memberService.restoreMember(member);
     }
 
+    /**
+     * 根据实体更新
+     * @param staff
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "changeRole", method = RequestMethod.POST)
+    public ResponseEntity<String> changeRole(@RequestBody Staff staff, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  changeRole  staff = {}",staff);
+        return memberService.changeRole(staff);
+    }
 
 
 }
