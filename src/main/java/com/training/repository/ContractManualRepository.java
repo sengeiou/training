@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * contract_manual 数据库操作类
- * Created by huai23 on 2018-06-28 01:30:49.
+ * Created by huai23 on 2018-06-28 02:06:09.
  */ 
 @Mapper
 public interface ContractManualRepository {
@@ -34,6 +34,8 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.realFee != null\"> real_fee, </if>" +
                 " <if test=\"contractManual.count != null\"> count, </if>" +
                 " <if test=\"contractManual.status != null\"> status, </if>" +
+                " <if test=\"contractManual.pauseDate != null\"> pause_date, </if>" +
+                " <if test=\"contractManual.deadDate != null\"> dead_date, </if>" +
                 " <if test=\"contractManual.remark != null\"> remark, </if>" +
                 " <if test=\"contractManual.feature != null\"> feature, </if>" +
                 " created , " +
@@ -59,6 +61,8 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.realFee != null\"> #{contractManual.realFee}, </if>" +
                 " <if test=\"contractManual.count != null\"> #{contractManual.count}, </if>" +
                 " <if test=\"contractManual.status != null\"> #{contractManual.status}, </if>" +
+                " <if test=\"contractManual.pauseDate != null\"> #{contractManual.pauseDate}, </if>" +
+                " <if test=\"contractManual.deadDate != null\"> #{contractManual.deadDate}, </if>" +
                 " <if test=\"contractManual.remark != null\"> #{contractManual.remark}, </if>" +
                 " <if test=\"contractManual.feature != null\"> #{contractManual.feature}, </if>" +
                 " now() , " +
@@ -67,7 +71,7 @@ public interface ContractManualRepository {
             "</script>")
     int add(@Param("contractManual") ContractManualEntity contractManual);
 
-    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,remark,feature,created,modified " +
+    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,created,modified " +
             " FROM contract_manual " +
             " WHERE 1 = 1 " +
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
@@ -90,6 +94,8 @@ public interface ContractManualRepository {
             " <if test=\"query.realFee != null\"> AND real_fee = #{query.realFee} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.pauseDate != null\"> AND pause_date = #{query.pauseDate} </if>" +
+            " <if test=\"query.deadDate != null\"> AND dead_date = #{query.deadDate} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
@@ -118,12 +124,14 @@ public interface ContractManualRepository {
             " <if test=\"query.realFee != null\"> AND real_fee = #{query.realFee} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.pauseDate != null\"> AND pause_date = #{query.pauseDate} </if>" +
+            " <if test=\"query.deadDate != null\"> AND dead_date = #{query.deadDate} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             "</script>")
     Long count(@Param("query") ContractManualQuery contractManual);
 
-    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,remark,feature,created,modified " +
+    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,created,modified " +
             " FROM contract_manual " +
             " WHERE contract_id = #{id} " +
             "</script>")
@@ -150,6 +158,8 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.realFee != null\"> real_fee = #{contractManual.realFee} , </if>" +
                 " <if test=\"contractManual.count != null\"> count = #{contractManual.count} , </if>" +
                 " <if test=\"contractManual.status != null\"> status = #{contractManual.status} , </if>" +
+                " <if test=\"contractManual.pauseDate != null\"> pause_date = #{contractManual.pauseDate} , </if>" +
+                " <if test=\"contractManual.deadDate != null\"> dead_date = #{contractManual.deadDate} , </if>" +
                 " <if test=\"contractManual.remark != null\"> remark = #{contractManual.remark} , </if>" +
                 " <if test=\"contractManual.feature != null\"> feature = #{contractManual.feature} , </if>" +
                 " modified = now() " +

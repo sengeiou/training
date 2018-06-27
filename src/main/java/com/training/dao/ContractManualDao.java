@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * contract_manual 数据库操作类
- * Created by huai23 on 2018-06-28 01:30:49.
+ * Created by huai23 on 2018-06-28 02:06:09.
  */ 
 @Service
 public class ContractManualDao {
@@ -25,7 +25,7 @@ public class ContractManualDao {
     /**
      * 新增实体
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public int add(ContractManualEntity contractManual){
         int n = contractManualRepository.add(contractManual);
@@ -36,7 +36,7 @@ public class ContractManualDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public List<ContractManualEntity> find(ContractManualQuery query , PageRequest page){
         List<ContractManualEntity> contractManualList = contractManualRepository.find(query,page);
@@ -46,7 +46,7 @@ public class ContractManualDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public Long count(ContractManualQuery query){
         Long n = contractManualRepository.count(query);
@@ -56,7 +56,7 @@ public class ContractManualDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public ContractManualEntity getById(String id){
         ContractManualEntity contractManualDB = contractManualRepository.getById(id);
@@ -66,7 +66,7 @@ public class ContractManualDao {
     /**
      * 根据实体更新
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public int update(ContractManualEntity contractManual){
         int n = contractManualRepository.update(contractManual);
@@ -76,7 +76,7 @@ public class ContractManualDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public int delete(String id){
         int n = contractManualRepository.delete(id);

@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * contract_manual API控制器
- * Created by huai23 on 2018-06-28 01:30:49.
+ * Created by huai23 on 2018-06-28 02:06:09.
  */ 
 @RestController
 @RequestMapping("/api/contractManual")
@@ -33,7 +33,7 @@ public class ContractManualRestController {
     /**
      * 新增实体
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody ContractManualEntity contractManual,HttpServletRequest request, HttpServletResponse response){
@@ -45,7 +45,7 @@ public class ContractManualRestController {
      * 分页查询
      * @param query
      * @param pageRequest
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute ContractManualQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
@@ -56,7 +56,7 @@ public class ContractManualRestController {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "count", method = RequestMethod.GET)
     public ResponseEntity<String> count(@ModelAttribute ContractManualQuery query,HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,7 @@ public class ContractManualRestController {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
@@ -83,7 +83,7 @@ public class ContractManualRestController {
     /**
      * 根据实体更新
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody ContractManualEntity contractManual,HttpServletRequest request, HttpServletResponse response){
@@ -94,7 +94,7 @@ public class ContractManualRestController {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){

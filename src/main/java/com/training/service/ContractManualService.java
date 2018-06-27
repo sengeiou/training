@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * contract_manual 核心业务操作类
- * Created by huai23 on 2018-06-28 01:30:49.
+ * Created by huai23 on 2018-06-28 02:06:09.
  */ 
 @Service
 public class ContractManualService {
@@ -29,7 +29,7 @@ public class ContractManualService {
     /**
      * 新增实体
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public ResponseEntity<String> add(ContractManualEntity contractManual){
         User user = RequestContextHelper.getUser();
@@ -44,7 +44,7 @@ public class ContractManualService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public Page<ContractManualEntity> find(ContractManualQuery query , PageRequest page){
         List<ContractManualEntity> contractManualList = contractManualDao.find(query,page);
@@ -60,7 +60,7 @@ public class ContractManualService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public Long count(ContractManualQuery query){
         Long count = contractManualDao.count(query);
@@ -70,7 +70,7 @@ public class ContractManualService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public ContractManualEntity getById(String id){
         ContractManualEntity contractManualDB = contractManualDao.getById(id);
@@ -80,7 +80,7 @@ public class ContractManualService {
     /**
      * 根据实体更新
      * @param contractManual
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public  ResponseEntity<String> update(ContractManualEntity contractManual){
         int n = contractManualDao.update(contractManual);
@@ -93,7 +93,7 @@ public class ContractManualService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-06-28 01:30:49.
+     * Created by huai23 on 2018-06-28 02:06:09.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = contractManualDao.delete(id);

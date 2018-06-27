@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * contract_manual 查询类
- * Created by huai23 on 2018-06-28 01:30:49.
+ * Created by huai23 on 2018-06-28 02:06:09.
  */ 
 @Data
 public class ContractManualQuery {
@@ -51,6 +51,10 @@ public class ContractManualQuery {
     private String count;
 
     private Integer status;
+
+    private String pauseDate;
+
+    private String deadDate;
 
     private String remark;
 
