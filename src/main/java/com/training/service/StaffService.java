@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Role;
 import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -26,6 +27,10 @@ import java.util.List;
 public class StaffService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private StaffDao staffDao;
@@ -69,6 +74,13 @@ public class StaffService {
     private Staff convertEntityToStaff(StaffEntity staffEntity) {
         Staff staff = new Staff();
         BeanUtils.copyProperties(staffEntity,staff);
+        Role role = roleService.getById(staff.getRoleId());
+        staff.setRole(role);
+        String roleName = "无";
+        if(role!=null){
+            roleName = role.getRoleName();
+        }
+        staff.setRoleName(roleName);
         staff.setMemberCount(10);
         staff.setKpi(98);
         return staff;
@@ -177,5 +189,15 @@ public class StaffService {
         return ResponseUtil.exception("修改失败");
     }
 
+    public ResponseEntity<String> getLoginStaffInfo() {
+        Staff staffRequest = RequestContextHelper.getStaff();
+        if(staffRequest==null){
+            return ResponseUtil.exception("查询失败");
+        }
+        Staff staff = this.getById(staffRequest.getStaffId());
+
+
+        return ResponseUtil.success(staff);
+    }
 }
 

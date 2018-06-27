@@ -52,6 +52,9 @@ public class MemberService {
     @Autowired
     private TrainingDao trainingDao;
 
+    @Autowired
+    private MemberPauseDao memberPauseDao;
+
     /**
      * 新增实体
      * @param member
@@ -487,13 +490,15 @@ public class MemberService {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info("  signIn  memberRequest = {}", memberRequest);
         logger.info("  signIn  training = {}", training);
-
-
-//        int n = memberDao.update(memberUpdate);
-//        if(n==1){
+        TrainingEntity trainingEntity = trainingDao.getById(training.getTrainingId());
+        if(trainingEntity==null){
+            return ResponseUtil.exception("签到异常");
+        }
+        int n = trainingDao.signIn(trainingEntity);
+        if(n==1){
             return ResponseUtil.success("签到成功");
-//        }
-//        return ResponseUtil.exception("签到失败");
+        }
+        return ResponseUtil.exception("签到失败");
     }
 
     public ResponseEntity<String> changeCoach(Member member) {
@@ -661,13 +666,32 @@ public class MemberService {
         return ResponseUtil.success("修改完成");
     }
 
-
+    @Transactional
     public ResponseEntity<String> pauseMember(Member member) {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  pauseMember  staffRequest = {}", staffRequest);
         logger.info("  pauseMember  member = {}", member);
+        if(staffRequest==null){
+            return ResponseUtil.exception("停课异常");
+        }
+        if(member==null||StringUtils.isEmpty(member.getMemberId())){
+            return ResponseUtil.exception("停课参数异常");
+        }
 
-        return ResponseUtil.success("听课成功");
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberId(member.getMemberId());
+        memberEntity.setStatus(9);   //  暂停
+
+        MemberPauseEntity memberPauseEntity = new MemberPauseEntity();
+        memberPauseEntity.setMemberId(member.getMemberId());
+        memberPauseEntity.setPauseDate(ut.currentTime());
+        memberPauseEntity.setPauseStaffId(staffRequest.getStaffId());
+        int n = memberPauseDao.add(memberPauseEntity);
+        if(n==1){
+            n = memberDao.update(memberEntity);
+            return ResponseUtil.success("停课成功");
+        }
+        return ResponseUtil.exception("停课失败");
     }
 
 
@@ -675,8 +699,21 @@ public class MemberService {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  restoreMember  staffRequest = {}", staffRequest);
         logger.info("  restoreMember  member = {}", member);
+        if(staffRequest==null){
+            return ResponseUtil.exception("恢复异常");
+        }
+        if(member==null||StringUtils.isEmpty(member.getMemberId())){
+            return ResponseUtil.exception("恢复参数异常");
+        }
 
-        return ResponseUtil.success("恢复会员成功");
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberId(member.getMemberId());
+        memberEntity.setStatus(0);
+        int n = memberDao.update(memberEntity);
+        if(n==1){
+            return ResponseUtil.success("恢复成功");
+        }
+        return ResponseUtil.exception("恢复失败");
     }
 
     public ResponseEntity<String> changeRole(Staff staff) {
@@ -684,9 +721,20 @@ public class MemberService {
         logger.info("  restoreMember  staffRequest = {}", staffRequest);
         logger.info("  restoreMember  staff = {}", staff);
 
+        StaffEntity staffEntity = staffDao.getById(staff.getStaffId());
+        if(staffEntity==null||StringUtils.isEmpty(staff.getRoleId())){
+            return ResponseUtil.exception("设置角色异常");
 
+        }
+        StaffEntity staffUpdate =  new StaffEntity();
+        staffUpdate.setRoleId(staff.getRoleId());
+        staffUpdate.setStaffId(staff.getStaffId());
+        int n = staffDao.update(staffUpdate);
+        if(n>0){
+            return ResponseUtil.success("设置角色成功");
+        }
+        return ResponseUtil.exception("设置角色失败");
 
-        return ResponseUtil.success("设置角色成功");
     }
 
 

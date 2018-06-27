@@ -4,6 +4,7 @@ import com.training.admin.service.AdminService;
 import com.training.domain.Member;
 import com.training.domain.MemberCard;
 import com.training.domain.Staff;
+import com.training.entity.LessonQuery;
 import com.training.entity.MemberEntity;
 import com.training.service.MemberService;
 import com.training.service.StaffService;
@@ -115,6 +116,15 @@ public class AdminController {
         return memberService.changeRole(staff);
     }
 
+    /**
+     * 分页查询
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "getLoginStaffInfo", method = RequestMethod.GET)
+    public ResponseEntity<String> getLoginStaffInfo(HttpServletRequest request, HttpServletResponse response){
+        logger.info("  getLoginStaffInfo  ");
+        return staffService.getLoginStaffInfo();
+    }
 
 }
 

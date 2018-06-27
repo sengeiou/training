@@ -55,7 +55,7 @@ public interface TrainingRepository {
             "</script>")
     int add(@Param("training") TrainingEntity training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
             " FROM training " +
             " WHERE 1 = 1 " +
             " <if test=\"query.trainingId != null\"> AND training_id = #{query.trainingId} </if>" +
@@ -103,7 +103,7 @@ public interface TrainingRepository {
             "</script>")
     Long count(@Param("query") TrainingQuery training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
             " FROM training " +
             " WHERE training_id = #{id} " +
             "</script>")
@@ -136,6 +136,10 @@ public interface TrainingRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Update("<script> UPDATE training SET sign_time = #{training.signiTme} , modified = now() " +
+            " WHERE training_id = #{training.trainingId} " +
+            "</script>")
+    int signIn(@Param("training") TrainingEntity training);
 
 }
 

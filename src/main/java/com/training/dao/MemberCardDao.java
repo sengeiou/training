@@ -99,5 +99,9 @@ public class MemberCardDao {
         return n;
     }
 
+    public int freeDelay(MemberCardEntity card) {
+        int n = memberCardRepository.delay(card);
+        return n;
+    }
 }
 

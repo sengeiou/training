@@ -151,5 +151,8 @@ public interface MemberCardRepository {
             "</script>")
     int updateCount(@Param("memberCard") MemberCardEntity memberCard);
 
+    @Update("<script> UPDATE member_card SET delay = delay + 1 , end_date = #{memberCard.endDate} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
+            "</script>")
+    int delay(MemberCardEntity memberCard);
 }
 

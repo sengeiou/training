@@ -3,6 +3,7 @@ package com.training.dao;
 import com.training.repository.*;
 import com.training.entity.*;
 import com.training.common.PageRequest;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -84,6 +85,15 @@ public class TrainingDao {
         return n;
     }
 
+
+    public int signIn(TrainingEntity trainingEntity) {
+        if(trainingEntity==null){
+            return 0;
+        }
+        trainingEntity.setSignTime(ut.currentTime());
+        int n = trainingRepository.signIn(trainingEntity);
+        return n;
+    }
 
 }
 

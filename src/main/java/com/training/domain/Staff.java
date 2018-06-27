@@ -21,6 +21,8 @@ public class Staff {
 
     private String roleId;
 
+    private String roleName;
+
     private String username;
 
     private String password;
@@ -52,6 +54,8 @@ public class Staff {
     private Integer kpi;
 
     private String newPassword;
+
+    private Role role;
 
 }
 

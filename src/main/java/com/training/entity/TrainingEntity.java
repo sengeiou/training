@@ -38,6 +38,8 @@ public class TrainingEntity {
 
     private String trainingData;
 
+    private String signTime;
+
     private String feature;
 
     private String remark;

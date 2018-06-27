@@ -2,6 +2,8 @@ package com.training.common;
 
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -11,6 +13,37 @@ public class Const {
     public static final String DOMAIN = "http://localhost:8080";
 
     public static ConcurrentHashMap<String,String> validCodeMap = new ConcurrentHashMap();
+
+    public static List<Integer> times;
+
+    {
+        times = new ArrayList();
+        times.add(900);
+        times.add(930);
+        times.add(1000);
+        times.add(1030);
+        times.add(1100);
+        times.add(1130);
+        times.add(1200);
+        times.add(1230);
+        times.add(1300);
+        times.add(1330);
+        times.add(1400);
+        times.add(1430);
+        times.add(1500);
+        times.add(1530);
+        times.add(1600);
+        times.add(1630);
+        times.add(1700);
+        times.add(1730);
+        times.add(1800);
+        times.add(1830);
+        times.add(1900);
+        times.add(1930);
+        times.add(2000);
+        times.add(2030);
+        times.add(2100);
+    }
 
     /**
      * 数据请求返回码

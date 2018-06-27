@@ -1,6 +1,7 @@
 package com.training.api;
 
 import com.training.domain.Lesson;
+import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -62,6 +63,17 @@ public class LessonRestController {
     public ResponseEntity<String> cancel(@RequestBody Lesson lesson, HttpServletRequest request, HttpServletResponse response){
         logger.info("  cancel  lesson = {}",lesson);
         return lessonService.cancel(lesson);
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "scheduleCoach", method = RequestMethod.GET)
+    public ResponseEntity<String> scheduleCoach(@ModelAttribute LessonQuery query , HttpServletRequest request, HttpServletResponse response){
+        logger.info("  scheduleCoach  LessonQuery = {}",query);
+        return lessonService.scheduleCoach(query);
     }
 
 }
