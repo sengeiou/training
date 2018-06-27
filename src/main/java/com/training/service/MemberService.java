@@ -661,5 +661,24 @@ public class MemberService {
         return ResponseUtil.success("修改完成");
     }
 
+
+    public ResponseEntity<String> pauseMember(Member member) {
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info("  pauseMember  staffRequest = {}", staffRequest);
+        logger.info("  pauseMember  member = {}", member);
+
+        return ResponseUtil.success("听课成功");
+    }
+
+
+    public ResponseEntity<String> restoreMember(Member member) {
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info("  restoreMember  staffRequest = {}", staffRequest);
+        logger.info("  restoreMember  member = {}", member);
+
+        return ResponseUtil.success("恢复会员成功");
+    }
+
+
 }
 

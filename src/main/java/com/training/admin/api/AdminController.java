@@ -82,5 +82,29 @@ public class AdminController {
         return memberService.changeCoach(member);
     }
 
+    /**
+     * 会员停课
+     * @param member
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "pauseMember", method = RequestMethod.POST)
+    public ResponseEntity<String> pauseMember(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  pauseMember  member = {}",member);
+        return memberService.pauseMember(member);
+    }
+
+    /**
+     * 恢复会员
+     * @param member
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "restoreMember", method = RequestMethod.POST)
+    public ResponseEntity<String> restoreMember(@RequestBody Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  restoreMember  member = {}",member);
+        return memberService.restoreMember(member);
+    }
+
+
+
 }
 
