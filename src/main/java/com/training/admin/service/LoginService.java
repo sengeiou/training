@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.training.common.Const;
 import com.training.common.Page;
 import com.training.common.PageRequest;
+import com.training.dao.RoleDao;
 import com.training.dao.StaffDao;
 import com.training.domain.Staff;
 import com.training.domain.User;
+import com.training.entity.RoleEntity;
 import com.training.entity.StaffEntity;
 import com.training.entity.StaffQuery;
 import com.training.util.JwtUtil;
@@ -34,6 +36,9 @@ public class LoginService {
     private StaffDao staffDao;
 
     @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
     private JwtUtil jwt;
 
     public Object doLogin(Staff staff) {
@@ -47,6 +52,16 @@ public class LoginService {
         if(!staffEntity.getPassword().equals(staff.getPassword())){
             return ResponseUtil.exception("密码错误！");
         }
+
+        if(StringUtils.isEmpty(staffEntity.getRoleId())){
+            return ResponseUtil.exception("暂无角色，不能登陆");
+        }
+
+        RoleEntity roleEntity = roleDao.getById(staffEntity.getRoleId());
+        if(roleEntity==null){
+            return ResponseUtil.exception("角色无效，不能登陆");
+        }
+
         JSONObject jo = new JSONObject();
         String subject = JwtUtil.generalAdminSubject(staffEntity);
         try {
