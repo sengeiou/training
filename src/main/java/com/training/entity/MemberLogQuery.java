@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member_log 查询类
- * Created by huai23 on 2018-06-09 09:16:23.
+ * Created by huai23 on 2018-06-28 23:16:57.
  */ 
 @Data
 public class MemberLogQuery {
@@ -17,6 +17,8 @@ public class MemberLogQuery {
     private String type;
 
     private String content;
+
+    private String memberId;
 
     private String staffId;
 

@@ -1,5 +1,6 @@
 package com.training.domain;
 
+import com.training.entity.MemberLogEntity;
 import lombok.Data;
 
 import java.util.Date;
@@ -70,6 +71,8 @@ public class Member {
     private String coachStaffId;
 
     private String coachName;
+
+    private MemberLogEntity memberLog;
 
 }
 

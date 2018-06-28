@@ -55,6 +55,9 @@ public class MemberService {
     @Autowired
     private MemberPauseDao memberPauseDao;
 
+    @Autowired
+    private MemberLogDao memberLogDao;
+
     /**
      * 新增实体
      * @param member
@@ -82,7 +85,6 @@ public class MemberService {
         List<Member> data = new ArrayList<>();
         for (MemberEntity trainingEntity : memberList){
             Member member = transferMember(trainingEntity);
-            member.setCardType("私教次卡,团体月卡");
             data.add(member);
         }
         Long count = memberDao.count(query);
@@ -107,6 +109,18 @@ public class MemberService {
             member.setCoachName(staffEntity.getCustname());
         }
         member.setCardType("私教次卡,团体月卡");
+
+        MemberLogQuery memberLogQuery = new MemberLogQuery();
+        memberLogQuery.setMemberId(memberEntity.getMemberId());
+        PageRequest page = new PageRequest();
+        page.setPageSize(1);
+
+        List<MemberLogEntity> memberLogEntityList = memberLogDao.find(memberLogQuery,page);
+        if(memberLogEntityList.size()>0){
+            member.setMemberLog(memberLogEntityList.get(0));
+        }else{
+            member.setMemberLog(new MemberLogEntity());
+        }
         return member;
     }
 

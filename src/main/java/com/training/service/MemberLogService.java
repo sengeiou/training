@@ -28,6 +28,9 @@ public class MemberLogService {
     @Autowired
     private MemberLogDao memberLogDao;
 
+    @Autowired
+    private StaffDao staffDao;
+
     /**
      * 新增实体
      * @param memberLog
@@ -52,6 +55,12 @@ public class MemberLogService {
      */ 
     public Page<MemberLogEntity> find(MemberLogQuery query , PageRequest page){
         List<MemberLogEntity> memberLogList = memberLogDao.find(query,page);
+        for (MemberLogEntity memberLog:memberLogList){
+            StaffEntity staffEntity = staffDao.getById(memberLog.getStaffId());
+            if(staffEntity!=null){
+                memberLog.setStaffName(staffEntity.getCustname());
+            }
+        }
         Long count = memberLogDao.count(query);
         Page<MemberLogEntity> returnPage = new Page<>();
         returnPage.setContent(memberLogList);

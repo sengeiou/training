@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member_log 实体类
- * Created by huai23 on 2018-06-09 09:16:23.
+ * Created by huai23 on 2018-06-28 23:16:57.
  */ 
 @Data
 public class MemberLogEntity {
@@ -18,6 +18,8 @@ public class MemberLogEntity {
 
     private String content;
 
+    private String memberId;
+
     private String staffId;
 
     private String storeId;
@@ -28,6 +30,7 @@ public class MemberLogEntity {
 
     private Date modified;
 
+    private String staffName;
 
 }
 
