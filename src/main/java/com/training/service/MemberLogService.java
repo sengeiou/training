@@ -5,6 +5,7 @@ import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class MemberLogService {
      */ 
     public ResponseEntity<String> add(MemberLogEntity memberLog){
         Staff staff = RequestContextHelper.getStaff();
+        memberLog.setLogId(IDUtils.getId());
         memberLog.setStaffId(staff.getStaffId());
         int n = memberLogDao.add(memberLog);
         if(n==1){

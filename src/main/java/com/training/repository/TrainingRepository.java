@@ -136,7 +136,7 @@ public interface TrainingRepository {
             "</script>")
     int delete(@Param("id") String id);
 
-    @Update("<script> UPDATE training SET sign_time = #{training.signiTme} , modified = now() " +
+    @Update("<script> UPDATE training SET sign_time = #{training.signTime} , modified = now() " +
             " WHERE training_id = #{training.trainingId} " +
             "</script>")
     int signIn(@Param("training") TrainingEntity training);

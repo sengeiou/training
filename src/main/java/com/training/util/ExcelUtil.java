@@ -137,16 +137,21 @@ public class ExcelUtil {
     }
 
     public static void main(String[] args) {
-        File file = new File("d:/file/contract20180627.xls");
-        List<List<String>> data = readExcel(file);
-        int i = 0;
-        for (List<String> item : data){
-            System.out.println(JSON.toJSONString(item));
-            i++;
+//        File file = new File("d:/file/contract20180627.xls");
+//        List<List<String>> data = readExcel(file);
+//        int i = 0;
+//        for (List<String> item : data){
+//            System.out.println(JSON.toJSONString(item));
+//            i++;
+//        }
+//        System.out.println(" count = "+i);
+
+
+        String staffName = "耿孟南(耿孟南)";
+        if(staffName.indexOf("(")>0){
+            staffName = staffName.substring(0,staffName.indexOf("("));
         }
-        System.out.println(" count = "+i);
-
-
+        System.out.println(staffName);
     }
 
 

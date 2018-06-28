@@ -305,11 +305,17 @@ public class MemberService {
         PageRequest page = new PageRequest();
         page.setPageSize(100);
         List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+
+        logger.info("  getValidLessonType  cardList.size() = {} ",cardList.size());
+
+
         List<MemberCardEntity> validCardList = new ArrayList<>();
         for (MemberCardEntity memberCardEntity : cardList){
             if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
                 if(memberCardEntity.getCount()<=0){
-                    continue;
+//                    if(memberCardEntity.getCount()<=0 && ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())<0){
+
+//                        continue;
                 }
             }
             validCardList.add(memberCardEntity);
@@ -332,8 +338,11 @@ public class MemberService {
             if(cardTypeSet.contains(cardType)){
                 continue;
             }
-            if(memberCardEntity.getCount()<1){
+            if(memberCardEntity.getCount()<=0 && ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())<0) {
                 continue;
+            }
+            if(memberCardEntity.getCount()<1){
+//                continue;
             }
             cardTypeSet.add(cardType);
             Lesson lesson = new Lesson();
@@ -606,7 +615,7 @@ public class MemberService {
 
             }
 
-            if(LessonTypeEnum.P.getKey().equals(lesson.getType())){
+            if(LessonTypeEnum.T.getKey().equals(lesson.getType())){
                 if(memberCardEntity.getType().equals(CardTypeEnum.TT.getKey())
                         ||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
 
@@ -665,8 +674,8 @@ public class MemberService {
         MemberEntity memberUpdate = new MemberEntity();
         memberUpdate.setMemberId(memberRequest.getMemberId());
         if(StringUtils.isNotEmpty(member.getNickname())){
-            memberUpdate.setNickname(member.getNickname());
-            flag = true;
+//            memberUpdate.setNickname(member.getNickname());
+//            flag = true;
         }
         if(StringUtils.isNotEmpty(member.getImage())){
             memberUpdate.setImage(member.getImage());

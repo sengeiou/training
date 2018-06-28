@@ -2,11 +2,8 @@ package com.training.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
-import com.training.domain.Lesson;
-import com.training.domain.Member;
-import com.training.domain.Training;
+import com.training.domain.*;
 import com.training.entity.*;
-import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.IDUtils;
 import com.training.util.ut;
@@ -530,6 +527,13 @@ public class LessonService {
             return ResponseUtil.exception("约课失败!课程卡已无可用次数!");
         }
 
+        logger.info(" =======   lesson.getLessonDate() = {} ,memberCardEntity.getEndDate() = {} ",lesson.getLessonDate(),memberCardEntity.getEndDate());
+        logger.info(" =======   passDayByDate = {} ",ut.passDayByDate(lesson.getLessonDate(),memberCardEntity.getEndDate()));
+
+        if(ut.passDayByDate(lesson.getLessonDate(),memberCardEntity.getEndDate())<0){
+            return ResponseUtil.exception("约课失败!预约日期已超过课卡有效期范围!");
+        }
+
         if(memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())) {
             TrainingQuery trainingQuery = new TrainingQuery();
             trainingQuery.setLessonDate(lesson.getLessonDate());
@@ -668,11 +672,19 @@ public class LessonService {
     public ResponseEntity<String> cancel(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" cancel  memberRequest = {}",memberRequest);
-        logger.info(" cancel  memberRequest = {}",lesson);
+        logger.info(" cancel  lesson = {}",lesson);
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info(" cancel  staffRequest = {}",staffRequest);
 
         if(StringUtils.isEmpty(lesson.getMemberId())){
             lesson.setMemberId(memberRequest.getMemberId());
         }
+
+        boolean manageFlag = false;
+        if(StringUtils.isNotEmpty(memberRequest.getStaffId())){
+            manageFlag = true;
+        }
+        logger.info(" cancel  manageFlag = {}",manageFlag);
 
         TrainingEntity trainingEntity = trainingDao.getById(lesson.getTrainingId());
         if(trainingEntity==null){
@@ -683,14 +695,15 @@ public class LessonService {
             return ResponseUtil.exception("取消约课失败!该课程已过期");
         }
 
-        if(ut.currentDate().equals(trainingEntity.getLessonDate())){
+        if(ut.currentDate().equals(trainingEntity.getLessonDate())) {
+            if(manageFlag){
 
-            if((trainingEntity.getStartHour()-ut.currentHour())<600){
-                return ResponseUtil.exception("取消约课失败!上课前6小时无法取消预约!如需取消请联系你的教练");
+            }else{
+                if((trainingEntity.getStartHour()-ut.currentHour())<600){
+                    return ResponseUtil.exception("取消约课失败!上课前6小时无法取消预约!如需取消请联系你的教练");
+                }
             }
-
         }
-
 
         if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
             TrainingEntity trainingUpdate = new TrainingEntity();

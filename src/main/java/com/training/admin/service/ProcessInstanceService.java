@@ -157,6 +157,8 @@ public class ProcessInstanceService {
                     }
                 }else{
                     System.out.println(" ================================  data = null : "+data);
+                    count = 0;
+                    contractEntityList = new ArrayList<>();
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);

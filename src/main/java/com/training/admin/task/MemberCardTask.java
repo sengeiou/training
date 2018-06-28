@@ -18,7 +18,7 @@ public class MemberCardTask {
     @Autowired
     CreateCardService createCardService;
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 0/5 * * * *")
     public void createCard(){
         logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
         createCardService.createCard();

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,8 @@ public class CreateCardService {
         page.setPageSize(1000);
         List<ContractEntity> contractEntityList = contractDao.find(query,page);
         for(ContractEntity contractEntity:contractEntityList){
+            logger.info("createCard   contractEntity = {} ", contractEntity);
+
             try {
                 String phone = contractEntity.getPhone();
                 if(StringUtils.isEmpty(phone)){
@@ -87,7 +90,8 @@ public class CreateCardService {
         }
     }
 
-    private void createPT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception {
+    @Transactional
+    void createPT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception {
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
@@ -105,37 +109,49 @@ public class CreateCardService {
         memberCardEntity.setEndDate(contractEntity.getEndDate());
         memberCardService.add(memberCardEntity);
 
+        if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
+            StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(memberDB.getMemberId());
+            memberUpdate.setCoachStaffId(staffEntity.getStaffId());
+            int n = memberDao.update(memberUpdate);
+        }
+
         contractEntity.setStatus(1);
-        updateCiontractStatus(contractEntity);
+        updateContractStatus(contractEntity);
 
         logger.info(" createPT  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
     private MemberEntity checkContract(ContractEntity contractEntity) throws Exception {
         String staffName = contractEntity.getCoach();
+        if(staffName.indexOf("(")>0){
+            staffName = staffName.substring(0,staffName.indexOf("("));
+        }
         StaffQuery query = new StaffQuery();
         query.setCustname(staffName);
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<StaffEntity> staffList = staffDao.find(query,new PageRequest());
         if(staffList.size()!=1){
-            logger.error(" createPT  ERROR :  staffList.size = {} , staffName = {}  ", staffList.size(), staffName);
+            logger.error(" checkContract  ERROR :  staffList.size = {} , staffName = {}  ", staffList.size(), staffName);
             throw new Exception(" "+staffName+" staffList.size = "+ staffList.size());
         }
         StaffEntity staffEntity = staffList.get(0);
         if(StringUtils.isEmpty(staffEntity.getOpenId())){
-            logger.error(" createPT  ERROR :  openId is null , staffEntity = {}  ", staffEntity);
+            logger.error(" checkContract  ERROR :  openId is null , staffEntity = {}  ", staffEntity);
             throw new Exception("openId is null");
         }
         MemberEntity coach = memberDao.getByOpenId(staffEntity.getOpenId());
         if(coach==null){
-            logger.error(" createPT  ERROR :  coach is null , openId = {}  ", staffEntity.getOpenId());
+            logger.error(" checkContract  ERROR :  coach is null , openId = {}  ", staffEntity.getOpenId());
             throw new Exception("coach is null");
         }
         return coach;
     }
 
-    private void createPM(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
+    @Transactional
+    void createPM(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
@@ -153,23 +169,33 @@ public class CreateCardService {
         memberCardEntity.setEndDate(contractEntity.getEndDate());
         memberCardService.add(memberCardEntity);
 
+        if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
+            StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(memberDB.getMemberId());
+            memberUpdate.setCoachStaffId(staffEntity.getStaffId());
+            int n = memberDao.update(memberUpdate);
+        }
+
         contractEntity.setStatus(1);
-        updateCiontractStatus(contractEntity);
+        updateContractStatus(contractEntity);
 
         logger.info(" createPM  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
-    private void createTT(ContractEntity contractEntity, MemberEntity memberDB) {
+    @Transactional
+    void createTT(ContractEntity contractEntity, MemberEntity memberDB) {
 
 
     }
 
-    private void createTM(ContractEntity contractEntity, MemberEntity memberDB) {
+    @Transactional
+    void createTM(ContractEntity contractEntity, MemberEntity memberDB) {
 
 
     }
 
-    private void updateCiontractStatus(ContractEntity contractEntity) {
+    private void updateContractStatus(ContractEntity contractEntity) {
         ContractEntity contractUpdate = new ContractEntity();
         contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
         contractUpdate.setStatus(contractEntity.getStatus());
