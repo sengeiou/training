@@ -58,7 +58,7 @@ public class ExcelUtil {
                 }else{
                     rowCount++;
                 }
-                for( int j = row.getFirstCellNum() ; j <= row.getLastCellNum() ;j++){
+                for( int j = 0 ; j <= row.getLastCellNum() ;j++){
                     cell = row.getCell(j);
                     if(cell == null || cell.getCellType() == HSSFCell.CELL_TYPE_BLANK){
                         //当该单元格为空
@@ -137,7 +137,7 @@ public class ExcelUtil {
     }
 
     public static void main(String[] args) {
-        File file = new File("/Users/huai23/Documents/健身/contract20180627.xls");
+        File file = new File("d:/file/contract20180627.xls");
         List<List<String>> data = readExcel(file);
         int i = 0;
         for (List<String> item : data){

@@ -1,20 +1,28 @@
 package com.training.admin.api;
 
+import com.alibaba.fastjson.JSON;
+import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
+import com.training.dao.ContractManualDao;
 import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.service.*;
 import com.training.util.DingtalkUtil;
+import com.training.util.ExcelUtil;
 import com.training.util.IDUtils;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +53,15 @@ public class DingDingRestController {
     @Autowired
     private ContractService contractService;
 
+    @Autowired
+    private ContractManualService contractManualService;
+
+    @Autowired
+    private ContractManualDao contractManualDao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @GetMapping("dept")
     public Object dept(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   dept  ");
@@ -65,13 +82,13 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map> deptList = DingtalkUtil.getDepts();
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
-            System.out.println("id: " + dept.get("id").toString()+" , name: " + dept.get("name").toString());
+            System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
 
-            String deptId = dept.get("id").toString();
-            List<Map> staffList = DingtalkUtil.getStaffs(dept.get("id").toString());
+            String deptId = dept.get("dept_id").toString();
+            List<Map> staffList = DingtalkUtil.getStaffs(dept.get("dept_id").toString());
             for (int j = 0; j < staffList.size(); j++) {
                 Map item = staffList.get(j);
                 System.out.println("userid: " + item.get("userid").toString());
@@ -166,5 +183,160 @@ public class DingDingRestController {
         return "member2执行成功";
     }
 
+
+    @GetMapping("contract_manual")
+    public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   contract_manual  ");
+
+        File file = new File("d:/file/contract20180628.xls");
+        List<List<String>> data = ExcelUtil.readExcel(file);
+        int i = 0;
+        for (List<String> item : data){
+            System.out.println(JSON.toJSONString(item));
+            if(i==0){
+                i++;
+                continue;
+            }
+            ContractManualEntity contractManualEntity = new ContractManualEntity();
+            contractManualEntity.setContractId(item.get(0));
+            contractManualEntity.setCardNo(item.get(1));
+
+            contractManualEntity.setMemberName(item.get(2));
+            contractManualEntity.setPhone(item.get(3));
+            contractManualEntity.setCardType(item.get(4));
+            contractManualEntity.setStoreName(item.get(5));
+            contractManualEntity.setSalesman(item.get(6));
+            contractManualEntity.setSalesmanPhone(item.get(7));
+            contractManualEntity.setCoach(item.get(8));
+            contractManualEntity.setCoachPhone(item.get(9));
+            contractManualEntity.setTotal(item.get(10));
+            contractManualEntity.setMoney(item.get(11));
+            contractManualEntity.setType(item.get(12));
+            contractManualEntity.setPayType(item.get(13));
+            contractManualEntity.setPrice(item.get(14));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date1 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(15))));
+            String date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(16))));
+
+            contractManualEntity.setStartDate(date1);
+            contractManualEntity.setEndDate(date2);
+            contractManualEntity.setRealFee(item.get(17));
+            contractManualEntity.setCount(item.get(18));
+            contractManualEntity.setStatus(item.get(19));
+            contractManualEntity.setPauseDate(item.size()>20?item.get(20):"");
+            contractManualEntity.setDeadDate(item.size()>21?item.get(21):"");
+
+            int n = contractManualDao.add(contractManualEntity);
+
+
+            i++;
+        }
+        System.out.println(" count = "+i);
+
+        return "contract_manual执行成功";
+    }
+
+
+    @GetMapping("contract_manual2")
+    public Object contract_manual2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   contract_manual2  ");
+        ContractManualQuery query = new ContractManualQuery();
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(500);
+        Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
+        for (ContractManualEntity contractManualEntity : page.getContent()){
+            MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
+            if(memberEntityDB!=null){
+                logger.info(" ============   "+contractManualEntity.getPhone() +" 已存在 ");
+                continue;
+            }
+            MemberEntity member = new MemberEntity();
+            member.setMemberId(IDUtils.getId());
+            member.setType("M");
+            member.setName(contractManualEntity.getMemberName());
+            member.setPhone(contractManualEntity.getPhone());
+            member.setSalesman(contractManualEntity.getSalesman());
+
+            StaffEntity staffEntity = staffService.getByPhone(contractManualEntity.getCoachPhone());
+            if(staffEntity!=null){
+                member.setCoachStaffId(staffEntity.getStaffId());
+            }
+
+            memberService.add(member);
+
+        }
+        return "contract_manual2执行成功";
+    }
+
+    @GetMapping("contract_manual3")
+    public Object contract_manual3(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   contract_manual3  ");
+        ContractManualQuery query = new ContractManualQuery();
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(500);
+        Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
+        int n = 0;
+        for (ContractManualEntity contractManualEntity : page.getContent()){
+            MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
+            if(memberEntityDB==null){
+                logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
+                continue;
+            }
+            String coachId = "123";
+            String cardId = "1";
+            if(contractManualEntity.getStatus().indexOf("有效")>=0||contractManualEntity.getStatus().indexOf("停")>=0){
+                int total = Integer.parseInt(contractManualEntity.getTotal());
+                int count = Integer.parseInt(contractManualEntity.getCount());
+                if(count==0){
+                    continue;
+                }
+                MemberCardEntity memberCardEntity = new MemberCardEntity();
+                memberCardEntity.setCardNo(IDUtils.getId());
+                memberCardEntity.setCardId(cardId);
+                memberCardEntity.setCoachId(coachId);
+                memberCardEntity.setContractId(contractManualEntity.getContractId());
+                memberCardEntity.setMemberId(memberEntityDB.getMemberId());
+                if(contractManualEntity.getCardType().indexOf("私教")>=0) {
+                    memberCardEntity.setType(CardTypeEnum.PT.getKey());
+                }
+                if(contractManualEntity.getCardType().indexOf("赠课")>=0) {
+                    memberCardEntity.setType(CardTypeEnum.TY.getKey());
+                }
+                memberCardEntity.setCount(count);
+                memberCardEntity.setTotal(total);
+                memberCardEntity.setDays(ut.passDayByDate(contractManualEntity.getStartDate(),contractManualEntity.getEndDate()));
+                memberCardEntity.setMoney(contractManualEntity.getMoney());
+                memberCardEntity.setStartDate(contractManualEntity.getStartDate());
+                memberCardEntity.setEndDate(contractManualEntity.getEndDate());
+                memberCardService.add(memberCardEntity);
+                n++;
+            }
+        }
+        logger.info("  n = {}" , n);
+        return "contract_manual3执行成功";
+    }
+
+    @GetMapping("contract_manual4")
+    public Object contract_manual4(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   contract_manual4  ");
+        ContractManualQuery query = new ContractManualQuery();
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(5000);
+        Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
+        int n = 0;
+        for (ContractManualEntity contractManualEntity : page.getContent()){
+            MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
+            if(memberEntityDB==null){
+                logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
+                continue;
+            }
+            if(contractManualEntity.getStatus().indexOf("有效")>=0||contractManualEntity.getStatus().indexOf("停")>=0){
+
+            }
+        }
+        logger.info("  n = {}" , n);
+        return "contract_manual4执行成功";
+    }
 
 }

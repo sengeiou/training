@@ -102,7 +102,7 @@ public class WechatController {
             memberCardEntity.setMoney(card.getPrice());
             memberCardEntity.setStartDate(ut.currentDate());
             memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
-            memberCardService.add(memberCardEntity);
+//            memberCardService.add(memberCardEntity);
 
             String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();

@@ -50,7 +50,7 @@ public class ContractManualEntity {
 
     private String count;
 
-    private Integer status;
+    private String status;
 
     private String pauseDate;
 

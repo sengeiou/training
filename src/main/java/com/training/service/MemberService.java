@@ -194,12 +194,12 @@ public class MemberService {
         if(StringUtils.isEmpty(member.getPhone())||member.getPhone().length()!=11){
             return ResponseUtil.exception("手机号码输入有误!");
         }
-        // todo 发送手机验证码
         String code = IDUtils.getVerifyCode();
-        code = "1234";
+//        code = "1234";
         Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
         try {
             SmsUtil.sendCode(member.getPhone(),code);
+            logger.info(" memberRestController  sendCode  getPhone = {} , code = {} ",member.getPhone(),code);
             return ResponseUtil.success("发送验证码成功");
         } catch (ClientException e) {
             e.printStackTrace();
@@ -345,6 +345,12 @@ public class MemberService {
             if(staff == null){
                 return ResponseUtil.exception("还未给您分配教练，请稍后再试");
             }
+
+            String coachId = getCoachIdByMemberId(query.getMemberId());
+            if(coachId == null){
+                return ResponseUtil.exception("教练暂时未绑定微信，请联系客服或稍后再试");
+            }
+
             lesson.setCoachId(memberCardEntity.getCoachId());
             lesson.setTitle("私教课");
             lesson.setCoachName(staff.getCustname());
@@ -395,7 +401,7 @@ public class MemberService {
 
         for (int i = 0; i < types.size(); i++) {
             Lesson lesson = types.get(i);
-            logger.info("  lesson"+i+" = {} ",lesson );
+//            logger.info("  lesson"+i+" = {} ",lesson );
         }
 
         return ResponseUtil.success(types);

@@ -18,6 +18,8 @@ public class Const {
 
     {
         times = new ArrayList();
+        times.add(800);
+        times.add(830);
         times.add(900);
         times.add(930);
         times.add(1000);

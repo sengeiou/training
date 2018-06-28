@@ -153,8 +153,16 @@ public class LessonService {
 //            lessonList = quertSpecialSchedule(query);
 //        }
         if(query.getType().startsWith("P")){
+
+            String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
+            logger.info(" schedule  coachId = {} ",coachId);
+            if(StringUtils.isEmpty(coachId)){
+                //return ResponseUtil.exception("教练未绑定微信,暂时不能约课!请稍后再试");
+                query.setCoachId(null);
+            }
+
             if(StringUtils.isEmpty(query.getCoachId())){
-                return ResponseUtil.exception("教练信息缺失,查询课程时间表异常!");
+                //return ResponseUtil.exception("教练信息缺失,查询课程时间表异常!");
             }
             lessonList = quertPersonalSchedule(query);
         }
@@ -177,6 +185,7 @@ public class LessonService {
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(query.getLessonDate());
         String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
+        logger.info(" quertPersonalSchedule  coachId = {} ",coachId);
         query.setCoachId(coachId);
         trainingQuery.setCoachId(coachId);
         trainingQuery.setStatus(0);
@@ -269,7 +278,7 @@ public class LessonService {
         }
 
         for (Lesson lesson:lessonList){
-            logger.info(" lesson = {} ",lesson);
+//            logger.info(" lesson = {} ",lesson);
         }
 
         return lessonList;

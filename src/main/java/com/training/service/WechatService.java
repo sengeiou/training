@@ -91,7 +91,7 @@ public class WechatService {
             ResponseUtil.exception("支付金额含有非法字符，请重试");
         }
         int total_fee = (int)(fee*100);
-        total_fee = 1;
+//        total_fee = 1;
         CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
 
         Map<String, String> param = new HashMap<>();
