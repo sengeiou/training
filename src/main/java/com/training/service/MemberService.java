@@ -347,6 +347,8 @@ public class MemberService {
             }
 
             String coachId = getCoachIdByMemberId(query.getMemberId());
+            logger.info(" ============ coachId = {}",coachId);
+
             if(coachId == null){
                 return ResponseUtil.exception("教练暂时未绑定微信，请联系客服或稍后再试");
             }
@@ -572,7 +574,12 @@ public class MemberService {
 
     public ResponseEntity<String> getCanUseCardList(Lesson lesson) {
         logger.info("  getCanUseCardList  lesson = {}", lesson);
+        List cards = new ArrayList();
         MemberCardQuery query = new MemberCardQuery();
+        if(StringUtils.isEmpty(lesson.getMemberId())){
+            logger.info("  getCanUseCardList  getMemberId = {}", lesson.getMemberId());
+            return ResponseUtil.success(cards);
+        }
         query.setMemberId(lesson.getMemberId());
         query.setStatus(0);
         query.setStartDate(ut.currentDate());
@@ -580,6 +587,8 @@ public class MemberService {
         PageRequest page = new PageRequest();
         page.setPageSize(100);
         List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+        logger.info("  getCanUseCardList   cardList.size() = {}", cardList.size());
+
         List<MemberCardEntity> validCardList = new ArrayList<>();
         for (MemberCardEntity memberCardEntity : cardList){
             if(LessonTypeEnum.P.getKey().equals(lesson.getType())){
@@ -613,7 +622,8 @@ public class MemberService {
 
         }
 
-        List cards = new ArrayList();
+        logger.info("  getCanUseCardList   cardList.size() = {}", cardList.size());
+
         for (MemberCardEntity memberCardEntity : cardList){
             MemberCard card = memberCardService.transfer(memberCardEntity);
             cards.add(card);
@@ -646,8 +656,8 @@ public class MemberService {
      */
     public  ResponseEntity<String> updateImage(MemberEntity member){
         Member memberRequest = RequestContextHelper.getMember();
-        logger.info("  updateImage  memberRequest = {}",memberRequest);
-        logger.info("  updateImage  member = {}",member);
+//        logger.info("  updateImage  memberRequest = {}",memberRequest);
+//        logger.info("  updateImage  member = {}",member);
         if(memberRequest==null||StringUtils.isEmpty(memberRequest.getMemberId())){
             return ResponseUtil.exception("修改异常");
         }
@@ -662,7 +672,7 @@ public class MemberService {
             memberUpdate.setImage(member.getImage());
             flag = true;
         }
-        logger.info("  updateImage  memberUpdate = {}",memberUpdate);
+//        logger.info("  updateImage  memberUpdate = {}",memberUpdate);
         if(flag){
             int n = memberDao.update(memberUpdate);
             if(n==1){

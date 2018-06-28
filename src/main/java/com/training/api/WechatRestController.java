@@ -86,7 +86,7 @@ public class WechatRestController {
      */
     @RequestMapping (value = "code/{code}", method = RequestMethod.GET)
     public ResponseEntity<String> getMemberByCode(@PathVariable String code, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  getMemberByCode  code = {}",code);
+//        logger.info("  getMemberByCode  code = {}",code);
         return wechatService.getMemberByCode(code);
     }
 

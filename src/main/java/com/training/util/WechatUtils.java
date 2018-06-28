@@ -37,7 +37,7 @@ public class WechatUtils {
      * Created by huai23 on 2018-05-26 13:33:17.
      */
     public String getOpenIdByCode(String code){
-        System.out.println(" getOpenIdByCode  code = {}"+code);
+//        System.out.println(" getOpenIdByCode  code = {}"+code);
         String openId = null;
         try {
             StringBuilder urlPath = new StringBuilder(jscode2session); // 微信提供的API，这里最好也放在配置文件
@@ -46,15 +46,15 @@ public class WechatUtils {
             urlPath.append(String.format("&js_code=%s", code));
             urlPath.append(String.format("&grant_type=%s", "authorization_code")); // 固定值
             String data = HttpUtils.doGet(urlPath.toString()); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
-            System.out.println("请求结果："+data);
+//            System.out.println("请求结果："+data);
             JSONObject obj = JSON.parseObject(data);
             openId = obj.get("openid").toString();
             String sessionKey = obj.get("session_key").toString();
-            System.out.println("获得openId: {} "+ openId);
-            System.out.println("获得sessionKey:  {} "+sessionKey);
+//            System.out.println("获得openId: {} "+ openId);
+//            System.out.println("获得sessionKey:  {} "+sessionKey);
             if(obj.containsKey("unionid")){
                 String unionId = obj.get("unionid").toString();
-                System.out.println("获得unionId: {} "+unionId);
+//                System.out.println("获得unionId: {} "+unionId);
             }
         } catch (Exception e) {
             System.out.println(" getOpenIdByCode ERROR : {}"+e.getMessage());
@@ -87,7 +87,7 @@ public class WechatUtils {
             param.put("notify_url",notify_url);
             param.put("trade_type","JSAPI");
             String sign = WXPayUtil.generateSignature(param,key);
-            System.out.println("sign："+sign);
+//            System.out.println("sign："+sign);
             param.put("sign",sign);
             String reqBody = WXPayUtil.mapToXml(param);
 //            System.out.println("reqBody："+reqBody);

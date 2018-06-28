@@ -183,7 +183,7 @@ public class MemberRestController {
      */
     @RequestMapping (value = "updateImage", method = RequestMethod.POST)
     public ResponseEntity<String> updateImage(@RequestBody MemberEntity member,HttpServletRequest request, HttpServletResponse response){
-        logger.info("  updateImage  member = {}",member);
+//        logger.info("  updateImage  member = {}",member);
         return memberService.updateImage(member);
     }
 

@@ -11,6 +11,7 @@ import com.training.common.*;
 import com.training.util.IDUtils;
 import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -146,23 +147,23 @@ public class LessonService {
 
     public ResponseEntity<String> schedule(LessonQuery query) {
         List<Lesson> lessonList = new ArrayList();
-        if(query.getType().equals("T")){
+        if("T".equals(query.getType())){
             lessonList = quertTeamSchedule(query);
         }
 //        if(query.getType().startsWith("S")){
 //            lessonList = quertSpecialSchedule(query);
 //        }
-        if(query.getType().startsWith("P")){
+        if(StringUtils.isNotEmpty(query.getType()) && query.getType().startsWith("P")){
 
             String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
             logger.info(" schedule  coachId = {} ",coachId);
             if(StringUtils.isEmpty(coachId)){
-                //return ResponseUtil.exception("教练未绑定微信,暂时不能约课!请稍后再试");
+//                return ResponseUtil.exception("教练未绑定微信,暂时不能约课!请稍后再试");
                 query.setCoachId(null);
             }
 
             if(StringUtils.isEmpty(query.getCoachId())){
-                //return ResponseUtil.exception("教练信息缺失,查询课程时间表异常!");
+//                return ResponseUtil.exception("教练信息缺失,查询课程时间表异常!");
             }
             lessonList = quertPersonalSchedule(query);
         }
@@ -174,7 +175,7 @@ public class LessonService {
     private List<Lesson> quertPersonalSchedule(LessonQuery query) {
         List<Lesson> lessonList = new ArrayList();
         if(StringUtils.isEmpty(query.getCoachId())){
-            return lessonList;
+//            return lessonList;
         }
         Member memberRequest = RequestContextHelper.getMember();
         if(StringUtils.isEmpty(query.getMemberId())){
@@ -244,8 +245,8 @@ public class LessonService {
             lesson.setTrainingId("");
             lesson.setTrainingList(new ArrayList<>());
             for (TrainingEntity trainingEntity:trainingEntityList){
-                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
-                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
+//                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
+//                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
                 if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
                     if(trainingEntity.getCardType().equals(CardTypeEnum.PT.getKey())||trainingEntity.getCardType().equals(CardTypeEnum.TY.getKey())){
                         lesson.setQuota(0);
@@ -788,7 +789,7 @@ public class LessonService {
         }
 
         for (Lesson lesson:lessonList){
-            logger.info(" lesson = {} ",lesson);
+//            logger.info(" lesson = {} ",lesson);
         }
         JSONObject jo = new JSONObject();
         jo.put("lessonList", lessonList);

@@ -331,8 +331,12 @@ public class DingDingRestController {
                 logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
                 continue;
             }
-            if(contractManualEntity.getStatus().indexOf("有效")>=0||contractManualEntity.getStatus().indexOf("停")>=0){
-
+            if(contractManualEntity.getStatus().indexOf("停")>=0){
+                MemberEntity memberEntity = new MemberEntity();
+                memberEntity.setMemberId(memberEntityDB.getMemberId());
+                memberEntity.setStatus(9);   //  暂停
+                logger.info(" ============  getPauseDate = " , contractManualEntity.getPauseDate());
+                n++;
             }
         }
         logger.info("  n = {}" , n);
