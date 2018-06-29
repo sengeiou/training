@@ -56,7 +56,7 @@ public interface StoreTaskRepository {
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creator != null\"> AND creator = #{query.creator} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<StoreTaskEntity> find(@Param("query") StoreTaskQuery storeTask , @Param("page") PageRequest page);
 

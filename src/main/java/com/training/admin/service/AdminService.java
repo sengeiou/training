@@ -3,10 +3,12 @@ package com.training.admin.service;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.CardTypeEnum;
 import com.training.common.Const;
+import com.training.common.PageRequest;
 import com.training.dao.*;
 import com.training.domain.MemberCard;
 import com.training.domain.Staff;
 import com.training.entity.MemberCardEntity;
+import com.training.entity.MemberCardQuery;
 import com.training.entity.MemberEntity;
 import com.training.entity.StaffEntity;
 import com.training.service.CardService;
@@ -24,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * staff 核心业务操作类
@@ -80,6 +84,19 @@ public class AdminService {
         if(coachEntity==null){
             return ResponseUtil.exception("获取教练信息异常");
         }
+
+        MemberCardQuery query = new MemberCardQuery();
+        query.setType(CardTypeEnum.TY.getKey());
+        query.setMemberId(card.getMemberId());
+        PageRequest page = new PageRequest();
+
+        List cards = memberCardDao.find(query,page);
+        if(cards.size()>0){
+            return ResponseUtil.exception("每个会员只能发一次体验卡！");
+
+        }
+
+
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
         memberCardEntity.setCardId("");

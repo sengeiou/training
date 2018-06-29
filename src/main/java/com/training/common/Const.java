@@ -18,6 +18,10 @@ public class Const {
 
     {
         times = new ArrayList();
+        times.add(600);
+        times.add(630);
+        times.add(700);
+        times.add(730);
         times.add(800);
         times.add(830);
         times.add(900);
@@ -45,6 +49,8 @@ public class Const {
         times.add(2000);
         times.add(2030);
         times.add(2100);
+        times.add(2130);
+        times.add(2200);
     }
 
     /**

@@ -77,9 +77,9 @@ public interface MemberRepository {
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
-            " <if test=\"query.name != null\"> AND name = #{query.name} </if>" +
+            " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')    </if>" +
             " <if test=\"query.email != null\"> AND email = #{query.email} </if>" +
-            " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
             " <if test=\"query.nickname != null\"> AND nickname = #{query.nickname} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.age != null\"> AND age = #{query.age} </if>" +
@@ -94,11 +94,11 @@ public interface MemberRepository {
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
-            " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
+            " <if test=\"query.salesman != null\"> AND salesman like CONCAT('%',#{query.salesman},'%')  </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberEntity> find(@Param("query") MemberQuery member , @Param("page") PageRequest page);
 
@@ -107,9 +107,9 @@ public interface MemberRepository {
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
-            " <if test=\"query.name != null\"> AND name = #{query.name} </if>" +
+            " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')  </if>" +
             " <if test=\"query.email != null\"> AND email = #{query.email} </if>" +
-            " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
             " <if test=\"query.nickname != null\"> AND nickname = #{query.nickname} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.age != null\"> AND age = #{query.age} </if>" +
@@ -124,7 +124,7 @@ public interface MemberRepository {
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
-            " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
+            " <if test=\"query.salesman != null\"> AND salesman like CONCAT('%',#{query.salesman},'%')  </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +

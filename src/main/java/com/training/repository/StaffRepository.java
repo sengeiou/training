@@ -59,9 +59,9 @@ public interface StaffRepository {
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
             " <if test=\"query.username != null\"> AND username = #{query.username} </if>" +
             " <if test=\"query.password != null\"> AND password = #{query.password} </if>" +
-            " <if test=\"query.custname != null\"> AND custname = #{query.custname} </if>" +
-            " <if test=\"query.email != null\"> AND email = #{query.email} </if>" +
-            " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.custname != null\"> AND custname like CONCAT('%',#{query.custname},'%')   </if>" +
+            " <if test=\"query.email != null\"> AND email like CONCAT('%',#{query.email},'%')   </if>" +
+            " <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')    </if>" +
             " <if test=\"query.job != null\"> AND job = #{query.job} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
@@ -79,9 +79,9 @@ public interface StaffRepository {
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
             " <if test=\"query.username != null\"> AND username = #{query.username} </if>" +
             " <if test=\"query.password != null\"> AND password = #{query.password} </if>" +
-            " <if test=\"query.custname != null\"> AND custname = #{query.custname} </if>" +
-            " <if test=\"query.email != null\"> AND email = #{query.email} </if>" +
-            " <if test=\"query.phone != null\"> AND phone = #{query.phone} </if>" +
+            " <if test=\"query.custname != null\"> AND custname like CONCAT('%',#{query.custname},'%')   </if>" +
+            " <if test=\"query.email != null\"> AND email like CONCAT('%',#{query.email},'%')   </if>" +
+            " <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')    </if>" +
             " <if test=\"query.job != null\"> AND job = #{query.job} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +

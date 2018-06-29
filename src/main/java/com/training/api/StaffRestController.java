@@ -4,6 +4,7 @@ import com.training.domain.Staff;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -50,6 +51,11 @@ public class StaffRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute StaffQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        String name = request.getParameter("name");
+        logger.info(" StaffRestController  find  name = {} ,  query = {}",name,query);
+        if(StringUtils.isNotEmpty(name)){
+            query.setCustname(name);
+        }
         Page<Staff> page = staffService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }

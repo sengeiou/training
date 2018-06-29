@@ -45,8 +45,8 @@ public interface StoreRepository {
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.deptId != null\"> AND dept_id = #{query.deptId} </if>" +
             " <if test=\"query.userId != null\"> AND user_id = #{query.userId} </if>" +
-            " <if test=\"query.name != null\"> AND name = #{query.name} </if>" +
-            " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
+            " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')  </if>" +
+            " <if test=\"query.address != null\"> AND address like CONCAT('%',#{query.address},'%')  </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -59,8 +59,8 @@ public interface StoreRepository {
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.deptId != null\"> AND dept_id = #{query.deptId} </if>" +
             " <if test=\"query.userId != null\"> AND user_id = #{query.userId} </if>" +
-            " <if test=\"query.name != null\"> AND name = #{query.name} </if>" +
-            " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
+            " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%') </if>" +
+            " <if test=\"query.address != null\"> AND address like CONCAT('%',#{query.address},'%')  </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +

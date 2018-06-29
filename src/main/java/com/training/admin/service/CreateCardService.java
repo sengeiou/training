@@ -53,7 +53,6 @@ public class CreateCardService {
         List<ContractEntity> contractEntityList = contractDao.find(query,page);
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
-
             try {
                 String phone = contractEntity.getPhone();
                 if(StringUtils.isEmpty(phone)){
@@ -65,7 +64,20 @@ public class CreateCardService {
                 MemberEntity memberDB = memberDao.getByPhone(phone);
                 if(memberDB==null){
                     logger.info("createCard  MemberEntity 不存在 ，  phone = {} ", phone);
-                    continue;
+                    memberDB = new MemberEntity();
+                    memberDB.setMemberId(IDUtils.getId());
+                    memberDB.setName(contractEntity.getMemberName());
+                    memberDB.setPhone(phone);
+                    memberDB.setType("M");
+                    memberDB.setOrigin("合同生成");
+                    memberDB.setRemark("合同编号:"+contractEntity.getContractId());
+                    int n = memberDao.add(memberDB);
+                    if(n!=1){
+                        logger.error("createCard  MemberEntity 创建新会员失败 ，  memberDB = {} ", memberDB);
+                        continue;
+                    }
+                    memberDB = memberDao.getById(memberDB.getMemberId());
+                    logger.info("createCard  MemberEntity 创建新会员成功 ，  memberDB = {} ", memberDB);
                 }
                 if(!memberDB.getType().equals("M")){
                     logger.info("createCard  MemberEntity 不是会员 ，  memberDB = {} ", memberDB);
@@ -125,6 +137,7 @@ public class CreateCardService {
 
     private MemberEntity checkContract(ContractEntity contractEntity) throws Exception {
         String staffName = contractEntity.getCoach();
+        staffName = staffName.replaceAll("（","(").replaceAll("）",")");
         if(staffName.indexOf("(")>0){
             staffName = staffName.substring(0,staffName.indexOf("("));
         }

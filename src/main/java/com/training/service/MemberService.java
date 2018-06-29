@@ -64,7 +64,12 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public ResponseEntity<String> add(MemberEntity member){
-        User user = RequestContextHelper.getUser();
+        if(StringUtils.isNotEmpty(member.getPhone())){
+            MemberEntity memberDB = this.getByPhone(member.getPhone());
+            if(memberDB!=null){
+                return ResponseUtil.exception("添加失败,手机号码已存在 ： "+member.getPhone());
+            }
+        }
         member.setMemberId(IDUtils.getId());
         int n = memberDao.add(member);
         if(n==1){
@@ -108,7 +113,7 @@ public class MemberService {
         }else{
             member.setCoachName(staffEntity.getCustname());
         }
-        member.setCardType("私教次卡,团体月卡");
+        member.setCardType("私教次卡");
 
         MemberLogQuery memberLogQuery = new MemberLogQuery();
         memberLogQuery.setMemberId(memberEntity.getMemberId());
@@ -176,6 +181,12 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public  ResponseEntity<String> update(MemberEntity member){
+        if(StringUtils.isNotEmpty(member.getPhone())){
+            MemberEntity memberDB = this.getByPhone(member.getPhone());
+            if(memberDB!=null){
+                return ResponseUtil.exception("修改失败,手机号码已存在 ： "+member.getPhone());
+            }
+        }
         int n = memberDao.update(member);
         if(n==1){
             return ResponseUtil.success("修改成功");

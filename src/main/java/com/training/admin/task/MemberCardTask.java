@@ -20,9 +20,9 @@ public class MemberCardTask {
 
     @Scheduled(cron = "0 0/5 * * * *")
     public void createCard(){
-        logger.info("start getProcessInstance scheduled!  time = {} ", ut.currentTime());
+        logger.info("start createCard scheduled!  time = {} ", ut.currentTime());
         createCardService.createCard();
-        logger.info("end getProcessInstance scheduled!  time = {} ", ut.currentTime());
+        logger.info("end createCard scheduled!  time = {} ", ut.currentTime());
     }
 
 }
