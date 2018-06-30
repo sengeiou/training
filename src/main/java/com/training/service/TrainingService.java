@@ -186,7 +186,13 @@ public class TrainingService {
      * Created by huai23 on 2018-05-26 17:09:14.
      */
     public Page<Training> findByStaff(TrainingQuery query , PageRequest page){
-        List<TrainingEntity> trainingList = trainingDao.find(query,page);
+        logger.info("findByStaff  query = {} , page = {} ", query,page);
+        String coachId = memberService.getCoachIdBStaffId(query.getStaffId());
+        List<TrainingEntity> trainingList = new ArrayList<>();
+        if(StringUtils.isNotEmpty(coachId)){
+            query.setCoachId(coachId);
+            trainingList = trainingDao.find(query,page);
+        }
         List<Training> data = new ArrayList<>();
         for (TrainingEntity trainingEntity : trainingList){
             Training training = transferTraining(trainingEntity);

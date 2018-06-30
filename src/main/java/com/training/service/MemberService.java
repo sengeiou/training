@@ -683,6 +683,21 @@ public class MemberService {
         return coach.getMemberId();
     }
 
+    public String getCoachIdBStaffId(String staffId) {
+        if(StringUtils.isEmpty(staffId)){
+            return null;
+        }
+        StaffEntity staffEntity = staffDao.getById(staffId);
+        if(staffEntity==null){
+            return null;
+        }
+        MemberEntity coach = this.getByOpenId(staffEntity.getOpenId());
+        if(coach==null){
+            return null;
+        }
+        return coach.getMemberId();
+    }
+
     /**
      * 根据实体更新
      * @param member

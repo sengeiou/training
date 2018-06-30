@@ -409,6 +409,16 @@ public class LessonService {
         if(StringUtils.isEmpty(lesson.getMemberId())){
             lesson.setMemberId(memberRequest.getMemberId());
         }
+
+        MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
+        if(memberEntity==null){
+            return ResponseUtil.exception("约课异常!会员信息无效");
+        }
+
+        if(memberEntity.getStatus().equals(Integer.parseInt("9"))){
+            return ResponseUtil.exception("您处于停课状态，不能约课");
+        }
+
         String type = lesson.getType();
         if(StringUtils.isEmpty(type)){
             return ResponseUtil.exception("约课异常!");
@@ -790,9 +800,10 @@ public class LessonService {
             }
             lesson.setStatus(0);  // 0 - 正常 ，   -1 - 不可约
             for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
-                if(coachRestEntity.getStartHour() >= endHour || coachRestEntity.getEndHour() <= startHour){
+                if( startHour >= coachRestEntity.getEndHour()  || startHour < coachRestEntity.getStartHour() ){
 
                 }else{
+                    lesson.setTitle(coachRestEntity.getTitle());
                     lesson.setStatus(-1);
                     break;
                 }
