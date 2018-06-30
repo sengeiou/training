@@ -1,6 +1,7 @@
-package com.training.entity;
+package com.training.domain;
 
 import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -8,11 +9,13 @@ import java.util.Date;
  * Created by huai23 on 2018-06-30 11:02:43.
  */ 
 @Data
-public class MemberCouponEntity {
+public class MemberCoupon {
 
     private Long couponId;
 
     private String memberId;
+
+    private String memberName;
 
     private String storeId;
 
@@ -48,6 +51,7 @@ public class MemberCouponEntity {
 
     private Date modified;
 
+    private Member member;
 
 }
 

@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.MemberCoupon;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -22,10 +23,13 @@ import java.util.List;
  * Created by huai23 on 2018-06-30 10:02:47.
  */ 
 @RestController
-@RequestMapping("/api/memberCoupon")
+@RequestMapping("/api/manage/memberCoupon")
 public class MemberCouponRestController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     private MemberCouponService memberCouponService;
@@ -73,11 +77,11 @@ public class MemberCouponRestController {
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        MemberCouponEntity memberCouponDB = memberCouponService.getById(id);
-        if(memberCouponDB==null){
+        MemberCoupon memberCoupon = memberCouponService.getById(id);
+        if(memberCoupon==null){
             return ResponseUtil.exception("查无数据");
         }
-        return ResponseUtil.success(memberCouponDB);
+        return ResponseUtil.success(memberCoupon);
     }
 
     /**
@@ -102,6 +106,16 @@ public class MemberCouponRestController {
         return memberCouponService.delete(id);
     }
 
+    /**
+     * 核销优惠券
+     * @param memberCoupon
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    @RequestMapping (value = "useCoupon", method = RequestMethod.POST)
+    public ResponseEntity<String> useCoupon(@RequestBody MemberCouponEntity memberCoupon,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  useCoupon  memberCoupon = {}",memberCoupon);
+        return memberCouponService.useCoupon(memberCoupon);
+    }
 
 }
 

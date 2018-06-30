@@ -101,7 +101,7 @@ public class MemberService {
         return returnPage;
     }
 
-    private Member transferMember(MemberEntity memberEntity) {
+    public Member transferMember(MemberEntity memberEntity) {
         if(memberEntity==null){
             return null;
         }

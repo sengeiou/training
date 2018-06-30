@@ -108,7 +108,7 @@ public class MemberCardService {
         }
 
         memberCard.setDelayFee("0");
-        memberCard.setDelayDays(45);
+        memberCard.setDelayDays(60);
         return memberCard;
     }
 
@@ -210,7 +210,10 @@ public class MemberCardService {
             return ResponseUtil.exception("卡号不能为空");
         }
         MemberCardEntity memberCardDB = memberCardDao.getById(memberCard.getCardNo());
-        memberCardDB.setEndDate(ut.currentDate(memberCardDB.getEndDate(),60));
+        if(ut.passDayByDate(ut.currentDate(),memberCardDB.getEndDate())>=0){
+            return ResponseUtil.exception("课卡还没有到期，不能提前延期");
+        }
+        memberCardDB.setEndDate(ut.currentDate(60));
         int n = memberCardDao.freeDelay(memberCardDB);
         if(n>0){
             return ResponseUtil.success("免费延期成功");

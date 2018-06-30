@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * member API控制器
  * Created by huai23 on 2018-05-26 13:39:33.
- */ 
+ */
 @RestController
 @RequestMapping("/api/member")
 public class MemberRestController {
@@ -33,6 +33,9 @@ public class MemberRestController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberCouponService memberCouponService;
 
     /**
      * 新增实体
@@ -185,6 +188,21 @@ public class MemberRestController {
     public ResponseEntity<String> updateImage(@RequestBody MemberEntity member,HttpServletRequest request, HttpServletResponse response){
 //        logger.info("  updateImage  member = {}",member);
         return memberService.updateImage(member);
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    @RequestMapping (value = "couponList", method = RequestMethod.GET)
+    public ResponseEntity<String> couponList(@ModelAttribute MemberCouponQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Member member = RequestContextHelper.getMember();
+        String memberId = member.getMemberId();
+        query.setMemberId(memberId);
+        logger.info(" memberRestController  couponList  query = {} , pageRequest = {} ",query,pageRequest);
+        return memberCouponService.couponList(query,pageRequest);
     }
 
 }

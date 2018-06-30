@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * member_coupon 数据库操作类
- * Created by huai23 on 2018-06-30 10:02:47.
+ * Created by huai23 on 2018-06-30 11:02:43.
  */ 
 @Mapper
 public interface MemberCouponRepository {
@@ -19,6 +19,9 @@ public interface MemberCouponRepository {
                 " <if test=\"memberCoupon.storeId != null\"> store_id, </if>" +
                 " <if test=\"memberCoupon.type != null\"> type, </if>" +
                 " <if test=\"memberCoupon.title != null\"> title, </if>" +
+                " <if test=\"memberCoupon.discount != null\"> discount, </if>" +
+                " <if test=\"memberCoupon.total != null\"> total, </if>" +
+                " <if test=\"memberCoupon.reduction != null\"> reduction, </if>" +
                 " <if test=\"memberCoupon.startDate != null\"> start_date, </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> end_date, </if>" +
                 " <if test=\"memberCoupon.content != null\"> content, </if>" +
@@ -36,6 +39,9 @@ public interface MemberCouponRepository {
                 " <if test=\"memberCoupon.storeId != null\"> #{memberCoupon.storeId}, </if>" +
                 " <if test=\"memberCoupon.type != null\"> #{memberCoupon.type}, </if>" +
                 " <if test=\"memberCoupon.title != null\"> #{memberCoupon.title}, </if>" +
+                " <if test=\"memberCoupon.discount != null\"> #{memberCoupon.discount}, </if>" +
+                " <if test=\"memberCoupon.total != null\"> #{memberCoupon.total}, </if>" +
+                " <if test=\"memberCoupon.reduction != null\"> #{memberCoupon.reduction}, </if>" +
                 " <if test=\"memberCoupon.startDate != null\"> #{memberCoupon.startDate}, </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> #{memberCoupon.endDate}, </if>" +
                 " <if test=\"memberCoupon.content != null\"> #{memberCoupon.content}, </if>" +
@@ -51,7 +57,7 @@ public interface MemberCouponRepository {
             "</script>")
     int add(@Param("memberCoupon") MemberCouponEntity memberCoupon);
 
-    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
+    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
             " FROM member_coupon " +
             " WHERE 1 = 1 " +
             " <if test=\"query.couponId != null\"> AND coupon_id = #{query.couponId} </if>" +
@@ -59,8 +65,11 @@ public interface MemberCouponRepository {
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.discount != null\"> AND discount = #{query.discount} </if>" +
+            " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
+            " <if test=\"query.reduction != null\"> AND reduction = #{query.reduction} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
@@ -68,7 +77,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.useDate != null\"> AND use_date = #{query.useDate} </if>" +
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
             " <if test=\"query.creator != null\"> AND creator = #{query.creator} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by coupon_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCouponEntity> find(@Param("query") MemberCouponQuery memberCoupon , @Param("page") PageRequest page);
 
@@ -79,8 +88,11 @@ public interface MemberCouponRepository {
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date = #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date = #{query.endDate} </if>" +
+            " <if test=\"query.discount != null\"> AND discount = #{query.discount} </if>" +
+            " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
+            " <if test=\"query.reduction != null\"> AND reduction = #{query.reduction} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
@@ -91,18 +103,20 @@ public interface MemberCouponRepository {
             "</script>")
     Long count(@Param("query") MemberCouponQuery memberCoupon);
 
-    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
+    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
             " FROM member_coupon " +
             " WHERE coupon_id = #{id} " +
             "</script>")
     MemberCouponEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE member_coupon SET " +
-                " <if test=\"memberCoupon.couponId != null\"> coupon_id = #{memberCoupon.couponId} , </if>" +
                 " <if test=\"memberCoupon.memberId != null\"> member_id = #{memberCoupon.memberId} , </if>" +
                 " <if test=\"memberCoupon.storeId != null\"> store_id = #{memberCoupon.storeId} , </if>" +
                 " <if test=\"memberCoupon.type != null\"> type = #{memberCoupon.type} , </if>" +
                 " <if test=\"memberCoupon.title != null\"> title = #{memberCoupon.title} , </if>" +
+                " <if test=\"memberCoupon.discount != null\"> discount = #{memberCoupon.discount} , </if>" +
+                " <if test=\"memberCoupon.total != null\"> total = #{memberCoupon.total} , </if>" +
+                " <if test=\"memberCoupon.reduction != null\"> reduction = #{memberCoupon.reduction} , </if>" +
                 " <if test=\"memberCoupon.startDate != null\"> start_date = #{memberCoupon.startDate} , </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> end_date = #{memberCoupon.endDate} , </if>" +
                 " <if test=\"memberCoupon.content != null\"> content = #{memberCoupon.content} , </if>" +
@@ -122,6 +136,13 @@ public interface MemberCouponRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Update("<script> update member_coupon set  status = 1 , " +
+            " <if test=\"memberCoupon.useDate != null\"> use_date = #{memberCoupon.useDate} , </if>" +
+            " <if test=\"memberCoupon.useStaffId != null\"> use_staff_id = #{memberCoupon.useStaffId} , </if>" +
+            " modified = now() " +
+            " WHERE coupon_id = #{memberCoupon.couponId} " +
+            "</script>")
+    int useCoupon(@Param("memberCoupon") MemberCouponEntity memberCoupon);
 
 }
 

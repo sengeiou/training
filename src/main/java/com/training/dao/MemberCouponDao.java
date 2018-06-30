@@ -84,5 +84,16 @@ public class MemberCouponDao {
     }
 
 
+    /**
+     * 根据实体更新
+     * @param memberCoupon
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    public int useCoupon(MemberCouponEntity memberCoupon){
+        int n = memberCouponRepository.useCoupon(memberCoupon);
+        return n;
+    }
+
+
 }
 

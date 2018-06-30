@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member_coupon 查询类
- * Created by huai23 on 2018-06-30 10:02:47.
+ * Created by huai23 on 2018-06-30 11:02:43.
  */ 
 @Data
 public class MemberCouponQuery {
@@ -19,6 +19,12 @@ public class MemberCouponQuery {
     private String type;
 
     private String title;
+
+    private Integer discount;
+
+    private Integer total;
+
+    private Integer reduction;
 
     private String startDate;
 
