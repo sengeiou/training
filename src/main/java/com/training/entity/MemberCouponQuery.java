@@ -32,6 +32,8 @@ public class MemberCouponQuery {
 
     private String content;
 
+    private String origin;
+
     private String feature;
 
     private String remark;

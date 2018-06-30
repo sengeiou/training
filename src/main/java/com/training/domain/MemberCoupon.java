@@ -35,6 +35,8 @@ public class MemberCoupon {
 
     private String content;
 
+    private String origin;
+
     private String feature;
 
     private String remark;

@@ -25,6 +25,7 @@ public interface MemberCouponRepository {
                 " <if test=\"memberCoupon.startDate != null\"> start_date, </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> end_date, </if>" +
                 " <if test=\"memberCoupon.content != null\"> content, </if>" +
+                " <if test=\"memberCoupon.origin != null\"> origin, </if>" +
                 " <if test=\"memberCoupon.feature != null\"> feature, </if>" +
                 " <if test=\"memberCoupon.remark != null\"> remark, </if>" +
                 " <if test=\"memberCoupon.status != null\"> status, </if>" +
@@ -45,6 +46,7 @@ public interface MemberCouponRepository {
                 " <if test=\"memberCoupon.startDate != null\"> #{memberCoupon.startDate}, </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> #{memberCoupon.endDate}, </if>" +
                 " <if test=\"memberCoupon.content != null\"> #{memberCoupon.content}, </if>" +
+                " <if test=\"memberCoupon.origin != null\"> #{member.origin}, </if>" +
                 " <if test=\"memberCoupon.feature != null\"> #{memberCoupon.feature}, </if>" +
                 " <if test=\"memberCoupon.remark != null\"> #{memberCoupon.remark}, </if>" +
                 " <if test=\"memberCoupon.status != null\"> #{memberCoupon.status}, </if>" +
@@ -57,7 +59,7 @@ public interface MemberCouponRepository {
             "</script>")
     int add(@Param("memberCoupon") MemberCouponEntity memberCoupon);
 
-    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
+    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,origin,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
             " FROM member_coupon " +
             " WHERE 1 = 1 " +
             " <if test=\"query.couponId != null\"> AND coupon_id = #{query.couponId} </if>" +
@@ -71,6 +73,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
             " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -94,6 +97,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
             " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
@@ -103,7 +107,7 @@ public interface MemberCouponRepository {
             "</script>")
     Long count(@Param("query") MemberCouponQuery memberCoupon);
 
-    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
+    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,origin,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
             " FROM member_coupon " +
             " WHERE coupon_id = #{id} " +
             "</script>")
