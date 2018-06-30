@@ -7,6 +7,7 @@ import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -51,9 +52,6 @@ public class MemberCouponService {
         }
         int total = 0;
         List<String> array = new ArrayList();
-        if(memberCoupon.getMemberId().indexOf(",")>=0){
-
-        }
         String[] ids = memberCoupon.getMemberId().split(",");
         for (int i = 0; i < ids.length; i++) {
             if(StringUtils.isNotEmpty(ids[i])){
@@ -61,11 +59,18 @@ public class MemberCouponService {
             }
         }
         for (String memberId : array){
+            Integer couponId = 0;
+            MemberCouponEntity memberCouponEntity = null;
+            int times = 0;
+            do{
+                couponId = IDUtils.getCouponId();
+                memberCouponEntity = memberCouponDao.getById(""+couponId);
+                times++;
+            }while(memberCouponEntity != null && times<100);
             memberCoupon.setMemberId(memberId);
             int n = memberCouponDao.add(memberCoupon);
             total = total + n;
         }
-
         if(total>0){
             return ResponseUtil.success("发放成功,共发放"+total+"张优惠券");
         }

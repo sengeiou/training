@@ -29,4 +29,15 @@ public class IDUtils {
         return ""+n;
     }
 
+    public static Integer getCouponId() {
+        int max = 100000000;
+        int min = 10000000;
+        int n = new Random().nextInt(max - min) + min;
+        return n;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getCouponId());
+    }
+
 }
