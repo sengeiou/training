@@ -386,9 +386,10 @@ public class MemberService {
             if(coachId == null){
                 return ResponseUtil.exception("教练暂时未绑定微信，请联系客服或稍后再试");
             }
-
+            MemberEntity coach = memberDao.getById(coachId);
             lesson.setCoachId(memberCardEntity.getCoachId());
             lesson.setTitle("私教课");
+            lesson.setCoachImage(coach.getImage());
             lesson.setCoachName(staff.getCustname());
             types.add(lesson);
         }

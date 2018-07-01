@@ -46,7 +46,7 @@ public interface MemberCouponRepository {
                 " <if test=\"memberCoupon.startDate != null\"> #{memberCoupon.startDate}, </if>" +
                 " <if test=\"memberCoupon.endDate != null\"> #{memberCoupon.endDate}, </if>" +
                 " <if test=\"memberCoupon.content != null\"> #{memberCoupon.content}, </if>" +
-                " <if test=\"memberCoupon.origin != null\"> #{member.origin}, </if>" +
+                " <if test=\"memberCoupon.origin != null\"> #{memberCoupon.origin}, </if>" +
                 " <if test=\"memberCoupon.feature != null\"> #{memberCoupon.feature}, </if>" +
                 " <if test=\"memberCoupon.remark != null\"> #{memberCoupon.remark}, </if>" +
                 " <if test=\"memberCoupon.status != null\"> #{memberCoupon.status}, </if>" +

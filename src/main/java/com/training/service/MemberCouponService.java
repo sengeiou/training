@@ -50,6 +50,7 @@ public class MemberCouponService {
         if(staff!=null){
             memberCoupon.setUseStaffId(staff.getStaffId());
         }
+        memberCoupon.setOrigin("manual");
         int total = 0;
         List<String> array = new ArrayList();
         String[] ids = memberCoupon.getMemberId().split(",");

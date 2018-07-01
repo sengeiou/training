@@ -23,6 +23,8 @@ public class Lesson {
 
     private String coachName;
 
+    private String coachImage;
+
     private String cardNo;
 
     private String lessonDate;

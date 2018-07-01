@@ -98,6 +98,9 @@ public class WechatService {
         param.put("openId",openId);
         param.put("total_fee",""+total_fee);
 
+        logger.info(" ============ prePayOrder  param = {}",param);
+
+
 //        param.put("card",JSON.toJSONString(card));
         Map<String, String> result = wechatUtils.prePayOrder(param);
         if(MapUtils.isEmpty(result)){

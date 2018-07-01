@@ -77,9 +77,9 @@ public class WechatUtils {
             param.put("device_info",device_info);
             param.put("nonce_str",nonce_str);
             param.put("sign_type",signType);
-            param.put("body","");
+            param.put("body",openid);
             param.put("detail","detail123");
-            param.put("attach","");
+            param.put("attach",openid);
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
             param.put("total_fee",input.get("total_fee"));
@@ -93,6 +93,7 @@ public class WechatUtils {
 //            System.out.println("reqBody："+reqBody);
             String data = HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
             Map<String, String> result = WXPayUtil.xmlToMap(data);
+            System.out.println("请求结果："+data);
 //            System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
 //            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
 //            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
