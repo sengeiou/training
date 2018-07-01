@@ -65,8 +65,8 @@ public class WechatUtils {
     public Map<String, String> prePayOrder(Map<String, String> input) {
         try {
             String openid = input.get("openId");
-            CardEntity card = JSON.parseObject(input.get("card"),CardEntity.class);
-            String body = card.getCardName();
+//            CardEntity card = JSON.parseObject(input.get("card"),CardEntity.class);
+//            String body = card.getCardName();
             String device_info = "1000";
             String nonce_str = "abc123cba321";
             String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
@@ -77,9 +77,9 @@ public class WechatUtils {
             param.put("device_info",device_info);
             param.put("nonce_str",nonce_str);
             param.put("sign_type",signType);
-            param.put("body",body);
+            param.put("body","");
             param.put("detail","detail123");
-            param.put("attach",card.getCardId());
+            param.put("attach","");
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
             param.put("total_fee",input.get("total_fee"));

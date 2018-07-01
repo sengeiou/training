@@ -85,23 +85,23 @@ public class WechatController {
             String openId = data.get("openid");
             String cardId = data.get("attach");
 
-            CardEntity card = cardService.getById(cardId);
-            MemberEntity memberEntity = memberService.getByOpenId(openId);
-            String coachId = "123";
-
-            MemberCardEntity memberCardEntity = new MemberCardEntity();
-            memberCardEntity.setCardNo(IDUtils.getId());
-            memberCardEntity.setCardId(cardId);
-            memberCardEntity.setCoachId(coachId);
+//            CardEntity card = cardService.getById(cardId);
+//            MemberEntity memberEntity = memberService.getByOpenId(openId);
+//            String coachId = "123";
+//
+//            MemberCardEntity memberCardEntity = new MemberCardEntity();
+//            memberCardEntity.setCardNo(IDUtils.getId());
+//            memberCardEntity.setCardId(cardId);
+//            memberCardEntity.setCoachId(coachId);
 //            memberCardEntity.setStoreId(coachEntity.getStoreId());
-            memberCardEntity.setMemberId(memberEntity.getMemberId());
-            memberCardEntity.setType(card.getType());
-            memberCardEntity.setCount(card.getTotal());
-            memberCardEntity.setTotal(card.getTotal());
-            memberCardEntity.setDays(card.getDays());
-            memberCardEntity.setMoney(card.getPrice());
-            memberCardEntity.setStartDate(ut.currentDate());
-            memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
+//            memberCardEntity.setMemberId(memberEntity.getMemberId());
+//            memberCardEntity.setType(card.getType());
+//            memberCardEntity.setCount(card.getTotal());
+//            memberCardEntity.setTotal(card.getTotal());
+//            memberCardEntity.setDays(card.getDays());
+//            memberCardEntity.setMoney(card.getPrice());
+//            memberCardEntity.setStartDate(ut.currentDate());
+//            memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
 //            memberCardService.add(memberCardEntity);
 
             String dataStr = JSON.toJSONString(data);

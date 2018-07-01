@@ -92,13 +92,13 @@ public class WechatService {
         }
         int total_fee = (int)(fee*100);
 //        total_fee = 1;
-        CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
+//        CardEntity card = cardService.getById(prePayOrder.getCardId()) ;
 
         Map<String, String> param = new HashMap<>();
         param.put("openId",openId);
         param.put("total_fee",""+total_fee);
 
-        param.put("card",JSON.toJSONString(card));
+//        param.put("card",JSON.toJSONString(card));
         Map<String, String> result = wechatUtils.prePayOrder(param);
         if(MapUtils.isEmpty(result)){
             return ResponseUtil.exception("发起支付请求异常");
