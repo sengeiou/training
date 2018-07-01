@@ -191,6 +191,7 @@ public class TrainingService {
         List<TrainingEntity> trainingList = new ArrayList<>();
         if(StringUtils.isNotEmpty(coachId)){
             query.setCoachId(coachId);
+            query.setStatus(0);
             trainingList = trainingDao.find(query,page);
         }
         List<Training> data = new ArrayList<>();
