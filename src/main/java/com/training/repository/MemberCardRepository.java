@@ -154,5 +154,64 @@ public interface MemberCardRepository {
     @Update("<script> UPDATE member_card SET delay = delay + 1 , end_date = #{memberCard.endDate} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
             "</script>")
     int delay(MemberCardEntity memberCard);
+
+    @Select("<script> SELECT pk_id,card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+            " FROM member_card " +
+            " WHERE 1 = 1 " +
+            " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
+            " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
+            " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.name != null || query.phone != null\"> AND member_id in ( select member_id from member where 1 = 1  " +
+            "   <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')  </if>" +
+            "   <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
+            " ) </if>" +
+            " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
+            " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
+            " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
+            " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
+            " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
+            " <if test=\"query.delay != null\"> AND delay = #{query.delay} </if>" +
+            " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.auditId != null\"> AND audit_id = #{query.auditId} </if>" +
+            " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
+            " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
+            " order by pk_id asc LIMIT #{page.offset} , #{page.pageSize} " +
+            "</script>")
+    List<MemberCardEntity> findPro(@Param("query") MemberCardQuery memberCard , @Param("page") PageRequest page);
+
+    @Select("<script> SELECT COUNT(1) FROM member_card " +
+            " WHERE 1 = 1 " +
+            " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
+            " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
+            " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.name != null || query.phone != null\"> AND member_id in ( select member_id from member where 1 = 1  " +
+            "   <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')  </if>" +
+            "   <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
+            " ) </if>" +
+            " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
+            " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
+            " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
+            " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
+            " <if test=\"query.days != null\"> AND days = #{query.days} </if>" +
+            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
+            " <if test=\"query.delay != null\"> AND delay = #{query.delay} </if>" +
+            " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.auditId != null\"> AND audit_id = #{query.auditId} </if>" +
+            " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
+            " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
+            "</script>")
+    Long countPro(@Param("query") MemberCardQuery memberCard);
+
 }
 

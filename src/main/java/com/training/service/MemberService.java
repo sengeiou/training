@@ -600,6 +600,9 @@ public class MemberService {
             Member member = transferMember(trainingEntity);
             data.add(member);
         }
+
+        logger.info("  memberList  data.size() = {}", data.size());
+
         Long count = memberDao.count(query);
         Page<Member> returnPage = new Page<>();
         returnPage.setContent(data);

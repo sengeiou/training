@@ -54,6 +54,9 @@ public class MemberCardQuery {
 
     private Date modified;
 
+    private String name;
+
+    private String phone;
 
 }
 

@@ -56,6 +56,19 @@ public class MemberCardRestController {
     }
 
     /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    @RequestMapping (value = "findPro", method = RequestMethod.GET)
+    public ResponseEntity<String> findPro(@ModelAttribute MemberCardQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" member_cardRestController  findPro  query = {}",query);
+        Page<MemberCard> page = memberCardService.findPro(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+    /**
      * 查询总数
      * @param query
      * Created by huai23 on 2018-05-26 13:53:17.

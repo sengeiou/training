@@ -63,6 +63,29 @@ public class MemberCardService {
      * @param page
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
+    public Page<MemberCard> findPro(MemberCardQuery query , PageRequest page){
+        logger.info("  findPro  MemberCardQuery = {} ", query);
+        List<MemberCardEntity> memberCardList = memberCardDao.findPro(query,page);
+        List<MemberCard> content = new ArrayList<>();
+        for(MemberCardEntity memberCardEntity : memberCardList){
+            MemberCard memberCard = transfer(memberCardEntity);
+            content.add(memberCard);
+        }
+        Long count = memberCardDao.countPro(query);
+        Page<MemberCard> returnPage = new Page<>();
+        returnPage.setContent(content);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
     public Page<MemberCard> find(MemberCardQuery query , PageRequest page){
         List<MemberCardEntity> memberCardList = memberCardDao.find(query,page);
         List<MemberCard> content = new ArrayList<>();
@@ -87,6 +110,10 @@ public class MemberCardService {
         MemberCard memberCard = new MemberCard();
         BeanUtils.copyProperties(memberCardEntity,memberCard);
         MemberEntity memberEntity = memberDao.getById(memberCardEntity.getMemberId());
+        if(memberEntity==null){
+            logger.error("  MemberCard  transfer  memberEntity = null, memberCardEntity = ", memberCardEntity);
+            return null;
+        }
         memberCard.setCardName(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
         memberCard.setMemberName(memberEntity.getName());
         StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());

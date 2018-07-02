@@ -186,7 +186,7 @@ public class ProcessInstanceService {
         Map<String,String> contractMap = new HashMap();
         List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
         for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
-            System.out.println(form.getName()+" : "+form.getValue());
+//            System.out.println(form.getName()+" : "+form.getValue());
             contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
         }
         ContractEntity contractEntity = new ContractEntity();
@@ -222,7 +222,7 @@ public class ProcessInstanceService {
         Map<String,String> contractMap = new HashMap();
         List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
         for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
-            System.out.println(form.getName()+" : "+form.getValue());
+//            System.out.println(form.getName()+" : "+form.getValue());
             contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
         }
         ContractEntity contractEntity = new ContractEntity();

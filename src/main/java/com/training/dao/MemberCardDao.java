@@ -54,6 +54,27 @@ public class MemberCardDao {
     }
 
     /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public List<MemberCardEntity> findPro(MemberCardQuery query , PageRequest page){
+        List<MemberCardEntity> memberCardList = memberCardRepository.findPro(query,page);
+        return memberCardList;
+    }
+
+    /**
+     * 查询总数
+     * @param query
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public Long countPro(MemberCardQuery query){
+        Long n = memberCardRepository.countPro(query);
+        return n;
+    }
+
+    /**
      * 根据ID查询实体
      * @param id
      * Created by huai23 on 2018-05-26 13:53:17.
