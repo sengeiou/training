@@ -282,12 +282,14 @@ public class MemberService {
                 memberEntity.setType("M");
                 StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
                 if( staffDB!=null && StringUtils.isEmpty(staffDB.getOpenId())){
-                    memberEntity.setType("C");
-                    memberEntity.setName(staffDB.getCustname());
-                    memberEntity.setStoreId(staffDB.getStoreId());
-                    staffDB.setOpenId(openId);
-                    int n = staffDao.bind(staffDB);
-                    logger.info("  bind  staffDao.bind  n = {} ",n);
+                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())){
+                        memberEntity.setType("C");
+                        memberEntity.setName(staffDB.getCustname());
+                        memberEntity.setStoreId(staffDB.getStoreId());
+                        staffDB.setOpenId(openId);
+                        int n = staffDao.bind(staffDB);
+                        logger.info("  bind  staffDao.bind  n = {} ",n);
+                    }
                 }
                 memberEntity.setOrigin("自动生成");
                 int n = memberDao.add(memberEntity);

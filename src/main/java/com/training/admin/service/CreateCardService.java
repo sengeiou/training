@@ -78,6 +78,15 @@ public class CreateCardService {
                     }
                     memberDB = memberDao.getById(memberDB.getMemberId());
                     logger.info("createCard  MemberEntity 创建新会员成功 ，  memberDB = {} ", memberDB);
+                }else{
+                    // 根据审批信息中的学员姓名更新系统中会员姓名
+                    MemberEntity memberUpdate = new MemberEntity();
+                    memberUpdate.setMemberId(memberDB.getMemberId());
+                    memberUpdate.setName(contractEntity.getMemberName());
+                    int n = memberDao.update(memberUpdate);
+                    if(n==1){
+                        memberDB.setName(contractEntity.getMemberName());
+                    }
                 }
                 if(!memberDB.getType().equals("M")){
                     logger.info("createCard  MemberEntity 不是会员 ，  memberDB = {} ", memberDB);
@@ -96,7 +105,7 @@ public class CreateCardService {
                     createTM(contractEntity,memberDB);
                 }
             }catch (Exception e){
-                logger.error(" createCard ERROR :  {} ", e.getMessage(),e);
+                logger.error(" createCard ERROR :  {} ", e.getMessage());
             }
 
         }
