@@ -3,6 +3,7 @@ package com.training.service;
 import com.training.dao.*;
 import com.training.domain.Member;
 import com.training.domain.MemberCard;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -44,6 +45,9 @@ public class MemberCardService {
     @Autowired
     private CardDao cardDao;
 
+    @Autowired
+    private RoleDao roleDao;
+
     /**
      * 新增实体
      * @param memberCard
@@ -64,6 +68,19 @@ public class MemberCardService {
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
     public Page<MemberCard> findPro(MemberCardQuery query , PageRequest page){
+        Staff staffRequest = RequestContextHelper.getStaff();
+        logger.info("  findPro  staffRequest = {} ", staffRequest);
+
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+            query.setStoreId(roleEntity.getStoreData());
+        }else{
+            query.setStoreId("123456789");
+        }
+        if(staffDB.getUsername().equals("admin")){
+            query.setStoreId(null);
+        }
         logger.info("  findPro  MemberCardQuery = {} ", query);
         List<MemberCardEntity> memberCardList = memberCardDao.findPro(query,page);
         List<MemberCard> content = new ArrayList<>();

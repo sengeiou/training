@@ -17,7 +17,9 @@ import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * staff 核心业务操作类
@@ -62,13 +64,36 @@ public class StaffService {
         Staff staffRequest = RequestContextHelper.getStaff();
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
         RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
-        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
-            query.setStoreId(roleEntity.getStoreData());
+        if(StringUtils.isEmpty(query.getStoreId())){
+            if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                query.setStoreId(roleEntity.getStoreData());
+            }else{
+                query.setStoreId("123456789");
+            }
+            if(staffDB.getUsername().equals("admin")){
+                query.setStoreId(null);
+            }
         }else{
-            query.setStoreId("123456789");
-        }
-        if(staffDB.getUsername().equals("admin")){
-            query.setStoreId(null);
+            if(staffDB.getUsername().equals("admin")){
+
+            }else{
+                if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                    String[] stores = roleEntity.getStoreData().split(",");
+                    Set<String> ids = new HashSet<>();
+                    for (int i = 0; i < stores.length; i++) {
+                        if(StringUtils.isNotEmpty(stores[i])){
+                            ids.add(stores[i]);
+                        }
+                    }
+                    if(ids.contains(query.getStoreId())){
+
+                    }else{
+                        query.setStoreId("123456789");
+                    }
+                }else{
+                    query.setStoreId("123456789");
+                }
+            }
         }
         logger.info("  find  StaffQuery = {}",query);
         List<Staff> staffs = new ArrayList();

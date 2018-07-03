@@ -88,17 +88,43 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public Page<Member> find(MemberQuery query , PageRequest page){
-        Staff staff = RequestContextHelper.getStaff();
-        StaffEntity staffEntity = staffDao.getById(staff.getStaffId());
-        RoleEntity roleEntity = roleDao.getById(staffEntity.getRoleId());
-        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
-            query.setStoreId(roleEntity.getStoreData());
+        logger.info("  find  MemberQuery = {}",query);
+
+        Staff staffRequest = RequestContextHelper.getStaff();
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+        if(StringUtils.isEmpty(query.getStoreId())){
+            if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                query.setStoreId(roleEntity.getStoreData());
+            }else{
+                query.setStoreId("123456789");
+            }
+            if(staffDB.getUsername().equals("admin")){
+                query.setStoreId(null);
+            }
         }else{
-            query.setStoreId("123456789");
+            if(staffDB.getUsername().equals("admin")){
+
+            }else{
+                if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                    String[] stores = roleEntity.getStoreData().split(",");
+                    Set<String> ids = new HashSet<>();
+                    for (int i = 0; i < stores.length; i++) {
+                        if(StringUtils.isNotEmpty(stores[i])){
+                            ids.add(stores[i]);
+                        }
+                    }
+                    if(ids.contains(query.getStoreId())){
+
+                    }else{
+                        query.setStoreId("123456789");
+                    }
+                }else{
+                    query.setStoreId("123456789");
+                }
+            }
         }
-        if(staffEntity.getUsername().equals("admin")){
-            query.setStoreId(null);
-        }
+
         logger.info("  find  MemberQuery = {}",query);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();

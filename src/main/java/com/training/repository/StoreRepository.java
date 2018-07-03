@@ -42,7 +42,7 @@ public interface StoreRepository {
     @Select("<script> SELECT pk_id,store_id,dept_id,user_id,name,address,feature,remark,status,created,modified " +
             " FROM store " +
             " WHERE 1 = 1 " +
-            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id in ( #{query.storeId} )  </if>" +
             " <if test=\"query.deptId != null\"> AND dept_id = #{query.deptId} </if>" +
             " <if test=\"query.userId != null\"> AND user_id = #{query.userId} </if>" +
             " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')  </if>" +
@@ -56,7 +56,7 @@ public interface StoreRepository {
 
     @Select("<script> SELECT COUNT(1) FROM store " +
             " WHERE 1 = 1 " +
-            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id in ( #{query.storeId} )  </if>" +
             " <if test=\"query.deptId != null\"> AND dept_id = #{query.deptId} </if>" +
             " <if test=\"query.userId != null\"> AND user_id = #{query.userId} </if>" +
             " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%') </if>" +
