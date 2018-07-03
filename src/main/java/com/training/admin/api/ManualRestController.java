@@ -67,7 +67,7 @@ public class ManualRestController {
     @GetMapping("updateCoachStaffId")
     public Object updateCoachStaffId(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" updateCoachStaffId     ");
-        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT a.staff_id , a.custname ,a.phone coach_phone,b.member_name , b.phone  from staff a , contract_manual_zizhuqiao b  where a.phone = b.coach_phone\n ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT a.staff_id , a.custname ,a.phone coach_phone,b.member_name , b.phone  from staff a , contract_manual b  where a.phone = b.coach_phone\n ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
             Map contract = data.get(i);
@@ -83,7 +83,28 @@ public class ManualRestController {
             }
         }
         System.out.println("total = "+total);
-        return "执行成功";
+        return "updateCoachStaffId执行成功";
     }
+
+    @GetMapping("updateTrainingHour")
+    public Object updateTrainingHour(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" updateTrainingHour     ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT *  from member  ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map member = data.get(i);
+            String memberId = member.get("member_id").toString();
+            String sql = " select training_id from training where member_id = ? and `status` = 0 and lesson_date <=  ? ";
+            List trainingList =  jdbcTemplate.queryForList(sql,new Object[]{memberId,ut.currentDate(-1)});
+            if(CollectionUtils.isNotEmpty(trainingList)){
+                System.out.println(" name = "+member.get("name")+"   hours = "+trainingList.size());
+                jdbcTemplate.update(" update member set training_hours = ? where member_id = ? ",new Object[]{trainingList.size(),memberId});
+                total++;
+            }
+        }
+        System.out.println("total = "+total);
+        return "updateTrainingHour执行成功";
+    }
+
 
 }
