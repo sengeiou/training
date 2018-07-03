@@ -49,7 +49,7 @@ public class SessonFilter implements Filter {
         String authorization = request.getHeader("Authorization");
         logger.info(" request.getRequestURI() = {} ,  Authorization = {} ",request.getRequestURI(),authorization);
         // 不过滤的uri
-        String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code",
+        String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code","/manual/",
                 "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken","/wechat/pay/callback",
                 "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",".txt","/dingding","/static/","/admin","/public/",
                 ".css",".jpg",".png",".jpeg",".gif"};
