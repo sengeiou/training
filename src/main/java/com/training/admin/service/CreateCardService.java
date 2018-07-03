@@ -48,6 +48,7 @@ public class CreateCardService {
     public void createCard() {
         ContractQuery query = new ContractQuery();
         query.setStatus(0);
+        query.setContractId("abcdefg");
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<ContractEntity> contractEntityList = contractDao.find(query,page);

@@ -64,6 +64,7 @@ public class ContractManualQuery {
 
     private Date modified;
 
+    private Integer dealFlag;
 
 }
 

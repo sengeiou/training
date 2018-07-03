@@ -35,6 +35,9 @@ public class StaffService {
     @Autowired
     private StaffDao staffDao;
 
+    @Autowired
+    private RoleDao roleDao;
+
     /**
      * 新增实体
      * @param staff
@@ -56,6 +59,18 @@ public class StaffService {
      * Created by huai23 on 2018-05-26 13:55:30.
      */ 
     public Page<Staff> find(StaffQuery query , PageRequest page){
+        Staff staffRequest = RequestContextHelper.getStaff();
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+            query.setStoreId(roleEntity.getStoreData());
+        }else{
+            query.setStoreId("123456789");
+        }
+        if(staffDB.getUsername().equals("admin")){
+            query.setStoreId(null);
+        }
+        logger.info("  find  StaffQuery = {}",query);
         List<Staff> staffs = new ArrayList();
         List<StaffEntity> staffList = staffDao.find(query,page);
         for (StaffEntity staffEntity : staffList) {

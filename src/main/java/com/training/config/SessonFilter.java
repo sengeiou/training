@@ -97,6 +97,12 @@ public class SessonFilter implements Filter {
                     Member member = JSONObject.parseObject(json, Member.class);
                     req.setAttribute("member",member);
                 }
+
+                Staff staff = JSONObject.parseObject(json, Staff.class);
+                if(StringUtils.isNotEmpty(staff.getStaffId())){
+                    req.setAttribute("staff",staff);
+                }
+
                 // 如果session中存在登录者实体，则继续
                 chain.doFilter(request, response);
             }

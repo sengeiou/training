@@ -38,6 +38,7 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.deadDate != null\"> dead_date, </if>" +
                 " <if test=\"contractManual.remark != null\"> remark, </if>" +
                 " <if test=\"contractManual.feature != null\"> feature, </if>" +
+                " <if test=\"contractManual.dealFlag != null\"> deal_flag, </if>" +
                 " created , " +
                 " modified " +
             " ) VALUES ( " +
@@ -65,13 +66,14 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.deadDate != null\"> #{contractManual.deadDate}, </if>" +
                 " <if test=\"contractManual.remark != null\"> #{contractManual.remark}, </if>" +
                 " <if test=\"contractManual.feature != null\"> #{contractManual.feature}, </if>" +
+                " <if test=\"contractManual.dealFlag != null\"> #{contractManual.dealFlag}, </if>" +
                 " now() , " +
                 " now() " +
             " ) " +
             "</script>")
     int add(@Param("contractManual") ContractManualEntity contractManual);
 
-    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,created,modified " +
+    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,deal_flag,created,modified " +
             " FROM contract_manual " +
             " WHERE 1 = 1 " +
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
@@ -98,6 +100,7 @@ public interface ContractManualRepository {
             " <if test=\"query.deadDate != null\"> AND dead_date = #{query.deadDate} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.dealFlag != null\"> AND deal_flag = #{query.dealFlag} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<ContractManualEntity> find(@Param("query") ContractManualQuery contractManual , @Param("page") PageRequest page);
@@ -128,10 +131,11 @@ public interface ContractManualRepository {
             " <if test=\"query.deadDate != null\"> AND dead_date = #{query.deadDate} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.dealFlag != null\"> AND deal_flag = #{query.dealFlag} </if>" +
             "</script>")
     Long count(@Param("query") ContractManualQuery contractManual);
 
-    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,created,modified " +
+    @Select("<script> SELECT pk_id,contract_id,card_no,member_name,phone,card_type,store_name,salesman,salesman_phone,coach,coach_phone,total,money,type,pay_type,price,start_date,end_date,real_fee,count,status,pause_date,dead_date,remark,feature,deal_flag,created,modified " +
             " FROM contract_manual " +
             " WHERE contract_id = #{id} " +
             "</script>")
@@ -162,6 +166,7 @@ public interface ContractManualRepository {
                 " <if test=\"contractManual.deadDate != null\"> dead_date = #{contractManual.deadDate} , </if>" +
                 " <if test=\"contractManual.remark != null\"> remark = #{contractManual.remark} , </if>" +
                 " <if test=\"contractManual.feature != null\"> feature = #{contractManual.feature} , </if>" +
+                " <if test=\"contractManual.dealFlag != null\"> deal_flag = #{contractManual.dealFlag} , </if>" +
                 " modified = now() " +
             " WHERE contract_id = #{contractManual.contractId} " +
             "</script>")

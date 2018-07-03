@@ -38,6 +38,9 @@ public class MemberService {
     private StaffDao staffDao;
 
     @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
     private CardDao cardDao;
 
     @Autowired
@@ -85,6 +88,17 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public Page<Member> find(MemberQuery query , PageRequest page){
+        Staff staff = RequestContextHelper.getStaff();
+        StaffEntity staffEntity = staffDao.getById(staff.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffEntity.getRoleId());
+        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+            query.setStoreId(roleEntity.getStoreData());
+        }else{
+            query.setStoreId("123456789");
+        }
+        if(staffEntity.getUsername().equals("admin")){
+            query.setStoreId(null);
+        }
         logger.info("  find  MemberQuery = {}",query);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();

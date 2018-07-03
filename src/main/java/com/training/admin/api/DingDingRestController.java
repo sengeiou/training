@@ -13,6 +13,7 @@ import com.training.util.ExcelUtil;
 import com.training.util.IDUtils;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -188,7 +189,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/contract20180628.xls");
+        File file = new File("d:/file/honglian2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -199,33 +200,37 @@ public class DingDingRestController {
             }
             ContractManualEntity contractManualEntity = new ContractManualEntity();
             contractManualEntity.setContractId(item.get(0));
+            if(StringUtils.isEmpty(contractManualEntity.getContractId())){
+                contractManualEntity.setContractId(IDUtils.getId());
+            }
             contractManualEntity.setCardNo(item.get(1));
 
-            contractManualEntity.setMemberName(item.get(2));
-            contractManualEntity.setPhone(item.get(3));
-            contractManualEntity.setCardType(item.get(4));
-            contractManualEntity.setStoreName(item.get(5));
-            contractManualEntity.setSalesman(item.get(6));
-            contractManualEntity.setSalesmanPhone(item.get(7));
-            contractManualEntity.setCoach(item.get(8));
-            contractManualEntity.setCoachPhone(item.get(9));
-            contractManualEntity.setTotal(item.get(10));
-            contractManualEntity.setMoney(item.get(11));
-            contractManualEntity.setType(item.get(12));
-            contractManualEntity.setPayType(item.get(13));
-            contractManualEntity.setPrice(item.get(14));
-
+            contractManualEntity.setMemberName(item.get(3));
+            contractManualEntity.setPhone(item.get(4));
+            contractManualEntity.setCardType(item.get(5));
+            contractManualEntity.setStoreName(item.get(6));
+            contractManualEntity.setSalesman(item.get(7));
+            contractManualEntity.setSalesmanPhone(item.get(8));
+            contractManualEntity.setCoach(item.get(9));
+            contractManualEntity.setCoachPhone(item.get(10));
+            contractManualEntity.setTotal(item.get(11));
+            contractManualEntity.setMoney(item.get(12));
+            contractManualEntity.setType(item.get(13));
+            contractManualEntity.setPayType(item.get(14));
+            contractManualEntity.setPrice(item.get(15));
+            contractManualEntity.setDealFlag(0);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String date1 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(15))));
-            String date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(16))));
-
+//            String date1 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(15))));
+//            String date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(16))));
+            String date1 = item.get(16);
+            String date2 = item.get(17);
             contractManualEntity.setStartDate(date1);
             contractManualEntity.setEndDate(date2);
-            contractManualEntity.setRealFee(item.get(17));
-            contractManualEntity.setCount(item.get(18));
-            contractManualEntity.setStatus(item.get(19));
-            contractManualEntity.setPauseDate(item.size()>20?item.get(20):"");
-            contractManualEntity.setDeadDate(item.size()>21?item.get(21):"");
+            contractManualEntity.setRealFee(item.get(18));
+            contractManualEntity.setCount(item.get(19));
+            contractManualEntity.setStatus(item.get(20));
+            contractManualEntity.setPauseDate(item.size()>21?item.get(21):"");
+            contractManualEntity.setDeadDate(item.size()>22?item.get(22):"");
 
             int n = contractManualDao.add(contractManualEntity);
 
@@ -257,14 +262,12 @@ public class DingDingRestController {
             member.setName(contractManualEntity.getMemberName());
             member.setPhone(contractManualEntity.getPhone());
             member.setSalesman(contractManualEntity.getSalesman());
-
+            member.setOrigin("EXCEL导入");
             StaffEntity staffEntity = staffService.getByPhone(contractManualEntity.getCoachPhone());
             if(staffEntity!=null){
                 member.setCoachStaffId(staffEntity.getStaffId());
             }
-
             memberService.add(member);
-
         }
         return "contract_manual2执行成功";
     }
@@ -311,6 +314,12 @@ public class DingDingRestController {
                 memberCardEntity.setEndDate(contractManualEntity.getEndDate());
                 memberCardService.add(memberCardEntity);
                 n++;
+
+                ContractManualEntity contractManualEntityUpdate = new ContractManualEntity();
+                contractManualEntityUpdate.setContractId(contractManualEntity.getContractId());
+                contractManualEntityUpdate.setDealFlag(1);
+                contractManualService.update(contractManualEntityUpdate);
+
             }
         }
         logger.info("  n = {}" , n);

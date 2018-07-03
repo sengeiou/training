@@ -64,6 +64,8 @@ public class ContractManualEntity {
 
     private Date modified;
 
+    private Integer dealFlag;
+
 
 }
 
