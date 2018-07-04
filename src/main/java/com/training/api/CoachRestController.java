@@ -140,5 +140,16 @@ public class CoachRestController {
         return ResponseUtil.success(page);
     }
 
+    /**
+     * 分页查询
+     * @param query
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "qrCode", method = RequestMethod.GET)
+    public ResponseEntity<String> qrCode(@ModelAttribute TrainingQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  qrCode  TrainingQuery = {}",query);
+        return trainingService.qrCode(query);
+    }
+
 }
 

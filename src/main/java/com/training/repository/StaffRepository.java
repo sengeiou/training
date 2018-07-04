@@ -55,7 +55,7 @@ public interface StaffRepository {
             " FROM staff " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.storeId != null\"> AND store_id in ( #{query.storeId} ) </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id in ( ${query.storeId} ) </if>" +
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
             " <if test=\"query.username != null\"> AND username = #{query.username} </if>" +
             " <if test=\"query.password != null\"> AND password = #{query.password} </if>" +
@@ -75,7 +75,7 @@ public interface StaffRepository {
     @Select("<script> SELECT COUNT(1) FROM staff " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.storeId != null\"> AND store_id in ( #{query.storeId} ) </if>" +
+            " <if test=\"query.storeId != null\"> AND store_id in ( ${query.storeId} ) </if>" +
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
             " <if test=\"query.username != null\"> AND username = #{query.username} </if>" +
             " <if test=\"query.password != null\"> AND password = #{query.password} </if>" +

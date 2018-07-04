@@ -447,7 +447,7 @@ public class LessonService {
 
         if(lesson.getLessonDate().equals(ut.currentDate())){
             int currentHour = ut.currentHour();
-            if(currentHour>2100||currentHour>=(lesson.getStartHour()-600)){
+            if(currentHour>2200||currentHour>=(lesson.getStartHour()-600)){
                 return ResponseUtil.exception("约课失败!已过约课时间!");
             }
         }
@@ -515,7 +515,7 @@ public class LessonService {
         }
         if(lesson.getLessonDate().equals(ut.currentDate())){
             int currentHour = ut.currentHour();
-            if(currentHour>2100||currentHour>=lesson.getStartHour()){
+            if(currentHour>2200||currentHour>=lesson.getStartHour()){
                 return ResponseUtil.exception("约课失败!已过约课时间!");
             }
         }

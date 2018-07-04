@@ -5,6 +5,7 @@ import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.ContractManualDao;
+import com.training.dao.MemberPauseDao;
 import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.service.*;
@@ -61,6 +62,9 @@ public class DingDingRestController {
     private ContractManualDao contractManualDao;
 
     @Autowired
+    private MemberPauseDao memberPauseDao;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("dept")
@@ -83,7 +87,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 31978073  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -122,7 +126,7 @@ public class DingDingRestController {
                 staffEntity.setStaffId(IDUtils.getId());
                 staffEntity.setRelId(item.get("userid").toString());
                 staffEntity.setStoreId(deptId);
-                staffEntity.setUsername(item.get("userid").toString());
+                staffEntity.setUsername(item.get("mobile").toString());
                 staffEntity.setCustname(item.get("name").toString());
                 staffEntity.setPhone(mobile);
                 staffEntity.setEmail(email);
@@ -189,7 +193,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/honglian2.xls");
+        File file = new File("d:/file/donghu2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -319,6 +323,14 @@ public class DingDingRestController {
                 contractManualEntityUpdate.setContractId(contractManualEntity.getContractId());
                 contractManualEntityUpdate.setDealFlag(1);
                 contractManualService.update(contractManualEntityUpdate);
+
+                if(contractManualEntity.getStatus().indexOf("停")>=0){
+                    jdbcTemplate.update(" update member set status = 9 where member_id = ? ",new Object[]{memberEntityDB.getMemberId()});
+                    MemberPauseEntity memberPause = new MemberPauseEntity();
+                    memberPause.setMemberId(memberEntityDB.getMemberId());
+                    memberPause.setPauseDate(contractManualEntity.getPauseDate());
+                    memberPauseDao.add(memberPause);
+                }
 
             }
         }

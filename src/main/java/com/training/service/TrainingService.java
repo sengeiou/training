@@ -7,6 +7,7 @@ import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.QrCodeUtils;
+import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,10 +87,10 @@ public class TrainingService {
     public Training getById(String id){
         TrainingEntity trainingDB = trainingDao.getById(id);
         Training training = transferTraining(trainingDB);
-        String text = "https://trainingbj.huai23.com/sign_in?id="+training.getTrainingId();
-        String qrcode = QrCodeUtils.getBase64Str(text);
-        logger.info("  qrcode   indexOf = {} ",  qrcode.indexOf("\\r\\n"));
-        training.setQrCode(qrcode);
+//        String text = "https://trainingbj.huai23.com/sign_in?id="+training.getTrainingId();
+//        String qrcode = QrCodeUtils.getBase64Str(text);
+//        logger.info("  qrcode   indexOf = {} ",  qrcode.indexOf("\\r\\n"));
+//        training.setQrCode(qrcode);
         return training;
     }
 
@@ -206,6 +207,38 @@ public class TrainingService {
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+
+    public ResponseEntity<String> qrCode(TrainingQuery query) {
+        Member memberToken = RequestContextHelper.getMember();
+        logger.info(" qrCode  query = {} ",query);
+        TrainingEntity trainingEntity = trainingDao.getById(query.getTrainingId());
+        if(trainingEntity==null){
+            return ResponseUtil.exception("获取二维码异常");
+        }
+        if(!ut.currentDate().equals(trainingEntity.getLessonDate())){
+            return ResponseUtil.exception("不是训练课程日，不能签到");
+        }
+
+        int currentHour = ut.currentHour();
+
+        int startHour = trainingEntity.getStartHour();
+        if(startHour%100==0){
+            startHour = startHour - 70;
+        }else{
+            startHour = startHour - 30;
+        }
+        if(currentHour<startHour){
+            return ResponseUtil.exception("上课前半小时内允许签到，时间未到不能签到");
+        }
+        if(currentHour>trainingEntity.getEndHour()) {
+            return ResponseUtil.exception("已过下课时间，不能签到");
+        }
+        logger.info(" =================   trainingEntity = {} ",trainingEntity);
+        String text = "https://trainingbj.huai23.com/sign_in?id="+trainingEntity.getTrainingId()+"_"+System.currentTimeMillis();
+        String qrcode = QrCodeUtils.getBase64Str(text);
+        return ResponseUtil.success("获取成功",qrcode);
     }
 
 }

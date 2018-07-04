@@ -575,10 +575,23 @@ public class MemberService {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info("  signIn  memberRequest = {}", memberRequest);
         logger.info("  signIn  training = {}", training);
-        TrainingEntity trainingEntity = trainingDao.getById(training.getTrainingId());
+        String[] strs = training.getTrainingId().split("_");
+        String time = strs[1];
+        Long now = System.currentTimeMillis();
+        logger.info("  signIn  time = {} , now = {} , now-time = {}  ", time,now,(now-Long.parseLong(time)));
+        if(now-Long.parseLong(time)>15000){
+            logger.error("  signIn  二维码已失效,请重新获取 ");
+            return ResponseUtil.exception("二维码已失效,请重新获取");
+        }
+        TrainingEntity trainingEntity = trainingDao.getById(strs[0]);
         if(trainingEntity==null){
             return ResponseUtil.exception("签到异常");
         }
+        if(!trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
+            logger.error("  signIn  只有学员本人的微信才能扫码签到 ");
+            return ResponseUtil.exception("只有学员本人的微信才能扫码签到");
+        }
+
         int n = trainingDao.signIn(trainingEntity);
         if(n==1){
             return ResponseUtil.success("签到成功");

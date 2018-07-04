@@ -166,7 +166,7 @@ public interface MemberCardRepository {
             "   <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
             " ) </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
-            " <if test=\"query.storeId != null\"> AND member_id  in ( SELECT a.member_id from member a , staff b where a.coach_staff_id = b.staff_id and b.store_id in ( #{query.storeId} )  )  </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id  in ( SELECT a.member_id from member a , staff b where a.coach_staff_id = b.staff_id and b.store_id in ( ${query.storeId} )  )  </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
@@ -195,7 +195,7 @@ public interface MemberCardRepository {
             "   <if test=\"query.phone != null\"> AND phone like CONCAT('%',#{query.phone},'%')  </if>" +
             " ) </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
-            " <if test=\"query.storeId != null\"> AND member_id  in ( SELECT a.member_id from member a , staff b where a.coach_staff_id = b.staff_id and b.store_id in ( #{query.storeId} )  )  </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id  in ( SELECT a.member_id from member a , staff b where a.coach_staff_id = b.staff_id and b.store_id in ( ${query.storeId} )  )  </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
