@@ -300,11 +300,27 @@ public class LessonService {
         if(StringUtils.isEmpty(query.getMemberId())){
             query.setMemberId(memberRequest.getMemberId());
         }
-        MemberCardEntity memberCardDB = memberCardDao.getById(query.getCardNo());
-        if(memberCardDB==null){
+
+        MemberEntity memberDB = memberDao.getById(memberRequest.getMemberId());
+        if(memberDB==null){
             return lessonList;
         }
-        query.setStoreId(memberCardDB.getStoreId());
+        if(StringUtils.isNotEmpty(memberDB.getCoachStaffId())){
+            StaffEntity coachStaff = staffDao.getById(memberDB.getCoachStaffId());
+            if(coachStaff!=null){
+                query.setStoreId(coachStaff.getStoreId());
+            }
+        }else{
+            if(StringUtils.isNotEmpty(memberDB.getStoreId())){
+                query.setStoreId(memberDB.getStoreId());
+            }
+        }
+        if(StringUtils.isEmpty(query.getStoreId())){
+            return lessonList;
+        }
+        if(StringUtils.isEmpty(query.getLessonDate())){
+            return lessonList;
+        }
 
         LessonSettingQuery lessonSettingQuery = new LessonSettingQuery();
         lessonSettingQuery.setStoreId(query.getStoreId());
