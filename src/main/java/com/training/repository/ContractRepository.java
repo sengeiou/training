@@ -33,6 +33,7 @@ public interface ContractRepository {
                 " <if test=\"contract.remark != null\"> remark, </if>" +
                 " <if test=\"contract.signDate != null\"> sign_date, </if>" +
                 " <if test=\"contract.image != null\"> image, </if>" +
+                " <if test=\"contract.form != null\"> form, </if>" +
                 " <if test=\"contract.status != null\"> status, </if>" +
                 " created , " +
                 " modified " +
@@ -56,6 +57,7 @@ public interface ContractRepository {
                 " <if test=\"contract.remark != null\"> #{contract.remark}, </if>" +
                 " <if test=\"contract.signDate != null\"> #{contract.signDate}, </if>" +
                 " <if test=\"contract.image != null\"> #{contract.image}, </if>" +
+                " <if test=\"contract.form != null\"> #{contract.form}, </if>" +
                 " <if test=\"contract.status != null\"> #{contract.status}, </if>" +
                 " now() , " +
                 " now() " +
@@ -63,7 +65,7 @@ public interface ContractRepository {
             "</script>")
     int add(@Param("contract") ContractEntity contract);
 
-    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,form,status,created,modified " +
             " FROM contract " +
             " WHERE 1 = 1 " +
             " <if test=\"query.processInstanceId != null\"> AND process_instance_id = #{query.processInstanceId} </if>" +
@@ -115,7 +117,7 @@ public interface ContractRepository {
             "</script>")
     Long count(@Param("query") ContractQuery contract);
 
-    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,form,status,created,modified " +
             " FROM contract " +
             " WHERE process_instance_id = #{id} " +
             "</script>")

@@ -215,6 +215,7 @@ public class ProcessInstanceService {
         contractEntity.setCoach(contractMap.get("分配教练"));
         contractEntity.setRemark(contractMap.get("备注"));
         contractEntity.setImage(contractMap.get("图片"));
+        contractEntity.setForm(JSON.toJSONString(processInstanceTopVo));
         return contractEntity;
     }
 
@@ -235,7 +236,6 @@ public class ProcessInstanceService {
         contractEntity.setGender(contractMap.get("会员性别"));
         contractEntity.setPhone(contractMap.get("会员电话"));
         contractEntity.setType(contractMap.get("合同属性"));
-        contractEntity.setTotal(contractMap.get("时长（ 天 ）"));
         contractEntity.setMoney(contractMap.get("付款金额（元）"));
         contractEntity.setPayType(contractMap.get("付款方式"));
         if(StringUtils.isNotEmpty(contractMap.get("[\"开始时间\",\"结束时间\"]"))){
@@ -243,6 +243,7 @@ public class ProcessInstanceService {
             String[] dates = dateStr.split(",");
             contractEntity.setStartDate(dates[0].replaceAll("\"",""));
             contractEntity.setEndDate(dates[1].replaceAll("\"",""));
+            contractEntity.setTotal(dates[2]);
         }
         Map<String,String> feature = new HashMap();
         feature.put("storeName",contractMap.get("所在部门"));
@@ -251,6 +252,7 @@ public class ProcessInstanceService {
         contractEntity.setCoach(contractMap.get("分配教练"));
         contractEntity.setRemark(contractMap.get("备注及特殊说明"));
         contractEntity.setImage(contractMap.get("图片"));
+        contractEntity.setForm(JSON.toJSONString(processInstanceTopVo));
         return contractEntity;
     }
 

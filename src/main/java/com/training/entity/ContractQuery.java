@@ -50,6 +50,8 @@ public class ContractQuery {
 
     private String image;
 
+    private String form;
+
     private Integer status;
 
     private Date created;
