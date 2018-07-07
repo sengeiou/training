@@ -257,6 +257,9 @@ public class MemberCardService {
         if(ut.passDayByDate(ut.currentDate(),memberCardDB.getEndDate())>=0){
             return ResponseUtil.exception("课卡还没有到期，不能提前延期");
         }
+        if(memberCardDB.getDelay()>0){
+            return ResponseUtil.exception("课卡已经延期过,不能再次免费延期");
+        }
         memberCardDB.setEndDate(ut.currentDate(60));
         int n = memberCardDao.freeDelay(memberCardDB);
         if(n>0){

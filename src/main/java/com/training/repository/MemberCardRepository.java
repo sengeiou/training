@@ -153,7 +153,7 @@ public interface MemberCardRepository {
 
     @Update("<script> UPDATE member_card SET delay = delay + 1 , end_date = #{memberCard.endDate} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
             "</script>")
-    int delay(MemberCardEntity memberCard);
+    int delay(@Param("memberCard") MemberCardEntity memberCard);
 
     @Select("<script> SELECT pk_id,card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
