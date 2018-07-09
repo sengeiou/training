@@ -22,7 +22,7 @@ import java.util.List;
  * Created by huai23 on 2018-07-09 22:42:44.
  */ 
 @RestController
-@RequestMapping("/api/kpiQuota")
+@RequestMapping("/api/manage/kpiQuota")
 public class KpiQuotaRestController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
