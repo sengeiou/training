@@ -71,16 +71,19 @@ public class KpiTemplateQuotaDao {
 
     /**
      * 根据ID查询实体
-     * @param id
+     * @param templateId
+     * @param quotaId
      * Created by huai23 on 2018-07-09 22:42:58.
      */ 
-    public KpiTemplateQuotaEntity getById(String id){
-        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaRepository.getById(id);
-        if("list".equals(kpiTemplateQuotaDB.getType())){
-            List<KpiQuotaStandard> standards = JSON.parseObject(kpiTemplateQuotaDB.getStandard(), new TypeReference<List<KpiQuotaStandard>>(){});
-            kpiTemplateQuotaDB.setStandardList(standards);
-        }else{
-            kpiTemplateQuotaDB.setStandardList(new ArrayList<>());
+    public KpiTemplateQuotaEntity getById(String templateId,String quotaId){
+        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaRepository.getById(templateId,quotaId);
+        if(kpiTemplateQuotaDB!=null){
+            if("list".equals(kpiTemplateQuotaDB.getType())){
+                List<KpiQuotaStandard> standards = JSON.parseObject(kpiTemplateQuotaDB.getStandard(), new TypeReference<List<KpiQuotaStandard>>(){});
+                kpiTemplateQuotaDB.setStandardList(standards);
+            }else{
+                kpiTemplateQuotaDB.setStandardList(new ArrayList<>());
+            }
         }
         return kpiTemplateQuotaDB;
     }
@@ -91,6 +94,11 @@ public class KpiTemplateQuotaDao {
      * Created by huai23 on 2018-07-09 22:42:58.
      */ 
     public int update(KpiTemplateQuotaEntity kpiTemplateQuota){
+        if("list".equals(kpiTemplateQuota.getType())){
+            kpiTemplateQuota.setStandard(JSON.toJSONString(kpiTemplateQuota.getStandardList()));
+        }else {
+            kpiTemplateQuota.setStandard("");
+        }
         int n = kpiTemplateQuotaRepository.update(kpiTemplateQuota);
         return n;
     }

@@ -81,13 +81,11 @@ public interface KpiTemplateQuotaRepository {
 
     @Select("<script> SELECT pk_id,template_id,quota_id,type,name,weight,standard,score,content,feature,remark,status,created,modified " +
             " FROM kpi_template_quota " +
-            " WHERE template_id = #{id} " +
+            " WHERE template_id = #{templateId} and quota_id = #{quotaId}  " +
             "</script>")
-    KpiTemplateQuotaEntity getById(@Param("id") String id);
+    KpiTemplateQuotaEntity getById(@Param("templateId") String templateId,@Param("quotaId") String quotaId);
 
     @Update("<script> UPDATE kpi_template_quota SET " +
-                " <if test=\"kpiTemplateQuota.templateId != null\"> template_id = #{kpiTemplateQuota.templateId} , </if>" +
-                " <if test=\"kpiTemplateQuota.quotaId != null\"> quota_id = #{kpiTemplateQuota.quotaId} , </if>" +
                 " <if test=\"kpiTemplateQuota.type != null\"> type = #{kpiTemplateQuota.type} , </if>" +
                 " <if test=\"kpiTemplateQuota.name != null\"> name = #{kpiTemplateQuota.name} , </if>" +
                 " <if test=\"kpiTemplateQuota.weight != null\"> weight = #{kpiTemplateQuota.weight} , </if>" +
@@ -98,7 +96,7 @@ public interface KpiTemplateQuotaRepository {
                 " <if test=\"kpiTemplateQuota.remark != null\"> remark = #{kpiTemplateQuota.remark} , </if>" +
                 " <if test=\"kpiTemplateQuota.status != null\"> status = #{kpiTemplateQuota.status} , </if>" +
                 " modified = now() " +
-            " WHERE template_id = #{kpiTemplateQuota.templateId} " +
+            " WHERE template_id = #{kpiTemplateQuota.templateId} and quota_id = #{kpiTemplateQuota.quotaId}  " +
             "</script>")
     int update(@Param("kpiTemplateQuota") KpiTemplateQuotaEntity kpiTemplateQuota);
 

@@ -69,11 +69,10 @@ public class KpiTemplateQuotaService {
 
     /**
      * 根据ID查询实体
-     * @param id
      * Created by huai23 on 2018-07-09 22:42:58.
      */ 
-    public KpiTemplateQuotaEntity getById(String id){
-        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaDao.getById(id);
+    public KpiTemplateQuotaEntity getById(String templateId,String quotaId){
+        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaDao.getById(templateId,quotaId);
         return kpiTemplateQuotaDB;
     }
 

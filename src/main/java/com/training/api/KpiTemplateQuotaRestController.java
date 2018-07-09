@@ -68,12 +68,12 @@ public class KpiTemplateQuotaRestController {
 
     /**
      * 根据ID查询实体
-     * @param id
+     * @param query
      * Created by huai23 on 2018-07-09 22:42:58.
      */ 
-    @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaService.getById(id);
+    @RequestMapping (value = "getById", method = RequestMethod.GET)
+    public ResponseEntity<String> getById(@ModelAttribute KpiTemplateQuotaQuery query,HttpServletRequest request, HttpServletResponse response){
+        KpiTemplateQuotaEntity kpiTemplateQuotaDB = kpiTemplateQuotaService.getById(query.getTemplateId(),query.getQuotaId());
         if(kpiTemplateQuotaDB==null){
             return ResponseUtil.exception("查无数据");
         }

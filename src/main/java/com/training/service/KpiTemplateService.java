@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -111,9 +112,16 @@ public class KpiTemplateService {
      * 根据实体更新
      * @param kpiTemplate
      * Created by huai23 on 2018-07-09 22:42:32.
-     */ 
+     */
+    @Transactional
     public  ResponseEntity<String> update(KpiTemplateEntity kpiTemplate){
         int n = kpiTemplateDao.update(kpiTemplate);
+        List<KpiTemplateQuotaEntity> quotaEntityList = kpiTemplate.getQuotaEntityList();
+        kpiTemplateQuotaDao.delete(kpiTemplate.getTemplateId());
+        for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity :quotaEntityList){
+            kpiTemplateQuotaEntity.setTemplateId(kpiTemplate.getTemplateId());
+            kpiTemplateQuotaDao.add(kpiTemplateQuotaEntity);
+        }
         if(n==1){
             return ResponseUtil.success("修改成功");
         }
@@ -124,9 +132,10 @@ public class KpiTemplateService {
      * 根据ID删除
      * @param id
      * Created by huai23 on 2018-07-09 22:42:32.
-     */ 
+     */
     public ResponseEntity<String> delete(String id){
         int n = kpiTemplateDao.delete(id);
+        kpiTemplateQuotaDao.delete(id);
         if(n==1){
             return ResponseUtil.success("删除成功");
         }
