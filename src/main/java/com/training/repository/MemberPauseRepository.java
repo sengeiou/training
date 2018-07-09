@@ -47,7 +47,7 @@ public interface MemberPauseRepository {
             " <if test=\"query.restoreStaffId != null\"> AND restore_staff_id = #{query.restoreStaffId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberPauseEntity> find(@Param("query") MemberPauseQuery memberPause , @Param("page") PageRequest page);
 

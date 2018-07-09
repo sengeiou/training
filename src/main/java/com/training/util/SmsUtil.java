@@ -57,7 +57,7 @@ public class SmsUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        SmsUtil.sendCode("18618191128","1111");
+        SmsUtil.sendCode("18611781683","1234");
     }
 
 }

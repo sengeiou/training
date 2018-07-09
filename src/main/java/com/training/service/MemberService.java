@@ -128,8 +128,17 @@ public class MemberService {
         logger.info("  find  MemberQuery = {}",query);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();
-        for (MemberEntity trainingEntity : memberList){
-            Member member = transferMember(trainingEntity);
+        for (MemberEntity memberEntity : memberList){
+            Member member = transferMember(memberEntity);
+
+            MemberCardQuery memberCardQuery = new MemberCardQuery();
+            memberCardQuery.setType(CardTypeEnum.TY.getKey());
+            memberCardQuery.setMemberId(memberEntity.getMemberId());
+            PageRequest pageRequest = new PageRequest();
+            List cards = memberCardDao.find(memberCardQuery,pageRequest);
+            if(cards.size()>0){
+                member.setHasTY(cards.size());
+            }
             data.add(member);
         }
         Long count = memberDao.count(query);
@@ -715,9 +724,9 @@ public class MemberService {
 
         }
 
-        logger.info("  getCanUseCardList   cardList.size() = {}", cardList.size());
+        logger.info("  getCanUseCardList   validCardList.size() = {}", validCardList.size());
 
-        for (MemberCardEntity memberCardEntity : cardList){
+        for (MemberCardEntity memberCardEntity : validCardList){
             MemberCard card = memberCardService.transfer(memberCardEntity);
             cards.add(card);
         }
@@ -801,8 +810,10 @@ public class MemberService {
         if(member==null||StringUtils.isEmpty(member.getMemberId())){
             return ResponseUtil.exception("停课参数异常");
         }
-
         MemberEntity memberEntity = new MemberEntity();
+        if(memberEntity.getStatus()==9){
+            return ResponseUtil.exception("该学员已处于停课状态！");
+        }
         memberEntity.setMemberId(member.getMemberId());
         memberEntity.setStatus(9);   //  暂停
 
@@ -818,7 +829,7 @@ public class MemberService {
         return ResponseUtil.exception("停课失败");
     }
 
-
+    @Transactional
     public ResponseEntity<String> restoreMember(Member member) {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  restoreMember  staffRequest = {}", staffRequest);
@@ -830,14 +841,34 @@ public class MemberService {
             return ResponseUtil.exception("恢复参数异常");
         }
 
+        MemberPauseQuery query = new MemberPauseQuery();
+        query.setMemberId(member.getMemberId());
+        query.setStatus(1);
+        PageRequest page = new PageRequest();
+        List<MemberPauseEntity> memberPauseEntities = memberPauseDao.find(query,page);
+        int days = 0;
+        if(memberPauseEntities.size()>0){
+            MemberPauseEntity memberPauseEntity = memberPauseEntities.get(0);
+            days = ut.passDayByDate(memberPauseEntity.getPauseDate(),ut.currentDate());
+            memberPauseEntity.setRestoreDate(ut.currentDate());
+            memberPauseEntity.setRestoreStaffId(staffRequest.getStaffId());
+            memberPauseEntity.setStatus(0);
+            int n = memberPauseDao.update(memberPauseEntity);
+            if(n<1){
+                return ResponseUtil.exception("复课异常，更新停课日志失败");
+            }
+        }else{
+            return ResponseUtil.exception("复课异常，无停课日志");
+        }
+
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberId(member.getMemberId());
         memberEntity.setStatus(0);
         int n = memberDao.update(memberEntity);
         if(n==1){
-            return ResponseUtil.success("恢复成功");
+            return ResponseUtil.success("复课成功");
         }
-        return ResponseUtil.exception("恢复失败");
+        return ResponseUtil.exception("复课失败");
     }
 
     public ResponseEntity<String> changeRole(Staff staff) {

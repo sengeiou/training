@@ -74,5 +74,7 @@ public class Member {
 
     private MemberLogEntity memberLog;
 
+    private Integer hasTY = 0;
+
 }
 
