@@ -6,6 +6,7 @@ import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -34,10 +35,16 @@ public class LessonSettingService {
     private StoreDao storeDao;
 
     @Autowired
+    private MemberService memberService;
+
+    @Autowired
     private MemberDao memberDao;
 
     @Autowired
     private StaffDao staffDao;
+
+    @Autowired
+    private TrainingDao trainingDao;
 
     /**
      * 新增实体
@@ -49,6 +56,32 @@ public class LessonSettingService {
         StaffEntity staffEntity = staffDao.getById(lessonSetting.getCoachId());
         if(!staffEntity.getStoreId().equals(lessonSetting.getStoreId())){
             //return ResponseUtil.exception("教练与门店不匹配,请重新选择");
+        }
+
+        String coachId = memberService.getCoachIdBStaffId(staffEntity.getStaffId());
+        TrainingQuery query = new TrainingQuery();
+        query.setCoachId(coachId);
+        query.setStartDate(lessonSetting.getStartDate());
+        query.setEndDate(lessonSetting.getEndDate());
+        query.setStatus(0);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(1000);
+        List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
+        logger.info(" =================   LessonSettingService  add  list  trainingList = {}",trainingList.size());
+        for (TrainingEntity trainingEntity:trainingList){
+            int weekIndex = ut.indexOfWeek(trainingEntity.getLessonDate());
+            String[] weekDays = lessonSetting.getWeekRepeat().split(",");
+            if(weekDays.length<weekIndex){
+                continue;
+            }
+            if(!weekDays[weekIndex-1].equals("1")){
+                continue;
+            }
+            if(trainingEntity.getEndHour()<=lessonSetting.getStartHour()||trainingEntity.getStartHour()>=lessonSetting.getEndHour()){
+
+            }else{
+                return ResponseUtil.exception("该时段不能设置团体课,已有学员约课：["+trainingEntity.getLessonDate()+"("+trainingEntity.getStartHour()+"-"+trainingEntity.getEndHour()+")]");
+            }
         }
         lessonSetting.setStoreId(staffEntity.getStoreId());
         lessonSetting.setLessonId(IDUtils.getId());

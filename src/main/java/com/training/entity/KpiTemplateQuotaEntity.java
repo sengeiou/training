@@ -2,6 +2,7 @@ package com.training.entity;
 
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 /**
  * kpi_template_quota 实体类
@@ -38,6 +39,7 @@ public class KpiTemplateQuotaEntity {
 
     private Date modified;
 
+    private List<KpiQuotaStandard> standardList;
 
 }
 

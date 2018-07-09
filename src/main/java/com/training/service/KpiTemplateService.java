@@ -1,5 +1,6 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSON;
 import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -27,15 +28,26 @@ public class KpiTemplateService {
     @Autowired
     private KpiTemplateDao kpiTemplateDao;
 
+    @Autowired
+    private KpiTemplateQuotaDao kpiTemplateQuotaDao;
+
     /**
      * 新增实体
      * @param kpiTemplate
      * Created by huai23 on 2018-07-09 22:42:32.
      */ 
     public ResponseEntity<String> add(KpiTemplateEntity kpiTemplate){
+        logger.info(" =================   KpiTemplateService add   kpiTemplate = {}",kpiTemplate);
         String id = IDUtils.getId();
         kpiTemplate.setTemplateId(id);
         int n = kpiTemplateDao.add(kpiTemplate);
+
+        List<KpiTemplateQuotaEntity> quotaEntityList = kpiTemplate.getQuotaEntityList();
+        for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity :quotaEntityList){
+            kpiTemplateQuotaEntity.setTemplateId(id);
+            kpiTemplateQuotaDao.add(kpiTemplateQuotaEntity);
+        }
+
         if(n==1){
             return ResponseUtil.success("添加成功");
         }
@@ -50,6 +62,16 @@ public class KpiTemplateService {
      */ 
     public Page<KpiTemplateEntity> find(KpiTemplateQuery query , PageRequest page){
         List<KpiTemplateEntity> kpiTemplateList = kpiTemplateDao.find(query,page);
+
+        for (KpiTemplateEntity kpiTemplateEntity : kpiTemplateList){
+            KpiTemplateQuotaQuery kpiTemplateQuotaQuery = new KpiTemplateQuotaQuery();
+            kpiTemplateQuotaQuery.setTemplateId(kpiTemplateEntity.getTemplateId());
+            PageRequest pageRequest = new PageRequest();
+            pageRequest.setPageSize(1000);
+            List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(kpiTemplateQuotaQuery,pageRequest);
+            kpiTemplateEntity.setQuotaEntityList(kpiTemplateQuotaEntityList);
+        }
+
         Long count = kpiTemplateDao.count(query);
         Page<KpiTemplateEntity> returnPage = new Page<>();
         returnPage.setContent(kpiTemplateList);
@@ -76,6 +98,12 @@ public class KpiTemplateService {
      */ 
     public KpiTemplateEntity getById(String id){
         KpiTemplateEntity kpiTemplateDB = kpiTemplateDao.getById(id);
+        KpiTemplateQuotaQuery kpiTemplateQuotaQuery = new KpiTemplateQuotaQuery();
+        kpiTemplateQuotaQuery.setTemplateId(kpiTemplateDB.getTemplateId());
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(1000);
+        List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(kpiTemplateQuotaQuery,pageRequest);
+        kpiTemplateDB.setQuotaEntityList(kpiTemplateQuotaEntityList);
         return kpiTemplateDB;
     }
 

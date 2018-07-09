@@ -811,9 +811,32 @@ public class MemberService {
             return ResponseUtil.exception("停课参数异常");
         }
         MemberEntity memberEntity = new MemberEntity();
+        if(memberEntity==null){
+            return ResponseUtil.exception("停课学员未知异常");
+        }
         if(memberEntity.getStatus()==9){
             return ResponseUtil.exception("该学员已处于停课状态！");
         }
+
+        TrainingQuery query = new TrainingQuery();
+        query.setMemberId(memberEntity.getMemberId());
+        query.setStartDate(ut.currentDate());
+        query.setStatus(0);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100);
+        List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
+        logger.info(" =================    list  trainingList = {}",trainingList.size());
+        for (TrainingEntity trainingEntity:trainingList){
+            if(trainingEntity.getLessonDate().equals(ut.currentDate())){
+                int time = ut.currentHour();
+                if(time<trainingEntity.getStartHour()){
+                    return ResponseUtil.exception("该学员已经预约今日课程，不能停课！");
+                }
+            }else{
+                return ResponseUtil.exception("该学员已经预约今日之后的课程，不能停课！");
+            }
+        }
+
         memberEntity.setMemberId(member.getMemberId());
         memberEntity.setStatus(9);   //  暂停
 
@@ -857,6 +880,32 @@ public class MemberService {
             if(n<1){
                 return ResponseUtil.exception("复课异常，更新停课日志失败");
             }
+            logger.info("  restoreMember  days = {}", days);
+            if(days>0){
+                MemberCardQuery memberCardQuery = new MemberCardQuery();
+                memberCardQuery.setMemberId(member.getMemberId());
+                PageRequest pageRequest = new PageRequest();
+                pageRequest.setPageSize(9999);
+                List<MemberCardEntity> cards = memberCardDao.find(memberCardQuery,pageRequest);
+                for (MemberCardEntity memberCardEntity :cards) {
+                    if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())
+                            ||memberCardEntity.getType().equals(CardTypeEnum.TT.getKey())
+                            ||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                        if(memberCardEntity.getCount()==0){
+                            continue;
+                        }
+                    }
+                    if(ut.passDayByDate(memberCardEntity.getEndDate(),memberPauseEntity.getPauseDate())<=0){
+                        String newEndDate = ut.currentDate(memberCardEntity.getEndDate(),days);
+                        logger.info("  restoreMember  newEndDate = {} , memberCardEntity = {} ", newEndDate,memberCardEntity);
+                        MemberCardEntity memberCardEntityUpdate = new MemberCardEntity();
+                        memberCardEntityUpdate.setEndDate(newEndDate);
+                        memberCardEntityUpdate.setCardNo(memberCardEntity.getCardNo());
+                        memberCardDao.update(memberCardEntityUpdate);
+                    }
+                }
+            }
+
         }else{
             return ResponseUtil.exception("复课异常，无停课日志");
         }
