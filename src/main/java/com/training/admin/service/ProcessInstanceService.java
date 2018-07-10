@@ -99,15 +99,15 @@ public class ProcessInstanceService {
                 }else{
                     System.out.println(" ================================  data = null : "+data);
                 }
-                for (int i = 0; i < contractEntityList.size(); i++) {
-                    ContractEntity contractEntity = contractEntityList.get(i);
-                    ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
-                    if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
-                        continue;
-                    }
-                    contractService.add(contractEntity);
-                }
+//                for (int i = 0; i < contractEntityList.size(); i++) {
+//                    ContractEntity contractEntity = contractEntityList.get(i);
+//                    ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
+//                    if(contractEntityDB!=null){
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        continue;
+//                    }
+//                    contractService.add(contractEntity);
+//                }
                 cursor++;
             }while(count>0);
 

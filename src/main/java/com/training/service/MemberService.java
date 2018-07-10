@@ -810,7 +810,7 @@ public class MemberService {
         if(member==null||StringUtils.isEmpty(member.getMemberId())){
             return ResponseUtil.exception("停课参数异常");
         }
-        MemberEntity memberEntity = new MemberEntity();
+        MemberEntity memberEntity = memberDao.getById(member.getMemberId());
         if(memberEntity==null){
             return ResponseUtil.exception("停课学员未知异常");
         }
