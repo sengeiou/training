@@ -8,8 +8,10 @@ import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
 import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
 import com.training.common.*;
 import com.training.dao.ContractDao;
+import com.training.dao.MemberCardDao;
 import com.training.dao.MemberDao;
 import com.training.dao.StaffDao;
+import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.service.ContractService;
 import com.training.service.MemberCardService;
@@ -45,6 +47,9 @@ public class CreateCardService {
     @Autowired
     private MemberCardService memberCardService;
 
+    @Autowired
+    private MemberCardDao memberCardDao;
+
     public void createCard() {
         ContractQuery query = new ContractQuery();
         query.setStatus(0);
@@ -56,7 +61,8 @@ public class CreateCardService {
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
-                if(CardTypeEnum.getEnumByKey(contractEntity.getCardType())==null){
+                if("ZK".equals(contractEntity.getCardType())){
+                    dealZK(contractEntity);
                     continue;
                 }
                 String phone = contractEntity.getPhone();
@@ -113,6 +119,56 @@ public class CreateCardService {
                 logger.error(" createCard ERROR :  {} ", e.getMessage());
             }
 
+        }
+    }
+
+    private void dealZK(ContractEntity contractEntity) {
+        logger.error(" dealZK contractEntity :  {} ", contractEntity);
+        String phone = contractEntity.getPhone();
+        SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
+        Map<String,String> contractMap = new HashMap();
+        List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+        for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+            System.out.println(form.getName()+" : "+form.getValue());
+            contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+        }
+        String newPhone = contractMap.get("转入会员电话");
+        if(StringUtils.isEmpty(newPhone)){
+            logger.error(" dealZK newPhone is null : contractMap = {} ", contractMap);
+            return;
+        }
+        MemberEntity memberFrom = memberDao.getByPhone(phone);
+        MemberEntity memberTo = memberDao.getByPhone(newPhone);
+        if(memberFrom==null){
+            logger.error(" dealZK memberFrom is null : phone = {} ", phone);
+            return;
+        }
+        if(memberTo==null){
+            logger.error(" dealZK memberTo is null : newPhone = {} ", newPhone);
+            return;
+        }
+        String cardNo = contractMap.get("课卡号");
+        if(StringUtils.isEmpty(cardNo)){
+            logger.error(" dealZK cardNo is null : contractEntity = {} ", contractEntity);
+            return;
+        }
+        String remark = "转卡，转出会员："+memberFrom.getName()+"("+memberFrom.getPhone()+")";
+        MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+        if(memberCardEntity.getMemberId().equals(memberFrom.getMemberId())){
+            MemberCardEntity memberCardUpdate = new MemberCardEntity();
+            memberCardUpdate.setCardNo(cardNo);
+            memberCardUpdate.setMemberId(memberTo.getMemberId());
+            memberCardUpdate.setRemark(remark);
+            int n = memberCardDao.update(memberCardUpdate);
+            if(n==1){
+                logger.info(" ==== dealZK  success : contractEntity = {} ", contractEntity);
+                contractEntity.setStatus(1);
+                updateContractStatus(contractEntity);
+            }else {
+                logger.error(" ****  dealZK failed : contractEntity = {} ", contractEntity);
+            }
+        }else{
+            logger.error(" dealZK 课卡号与转出会员不一致 : cardNo = {} ， memberFrom = {} ", cardNo,memberFrom);
         }
     }
 

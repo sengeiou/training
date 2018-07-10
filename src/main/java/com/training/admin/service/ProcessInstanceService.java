@@ -99,15 +99,15 @@ public class ProcessInstanceService {
                 }else{
                     System.out.println(" ================================  data = null : "+data);
                 }
-//                for (int i = 0; i < contractEntityList.size(); i++) {
-//                    ContractEntity contractEntity = contractEntityList.get(i);
-//                    ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
-//                    if(contractEntityDB!=null){
-//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
-//                        continue;
-//                    }
-//                    contractService.add(contractEntity);
-//                }
+                for (int i = 0; i < contractEntityList.size(); i++) {
+                    ContractEntity contractEntity = contractEntityList.get(i);
+                    ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
+                    if(contractEntityDB!=null){
+                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+                        continue;
+                    }
+                    contractService.add(contractEntity);
+                }
                 cursor++;
             }while(count>0);
 
@@ -131,12 +131,11 @@ public class ProcessInstanceService {
         contractEntity.setContractId(contractMap.get("合同编号"));
         contractEntity.setContractName(processInstanceTopVo.getTitle());
         contractEntity.setSignDate(contractMap.get("签约日期"));
-        contractEntity.setMemberName(contractMap.get("会员姓名"));
-        contractEntity.setGender(contractMap.get("会员性别"));
-        contractEntity.setPhone(contractMap.get("会员电话"));
-        contractEntity.setType(contractMap.get("合同属性"));
+        contractEntity.setMemberName(contractMap.get("转出会员姓名"));
+        contractEntity.setPhone(contractMap.get("转出会员电话"));
+        contractEntity.setType(contractMap.get("转课类型"));
         contractEntity.setTotal(contractMap.get("购买课程"));
-        contractEntity.setMoney(contractMap.get("金额（元）"));
+        contractEntity.setMoney(contractMap.get("剩余金额（元）"));
         contractEntity.setPayType(contractMap.get("付款方式"));
         if(StringUtils.isNotEmpty(contractMap.get("[\"开始时间\",\"结束时间\"]"))){
             String dateStr = contractMap.get("[\"开始时间\",\"结束时间\"]").replace("[","").replace("]","");
@@ -149,7 +148,7 @@ public class ProcessInstanceService {
         contractEntity.setFeature(JSON.toJSONString(feature));
         contractEntity.setSalesman(contractMap.get("销售人员"));
         contractEntity.setCoach(contractMap.get("分配教练"));
-        contractEntity.setRemark(contractMap.get("备注"));
+        contractEntity.setRemark(contractMap.get("转卡原因"));
         contractEntity.setImage(contractMap.get("图片"));
         contractEntity.setForm(JSON.toJSONString(processInstanceTopVo));
         return contractEntity;

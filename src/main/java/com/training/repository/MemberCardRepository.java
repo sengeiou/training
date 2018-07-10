@@ -118,7 +118,6 @@ public interface MemberCardRepository {
     MemberCardEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE member_card SET " +
-                " <if test=\"memberCard.cardNo != null\"> card_no = #{memberCard.cardNo} , </if>" +
                 " <if test=\"memberCard.cardId != null\"> card_id = #{memberCard.cardId} , </if>" +
                 " <if test=\"memberCard.memberId != null\"> member_id = #{memberCard.memberId} , </if>" +
                 " <if test=\"memberCard.coachId != null\"> coach_id = #{memberCard.coachId} , </if>" +
