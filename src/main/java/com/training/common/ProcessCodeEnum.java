@@ -11,8 +11,10 @@ public enum ProcessCodeEnum {
 
     PT("PT","PROC-EF6Y0XWVO2-RG59KJS2S58XL1O495ZN2-QABKW8MI-19","私教次卡"),
     PM("PM","PROC-FF6YQLE1N2-HESQB9ZYOW7FOIN97KIL1-84X7L0BJ-E","私教月卡"),
-    TT("TT","","团体次卡"),
+    TT("TT","PROC-ZJYJ3R8V-UYNWH39TPFRDZ0HTUI163-40RIHCJJ-R1","团体次卡"),
     TM("TM","","团体月卡"),
+    ZK("ZK","PROC-9KYJU59W-T7NWXA0SRF5AJ2LKK1Q63-QTOSGCJJ-X2","转课"),
+
     ;
 
     private String key;

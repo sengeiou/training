@@ -56,6 +56,9 @@ public class CreateCardService {
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
+                if(CardTypeEnum.getEnumByKey(contractEntity.getCardType())==null){
+                    continue;
+                }
                 String phone = contractEntity.getPhone();
                 if(StringUtils.isEmpty(phone)){
                     ContractEntity contractUpdate = new ContractEntity();
