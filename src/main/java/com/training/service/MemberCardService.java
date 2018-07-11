@@ -144,13 +144,12 @@ public class MemberCardService {
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
         }
         memberCard.setCardType(cardType);
-
-        if(ut.passDayByDate(ut.currentDate(-7),memberCard.getEndDate()) < 0){
-            memberCard.setCanDelay(1);
-        }else{
-            memberCard.setCanDelay(0);
+        memberCard.setCanDelay(0);
+        if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
+            if(memberCard.getDelay()==0){
+                memberCard.setCanDelay(1);
+            }
         }
-
         memberCard.setDelayFee("0");
         memberCard.setDelayDays(60);
         return memberCard;

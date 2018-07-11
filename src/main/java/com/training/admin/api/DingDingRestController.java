@@ -79,7 +79,14 @@ public class DingDingRestController {
             store.setDeptId(item.get("id").toString());
             store.setName(item.get("name").toString());
             store.setUserId("");
-            storeService.add(store);
+
+            StoreEntity storeEntity = storeService.getById(store.getStoreId());
+            if(storeEntity==null){
+                storeService.add(store);
+            }else{
+                logger.info(store.getName()+"已存在，无需重复添加");
+            }
+
         }
         return "执行成功";
     }
@@ -87,7 +94,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 31978073  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 68901437  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -100,7 +107,7 @@ public class DingDingRestController {
                 System.out.println("name: " + item.get("name").toString());
 
                 String userid = item.get("userid").toString();
-                StaffEntity staffDB = staffService.getByUsername(userid);
+                StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
                 if(staffDB!=null){
                     logger.info(item.get("name").toString()+"已存在，无需重复添加");
                     continue;
