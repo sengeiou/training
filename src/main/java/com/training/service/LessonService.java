@@ -718,7 +718,13 @@ public class LessonService {
         }
 
         if(ut.passDayByDate(ut.currentDate(),trainingEntity.getLessonDate())<0){
-            return ResponseUtil.exception("取消约课失败!该课程已过期");
+            if(manageFlag){
+                if(StringUtils.isNotEmpty(trainingEntity.getSignTime())){
+                    return ResponseUtil.exception("取消约课失败!该课程已签到，不能取消！签到时间："+trainingEntity.getSignTime());
+                }
+            }else{
+                return ResponseUtil.exception("取消约课失败!该课程已过期");
+            }
         }
 
         if(ut.currentDate().equals(trainingEntity.getLessonDate())) {
