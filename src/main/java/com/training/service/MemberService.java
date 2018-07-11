@@ -232,7 +232,7 @@ public class MemberService {
     public  ResponseEntity<String> update(MemberEntity member){
         if(StringUtils.isNotEmpty(member.getPhone())){
             MemberEntity memberDB = this.getByPhone(member.getPhone());
-            if(memberDB!=null){
+            if(memberDB!=null && !member.getMemberId().equals(memberDB.getMemberId())){
                 return ResponseUtil.exception("修改失败,手机号码已存在 ： "+member.getPhone());
             }
         }
