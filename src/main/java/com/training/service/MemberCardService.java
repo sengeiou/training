@@ -145,10 +145,14 @@ public class MemberCardService {
         }
         memberCard.setCardType(cardType);
         memberCard.setCanDelay(0);
-        if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
-            if(memberCard.getDelay()==0){
-                memberCard.setCanDelay(1);
+        if(memberCard.getType().equals(CardTypeEnum.PT.getKey())||memberCard.getType().equals(CardTypeEnum.TT.getKey())){
+            if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
+                if(memberCard.getDelay()==0){
+                    memberCard.setCanDelay(1);
+                }
             }
+        }else{
+
         }
         memberCard.setDelayFee("0");
         memberCard.setDelayDays(60);
@@ -253,7 +257,17 @@ public class MemberCardService {
             return ResponseUtil.exception("卡号不能为空");
         }
         MemberCardEntity memberCardDB = memberCardDao.getById(memberCard.getCardNo());
-        if(ut.passDayByDate(ut.currentDate(-7),memberCardDB.getEndDate())>=0){
+        if(memberCardDB==null){
+            return ResponseUtil.exception("无效卡号");
+        }
+        if(memberCardDB.getType().equals(CardTypeEnum.PT.getKey())||memberCardDB.getType().equals(CardTypeEnum.TT.getKey())){
+
+        }else{
+            return ResponseUtil.exception("此种课卡不能延期");
+        }
+        if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
+
+        }else{
             return ResponseUtil.exception("课卡到期前一周才可延期");
         }
         if(memberCardDB.getDelay()>0){
