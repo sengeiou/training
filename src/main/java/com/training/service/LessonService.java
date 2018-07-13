@@ -720,7 +720,7 @@ public class LessonService {
         if(ut.currentFullMonth().equals(lesson.getLessonDate().substring(0,7))){
 
         }else{
-            return ResponseUtil.exception("取消约课失败!该课程不是当月课时,不能取消!");
+//            return ResponseUtil.exception("取消约课失败!该课程不是当月课时,不能取消!");
         }
 
         if(ut.passDayByDate(ut.currentDate(),trainingEntity.getLessonDate())<0){
