@@ -83,6 +83,10 @@ public class ContractManualDao {
         return n;
     }
 
+    public ContractManualEntity getByContractId(String id){
+        ContractManualEntity contractManualDB = contractManualRepository.getById(id);
+        return contractManualDB;
+    }
 
 }
 

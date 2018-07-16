@@ -9,10 +9,7 @@ import com.training.dao.MemberPauseDao;
 import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.service.*;
-import com.training.util.DingtalkUtil;
-import com.training.util.ExcelUtil;
-import com.training.util.IDUtils;
-import com.training.util.ut;
+import com.training.util.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -94,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 68901437  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 43828236  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -200,7 +197,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/donghu2.xls");
+        File file = new File("d:/file/cym2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -343,32 +340,6 @@ public class DingDingRestController {
         }
         logger.info("  n = {}" , n);
         return "contract_manual3执行成功";
-    }
-
-    @GetMapping("contract_manual4")
-    public Object contract_manual4(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" DingDingRestController   contract_manual4  ");
-        ContractManualQuery query = new ContractManualQuery();
-        PageRequest pageRequest = new PageRequest();
-        pageRequest.setPageSize(5000);
-        Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
-        int n = 0;
-        for (ContractManualEntity contractManualEntity : page.getContent()){
-            MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
-            if(memberEntityDB==null){
-                logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
-                continue;
-            }
-            if(contractManualEntity.getStatus().indexOf("停")>=0){
-                MemberEntity memberEntity = new MemberEntity();
-                memberEntity.setMemberId(memberEntityDB.getMemberId());
-                memberEntity.setStatus(9);   //  暂停
-                logger.info(" ============  getPauseDate = " , contractManualEntity.getPauseDate());
-                n++;
-            }
-        }
-        logger.info("  n = {}" , n);
-        return "contract_manual4执行成功";
     }
 
 }

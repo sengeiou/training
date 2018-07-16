@@ -7,10 +7,7 @@ import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
 import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
 import com.training.common.*;
-import com.training.dao.ContractDao;
-import com.training.dao.MemberCardDao;
-import com.training.dao.MemberDao;
-import com.training.dao.StaffDao;
+import com.training.dao.*;
 import com.training.domain.MemberCard;
 import com.training.entity.*;
 import com.training.service.ContractService;
@@ -49,6 +46,9 @@ public class CreateCardService {
 
     @Autowired
     private MemberCardDao memberCardDao;
+
+    @Autowired
+    private ContractManualDao contractManualDao;
 
     public void createCard() {
         ContractQuery query = new ContractQuery();
@@ -225,6 +225,13 @@ public class CreateCardService {
             logger.error(" checkContract  ERROR :  openId is null , staffEntity = {}  ", staffEntity);
             throw new Exception("openId is null");
         }
+
+        ContractManualEntity contractManualEntity = contractManualDao.getById(contractEntity.getContractId());
+        if(contractManualEntity!=null){
+            logger.error(" checkContract  ERROR :  contractManualEntity is exist , contractId = {}  ", contractEntity.getContractId());
+            throw new Exception("contractManualEntity is exist");
+        }
+
         MemberEntity coach = memberDao.getByOpenId(staffEntity.getOpenId());
         if(coach==null){
             logger.error(" checkContract  ERROR :  coach is null , openId = {}  ", staffEntity.getOpenId());
