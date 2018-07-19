@@ -160,7 +160,7 @@ public class CreateCardService {
         if(memberCardEntity.getMemberId().equals(member.getMemberId())){
             MemberCardEntity memberCardUpdate = new MemberCardEntity();
             memberCardUpdate.setCardNo(cardNo);
-            memberCardUpdate.setTotal(0);
+            memberCardUpdate.setCount(0);
             memberCardUpdate.setRemark(remark);
             memberCardUpdate.setStatus(-1);
             int n = memberCardDao.update(memberCardUpdate);
