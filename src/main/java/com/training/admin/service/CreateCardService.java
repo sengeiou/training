@@ -61,6 +61,12 @@ public class CreateCardService {
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
+
+                if("TK".equals(contractEntity.getCardType())){
+                    dealTK(contractEntity);
+                    continue;
+                }
+
                 if("ZK".equals(contractEntity.getCardType())){
                     dealZK(contractEntity);
                     continue;
@@ -122,8 +128,56 @@ public class CreateCardService {
         }
     }
 
+    private void dealTK(ContractEntity contractEntity) {
+        logger.info(" dealTK contractEntity :  {} ", contractEntity);
+        String phone = contractEntity.getPhone();
+        SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
+        Map<String,String> contractMap = new HashMap();
+        List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+        for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+            System.out.println(form.getName()+" : "+form.getValue());
+            contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+        }
+        String cardNo = contractMap.get("课卡号");
+        if(StringUtils.isEmpty(cardNo)){
+            logger.error(" dealZK cardNo is null : contractEntity = {} ", contractEntity);
+            return;
+        }
+
+        MemberEntity member = memberDao.getByPhone(contractEntity.getPhone());
+        if(member==null){
+            logger.error(" dealZK member is null : contractMap = {} ", contractMap);
+            return;
+        }
+
+        String remark = "退课，日期："+ut.currentTime()+"(合同号："+contractEntity.getContractId()+")";
+        MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+        if(memberCardEntity==null){
+            logger.error(" dealTK memberCardEntity is null : contractMap = {} ", contractMap);
+            return;
+        }
+
+        if(memberCardEntity.getMemberId().equals(member.getMemberId())){
+            MemberCardEntity memberCardUpdate = new MemberCardEntity();
+            memberCardUpdate.setCardNo(cardNo);
+            memberCardUpdate.setTotal(0);
+            memberCardUpdate.setRemark(remark);
+            memberCardUpdate.setStatus(-1);
+            int n = memberCardDao.update(memberCardUpdate);
+            if(n==1){
+                logger.info(" ==== dealTK  success : contractEntity = {} ", contractEntity);
+                contractEntity.setStatus(1);
+                updateContractStatus(contractEntity);
+            }else {
+                logger.error(" ****  dealTK failed : contractEntity = {} ", contractEntity);
+            }
+        }else{
+            logger.error(" dealTK 课卡号与转出会员不一致 : cardNo = {} ， member = {} ", cardNo,member);
+        }
+    }
+
     private void dealZK(ContractEntity contractEntity) {
-        logger.error(" dealZK contractEntity :  {} ", contractEntity);
+        logger.info(" dealZK contractEntity :  {} ", contractEntity);
         String phone = contractEntity.getPhone();
         SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
         Map<String,String> contractMap = new HashMap();
