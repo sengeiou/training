@@ -91,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where dept_id = 43828236  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -107,6 +107,10 @@ public class DingDingRestController {
                 StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
                 if(staffDB!=null){
                     logger.info(item.get("name").toString()+"已存在，无需重复添加");
+                    StaffEntity staffUpdate = new StaffEntity();
+                    staffUpdate.setStaffId(staffDB.getStaffId());
+                    staffUpdate.setCustname(item.get("name").toString());
+                    staffService.update(staffUpdate);
                     continue;
                 }
                 String position = "";
@@ -197,7 +201,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/cym2.xls");
+        File file = new File("d:/file/by2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
