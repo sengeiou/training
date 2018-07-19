@@ -243,6 +243,7 @@ public class CreateCardService {
         memberCardEntity.setMoney(contractEntity.getMoney());
         memberCardEntity.setStartDate(contractEntity.getStartDate());
         memberCardEntity.setEndDate(contractEntity.getEndDate());
+        memberCardEntity.setContractId(contractEntity.getContractId());
         memberCardService.add(memberCardEntity);
 
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
@@ -311,6 +312,7 @@ public class CreateCardService {
         memberCardEntity.setMoney(contractEntity.getMoney());
         memberCardEntity.setStartDate(contractEntity.getStartDate());
         memberCardEntity.setEndDate(contractEntity.getEndDate());
+        memberCardEntity.setContractId(contractEntity.getContractId());
         memberCardService.add(memberCardEntity);
 
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
