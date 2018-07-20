@@ -109,7 +109,7 @@ public interface StaffRepository {
                 " <if test=\"staff.email != null\"> email = #{staff.email} , </if>" +
                 " <if test=\"staff.phone != null\"> phone = #{staff.phone} , </if>" +
                 " <if test=\"staff.job != null\"> job = #{staff.job} , </if>" +
-                " <if test=\"staff.image != null\"> job = #{staff.image} , </if>" +
+                " <if test=\"staff.image != null\"> image = #{staff.image} , </if>" +
                 " <if test=\"staff.openId != null\"> open_id = #{staff.openId} , </if>" +
                 " <if test=\"staff.unionId != null\"> union_id = #{staff.unionId} , </if>" +
                 " <if test=\"staff.feature != null\"> feature = #{staff.feature} , </if>" +
