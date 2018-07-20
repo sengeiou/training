@@ -440,6 +440,9 @@ public class MemberService {
             MemberEntity coach = memberDao.getById(coachId);
             lesson.setCoachId(memberCardEntity.getCoachId());
             lesson.setTitle("私教课");
+            if(StringUtils.isNotEmpty(staff.getImage())){
+                coach.setImage(staff.getImage());
+            }
             lesson.setCoachImage(coach.getImage());
             lesson.setCoachName(staff.getCustname());
             types.add(lesson);

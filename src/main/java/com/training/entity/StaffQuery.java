@@ -30,6 +30,8 @@ public class StaffQuery {
 
     private String job;
 
+    private String image;
+
     private String openId;
 
     private String unionId;

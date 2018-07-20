@@ -35,6 +35,8 @@ public class Staff {
 
     private String job;
 
+    private String image;
+
     private String openId;
 
     private String unionId;

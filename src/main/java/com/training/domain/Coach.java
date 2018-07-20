@@ -29,6 +29,8 @@ public class Coach {
 
     private String image;
 
+    private String staffImage;
+
     private Integer age;
 
     private Integer gender;

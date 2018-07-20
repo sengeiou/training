@@ -23,6 +23,7 @@ public interface StaffRepository {
                 " <if test=\"staff.email != null\"> email, </if>" +
                 " <if test=\"staff.phone != null\"> phone, </if>" +
                 " <if test=\"staff.job != null\"> job, </if>" +
+                " <if test=\"staff.image != null\"> image, </if>" +
                 " <if test=\"staff.openId != null\"> open_id, </if>" +
                 " <if test=\"staff.unionId != null\"> union_id, </if>" +
                 " <if test=\"staff.feature != null\"> feature, </if>" +
@@ -40,6 +41,7 @@ public interface StaffRepository {
                 " <if test=\"staff.email != null\"> #{staff.email}, </if>" +
                 " <if test=\"staff.phone != null\"> #{staff.phone}, </if>" +
                 " <if test=\"staff.job != null\"> #{staff.job}, </if>" +
+                " <if test=\"staff.image != null\"> #{staff.image}, </if>" +
                 " <if test=\"staff.openId != null\"> #{staff.openId}, </if>" +
                 " <if test=\"staff.unionId != null\"> #{staff.unionId}, </if>" +
                 " <if test=\"staff.feature != null\"> #{staff.feature}, </if>" +
@@ -51,7 +53,7 @@ public interface StaffRepository {
             "</script>")
     int add(@Param("staff") StaffEntity staff);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
@@ -91,7 +93,7 @@ public interface StaffRepository {
             "</script>")
     Long count(@Param("query") StaffQuery staff);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE staff_id = #{id} " +
             "</script>")
@@ -107,6 +109,7 @@ public interface StaffRepository {
                 " <if test=\"staff.email != null\"> email = #{staff.email} , </if>" +
                 " <if test=\"staff.phone != null\"> phone = #{staff.phone} , </if>" +
                 " <if test=\"staff.job != null\"> job = #{staff.job} , </if>" +
+                " <if test=\"staff.image != null\"> job = #{staff.image} , </if>" +
                 " <if test=\"staff.openId != null\"> open_id = #{staff.openId} , </if>" +
                 " <if test=\"staff.unionId != null\"> union_id = #{staff.unionId} , </if>" +
                 " <if test=\"staff.feature != null\"> feature = #{staff.feature} , </if>" +
@@ -122,13 +125,13 @@ public interface StaffRepository {
             "</script>")
     int delete(@Param("id") String id);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE username = #{username} limit 0,1 " +
             "</script>")
     StaffEntity getByUsername(@Param("username") String username);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE phone = #{phone} limit 0,1 " +
             "</script>")
