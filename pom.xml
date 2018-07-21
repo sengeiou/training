@@ -270,6 +270,7 @@
         <profile>
             <id>dev</id>
             <properties>
+                <activatedProperties>dev</activatedProperties>
                 <logging-level>INFO</logging-level>
             </properties>
             <activation>
@@ -280,6 +281,7 @@
         <profile>
             <id>mac</id>
             <properties>
+                <activatedProperties>mac</activatedProperties>
                 <logging-level>INFO</logging-level>
             </properties>
         </profile>
@@ -287,6 +289,7 @@
         <profile>
             <id>prod</id>
             <properties>
+                <activatedProperties>prod</activatedProperties>
                 <logging-level>INFO</logging-level>
             </properties>
         </profile>
