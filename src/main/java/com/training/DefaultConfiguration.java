@@ -33,7 +33,7 @@ public class DefaultConfiguration {
 
     @Configuration
     @Profile("prod")
-    @PropertySource(value = {"classpath:/prod/common.properties",
+    @PropertySource(value = {"classpath:/prod/prod.properties",
             "classpath:/prod/db.properties"},
             ignoreResourceNotFound = true)
     static class Production {
