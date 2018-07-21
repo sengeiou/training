@@ -266,6 +266,7 @@
     </build>
 
     <profiles>
+
         <profile>
             <id>dev</id>
             <properties>
@@ -277,11 +278,19 @@
         </profile>
 
         <profile>
+            <id>mac</id>
+            <properties>
+                <logging-level>INFO</logging-level>
+            </properties>
+        </profile>
+
+        <profile>
             <id>prod</id>
             <properties>
                 <logging-level>INFO</logging-level>
             </properties>
         </profile>
+
     </profiles>
 
 

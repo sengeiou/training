@@ -42,8 +42,18 @@ public class DefaultConfiguration {
     @Configuration
     @Profile("dev")
     @PropertySource(value = {"classpath:/dev/dev.properties",
-            "classpath:/dev/db.properties"},
+            "classpath:/dev/db_dev.properties"},
             ignoreResourceNotFound = true)
     static class Development {
     }
+
+    @Configuration
+    @Profile("mac")
+    @PropertySource(value = {"classpath:/dev/dev.properties",
+            "classpath:/dev/db_mac.properties"},
+            ignoreResourceNotFound = true)
+    static class Mac {
+    }
+
+
 }
