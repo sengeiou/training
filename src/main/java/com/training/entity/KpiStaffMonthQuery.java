@@ -16,6 +16,8 @@ public class KpiStaffMonthQuery {
 
     private String staffName;
 
+    private String phone;
+
     private String storeId;
 
     private String templateId;

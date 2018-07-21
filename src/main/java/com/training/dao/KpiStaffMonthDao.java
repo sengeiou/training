@@ -58,8 +58,8 @@ public class KpiStaffMonthDao {
      * @param id
      * Created by huai23 on 2018-07-13 23:24:52.
      */ 
-    public KpiStaffMonthEntity getById(String id){
-        KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthRepository.getById(id);
+    public KpiStaffMonthEntity getByIdAndMonth(String id,String month){
+        KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthRepository.getByIdAndMonth(id,month);
         return kpiStaffMonthDB;
     }
 

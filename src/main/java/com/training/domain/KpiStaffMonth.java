@@ -12,13 +12,13 @@ import java.util.List;
 @Data
 public class KpiStaffMonth {
 
-    private Long pkId;
-
     private String staffId;
 
     private String staffName;
 
     private String storeId;
+
+    private String storeName;
 
     private String templateId;
 
@@ -69,6 +69,8 @@ public class KpiStaffMonth {
     private String tczhl;
 
     private String kpiScore;
+
+    private String kpiData;
 
     private String param1;
 

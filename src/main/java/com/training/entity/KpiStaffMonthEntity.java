@@ -66,6 +66,8 @@ public class KpiStaffMonthEntity {
 
     private String kpiScore;
 
+    private String kpiData;
+
     private String param1;
 
     private String param2;

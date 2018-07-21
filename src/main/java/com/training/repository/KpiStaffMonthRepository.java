@@ -41,6 +41,7 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tcs != null\"> tcs, </if>" +
                 " <if test=\"kpiStaffMonth.tczhl != null\"> tczhl, </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> kpi_score, </if>" +
+                " <if test=\"kpiStaffMonth.kpiData != null\"> kpi_data, </if>" +
                 " <if test=\"kpiStaffMonth.param1 != null\"> param1, </if>" +
                 " <if test=\"kpiStaffMonth.param2 != null\"> param2, </if>" +
                 " <if test=\"kpiStaffMonth.param3 != null\"> param3, </if>" +
@@ -81,6 +82,7 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tcs != null\"> #{kpiStaffMonth.tcs}, </if>" +
                 " <if test=\"kpiStaffMonth.tczhl != null\"> #{kpiStaffMonth.tczhl}, </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> #{kpiStaffMonth.kpiScore}, </if>" +
+                " <if test=\"kpiStaffMonth.kpiData != null\"> #{kpiStaffMonth.kpiData}, </if>" +
                 " <if test=\"kpiStaffMonth.param1 != null\"> #{kpiStaffMonth.param1}, </if>" +
                 " <if test=\"kpiStaffMonth.param2 != null\"> #{kpiStaffMonth.param2}, </if>" +
                 " <if test=\"kpiStaffMonth.param3 != null\"> #{kpiStaffMonth.param3}, </if>" +
@@ -97,7 +99,7 @@ public interface KpiStaffMonthRepository {
             "</script>")
     int add(@Param("kpiStaffMonth") KpiStaffMonthEntity kpiStaffMonth);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,cjs,tcs,tczhl,kpi_score,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,cjs,tcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
             " FROM kpi_staff_month " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
@@ -183,20 +185,17 @@ public interface KpiStaffMonthRepository {
             "</script>")
     Long count(@Param("query") KpiStaffMonthQuery kpiStaffMonth);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,cjs,tcs,tczhl,kpi_score,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,cjs,tcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
             " FROM kpi_staff_month " +
-            " WHERE staff_id = #{id} " +
+            " WHERE staff_id = #{id} and month = #{kpiStaffMonth.month} " +
             "</script>")
-    KpiStaffMonthEntity getById(@Param("id") String id);
+    KpiStaffMonthEntity getByIdAndMonth(@Param("id") String id,@Param("month") String month);
 
     @Update("<script> UPDATE kpi_staff_month SET " +
-                " <if test=\"kpiStaffMonth.staffId != null\"> staff_id = #{kpiStaffMonth.staffId} , </if>" +
                 " <if test=\"kpiStaffMonth.staffName != null\"> staff_name = #{kpiStaffMonth.staffName} , </if>" +
                 " <if test=\"kpiStaffMonth.storeId != null\"> store_id = #{kpiStaffMonth.storeId} , </if>" +
                 " <if test=\"kpiStaffMonth.templateId != null\"> template_id = #{kpiStaffMonth.templateId} , </if>" +
                 " <if test=\"kpiStaffMonth.type != null\"> type = #{kpiStaffMonth.type} , </if>" +
-                " <if test=\"kpiStaffMonth.year != null\"> year = #{kpiStaffMonth.year} , </if>" +
-                " <if test=\"kpiStaffMonth.month != null\"> month = #{kpiStaffMonth.month} , </if>" +
                 " <if test=\"kpiStaffMonth.xks != null\"> xks = #{kpiStaffMonth.xks} , </if>" +
                 " <if test=\"kpiStaffMonth.jks != null\"> jks = #{kpiStaffMonth.jks} , </if>" +
                 " <if test=\"kpiStaffMonth.sjks != null\"> sjks = #{kpiStaffMonth.sjks} , </if>" +
@@ -217,6 +216,7 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tcs != null\"> tcs = #{kpiStaffMonth.tcs} , </if>" +
                 " <if test=\"kpiStaffMonth.tczhl != null\"> tczhl = #{kpiStaffMonth.tczhl} , </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> kpi_score = #{kpiStaffMonth.kpiScore} , </if>" +
+                " <if test=\"kpiStaffMonth.kpiData != null\"> kpi_data = #{kpiStaffMonth.kpiData} , </if>" +
                 " <if test=\"kpiStaffMonth.param1 != null\"> param1 = #{kpiStaffMonth.param1} , </if>" +
                 " <if test=\"kpiStaffMonth.param2 != null\"> param2 = #{kpiStaffMonth.param2} , </if>" +
                 " <if test=\"kpiStaffMonth.param3 != null\"> param3 = #{kpiStaffMonth.param3} , </if>" +
@@ -228,12 +228,12 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.remark != null\"> remark = #{kpiStaffMonth.remark} , </if>" +
                 " <if test=\"kpiStaffMonth.status != null\"> status = #{kpiStaffMonth.status} , </if>" +
                 " modified = now() " +
-            " WHERE staff_id = #{kpiStaffMonth.staffId} " +
+            " WHERE staff_id = #{kpiStaffMonth.staffId} and month = #{kpiStaffMonth.month} " +
             "</script>")
     int update(@Param("kpiStaffMonth") KpiStaffMonthEntity kpiStaffMonth);
 
     @Update("<script> DELETE  FROM kpi_staff_month " +
-            " WHERE staff_id = #{id} " +
+            " WHERE staff_id = #{id} and month = '123456' " +
             "</script>")
     int delete(@Param("id") String id);
 

@@ -1,17 +1,20 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.KpiStaffMonth;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +28,13 @@ public class KpiStaffMonthService {
 
     @Autowired
     private KpiStaffMonthDao kpiStaffMonthDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
 
     /**
      * 新增实体
@@ -46,15 +56,32 @@ public class KpiStaffMonthService {
      * @param page
      * Created by huai23 on 2018-07-13 23:24:52.
      */ 
-    public Page<KpiStaffMonthEntity> find(KpiStaffMonthQuery query , PageRequest page){
+    public Page<KpiStaffMonth> find(KpiStaffMonthQuery query , PageRequest page){
         List<KpiStaffMonthEntity> kpiStaffMonthList = kpiStaffMonthDao.find(query,page);
+        List<KpiStaffMonth> kpiList = new ArrayList();
+        for(KpiStaffMonthEntity kpiStaffMonthEntity :kpiStaffMonthList){
+            KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthEntity);
+            kpiList.add(kpiStaffMonth);
+        }
         Long count = kpiStaffMonthDao.count(query);
-        Page<KpiStaffMonthEntity> returnPage = new Page<>();
-        returnPage.setContent(kpiStaffMonthList);
+        Page<KpiStaffMonth> returnPage = new Page<>();
+        returnPage.setContent(kpiList);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+    private KpiStaffMonth convertKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+        KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
+        BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
+        StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
+        if(storeEntity!=null){
+            kpiStaffMonth.setStoreName(storeEntity.getName());
+        }else{
+            kpiStaffMonth.setStoreName("-");
+        }
+        return kpiStaffMonth;
     }
 
     /**
@@ -72,9 +99,10 @@ public class KpiStaffMonthService {
      * @param id
      * Created by huai23 on 2018-07-13 23:24:53.
      */ 
-    public KpiStaffMonthEntity getById(String id){
-        KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getById(id);
-        return kpiStaffMonthDB;
+    public KpiStaffMonth getByIdAndMonth(String id,String month){
+        KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getByIdAndMonth(id,month);
+        KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthDB);
+        return kpiStaffMonth;
     }
 
     /**

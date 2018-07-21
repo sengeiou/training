@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.KpiStaffMonth;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -49,7 +50,7 @@ public class KpiStaffMonthRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute KpiStaffMonthQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<KpiStaffMonthEntity> page = kpiStaffMonthService.find(query,pageRequest);
+        Page<KpiStaffMonth> page = kpiStaffMonthService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
@@ -68,12 +69,11 @@ public class KpiStaffMonthRestController {
 
     /**
      * 根据ID查询实体
-     * @param id
      * Created by huai23 on 2018-07-13 23:24:53.
      */ 
-    @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
-    public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthService.getById(id);
+    @RequestMapping (value = "getByIdAndMonth", method = RequestMethod.GET)
+    public ResponseEntity<String> getByIdAndMonth(@ModelAttribute KpiStaffMonth kpiStaffMonth,HttpServletRequest request, HttpServletResponse response){
+        KpiStaffMonth kpiStaffMonthDB = kpiStaffMonthService.getByIdAndMonth(kpiStaffMonth.getStaffId(),kpiStaffMonth.getMonth());
         if(kpiStaffMonthDB==null){
             return ResponseUtil.exception("查无数据");
         }
