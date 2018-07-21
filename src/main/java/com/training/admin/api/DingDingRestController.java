@@ -110,6 +110,10 @@ public class DingDingRestController {
                     StaffEntity staffUpdate = new StaffEntity();
                     staffUpdate.setStaffId(staffDB.getStaffId());
                     staffUpdate.setCustname(item.get("name").toString());
+                    staffUpdate.setStoreId(deptId);
+                    if(item.containsKey("position")){
+                        staffUpdate.setJob(item.get("position").toString());
+                    }
                     staffService.update(staffUpdate);
                     continue;
                 }
