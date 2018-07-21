@@ -2,6 +2,7 @@ package com.training.service;
 
 import com.training.dao.*;
 import com.training.domain.KpiStaffMonth;
+import com.training.domain.KpiTemplateQuota;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -34,6 +35,12 @@ public class KpiStaffMonthService {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Autowired
+    private KpiTemplateDao kpiTemplateDao;
+
+    @Autowired
+    private KpiTemplateQuotaDao kpiTemplateQuotaDao;
 
 
     /**
@@ -80,6 +87,31 @@ public class KpiStaffMonthService {
             kpiStaffMonth.setStoreName(storeEntity.getName());
         }else{
             kpiStaffMonth.setStoreName("-");
+        }
+
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(kpiStaffMonth.getTemplateId());
+        if(kpiTemplateEntity!=null){
+            kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
+
+            kpiStaffMonth.setKpiTemplateQuotaList(new ArrayList<>());
+
+            KpiTemplateQuotaQuery query = new KpiTemplateQuotaQuery();
+            query.setTemplateId(kpiStaffMonthEntity.getTemplateId());
+            PageRequest page = new PageRequest();
+            page.setPageSize(100);
+            List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(query,page);
+            int i = 0;
+            for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
+                KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
+                BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
+                kpiTemplateQuota.setFinishRate("123"+i);
+                kpiTemplateQuota.setScore("9"+i);
+                kpiTemplateQuota.setKpiScore(""+i);
+                kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
+            }
+
+        }else{
+            kpiStaffMonth.setTemplateName("-");
         }
         return kpiStaffMonth;
     }

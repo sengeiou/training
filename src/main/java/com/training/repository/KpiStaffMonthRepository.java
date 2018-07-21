@@ -187,7 +187,7 @@ public interface KpiStaffMonthRepository {
 
     @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,cjs,tcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
             " FROM kpi_staff_month " +
-            " WHERE staff_id = #{id} and month = #{kpiStaffMonth.month} " +
+            " WHERE staff_id = #{id} and month = #{month} " +
             "</script>")
     KpiStaffMonthEntity getByIdAndMonth(@Param("id") String id,@Param("month") String month);
 

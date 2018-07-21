@@ -22,6 +22,8 @@ public class KpiStaffMonth {
 
     private String templateId;
 
+    private String templateName;
+
     private String title;
 
     private String type;
