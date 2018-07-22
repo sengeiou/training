@@ -76,5 +76,7 @@ public class Member {
 
     private Integer hasTY = 0;
 
+    private Integer starLevel;
+
 }
 
