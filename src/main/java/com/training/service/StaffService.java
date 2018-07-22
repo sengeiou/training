@@ -3,6 +3,7 @@ package com.training.service;
 import com.training.dao.*;
 import com.training.domain.Role;
 import com.training.domain.Staff;
+import com.training.domain.StaffMedal;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -36,6 +37,12 @@ public class StaffService {
 
     @Autowired
     private StaffDao staffDao;
+
+    @Autowired
+    private StaffMedalDao staffMedalDao;
+
+    @Autowired
+    private MedalDao medalDao;
 
     @Autowired
     private RoleDao roleDao;
@@ -100,6 +107,74 @@ public class StaffService {
         List<StaffEntity> staffList = staffDao.find(query,page);
         for (StaffEntity staffEntity : staffList) {
             Staff staff = convertEntityToStaff(staffEntity);
+            staffs.add(staff);
+        }
+        Long count = staffDao.count(query);
+        Page<Staff> returnPage = new Page<>();
+        returnPage.setContent(staffs);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    /**
+     * 分页查询员工勋章列表
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    public Page<Staff> staffMedalList(StaffQuery query , PageRequest page){
+        Staff staffRequest = RequestContextHelper.getStaff();
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+        if(StringUtils.isEmpty(query.getStoreId())){
+            if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                query.setStoreId(roleEntity.getStoreData());
+            }else{
+                query.setStoreId("123456789");
+            }
+            if(staffDB.getUsername().equals("admin")){
+                query.setStoreId(null);
+            }
+        }else{
+            if(staffDB.getUsername().equals("admin")){
+
+            }else{
+                if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                    String[] stores = roleEntity.getStoreData().split(",");
+                    Set<String> ids = new HashSet<>();
+                    for (int i = 0; i < stores.length; i++) {
+                        if(StringUtils.isNotEmpty(stores[i])){
+                            ids.add(stores[i]);
+                        }
+                    }
+                    if(ids.contains(query.getStoreId())){
+
+                    }else{
+                        query.setStoreId("123456789");
+                    }
+                }else{
+                    query.setStoreId("123456789");
+                }
+            }
+        }
+        logger.info("  staffMedalList  StaffQuery = {}",query);
+        List<Staff> staffs = new ArrayList();
+        List<StaffEntity> staffList = staffDao.find(query,page);
+        for (StaffEntity staffEntity : staffList) {
+            Staff staff = convertEntityToStaff(staffEntity);
+
+            List<StaffMedalEntity> staffMedalEntityList = staffMedalDao.getByStaffId(staffEntity.getStaffId());
+            List staffMedals = new ArrayList();
+            for (StaffMedalEntity staffMedalEntity:staffMedalEntityList){
+                StaffMedal staffMedal = new StaffMedal();
+                BeanUtils.copyProperties(staffMedalEntity,staffMedal);
+                MedalEntity medalEntity = medalDao.getById(staffMedalEntity.getMedalId());
+                staffMedal.setMedalName(medalEntity.getName());
+                staffMedals.add(staffMedal);
+            }
+            staff.setStaffMedalList(staffMedals);
             staffs.add(staff);
         }
         Long count = staffDao.count(query);

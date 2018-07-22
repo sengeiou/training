@@ -60,6 +60,25 @@ public class StaffRestController {
         return ResponseUtil.success(page);
     }
 
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "staffMedalList", method = RequestMethod.GET)
+    public ResponseEntity<String> staffMedalList(@ModelAttribute StaffQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        String name = request.getParameter("name");
+        logger.info(" StaffRestController  staffMedalList  name = {} ,  query = {}",name,query);
+        if(StringUtils.isNotEmpty(name)){
+            query.setCustname(name);
+        }
+        Page<Staff> page = staffService.staffMedalList(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+
     /**
      * 查询总数
      * @param query

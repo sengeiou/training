@@ -3,6 +3,7 @@ package com.training.domain;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * staff 实体类
@@ -60,6 +61,8 @@ public class Staff {
     private Role role;
 
     private String heroNumber;
+
+    private List<StaffMedal> staffMedalList;
 
 
 }
