@@ -80,6 +80,9 @@ public class KpiStaffMonthService {
     }
 
     private KpiStaffMonth convertKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+        if(kpiStaffMonthEntity==null){
+            return null;
+        }
         KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
         BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
         StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
@@ -132,6 +135,7 @@ public class KpiStaffMonthService {
      * Created by huai23 on 2018-07-13 23:24:53.
      */ 
     public KpiStaffMonth getByIdAndMonth(String id,String month){
+        logger.info(" getByIdAndMonth , id = {} , month = {}  ",id,month);
         KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getByIdAndMonth(id,month);
         KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthDB);
         return kpiStaffMonth;

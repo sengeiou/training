@@ -74,6 +74,7 @@ public class KpiStaffMonthRestController {
      */ 
     @RequestMapping (value = "getByIdAndMonth", method = RequestMethod.GET)
     public ResponseEntity<String> getByIdAndMonth(@ModelAttribute KpiStaffMonth kpiStaffMonth,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" KpiStaffMonthRestController   getByIdAndMonth , kpiStaffMonth = {}  ",kpiStaffMonth);
         KpiStaffMonth kpiStaffMonthDB = kpiStaffMonthService.getByIdAndMonth(kpiStaffMonth.getStaffId(),kpiStaffMonth.getMonth());
         if(kpiStaffMonthDB==null){
             return ResponseUtil.exception("查无数据");
