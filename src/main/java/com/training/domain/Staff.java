@@ -17,7 +17,7 @@ public class Staff {
 
     private String storeId;
 
-    private String storName;
+    private String storeName;
 
     private String roleId;
 

@@ -45,7 +45,7 @@ public class HeroListService {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
             StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
-            staff.setStorName(storeEntity.getName());
+            staff.setStoreName(storeEntity.getName());
             staff.setHeroNumber(item.get("sjks").toString());
             staffList.add(staff);
         }
@@ -59,7 +59,7 @@ public class HeroListService {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
             StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
-            staff.setStorName(storeEntity.getName());
+            staff.setStoreName(storeEntity.getName());
             staff.setHeroNumber(item.get("xks").toString());
             staffList.add(staff);
         }
@@ -73,7 +73,7 @@ public class HeroListService {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
             StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
-            staff.setStorName(storeEntity.getName());
+            staff.setStoreName(storeEntity.getName());
             staff.setHeroNumber(item.get("hyd").toString());
             staffList.add(staff);
         }
@@ -87,7 +87,7 @@ public class HeroListService {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
             StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
-            staff.setStorName(storeEntity.getName());
+            staff.setStoreName(storeEntity.getName());
             staff.setHeroNumber(item.get("zjs").toString());
             staffList.add(staff);
         }
