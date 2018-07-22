@@ -41,9 +41,9 @@ public class StaffMedalService {
         staffMedal.setAwardDate(ut.currentTime());
         int n = staffMedalDao.add(staffMedal);
         if(n==1){
-            return ResponseUtil.success("添加成功");
+            return ResponseUtil.success("颁发勋章成功");
         }
-        return ResponseUtil.exception("添加失败");
+        return ResponseUtil.exception("颁发勋章失败");
     }
 
     /**
