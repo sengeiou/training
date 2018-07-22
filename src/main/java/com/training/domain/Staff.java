@@ -59,5 +59,8 @@ public class Staff {
 
     private Role role;
 
+    private String heroNumber;
+
+
 }
 
