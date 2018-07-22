@@ -6,6 +6,7 @@ import com.training.domain.KpiTemplateQuota;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -76,6 +77,31 @@ public class KpiStaffMonthService {
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-07-13 23:24:52.
+     */
+    public Page<KpiStaffMonth> findByCoach(KpiStaffMonthQuery query , PageRequest page){
+        page.setPageSize(100);
+        query.setStartMonth(ut.currentFullMonth(-6).replaceAll("-",""));
+        query.setEndMonth(ut.currentFullMonth().replaceAll("-",""));
+        List<KpiStaffMonthEntity> kpiStaffMonthList = kpiStaffMonthDao.find(query,page);
+        logger.info("  findByCoach  query = {}",query);
+        List<KpiStaffMonth> kpiList = new ArrayList();
+        for(KpiStaffMonthEntity kpiStaffMonthEntity :kpiStaffMonthList){
+            KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthEntity);
+            kpiList.add(kpiStaffMonth);
+        }
+        Page<KpiStaffMonth> returnPage = new Page<>();
+        returnPage.setContent(kpiList);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(kpiList.size());
         return returnPage;
     }
 

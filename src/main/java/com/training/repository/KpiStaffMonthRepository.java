@@ -109,6 +109,8 @@ public interface KpiStaffMonthRepository {
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.year != null\"> AND year = #{query.year} </if>" +
             " <if test=\"query.month != null\"> AND month = #{query.month} </if>" +
+            " <if test=\"query.startMonth != null\"> AND month &gt;= #{query.startMonth} </if>" +
+            " <if test=\"query.endMonth != null\"> AND month &lt;= #{query.endMonth} </if>" +
             " <if test=\"query.xks != null\"> AND xks = #{query.xks} </if>" +
             " <if test=\"query.jks != null\"> AND jks = #{query.jks} </if>" +
             " <if test=\"query.sjks != null\"> AND sjks = #{query.sjks} </if>" +
@@ -139,7 +141,7 @@ public interface KpiStaffMonthRepository {
             " <if test=\"query.param8 != null\"> AND param8 = #{query.param8} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by month desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<KpiStaffMonthEntity> find(@Param("query") KpiStaffMonthQuery kpiStaffMonth , @Param("page") PageRequest page);
 
@@ -152,6 +154,8 @@ public interface KpiStaffMonthRepository {
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.year != null\"> AND year = #{query.year} </if>" +
             " <if test=\"query.month != null\"> AND month = #{query.month} </if>" +
+            " <if test=\"query.startMonth != null\"> AND month &gt;= #{query.startMonth} </if>" +
+            " <if test=\"query.endMonth != null\"> AND month &lt;= #{query.endMonth} </if>" +
             " <if test=\"query.xks != null\"> AND xks = #{query.xks} </if>" +
             " <if test=\"query.jks != null\"> AND jks = #{query.jks} </if>" +
             " <if test=\"query.sjks != null\"> AND sjks = #{query.sjks} </if>" +

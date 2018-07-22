@@ -92,6 +92,9 @@ public class KpiStaffMonthQuery {
 
     private Date modified;
 
+    private String startMonth;
+
+    private String endMonth;
 
 }
 

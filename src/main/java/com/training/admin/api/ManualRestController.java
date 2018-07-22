@@ -1,6 +1,7 @@
 package com.training.admin.api;
 
 import com.alibaba.fastjson.JSON;
+import com.training.admin.service.ManualService;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
@@ -61,6 +62,10 @@ public class ManualRestController {
     @Autowired
     private ContractManualDao contractManualDao;
 
+
+    @Autowired
+    private ManualService manualService;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -104,6 +109,14 @@ public class ManualRestController {
         }
         System.out.println("total = "+total);
         return "updateTrainingHour执行成功";
+    }
+
+    @GetMapping("createStaffMonth")
+    public Object createStaffMonth(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" createStaffMonth   ");
+        String month = "201707";
+        manualService.createStaffMonth(month);
+        return "createStaffMonth执行成功";
     }
 
 

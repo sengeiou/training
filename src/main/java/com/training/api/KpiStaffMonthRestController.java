@@ -55,6 +55,21 @@ public class KpiStaffMonthRestController {
         return ResponseUtil.success(page);
     }
 
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-07-13 23:24:53.
+     */
+    @RequestMapping (value = "findByCoach", method = RequestMethod.GET)
+    public ResponseEntity<String> findByCoach(@ModelAttribute KpiStaffMonthQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" kpi_staff_monthRestController  findByCoach  KpiStaffMonthQuery = {}",query);
+        Page<KpiStaffMonth> page = kpiStaffMonthService.findByCoach(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+
     /**
      * 查询总数
      * @param query
