@@ -50,6 +50,7 @@ public class KpiStaffMonthRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute KpiStaffMonthQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" kpi_staff_monthRestController  find  KpiStaffMonthQuery = {}",query);
         Page<KpiStaffMonth> page = kpiStaffMonthService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
