@@ -60,11 +60,12 @@ public class WechatService {
             member.setMemberId(memberEntity.getMemberId());
             member.setType(memberEntity.getType());
             jo.put("member", memberEntity);
+            jo.put("star",2);
+
         }else{
             member.setMemberId("");
             member.setType("");
         }
-        member.setStarLevel(2);
         String subject = JwtUtil.generalSubject(openId,member);
         try {
             String token = jwt.createJWT(Const.JWT_ID, subject, Const.JWT_TTL);
