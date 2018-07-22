@@ -114,7 +114,7 @@ public class ManualRestController {
     @GetMapping("createStaffMonth")
     public Object createStaffMonth(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" createStaffMonth   ");
-        String month = "201707";
+        String month = "201805";
         manualService.createStaffMonth(month);
         return "createStaffMonth执行成功";
     }

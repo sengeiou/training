@@ -1,6 +1,7 @@
 package com.training.api;
 
 import com.training.domain.KpiStaffMonth;
+import com.training.domain.Member;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -30,6 +31,12 @@ public class KpiStaffMonthRestController {
 
     @Autowired
     private KpiStaffMonthService kpiStaffMonthService;
+
+    @Autowired
+    private StaffService staffService;
+
+    @Autowired
+    private MemberService memberService;
 
     /**
      * 新增实体
@@ -65,6 +72,9 @@ public class KpiStaffMonthRestController {
     @RequestMapping (value = "findByCoach", method = RequestMethod.GET)
     public ResponseEntity<String> findByCoach(@ModelAttribute KpiStaffMonthQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         logger.info(" kpi_staff_monthRestController  findByCoach  KpiStaffMonthQuery = {}",query);
+        MemberEntity member = memberService.getById(query.getStaffId());
+        StaffEntity staffEntity = staffService.getByPhone(member.getPhone());
+        query.setStaffId(staffEntity.getStaffId());
         Page<KpiStaffMonth> page = kpiStaffMonthService.findByCoach(query,pageRequest);
         return ResponseUtil.success(page);
     }
