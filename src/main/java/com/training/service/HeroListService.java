@@ -32,6 +32,9 @@ public class HeroListService {
     private StoreDao storeDao;
 
     @Autowired
+    private StaffService staffService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public List<Staff> lessonList() {
@@ -39,8 +42,7 @@ public class HeroListService {
         List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by sjks desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
-            Staff staff = new Staff();
-            staff.setCustname(item.get("staff_name").toString());
+            Staff staff = staffService.getById(item.get("staff_id").toString());
             staff.setHeroNumber(item.get("sjks").toString());
             staffList.add(staff);
         }
@@ -52,8 +54,7 @@ public class HeroListService {
         List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by xks desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
-            Staff staff = new Staff();
-            staff.setCustname(item.get("staff_name").toString());
+            Staff staff = staffService.getById(item.get("staff_id").toString());
             staff.setHeroNumber(item.get("xks").toString());
             staffList.add(staff);
         }
@@ -65,8 +66,7 @@ public class HeroListService {
         List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by hyd desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
-            Staff staff = new Staff();
-            staff.setCustname(item.get("staff_name").toString());
+            Staff staff = staffService.getById(item.get("staff_id").toString());
             staff.setHeroNumber(item.get("hyd").toString());
             staffList.add(staff);
         }
@@ -78,8 +78,7 @@ public class HeroListService {
         List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by zjs desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
-            Staff staff = new Staff();
-            staff.setCustname(item.get("staff_name").toString());
+            Staff staff = staffService.getById(item.get("staff_id").toString());
             staff.setHeroNumber(item.get("zjs").toString());
             staffList.add(staff);
         }
