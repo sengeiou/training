@@ -3,6 +3,7 @@ package com.training.service;
 import com.training.dao.StoreDao;
 import com.training.dao.TrainingDao;
 import com.training.domain.Staff;
+import com.training.entity.StoreEntity;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,8 @@ public class HeroListService {
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
+            StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
+            staff.setStorName(storeEntity.getName());
             staff.setHeroNumber(item.get("sjks").toString());
             staffList.add(staff);
         }
@@ -55,6 +58,8 @@ public class HeroListService {
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
+            StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
+            staff.setStorName(storeEntity.getName());
             staff.setHeroNumber(item.get("xks").toString());
             staffList.add(staff);
         }
@@ -67,6 +72,8 @@ public class HeroListService {
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
+            StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
+            staff.setStorName(storeEntity.getName());
             staff.setHeroNumber(item.get("hyd").toString());
             staffList.add(staff);
         }
@@ -79,6 +86,8 @@ public class HeroListService {
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
+            StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
+            staff.setStorName(storeEntity.getName());
             staff.setHeroNumber(item.get("zjs").toString());
             staffList.add(staff);
         }
