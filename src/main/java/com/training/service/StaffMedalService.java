@@ -36,6 +36,11 @@ public class StaffMedalService {
      * Created by huai23 on 2018-07-22 23:28:30.
      */ 
     public ResponseEntity<String> add(StaffMedalEntity staffMedal){
+
+        StaffMedalEntity staffMedalEntity = staffMedalDao.getById(staffMedal.getStaffId(),staffMedal.getMedalId());
+        if(staffMedalEntity!=null){
+            return ResponseUtil.exception("该勋章已获得，不能重复颁发");
+        }
         MedalEntity medalEntity = medalDao.getById(staffMedal.getMedalId());
         staffMedal.setContent(medalEntity.getContent());
         staffMedal.setAwardDate(ut.currentTime());
