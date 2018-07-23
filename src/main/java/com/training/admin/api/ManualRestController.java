@@ -1,6 +1,7 @@
 package com.training.admin.api;
 
 import com.alibaba.fastjson.JSON;
+import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
@@ -67,6 +68,9 @@ public class ManualRestController {
     private ManualService manualService;
 
     @Autowired
+    private CalculateKpiService calculateKpiService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("updateCoachStaffId")
@@ -117,6 +121,14 @@ public class ManualRestController {
         String month = "201805";
         manualService.createStaffMonth(month);
         return "createStaffMonth执行成功";
+    }
+
+    @GetMapping("kpi")
+    public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" calculateKpi   ");
+        String staffId = "201805";
+        calculateKpiService.calculateStaffKpi(staffId);
+        return "calculateKpi执行成功";
     }
 
 
