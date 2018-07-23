@@ -1,18 +1,21 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.StaffMedal;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,6 +89,24 @@ public class StaffMedalService {
     public StaffMedalEntity getById(String id,String medalId){
         StaffMedalEntity staffMedalDB = staffMedalDao.getById(id,medalId);
         return staffMedalDB;
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-07-22 23:28:30.
+     */
+    public List<StaffMedal> getByStaffId(String id){
+        List<StaffMedalEntity> staffMedalEntityList = staffMedalDao.getByStaffId(id);
+        List<StaffMedal> staffMedals = new ArrayList();
+        for (StaffMedalEntity staffMedalEntity:staffMedalEntityList){
+            StaffMedal staffMedal = new StaffMedal();
+            BeanUtils.copyProperties(staffMedalEntity,staffMedal);
+            MedalEntity medalEntity = medalDao.getById(staffMedalEntity.getMedalId());
+            staffMedal.setMedalName(medalEntity.getName());
+            staffMedals.add(staffMedal);
+        }
+        return staffMedals;
     }
 
     /**

@@ -3,6 +3,7 @@ package com.training.dao;
 import com.training.repository.*;
 import com.training.entity.*;
 import com.training.common.PageRequest;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,19 @@ public class StaffDao {
      */ 
     public StaffEntity getById(String id){
         StaffEntity staffDB = staffRepository.getById(id);
+        return staffDB;
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    public StaffEntity getByOpenId(String id){
+        if(StringUtils.isEmpty(id)){
+            return null;
+        }
+        StaffEntity staffDB = staffRepository.getByOpenId(id);
         return staffDB;
     }
 

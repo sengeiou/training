@@ -6,12 +6,14 @@ import com.training.common.Const;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.MemberDao;
+import com.training.dao.StaffDao;
 import com.training.domain.Member;
 import com.training.domain.PrePayOrder;
 import com.training.domain.User;
 import com.training.entity.CardEntity;
 import com.training.entity.MemberEntity;
 import com.training.entity.MemberQuery;
+import com.training.entity.StaffEntity;
 import com.training.util.*;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +46,9 @@ public class WechatService {
     private WechatUtils wechatUtils;
 
     @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
     private JwtUtil jwt;
 
     public ResponseEntity<String> getMemberByCode(String code) {
@@ -61,7 +66,12 @@ public class WechatService {
             member.setType(memberEntity.getType());
             jo.put("member", memberEntity);
             jo.put("star",2);
-
+            if(memberEntity.getType().equals("C")){
+                StaffEntity staffEntity = staffDao.getByOpenId(memberEntity.getOpenId());
+                if(staffEntity!=null){
+                    jo.put("staffId",staffEntity.getStaffId());
+                }
+            }
         }else{
             member.setMemberId("");
             member.setType("");

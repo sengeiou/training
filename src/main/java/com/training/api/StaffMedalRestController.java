@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.StaffMedal;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -77,6 +78,16 @@ public class StaffMedalRestController {
             return ResponseUtil.exception("查无数据");
         }
         return ResponseUtil.success(staffMedalDB);
+    }
+
+    /**
+     * 根据ID查询实体
+     * Created by huai23 on 2018-07-22 23:28:30.
+     */
+    @RequestMapping (value = "getByStaffId", method = RequestMethod.GET)
+    public ResponseEntity<String> getByStaffId(@ModelAttribute StaffMedalQuery query,HttpServletRequest request, HttpServletResponse response){
+        List<StaffMedal> staffMedalList = staffMedalService.getByStaffId(query.getStaffId());
+        return ResponseUtil.success(staffMedalList);
     }
 
     /**
