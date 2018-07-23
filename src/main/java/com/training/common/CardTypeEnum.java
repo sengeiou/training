@@ -14,6 +14,9 @@ public enum CardTypeEnum {
     TT("TT","团体次卡"),
     TM("TM","团体月卡"),
     TY("TY","体验卡"),
+    ST1("ST1","格斗健身"),
+    ST2("ST2","极速塑形"),
+    ST3("ST3","孕产课程"),
     ;
 
     private String key;

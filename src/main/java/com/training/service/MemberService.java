@@ -473,8 +473,8 @@ public class MemberService {
         }
 
         for (MemberCardEntity memberCardEntity : validCardList){
-            String cardType = memberCardEntity.getType().substring(0,1);
-            if(!cardType.equals("S")){
+            String cardType = memberCardEntity.getType();
+            if(!memberCardEntity.getType().startsWith("S")){
                 continue;
             }
             if(cardTypeSet.contains(cardType)){
@@ -485,8 +485,14 @@ public class MemberService {
             lesson.setType(cardType);
             MemberEntity coachEntity = memberDao.getById(memberCardEntity.getCoachId());
             lesson.setCoachId(memberCardEntity.getCoachId());
-            lesson.setTitle("特色课");
+            lesson.setTitle(CardTypeEnum.getEnumByKey(cardType).getDesc());
             lesson.setCoachName(coachEntity.getName());
+            StaffEntity staff = staffDao.getByPhone(coachEntity.getPhone());
+            logger.info(" ============ staff = {}",staff);
+            if(StringUtils.isNotEmpty(staff.getImage())){
+                coachEntity.setImage(staff.getImage());
+            }
+            lesson.setCoachImage(coachEntity.getImage());
             types.add(lesson);
         }
 
@@ -722,6 +728,14 @@ public class MemberService {
 
                 if(memberCardEntity.getType().equals(CardTypeEnum.TM.getKey())){
                     validCardList.add(memberCardEntity);
+                }
+            }
+
+            if(lesson.getType().startsWith(LessonTypeEnum.S.getKey())){
+                if(memberCardEntity.getType().equals(lesson.getType())){
+                    if(memberCardEntity.getCount()>0){
+                        validCardList.add(memberCardEntity);
+                    }
                 }
             }
 

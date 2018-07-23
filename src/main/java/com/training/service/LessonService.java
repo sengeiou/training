@@ -147,9 +147,9 @@ public class LessonService {
         if("T".equals(query.getType())){
             lessonList = quertTeamSchedule(query);
         }
-//        if(query.getType().startsWith("S")){
-//            lessonList = quertSpecialSchedule(query);
-//        }
+        if(query.getType().startsWith("S")){
+            lessonList = quertSpecialSchedule(query);
+        }
         if(StringUtils.isNotEmpty(query.getType()) && query.getType().startsWith("P")){
 
             String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
@@ -393,29 +393,111 @@ public class LessonService {
     }
 
     public List<Lesson> quertSpecialSchedule(LessonQuery query) {
-        Member memberRequest = RequestContextHelper.getMember();
-        logger.info(" quertSpecialSchedule  memberRequest = {}",memberRequest);
         List<Lesson> lessonList = new ArrayList();
-        for (int i = 9; i < 22; i++) {
+        Member memberRequest = RequestContextHelper.getMember();
+        if(StringUtils.isEmpty(query.getMemberId())){
+            query.setMemberId(memberRequest.getMemberId());
+        }
+        logger.info(" quertSpecialSchedule  memberRequest = {} ",memberRequest);
+        logger.info(" quertSpecialSchedule  query = {} ",query);
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setLessonDate(query.getLessonDate());
+        String coachId = query.getCoachId();
+        logger.info(" quertSpecialSchedule  coachId = {} ",coachId);
+        trainingQuery.setCoachId(coachId);
+        trainingQuery.setStatus(0);
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
+        logger.info(" quertSpecialSchedule  trainingEntityList.size() = {} ",trainingEntityList.size());
+//        for (TrainingEntity trainingEntity:trainingEntityList){
+//            logger.info(" trainingEntity = {} ",trainingEntity);
+//        }
+
+        CoachRestQuery coachRestQuery = new CoachRestQuery();
+        coachRestQuery.setCoachId(memberService.getCoachIdByMemberId(query.getMemberId()));
+
+        List<CoachRestEntity> coachRestEntityList = coachRestDao.find(coachRestQuery,page);
+        logger.info(" quertSpecialSchedule  coachRestEntityList.size() = {} ",coachRestEntityList.size());
+
+        List<CoachRestEntity> filterCoachRestEntityList = new ArrayList<>();
+        for (CoachRestEntity coachRestEntity:coachRestEntityList){
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.ONCE.getKey())){
+                if(coachRestEntity.getRestDate().equals(query.getLessonDate())){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.DAY.getKey())){
+                filterCoachRestEntityList.add(coachRestEntity);
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.WEEK.getKey())){
+                int index1 = ut.indexOfWeek(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfWeek(query.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.MONTH.getKey())){
+                int index1 = ut.indexOfMonth(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfMonth(query.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+        }
+        logger.info(" quertSpecialSchedule  filterCoachRestEntityList.size() = {} ",filterCoachRestEntityList.size());
+        for (int i = 0; i < Const.times.size(); i++) {
+            int startHour = Const.times.get(i);
+            int endHour = startHour+100;
             Lesson lesson = new Lesson();
-            lesson.setTitle("肌肉训练课"+query.getType());
-            lesson.setLessonId(System.currentTimeMillis()+"");
-            lesson.setStartHour(i);
-            lesson.setEndHour(i+1);
-            lesson.setCoachId("1");
+            lesson.setType(query.getType());
+            lesson.setStartHour(startHour);
+            lesson.setEndHour(endHour);
+            lesson.setCoachId(query.getCoachId());
             lesson.setLessonDate(query.getLessonDate());
-            if(i%5==0){
-                lesson.setQuota(0);
-            }else{
-                lesson.setQuota(1);
+            lesson.setLessonId(createLessonId(lesson));
+            lesson.setMyOrder("0");
+            lesson.setQuota(2);
+            lesson.setTrainingId("");
+            lesson.setTrainingList(new ArrayList<>());
+            for (TrainingEntity trainingEntity:trainingEntityList){
+//                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
+//                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
+                if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
+                    if(trainingEntity.getCardType().equals(CardTypeEnum.PT.getKey())||trainingEntity.getCardType().equals(CardTypeEnum.TY.getKey())){
+                        lesson.setQuota(0);
+                    }
+                    if(trainingEntity.getCardType().equals(CardTypeEnum.PM.getKey())){
+                        lesson.setQuota(lesson.getQuota()-1);
+                    }
+
+                    if(lesson.getQuota()<0){
+                        lesson.setQuota(0);
+                    }
+                    if(trainingEntity.getMemberId().equals(query.getMemberId())){
+                        lesson.setMyOrder("1");
+                        lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
+                        lesson.setTrainingId(trainingEntity.getTrainingId());
+                    }
+                }
             }
-            if(i%3==0){
-                lesson.setStatus(-1);
-            }else{
-                lesson.setStatus(0);
+            lesson.setStatus(0);  // 0 - 正常 ，   -1 - 不可约
+            for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
+                if(coachRestEntity.getStartHour() >= endHour || coachRestEntity.getEndHour() <= startHour){
+
+                }else{
+                    lesson.setStatus(-1);
+                    break;
+                }
             }
+            lesson.setType(LessonTypeEnum.P.getKey());
             lessonList.add(lesson);
         }
+
+        for (Lesson lesson:lessonList){
+//            logger.info(" lesson = {} ",lesson);
+        }
+
         return lessonList;
     }
 
@@ -445,7 +527,176 @@ public class LessonService {
         if(type.equals(LessonTypeEnum.T.getKey())){
             return orderTeam(lesson);
         }
+
+        if(type.startsWith(LessonTypeEnum.S.getKey())){
+            return orderSpecial(lesson);
+        }
+
         return ResponseUtil.exception("约课失败!");
+    }
+
+    private ResponseEntity<String> orderSpecial(Lesson lesson) {
+        logger.info(" orderSpecial  lesson = {} ",lesson);
+        String lessonId = lesson.getLessonId();
+        String[] ids = lessonId.split(",");
+        String type = ids[0];
+        String lessonDate = ids[1];
+        String startHour = ids[2];
+        String endHour = ids[3];
+        String coachId = ids[4];
+        lesson.setStartHour(Integer.parseInt(startHour));
+        lesson.setEndHour(Integer.parseInt(endHour));
+
+        if(StringUtils.isEmpty(lesson.getCardNo())){
+            return ResponseUtil.exception("约课失败!无课程卡ID!");
+        }
+        if(lesson.getLessonDate()==null){
+            return ResponseUtil.exception("约课失败!约课日期异常");
+        }
+        if(lesson.getLessonDate().equals(ut.currentDate())){
+            int currentHour = ut.currentHour();
+            if(currentHour>2200||currentHour>=lesson.getStartHour()){
+                return ResponseUtil.exception("约课失败!已过约课时间!");
+            }
+        }
+
+        MemberCardEntity memberCardEntity = memberCardDao.getById(lesson.getCardNo());
+        if(memberCardEntity==null){
+            return ResponseUtil.exception("约课失败!无此课程卡!");
+        }
+
+        if(ut.passDayByDate(ut.currentDate(),memberCardEntity.getStartDate())>0){
+            return ResponseUtil.exception("约课失败!课程卡未到使用期!");
+        }
+
+        if(ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())<0){
+            return ResponseUtil.exception("约课失败!课程卡已过期!");
+        }
+
+        if(memberCardEntity.getCount()<=0){
+            return ResponseUtil.exception("约课失败!课程卡已无可用次数!");
+        }
+
+        logger.info(" =======   lesson.getLessonDate() = {} ,memberCardEntity.getEndDate() = {} ",lesson.getLessonDate(),memberCardEntity.getEndDate());
+        logger.info(" =======   passDayByDate = {} ",ut.passDayByDate(lesson.getLessonDate(),memberCardEntity.getEndDate()));
+
+        if(ut.passDayByDate(lesson.getLessonDate(),memberCardEntity.getEndDate())<0){
+            return ResponseUtil.exception("约课失败!预约日期已超过课卡有效期范围!");
+        }
+
+        CoachRestQuery coachRestQuery = new CoachRestQuery();
+        coachRestQuery.setCoachId(coachId);
+
+        PageRequest page = new PageRequest();
+        page.setPageSize(100);
+        List<CoachRestEntity> coachRestEntityList = coachRestDao.find(coachRestQuery,page);
+        logger.info(" orderSpecial  coachRestEntityList.size() = {} ",coachRestEntityList.size());
+
+        List<CoachRestEntity> filterCoachRestEntityList = new ArrayList<>();
+        for (CoachRestEntity coachRestEntity:coachRestEntityList){
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.ONCE.getKey())){
+                if(coachRestEntity.getRestDate().equals(lesson.getLessonDate())){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.DAY.getKey())){
+                filterCoachRestEntityList.add(coachRestEntity);
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.WEEK.getKey())){
+                int index1 = ut.indexOfWeek(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfWeek(lesson.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+            if(coachRestEntity.getType().equals(CoachRestTypeEnum.MONTH.getKey())){
+                int index1 = ut.indexOfMonth(coachRestEntity.getRestDate());
+                int index2 = ut.indexOfMonth(lesson.getLessonDate());
+                if(index1==index2){
+                    filterCoachRestEntityList.add(coachRestEntity);
+                }
+            }
+        }
+        logger.info(" orderSpecial  filterCoachRestEntityList.size() = {} ",filterCoachRestEntityList.size());
+
+        for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
+            if(coachRestEntity.getStartHour() >= lesson.getEndHour() || coachRestEntity.getEndHour() <= lesson.getStartHour() ){
+
+            }else{
+                return ResponseUtil.exception("约课失败!此时段课程可约时长不足一小时!");
+            }
+        }
+
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setLessonDate(lesson.getLessonDate());
+        trainingQuery.setCoachId(coachId);
+//        trainingQuery.setMemberId(lesson.getMemberId());
+//        trainingQuery.setType(LessonTypeEnum.P.getKey());
+        trainingQuery.setStatus(0);
+
+        List<TrainingEntity> trainingEntityListCoach = trainingDao.find(trainingQuery,page);
+        logger.info(" orderSpecial  trainingEntityListCoach.size() = {} ",trainingEntityListCoach.size());
+        List<TrainingEntity> trainingEntityList = new ArrayList<>();
+        for (TrainingEntity trainingEntity : trainingEntityListCoach){
+            int startHourTraining = trainingEntity.getStartHour();
+            int endHourTraining = trainingEntity.getEndHour();
+
+            if(trainingEntity.getStartHour().equals( lesson.getStartHour() ) ){
+                trainingEntityList.add(trainingEntity);
+                continue;
+            }
+            if(startHourTraining >= lesson.getEndHour() || endHourTraining <= lesson.getStartHour() ){
+
+            }else{
+                return ResponseUtil.exception("约课失败!此时段课程可约时长不足一小时!不能预约!");
+            }
+        }
+
+        for (TrainingEntity trainingEntity : trainingEntityList){
+            if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
+                return ResponseUtil.exception("约课失败!您已预约此时段的课程!不能重复预约!");
+            }
+        }
+        if(trainingEntityList.size()==1){
+//            TrainingEntity trainingEntity = trainingEntityList.get(0);
+//
+//            MemberCardEntity memberCardOther = memberCardDao.getById(trainingEntity.getCardNo());
+//            logger.info(" *****   memberCardOther = {} ",memberCardOther);
+//            if(memberCardOther.getType().equals(CardTypeEnum.PT.getKey())){
+                return ResponseUtil.exception("约课失败!该时段课程已约满!");
+//            }else{
+//                //如果已经预约的会员 是用月卡约的 ， 需要判断本次是否也是月卡  ，如果是月卡可以预约 ， 如果是次卡  不能预约
+//                if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
+//                    return ResponseUtil.exception("该时段课程因属于双学员课程，只能再由一个私教月卡会员预约!您为私教次卡不能预约!");
+//                }
+//            }
+        }
+        if(trainingEntityList.size()>1){
+            return ResponseUtil.exception("该时段课程属于双学员课程，且已经约满，不能预约!");
+        }
+        TrainingEntity  trainingEntity = new TrainingEntity();
+        trainingEntity.setTrainingId(IDUtils.getId());
+        trainingEntity.setMemberId(lesson.getMemberId());
+        if(coachId==null){
+            return ResponseUtil.exception("约课失败!教练信息获取失败!");
+        }
+        trainingEntity.setCoachId(coachId);
+        trainingEntity.setStartHour(Integer.parseInt(startHour));
+        trainingEntity.setEndHour(Integer.parseInt(endHour));
+        trainingEntity.setLessonDate(lessonDate);
+        trainingEntity.setLessonId(lessonId);
+        trainingEntity.setType(type);
+        trainingEntity.setTitle(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
+        trainingEntity.setStoreId(memberCardEntity.getStoreId());
+        trainingEntity.setCardNo(memberCardEntity.getCardNo());
+        trainingEntity.setCardType(memberCardEntity.getType());
+        int n = trainingDao.add(trainingEntity);
+        if(n > 0){
+            n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
+            return ResponseUtil.success("约课成功");
+        }
+        return ResponseUtil.exception("约课失败!该时段课程已约满!");
+//        return ResponseUtil.exception("约特色课失败!");
     }
 
     private ResponseEntity<String> orderTeam(Lesson lesson) {
@@ -626,7 +877,7 @@ public class LessonService {
 //        trainingQuery.setLessonId(lessonId);
         trainingQuery.setCoachId(coachId);
 //        trainingQuery.setMemberId(lesson.getMemberId());
-        trainingQuery.setType(LessonTypeEnum.P.getKey());
+//        trainingQuery.setType(LessonTypeEnum.P.getKey());
         trainingQuery.setStatus(0);
 
         List<TrainingEntity> trainingEntityListCoach = trainingDao.find(trainingQuery,page);
