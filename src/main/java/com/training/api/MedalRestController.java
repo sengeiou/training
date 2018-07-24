@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * medal API控制器
- * Created by huai23 on 2018-05-26 13:54:27.
+ * Created by huai23 on 2018-07-24 22:48:27.
  */ 
 @RestController
 @RequestMapping("/api/medal")
@@ -33,7 +33,7 @@ public class MedalRestController {
     /**
      * 新增实体
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody MedalEntity medal,HttpServletRequest request, HttpServletResponse response){
@@ -45,7 +45,7 @@ public class MedalRestController {
      * 分页查询
      * @param query
      * @param pageRequest
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MedalQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
@@ -56,7 +56,7 @@ public class MedalRestController {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "count", method = RequestMethod.GET)
     public ResponseEntity<String> count(@ModelAttribute MedalQuery query,HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,7 @@ public class MedalRestController {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
@@ -83,7 +83,7 @@ public class MedalRestController {
     /**
      * 根据实体更新
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody MedalEntity medal,HttpServletRequest request, HttpServletResponse response){
@@ -94,7 +94,7 @@ public class MedalRestController {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){

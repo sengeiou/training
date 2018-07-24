@@ -2,7 +2,7 @@ package com.training.util.database;
 
 public class GenAll {
 
-    private static final  String table_name = "staff_medal";//数据库名
+    private static final  String table_name = "medal";//数据库名
 
     /**
      * 出口

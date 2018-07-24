@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * medal 查询类
- * Created by huai23 on 2018-05-26 13:54:27.
+ * Created by huai23 on 2018-07-24 22:48:27.
  */ 
 @Data
 public class MedalQuery {
@@ -18,9 +18,9 @@ public class MedalQuery {
 
     private String type;
 
-    private String content;
+    private Integer level;
 
-    private String desc;
+    private String content;
 
     private String image;
 

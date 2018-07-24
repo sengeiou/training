@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * member_medal 查询类
- * Created by huai23 on 2018-05-26 13:54:40.
+ * Created by huai23 on 2018-07-24 22:31:46.
  */ 
 @Data
 public class MemberMedalQuery {

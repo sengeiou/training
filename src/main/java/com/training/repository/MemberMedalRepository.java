@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * member_medal 数据库操作类
- * Created by huai23 on 2018-05-26 13:54:40.
+ * Created by huai23 on 2018-07-24 22:31:46.
  */ 
 @Mapper
 public interface MemberMedalRepository {
@@ -65,9 +65,15 @@ public interface MemberMedalRepository {
 
     @Select("<script> SELECT pk_id,member_id,medal_id,content,award_date,feature,remark,status,created,modified " +
             " FROM member_medal " +
-            " WHERE member_id = #{id} " +
+            " WHERE member_id = #{memberId} and medal_id = #{medalId}  " +
             "</script>")
-    MemberMedalEntity getById(@Param("id") String id);
+    MemberMedalEntity getById(@Param("memberId") String memberId,@Param("medalId") String medalId);
+
+    @Select("<script> SELECT pk_id,member_id,medal_id,content,award_date,feature,remark,status,created,modified " +
+            " FROM member_medal " +
+            " WHERE member_id = #{memberId} " +
+            "</script>")
+    List<MemberMedalEntity> getByMemberId(@Param("memberId") String memberId);
 
     @Update("<script> UPDATE member_medal SET " +
                 " <if test=\"memberMedal.memberId != null\"> member_id = #{memberMedal.memberId} , </if>" +

@@ -19,6 +19,8 @@ public class MemberMedal {
 
     private String medalName;
 
+    private Integer level;
+
     private String content;
 
     private String awardDate;
@@ -32,7 +34,6 @@ public class MemberMedal {
     private Date created;
 
     private Date modified;
-
 
 }
 

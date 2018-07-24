@@ -61,6 +61,18 @@ public class MemberRestController {
     }
 
     /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "memberMedalList", method = RequestMethod.GET)
+    public ResponseEntity<String> memberMedalList(@ModelAttribute MemberQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<Member> page = memberService.memberMedalList(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+    /**
      * 查询总数
      * @param query
      * Created by huai23 on 2018-05-26 13:39:33.

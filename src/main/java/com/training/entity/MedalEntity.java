@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * medal 实体类
- * Created by huai23 on 2018-05-26 13:54:27.
+ * Created by huai23 on 2018-07-24 22:48:27.
  */ 
 @Data
 public class MedalEntity {
@@ -18,9 +18,9 @@ public class MedalEntity {
 
     private String type;
 
-    private String content;
+    private Integer level;
 
-    private String desc;
+    private String content;
 
     private String image;
 

@@ -61,6 +61,12 @@ public class MemberService {
     @Autowired
     private MemberLogDao memberLogDao;
 
+    @Autowired
+    private MemberMedalDao memberMedalDao;
+
+    @Autowired
+    private MedalDao medalDao;
+
     /**
      * 新增实体
      * @param member
@@ -139,6 +145,119 @@ public class MemberService {
             if(cards.size()>0){
                 member.setHasTY(cards.size());
             }
+            data.add(member);
+        }
+        Long count = memberDao.count(query);
+        Page<Member> returnPage = new Page<>();
+        returnPage.setContent(data);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+
+    /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public Page<Member> memberMedalList(MemberQuery query , PageRequest page){
+        logger.info("  memberMedalList  MemberQuery = {}",query);
+
+        Staff staffRequest = RequestContextHelper.getStaff();
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+        if(StringUtils.isEmpty(query.getStoreId())){
+            if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                query.setStoreId(roleEntity.getStoreData());
+            }else{
+                query.setStoreId("123456789");
+            }
+            if(staffDB.getUsername().equals("admin")){
+                query.setStoreId(null);
+            }
+        }else{
+            if(staffDB.getUsername().equals("admin")){
+
+            }else{
+                if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                    String[] stores = roleEntity.getStoreData().split(",");
+                    Set<String> ids = new HashSet<>();
+                    for (int i = 0; i < stores.length; i++) {
+                        if(StringUtils.isNotEmpty(stores[i])){
+                            ids.add(stores[i]);
+                        }
+                    }
+                    if(ids.contains(query.getStoreId())){
+
+                    }else{
+                        query.setStoreId("123456789");
+                    }
+                }else{
+                    query.setStoreId("123456789");
+                }
+            }
+        }
+
+        logger.info("  find  MemberQuery = {}",query);
+        List<MemberEntity> memberList = memberDao.find(query,page);
+        List<Member> data = new ArrayList<>();
+        for (MemberEntity memberEntity : memberList){
+            Member member = transferMember(memberEntity);
+
+            MemberCardQuery memberCardQuery = new MemberCardQuery();
+            memberCardQuery.setType(CardTypeEnum.TY.getKey());
+            memberCardQuery.setMemberId(memberEntity.getMemberId());
+            PageRequest pageRequest = new PageRequest();
+            List cards = memberCardDao.find(memberCardQuery,pageRequest);
+            if(cards.size()>0){
+                member.setHasTY(cards.size());
+            }
+            List<MemberMedalEntity> memberMedalEntityList = memberMedalDao.getByMemberId(memberEntity.getMemberId());
+            List memberMedals = new ArrayList();
+
+            int level_cq = 0;
+            int level_tn = 0;
+            MemberMedal memberMedalTN = null;
+            MemberMedal memberMedalCQ = null;
+
+            for (MemberMedalEntity memberMedalEntity:memberMedalEntityList){
+                MemberMedal memberMedal = new MemberMedal();
+                BeanUtils.copyProperties(memberMedalEntity,memberMedal);
+                MedalEntity medalEntity = medalDao.getById(memberMedalEntity.getMedalId());
+                memberMedal.setMedalName(medalEntity.getName());
+
+                memberMedal.setLevel(medalEntity.getLevel());
+                if(medalEntity.getMedalId().startsWith("TN")){
+                    int level = memberMedal.getLevel();
+                    if(level>level_tn){
+                        memberMedalTN = memberMedal;
+                        level_tn = level;
+                    }
+                    continue;
+                }
+                if(medalEntity.getMedalId().startsWith("CQ")){
+                    int level = memberMedal.getLevel();
+                    if(level>level_cq){
+                        memberMedalCQ = memberMedal;
+                        level_cq = level;
+                    }
+                    continue;
+                }
+
+                memberMedals.add(memberMedal);
+            }
+
+            if(memberMedalTN!=null){
+                memberMedals.add(memberMedalTN);
+            }
+            if(memberMedalCQ!=null){
+                memberMedals.add(memberMedalCQ);
+            }
+
+            member.setMemberMedalList(memberMedals);
             data.add(member);
         }
         Long count = memberDao.count(query);

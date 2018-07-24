@@ -4,7 +4,6 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
-import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import java.util.List;
 
 /**
  * medal 核心业务操作类
- * Created by huai23 on 2018-05-26 13:54:27.
+ * Created by huai23 on 2018-07-24 22:48:27.
  */ 
 @Service
 public class MedalService {
@@ -30,11 +29,10 @@ public class MedalService {
     /**
      * 新增实体
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public ResponseEntity<String> add(MedalEntity medal){
         User user = RequestContextHelper.getUser();
-        medal.setMedalId(IDUtils.getId());
         int n = medalDao.add(medal);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -46,7 +44,7 @@ public class MedalService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public Page<MedalEntity> find(MedalQuery query , PageRequest page){
         List<MedalEntity> medalList = medalDao.find(query,page);
@@ -62,7 +60,7 @@ public class MedalService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public Long count(MedalQuery query){
         Long count = medalDao.count(query);
@@ -72,7 +70,7 @@ public class MedalService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public MedalEntity getById(String id){
         MedalEntity medalDB = medalDao.getById(id);
@@ -82,7 +80,7 @@ public class MedalService {
     /**
      * 根据实体更新
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public  ResponseEntity<String> update(MedalEntity medal){
         int n = medalDao.update(medal);
@@ -95,7 +93,7 @@ public class MedalService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = medalDao.delete(id);

@@ -4,6 +4,7 @@ import com.training.entity.MemberLogEntity;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * member 实体类
@@ -77,6 +78,8 @@ public class Member {
     private Integer hasTY = 0;
 
     private Integer starLevel;
+
+    private List<MemberMedal> memberMedalList;
 
 }
 

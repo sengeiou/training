@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * member_medal 数据库操作类
- * Created by huai23 on 2018-05-26 13:54:40.
+ * Created by huai23 on 2018-07-24 22:31:46.
  */ 
 @Service
 public class MemberMedalDao {
@@ -25,7 +25,7 @@ public class MemberMedalDao {
     /**
      * 新增实体
      * @param memberMedal
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
     public int add(MemberMedalEntity memberMedal){
         int n = memberMedalRepository.add(memberMedal);
@@ -36,7 +36,7 @@ public class MemberMedalDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
     public List<MemberMedalEntity> find(MemberMedalQuery query , PageRequest page){
         List<MemberMedalEntity> memberMedalList = memberMedalRepository.find(query,page);
@@ -46,7 +46,7 @@ public class MemberMedalDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
     public Long count(MemberMedalQuery query){
         Long n = memberMedalRepository.count(query);
@@ -56,17 +56,22 @@ public class MemberMedalDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
-    public MemberMedalEntity getById(String id){
-        MemberMedalEntity memberMedalDB = memberMedalRepository.getById(id);
+    public MemberMedalEntity getById(String id,String medalId){
+        MemberMedalEntity memberMedalDB = memberMedalRepository.getById(id,medalId);
         return memberMedalDB;
+    }
+
+    public List<MemberMedalEntity> getByMemberId(String memberId) {
+        List<MemberMedalEntity> memberMedalEntityList = memberMedalRepository.getByMemberId(memberId);
+        return memberMedalEntityList;
     }
 
     /**
      * 根据实体更新
      * @param memberMedal
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
     public int update(MemberMedalEntity memberMedal){
         int n = memberMedalRepository.update(memberMedal);
@@ -76,13 +81,12 @@ public class MemberMedalDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:40.
+     * Created by huai23 on 2018-07-24 22:31:46.
      */ 
     public int delete(String id){
         int n = memberMedalRepository.delete(id);
         return n;
     }
-
 
 }
 

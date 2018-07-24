@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * medal 数据库操作类
- * Created by huai23 on 2018-05-26 13:54:27.
+ * Created by huai23 on 2018-07-24 22:48:27.
  */ 
 @Service
 public class MedalDao {
@@ -25,7 +25,7 @@ public class MedalDao {
     /**
      * 新增实体
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public int add(MedalEntity medal){
         int n = medalRepository.add(medal);
@@ -36,7 +36,7 @@ public class MedalDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public List<MedalEntity> find(MedalQuery query , PageRequest page){
         List<MedalEntity> medalList = medalRepository.find(query,page);
@@ -46,7 +46,7 @@ public class MedalDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public Long count(MedalQuery query){
         Long n = medalRepository.count(query);
@@ -56,7 +56,7 @@ public class MedalDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public MedalEntity getById(String id){
         MedalEntity medalDB = medalRepository.getById(id);
@@ -66,7 +66,7 @@ public class MedalDao {
     /**
      * 根据实体更新
      * @param medal
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public int update(MedalEntity medal){
         int n = medalRepository.update(medal);
@@ -76,7 +76,7 @@ public class MedalDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-05-26 13:54:27.
+     * Created by huai23 on 2018-07-24 22:48:27.
      */ 
     public int delete(String id){
         int n = medalRepository.delete(id);
