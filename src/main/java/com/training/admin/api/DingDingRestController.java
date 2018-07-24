@@ -205,7 +205,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/by2.xls");
+        File file = new File("d:/file/ydl3.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -264,7 +264,7 @@ public class DingDingRestController {
         logger.info(" DingDingRestController   contract_manual2  ");
         ContractManualQuery query = new ContractManualQuery();
         PageRequest pageRequest = new PageRequest();
-        pageRequest.setPageSize(500);
+        pageRequest.setPageSize(5000);
         Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
         for (ContractManualEntity contractManualEntity : page.getContent()){
             MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
@@ -292,11 +292,15 @@ public class DingDingRestController {
     public Object contract_manual3(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual3  ");
         ContractManualQuery query = new ContractManualQuery();
+        query.setDealFlag(0);
         PageRequest pageRequest = new PageRequest();
-        pageRequest.setPageSize(500);
+        pageRequest.setPageSize(5000);
         Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
         int n = 0;
         for (ContractManualEntity contractManualEntity : page.getContent()){
+            if(contractManualEntity.getDealFlag().equals(new Integer(1))){
+                continue;
+            }
             MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
             if(memberEntityDB==null){
                 logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
@@ -321,6 +325,15 @@ public class DingDingRestController {
                 }
                 if(contractManualEntity.getCardType().indexOf("赠课")>=0) {
                     memberCardEntity.setType(CardTypeEnum.TY.getKey());
+                }
+                if(contractManualEntity.getCardType().indexOf("格斗健身")>=0) {
+                    memberCardEntity.setType(CardTypeEnum.ST1.getKey());
+                }
+                if(contractManualEntity.getCardType().indexOf("塑形")>=0) {
+                    memberCardEntity.setType(CardTypeEnum.ST2.getKey());
+                }
+                if(contractManualEntity.getCardType().indexOf("孕产")>=0) {
+                    memberCardEntity.setType(CardTypeEnum.ST3.getKey());
                 }
                 memberCardEntity.setCount(count);
                 memberCardEntity.setTotal(total);
