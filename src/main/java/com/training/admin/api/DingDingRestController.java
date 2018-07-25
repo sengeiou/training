@@ -91,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 6720090  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 6720088  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -205,7 +205,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/ydl3.xls");
+        File file = new File("d:/file/yyc2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -270,6 +270,13 @@ public class DingDingRestController {
             MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
             if(memberEntityDB!=null){
                 logger.info(" ============   "+contractManualEntity.getPhone() +" 已存在 ");
+                MemberEntity member = new MemberEntity();
+                member.setMemberId(memberEntityDB.getMemberId());
+                StaffEntity staffEntity = staffService.getByPhone(contractManualEntity.getCoachPhone());
+                if(staffEntity!=null){
+                    member.setCoachStaffId(staffEntity.getStaffId());
+                }
+                memberService.update(member);
                 continue;
             }
             MemberEntity member = new MemberEntity();

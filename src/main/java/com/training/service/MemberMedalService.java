@@ -110,7 +110,7 @@ public class MemberMedalService {
             MedalEntity medalEntity = medalDao.getById(memberMedalEntity.getMedalId());
             memberMedal.setMedalName(medalEntity.getName());
             memberMedal.setLevel(medalEntity.getLevel());
-            if(medalEntity.getMedalId().startsWith("TN")){
+            if(medalEntity.getMedalId().startsWith("SJ")){
                 int level = memberMedal.getLevel();
                 if(level>level_tn){
                     memberMedalTN = memberMedal;
