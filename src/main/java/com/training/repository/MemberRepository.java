@@ -75,7 +75,7 @@ public interface MemberRepository {
             " FROM member " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
-            " <if test=\"query.storeId != null\"> AND coach_staff_id in ( select staff_id from staff where store_id in ( ${query.storeId} ) ) </if>" +
+            " <if test=\"query.storeId != null\"> AND coach_staff_id in ( select staff_id from staff where store_id in ( ${query.storeId} ) union select ''  ) </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.name != null\"> AND name like CONCAT('%',#{query.name},'%')    </if>" +
             " <if test=\"query.email != null\"> AND email = #{query.email} </if>" +
