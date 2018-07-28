@@ -91,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 6720088  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 6706115  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -205,7 +205,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/yyc2.xls");
+        File file = new File("d:/file/wj2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -267,6 +267,9 @@ public class DingDingRestController {
         pageRequest.setPageSize(5000);
         Page<ContractManualEntity> page = contractManualService.find(query,pageRequest);
         for (ContractManualEntity contractManualEntity : page.getContent()){
+            if(StringUtils.isEmpty(contractManualEntity.getPhone())){
+                continue;
+            }
             MemberEntity memberEntityDB = memberService.getByPhone(contractManualEntity.getPhone());
             if(memberEntityDB!=null){
                 logger.info(" ============   "+contractManualEntity.getPhone() +" 已存在 ");
@@ -279,6 +282,8 @@ public class DingDingRestController {
                 memberService.update(member);
                 continue;
             }
+            logger.info(" ****************  "+contractManualEntity.getMemberName()+", phone='"+contractManualEntity.getPhone() +"'  not  存在 ");
+
             MemberEntity member = new MemberEntity();
             member.setMemberId(IDUtils.getId());
             member.setType("M");
@@ -316,6 +321,20 @@ public class DingDingRestController {
             String coachId = "123";
             String cardId = "1";
             if(contractManualEntity.getStatus().indexOf("有效")>=0||contractManualEntity.getStatus().indexOf("停")>=0){
+                logger.info(" ============   "+contractManualEntity.getMemberName() +" , "+contractManualEntity.getPhone() +" count =  "+contractManualEntity.getCount());
+
+                if(contractManualEntity.getStartDate().indexOf("#N/A")>=0){
+                    continue;
+                }
+
+                if(contractManualEntity.getEndDate().indexOf("#N/A")>=0){
+                    continue;
+                }
+
+                if(contractManualEntity.getCount().indexOf("#N/A")>=0){
+                    continue;
+                }
+
                 int total = Integer.parseInt(contractManualEntity.getTotal());
                 int count = Integer.parseInt(contractManualEntity.getCount());
                 if(count==0){
