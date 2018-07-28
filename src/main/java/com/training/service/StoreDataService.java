@@ -85,16 +85,19 @@ public class StoreDataService {
         StoreData hksr = new StoreData();
         hksr.setLabel("耗课收入");
         hksr.setValue("3000");
+        hksr.setLesson("10");
         storeDataList.add(hksr);
 
         StoreData sksr = new StoreData();
         sksr.setLabel("死课收入");
         sksr.setValue("500");
+        sksr.setLesson("4");
         storeDataList.add(sksr);
 
         StoreData yqsr = new StoreData();
         yqsr.setLabel("延期收入");
         yqsr.setValue("100");
+        yqsr.setLesson("2");
         storeDataList.add(yqsr);
 
         return storeDataList;
