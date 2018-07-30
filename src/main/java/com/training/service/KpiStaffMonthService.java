@@ -7,6 +7,7 @@ import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,8 +173,18 @@ public class KpiStaffMonthService {
      * 根据实体更新
      * @param kpiStaffMonth
      * Created by huai23 on 2018-07-13 23:24:53.
-     */ 
+     */
+    @Transactional
     public  ResponseEntity<String> update(KpiStaffMonthEntity kpiStaffMonth){
+        logger.info(" KpiStaffMonthService  update , kpiStaffMonth = {} ",kpiStaffMonth);
+        String templateId = kpiStaffMonth.getTemplateId();
+        if(StringUtils.isNotEmpty(templateId)){
+            StaffEntity staffEntity = new StaffEntity();
+            staffEntity.setStaffId(kpiStaffMonth.getStaffId());
+            staffEntity.setTemplateId(kpiStaffMonth.getTemplateId());
+            staffDao.update(staffEntity);
+        }
+        kpiStaffMonth.setTemplateId(null);
         int n = kpiStaffMonthDao.update(kpiStaffMonth);
         if(n==1){
             return ResponseUtil.success("修改成功");

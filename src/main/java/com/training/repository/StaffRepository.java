@@ -26,6 +26,7 @@ public interface StaffRepository {
                 " <if test=\"staff.image != null\"> image, </if>" +
                 " <if test=\"staff.openId != null\"> open_id, </if>" +
                 " <if test=\"staff.unionId != null\"> union_id, </if>" +
+                " <if test=\"staff.templateId != null\"> template_id, </if>" +
                 " <if test=\"staff.feature != null\"> feature, </if>" +
                 " <if test=\"staff.status != null\"> status, </if>" +
                 " <if test=\"staff.relId != null\"> rel_id, </if>" +
@@ -44,6 +45,7 @@ public interface StaffRepository {
                 " <if test=\"staff.image != null\"> #{staff.image}, </if>" +
                 " <if test=\"staff.openId != null\"> #{staff.openId}, </if>" +
                 " <if test=\"staff.unionId != null\"> #{staff.unionId}, </if>" +
+                " <if test=\"staff.templateId != null\"> #{staff.templateId}, </if>" +
                 " <if test=\"staff.feature != null\"> #{staff.feature}, </if>" +
                 " <if test=\"staff.status != null\"> #{staff.status}, </if>" +
                 " <if test=\"staff.relId != null\"> #{staff.relId}, </if>" +
@@ -53,7 +55,7 @@ public interface StaffRepository {
             "</script>")
     int add(@Param("staff") StaffEntity staff);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
@@ -67,6 +69,7 @@ public interface StaffRepository {
             " <if test=\"query.job != null\"> AND job = #{query.job} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
+            " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.relId != null\"> AND rel_id = #{query.relId} </if>" +
@@ -87,19 +90,20 @@ public interface StaffRepository {
             " <if test=\"query.job != null\"> AND job = #{query.job} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
             " <if test=\"query.unionId != null\"> AND union_id = #{query.unionId} </if>" +
+            " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.relId != null\"> AND rel_id = #{query.relId} </if>" +
             "</script>")
     Long count(@Param("query") StaffQuery staff);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE staff_id = #{id} " +
             "</script>")
     StaffEntity getById(@Param("id") String id);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE open_id = #{id} " +
             "</script>")
@@ -118,6 +122,7 @@ public interface StaffRepository {
                 " <if test=\"staff.image != null\"> image = #{staff.image} , </if>" +
                 " <if test=\"staff.openId != null\"> open_id = #{staff.openId} , </if>" +
                 " <if test=\"staff.unionId != null\"> union_id = #{staff.unionId} , </if>" +
+                " <if test=\"staff.templateId != null\"> template_id = #{staff.templateId} , </if>" +
                 " <if test=\"staff.feature != null\"> feature = #{staff.feature} , </if>" +
                 " <if test=\"staff.status != null\"> status = #{staff.status} , </if>" +
                 " <if test=\"staff.relId != null\"> rel_id = #{staff.relId} , </if>" +
@@ -131,13 +136,13 @@ public interface StaffRepository {
             "</script>")
     int delete(@Param("id") String id);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE username = #{username} limit 0,1 " +
             "</script>")
     StaffEntity getByUsername(@Param("username") String username);
 
-    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,feature,status,rel_id,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
             " FROM staff " +
             " WHERE phone = #{phone} limit 0,1 " +
             "</script>")

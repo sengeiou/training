@@ -36,6 +36,8 @@ public class StaffEntity {
 
     private String unionId;
 
+    private String templateId;
+
     private String feature;
 
     private Integer status;

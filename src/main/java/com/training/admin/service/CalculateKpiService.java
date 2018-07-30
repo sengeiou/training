@@ -60,7 +60,7 @@ public class CalculateKpiService {
     private JdbcTemplate jdbcTemplate;
 
 
-    public void calculateStaffKpi(String staffId) {
+    public void calculateStaffKpi(String staffId,String month) {
 
 
 
