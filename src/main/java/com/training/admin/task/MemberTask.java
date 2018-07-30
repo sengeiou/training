@@ -20,7 +20,7 @@ public class MemberTask {
     /**
      * 更新学员的训练时长
      */
-//    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 1 0 * * *")
     public void updateMemberTrainingTimes(){
         logger.info("start updateMemberTrainingTimes!  time = {} ", ut.currentTime());
         memberTrainingTimeService.execute();
