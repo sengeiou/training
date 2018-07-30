@@ -47,7 +47,6 @@ public class SessonFilter implements Filter {
         // 请求的uri
         String uri = request.getRequestURI();
         String authorization = request.getHeader("Authorization");
-        logger.info(" request.getRequestURI() = {} ,  Authorization = {} ",request.getRequestURI(),authorization);
         // 不过滤的uri
         String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code","/manual/",
                 "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken","/wechat/pay/callback",
@@ -67,7 +66,7 @@ public class SessonFilter implements Filter {
                 break;
             }
         }
-        logger.info(" request.getRequestURI() = {} , doFilter = {}, Authorization = {} , ",request.getRequestURI(),doFilter,authorization);
+        logger.info(" request.getRequestURI() = {} , doFilter = {},  Authorization = {} , ",request.getRequestURI(),doFilter,authorization);
         if (doFilter) {
             // 执行过滤
             // 从session中获取登录者实体
@@ -102,7 +101,6 @@ public class SessonFilter implements Filter {
                 if(StringUtils.isNotEmpty(staff.getStaffId())){
                     req.setAttribute("staff",staff);
                 }
-
                 // 如果session中存在登录者实体，则继续
                 chain.doFilter(request, response);
             }
