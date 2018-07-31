@@ -190,6 +190,21 @@ public class LessonService {
         PageRequest page = new PageRequest();
         page.setPageSize(100);
         List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
+
+        logger.info(" quertPersonalSchedule  trainingQuery1 = {} ",trainingQuery);
+        trainingQuery.setCoachId(null);
+        trainingQuery.setMemberId(query.getMemberId());
+        logger.info(" quertPersonalSchedule  trainingQuery2 = {} ",trainingQuery);
+
+        List<TrainingEntity> trainingEntityListMember = trainingDao.find(trainingQuery,page);
+        logger.info(" quertPersonalSchedule  trainingEntityListMember.size() = {} ",trainingEntityListMember.size());
+
+        for (TrainingEntity trainingEntity : trainingEntityListMember){
+            if(!trainingEntity.getCoachId().equals(coachId)){
+                trainingEntityList.add(trainingEntity);
+            }
+        }
+
         logger.info(" quertPersonalSchedule  trainingEntityList.size() = {} ",trainingEntityList.size());
 //        for (TrainingEntity trainingEntity:trainingEntityList){
 //            logger.info(" trainingEntity = {} ",trainingEntity);
