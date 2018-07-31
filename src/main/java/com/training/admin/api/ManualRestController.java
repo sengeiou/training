@@ -3,6 +3,7 @@ package com.training.admin.api;
 import com.alibaba.fastjson.JSON;
 import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
+import com.training.admin.service.MemberTrainingTaskService;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
@@ -71,6 +72,9 @@ public class ManualRestController {
     private CalculateKpiService calculateKpiService;
 
     @Autowired
+    MemberTrainingTaskService memberTrainingTaskService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("updateCoachStaffId")
@@ -97,22 +101,12 @@ public class ManualRestController {
 
     @GetMapping("updateTrainingHour")
     public Object updateTrainingHour(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" updateTrainingHour     ");
-        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT *  from member  ");
-        int total = 0;
-        for (int i = 0; i < data.size(); i++) {
-            Map member = data.get(i);
-            String memberId = member.get("member_id").toString();
-            String sql = " select training_id from training where member_id = ? and `status` = 0 and lesson_date <=  ? ";
-            List trainingList =  jdbcTemplate.queryForList(sql,new Object[]{memberId,ut.currentDate(-1)});
-            if(CollectionUtils.isNotEmpty(trainingList)){
-                System.out.println(" name = "+member.get("name")+"   hours = "+trainingList.size());
-                jdbcTemplate.update(" update member set training_hours = ? where member_id = ? ",new Object[]{trainingList.size(),memberId});
-                total++;
-            }
-        }
-        System.out.println("total = "+total);
-        return "updateTrainingHour执行成功";
+        return memberTrainingTaskService.updateTrainingHour();
+    }
+
+    @GetMapping("updateMemberMedal")
+    public Object updateMemberMedal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return memberTrainingTaskService.updateMemberMedal();
     }
 
     @GetMapping("createStaffMonth")

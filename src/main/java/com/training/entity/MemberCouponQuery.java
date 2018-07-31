@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 public class MemberCouponQuery {
 
-    private Long couponId;
+    private Integer couponId;
 
     private String memberId;
 

@@ -62,12 +62,11 @@ public class MemberCouponService {
         for (String memberId : array){
             Integer couponId = 0;
             MemberCouponEntity memberCouponEntity = null;
-            int times = 0;
             do{
                 couponId = IDUtils.getCouponId();
                 memberCouponEntity = memberCouponDao.getById(""+couponId);
-                times++;
-            }while(memberCouponEntity != null && times<100);
+            }while(memberCouponEntity != null);
+            memberCoupon.setCouponId(couponId);
             memberCoupon.setMemberId(memberId);
             int n = memberCouponDao.add(memberCoupon);
             total = total + n;
@@ -76,6 +75,42 @@ public class MemberCouponService {
             return ResponseUtil.success("发放成功,共发放"+total+"张优惠券");
         }
         return ResponseUtil.exception("发放失败");
+    }
+
+
+    /**
+     * 新增实体
+     * @param memberCoupon
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    public ResponseEntity<String> addOne(MemberCouponEntity memberCoupon){
+        if(memberCoupon==null|| StringUtils.isEmpty(memberCoupon.getMemberId())|| StringUtils.isEmpty(memberCoupon.getStartDate())|| StringUtils.isEmpty(memberCoupon.getEndDate())){
+            return ResponseUtil.exception("发放优惠券参数异常");
+        }
+        Staff staff = RequestContextHelper.getStaff();
+        if(staff!=null){
+            memberCoupon.setUseStaffId(staff.getStaffId());
+        }
+        memberCoupon.setCouponId(getCouponId());
+        if(StringUtils.isEmpty(memberCoupon.getOrigin())){
+            memberCoupon.setOrigin("auto");
+        }
+        int n = memberCouponDao.add(memberCoupon);
+        if(n>0){
+            return ResponseUtil.success("发放成功");
+        }
+        return ResponseUtil.exception("发放失败");
+    }
+
+
+    public Integer getCouponId(){
+        Integer couponId = 0;
+        MemberCouponEntity memberCouponEntity = null;
+        do{
+            couponId = IDUtils.getCouponId();
+            memberCouponEntity = memberCouponDao.getById(""+couponId);
+        }while(memberCouponEntity != null);
+        return couponId;
     }
 
     /**

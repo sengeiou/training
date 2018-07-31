@@ -1,7 +1,6 @@
 package com.training.admin.task;
 
 import com.training.admin.service.CoachKpiUpdateService;
-import com.training.admin.service.MemberTrainingTimeService;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
