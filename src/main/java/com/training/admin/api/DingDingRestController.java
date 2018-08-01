@@ -91,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 6706115  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id    ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -205,7 +205,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/wj2.xls");
+        File file = new File("d:/file/bcks0731.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -387,6 +387,31 @@ public class DingDingRestController {
         }
         logger.info("  n = {}" , n);
         return "contract_manual3执行成功";
+    }
+
+
+    @GetMapping("change_valid_date")
+    public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   change_valid_date  ");
+        File file = new File("d:/file/yxqbd.xls");
+        List<List<String>> data = ExcelUtil.readExcel(file);
+        String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
+        int i = 0;
+        for (List<String> item : data){
+//            System.out.println(JSON.toJSONString(item));
+            if(i==0){
+                i++;
+                continue;
+            }
+            System.out.println(item.get(2)+" , "+item.get(5)+" , "+item.get(6)+" , "+item.get(7));
+            Object[] params = { item.get(5) , item.get(6) , item.get(7) , item.get(2) };
+            int n = jdbcTemplate.update(sql,params);
+            if(n==1){
+                i++;
+            }
+        }
+        System.out.println(" count = "+i);
+        return "change_valid_date执行成功";
     }
 
 }
