@@ -205,7 +205,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/bcks0731.xls");
+        File file = new File("d:/file/tzl.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -245,8 +245,19 @@ public class DingDingRestController {
             contractManualEntity.setRealFee(item.get(18));
             contractManualEntity.setCount(item.get(19));
             contractManualEntity.setStatus(item.get(20));
-            contractManualEntity.setPauseDate(item.size()>21?item.get(21):"");
-            contractManualEntity.setDeadDate(item.size()>22?item.get(22):"");
+
+            String pauseDate = item.size()>21?item.get(21):"";
+            pauseDate = pauseDate.replaceAll("/","-");
+            if(StringUtils.isNotEmpty(pauseDate)&&pauseDate.indexOf("-")<0){
+                pauseDate = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(pauseDate)));
+            }
+            String deadDate = item.size()>22?item.get(22):"";
+            deadDate = deadDate.replaceAll("/","-");
+            if(StringUtils.isNotEmpty(deadDate)&&deadDate.indexOf("-")<0){
+                deadDate = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(deadDate)));
+            }
+            contractManualEntity.setPauseDate(pauseDate);
+            contractManualEntity.setDeadDate(deadDate);
 
             int n = contractManualDao.add(contractManualEntity);
 
