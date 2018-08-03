@@ -35,6 +35,9 @@ public class MemberCouponService {
     private MemberService memberService;
 
     @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
     private MemberCouponDao memberCouponDao;
 
     /**
@@ -60,6 +63,11 @@ public class MemberCouponService {
             }
         }
         for (String memberId : array){
+            MemberEntity memberEntity = memberDao.getByPhone(memberId);
+            if(memberEntity==null){
+                continue;
+            }
+            memberId = memberEntity.getMemberId();
             Integer couponId = 0;
             MemberCouponEntity memberCouponEntity = null;
             do{
