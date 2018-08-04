@@ -1,14 +1,12 @@
 package com.training.admin.service;
 
+import com.alibaba.fastjson.JSON;
 import com.training.common.PageRequest;
 import com.training.dao.*;
-import com.training.entity.KpiStaffMonthEntity;
-import com.training.entity.StaffEntity;
-import com.training.entity.StaffQuery;
-import com.training.service.CardService;
-import com.training.service.KpiStaffMonthService;
-import com.training.service.MemberService;
-import com.training.service.SysLogService;
+import com.training.domain.KpiStaffMonth;
+import com.training.entity.*;
+import com.training.service.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,21 +49,75 @@ public class CalculateKpiService {
     private MemberService memberService;
 
     @Autowired
+    private TrainingService trainingService;
+
+    @Autowired
+    private TrainingDao trainingDao;
+
+    @Autowired
     private KpiStaffMonthService kpiStaffMonthService;
 
     @Autowired
     private KpiStaffMonthDao kpiStaffMonthDao;
 
     @Autowired
+    private StoreOpenDao storeOpenDao;
+
+    @Autowired
+    private KpiTemplateService kpiTemplateService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
     public void calculateStaffKpi(String staffId,String month) {
+        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
+        StaffEntity staffEntity = staffDao.getById(staffId);
+        String templateId = staffEntity.getTemplateId();
+
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateService.getById(templateId);
+        List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateEntity.getQuotaEntityList();
+
+        int xks = getXks(staffId,month);
+        int jks = getJks(staffId,month);
+        int lessonCount = queryLessonCount(staffId,month);
+        int validMemberCount = queryValidMemberCount(staffId,month);
+        int yyts = queryOpenDays(staffEntity.getStoreId());
 
 
 
+        kpiStaffMonthEntity.setXks(""+xks);
+        kpiStaffMonthEntity.setJks(""+jks);
+        kpiStaffMonthEntity.setSjks(""+lessonCount);
+        kpiStaffMonthEntity.setYxhys(""+validMemberCount);
+        kpiStaffMonthEntity.setYyts(""+yyts);
 
 
+        kpiStaffMonthEntity.setKpiScore("1");
+        kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
+        int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
+
+    }
+
+    private int getXks(String staffId, String month) {
+        return 0;
+    }
+
+    private int getJks(String staffId, String month) {
+        return 0;
+    }
+
+    private int queryLessonCount(String staffId, String month) {
+        return 0;
+    }
+
+    private int queryValidMemberCount(String staffId, String month) {
+        return 0;
+    }
+
+    private int queryOpenDays(String storeId) {
+        StoreOpenEntity storeOpenEntity = storeOpenDao.getById(storeId, ut.currentYear());
+        return 0;
     }
 
 }

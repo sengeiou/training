@@ -44,7 +44,7 @@ public class MemberCouponService {
      * 新增实体
      * @param memberCoupon
      * Created by huai23 on 2018-06-30 10:02:47.
-     */ 
+     */
     public ResponseEntity<String> add(MemberCouponEntity memberCoupon){
         if(memberCoupon==null|| StringUtils.isEmpty(memberCoupon.getMemberId())|| StringUtils.isEmpty(memberCoupon.getStartDate())|| StringUtils.isEmpty(memberCoupon.getEndDate())){
             return ResponseUtil.exception("发放优惠券异常");
