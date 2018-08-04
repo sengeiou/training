@@ -376,7 +376,7 @@ public class ProcessInstanceService {
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();
-            String startDate = ut.currentDate(-2);
+            String startDate = ut.currentDate(-3);
             System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");

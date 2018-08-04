@@ -404,7 +404,7 @@ public class DingDingRestController {
     @GetMapping("change_valid_date")
     public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   change_valid_date  ");
-        File file = new File("d:/file/yxqbd.xls");
+        File file = new File("d:/file/dhbg.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
         int i = 0;
@@ -414,8 +414,15 @@ public class DingDingRestController {
                 i++;
                 continue;
             }
-            System.out.println(item.get(2)+" , "+item.get(5)+" , "+item.get(6)+" , "+item.get(7));
-            Object[] params = { item.get(5) , item.get(6) , item.get(7) , item.get(2) };
+            if(StringUtils.isEmpty(item.get(2))){
+                continue;
+            }
+            String remark = "";
+            if(item.size()>7&&StringUtils.isNotEmpty(item.get(7))){
+                remark = item.get(7);
+            }
+            System.out.println(item.get(2)+" , "+item.get(5)+" , "+item.get(6)+" , "+remark);
+            Object[] params = { item.get(5) , item.get(6) , remark , item.get(2) };
             int n = jdbcTemplate.update(sql,params);
             if(n==1){
                 i++;

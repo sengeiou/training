@@ -228,6 +228,7 @@ public class CreateCardService {
 
     @Transactional
     void createPT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception {
+        logger.info(" ==== createPT  contractEntity = {} ", contractEntity);
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
@@ -271,11 +272,22 @@ public class CreateCardService {
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<StaffEntity> staffList = staffDao.find(query,new PageRequest());
-        if(staffList.size()!=1){
-            logger.error(" checkContract  ERROR :  staffList.size = {} , staffName = {}  ", staffList.size(), staffName);
-            throw new Exception(" "+staffName+" staffList.size = "+ staffList.size());
+        StaffEntity staffEntity = null;
+        for (StaffEntity staff : staffList){
+            if(staff.getCustname().trim().equals(staffName)){
+                staffEntity = staff;
+                break;
+            }
         }
-        StaffEntity staffEntity = staffList.get(0);
+        if(staffEntity==null){
+            logger.error(" checkContract  ERROR :  staffEntity = null , staffName = {}  ", staffName);
+            throw new Exception(" "+staffName+" staffEntity = null ");
+        }
+//        if(staffList.size()!=1){
+//            logger.error(" checkContract  ERROR :  staffList.size = {} , staffName = {}  ", staffList.size(), staffName);
+//            throw new Exception(" "+staffName+" staffList.size = "+ staffList.size());
+//        }
+//        StaffEntity staffEntity = staffList.get(0);
         if(StringUtils.isEmpty(staffEntity.getOpenId())){
             logger.error(" checkContract  ERROR :  openId is null , staffEntity = {}  ", staffEntity);
             throw new Exception("openId is null");
