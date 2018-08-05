@@ -67,7 +67,10 @@ public class KpiStaffMonthService {
      * Created by huai23 on 2018-07-13 23:24:52.
      */ 
     public Page<KpiStaffMonth> find(KpiStaffMonthQuery query , PageRequest page){
+        logger.info(" find   query = {}  ",query);
         List<KpiStaffMonthEntity> kpiStaffMonthList = kpiStaffMonthDao.find(query,page);
+        logger.info(" find   kpiStaffMonthList = {}  ",kpiStaffMonthList.size());
+
         List<KpiStaffMonth> kpiList = new ArrayList();
         for(KpiStaffMonthEntity kpiStaffMonthEntity :kpiStaffMonthList){
             KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthEntity);
