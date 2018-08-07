@@ -126,5 +126,14 @@ public class ManualRestController {
         return "calculateKpi执行成功";
     }
 
+    @GetMapping("trainingExcel")
+    public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" trainingExcel   ");
+        String startDate = "2018-07-01";
+        String endDate = "2018-07-31";
+        manualService.trainingExcel(startDate,endDate);
+        return "trainingExcel执行成功";
+    }
+
 
 }
