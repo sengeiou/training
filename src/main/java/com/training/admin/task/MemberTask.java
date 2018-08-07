@@ -19,11 +19,21 @@ public class MemberTask {
     /**
      * 更新学员的训练时长
      */
-    @Scheduled(cron = "0 1 0 * * *")
+    @Scheduled(cron = "0 0 2 * * *")
     public void updateMemberTrainingTimes(){
         logger.info("start updateTrainingHour!  time = {} ", ut.currentTime());
         memberTrainingTaskService.updateTrainingHour();
         logger.info("end updateTrainingHour!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 更新学员勋章
+     */
+    @Scheduled(cron = "0 10 2 * * *")
+    public void updateMemberMedal(){
+        logger.info("start updateMemberMedal!  time = {} ", ut.currentTime());
+        memberTrainingTaskService.updateMemberMedal();
+        logger.info("end updateMemberMedal!  time = {} ", ut.currentTime());
     }
 
 }
