@@ -7,12 +7,14 @@ import com.training.domain.KpiStaffMonth;
 import com.training.entity.*;
 import com.training.service.*;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,17 +76,20 @@ public class CalculateKpiService {
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
         StaffEntity staffEntity = staffDao.getById(staffId);
         String templateId = staffEntity.getTemplateId();
-
-        KpiTemplateEntity kpiTemplateEntity = kpiTemplateService.getById(templateId);
-        List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateEntity.getQuotaEntityList();
+        KpiTemplateEntity kpiTemplateEntity = new KpiTemplateEntity();
+        List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = new ArrayList<>();
+        if(StringUtils.isNotEmpty(templateId)){
+            kpiTemplateEntity = kpiTemplateService.getById(templateId);
+            if(kpiTemplateEntity!=null){
+                kpiTemplateQuotaEntityList = kpiTemplateEntity.getQuotaEntityList();
+            }
+        }
 
         int xks = getXks(staffId,month);
         int jks = getJks(staffId,month);
         int lessonCount = queryLessonCount(staffId,month);
         int validMemberCount = queryValidMemberCount(staffId,month);
-        int yyts = queryOpenDays(staffEntity.getStoreId());
-
-
+        int yyts = queryOpenDays(staffEntity.getStoreId(),month);
 
         kpiStaffMonthEntity.setXks(""+xks);
         kpiStaffMonthEntity.setJks(""+jks);
@@ -115,8 +120,26 @@ public class CalculateKpiService {
         return 0;
     }
 
-    private int queryOpenDays(String storeId) {
-        StoreOpenEntity storeOpenEntity = storeOpenDao.getById(storeId, ut.currentYear());
+    private int queryOpenDays(String storeId,String month) {
+        String y = month.substring(0,4);
+        String m = month.substring(5,6);
+        StoreOpenEntity storeOpenEntity = storeOpenDao.getById(storeId, y);
+        if(storeOpenEntity==null){
+            int days = ut.daysOfMonth(y+"-"+m+"-01");
+            return days;
+        }
+        if(m.equals("01")) return storeOpenEntity.getM01();
+        if(m.equals("02")) return storeOpenEntity.getM02();
+        if(m.equals("03")) return storeOpenEntity.getM03();
+        if(m.equals("04")) return storeOpenEntity.getM04();
+        if(m.equals("05")) return storeOpenEntity.getM05();
+        if(m.equals("06")) return storeOpenEntity.getM06();
+        if(m.equals("07")) return storeOpenEntity.getM07();
+        if(m.equals("08")) return storeOpenEntity.getM08();
+        if(m.equals("09")) return storeOpenEntity.getM09();
+        if(m.equals("10")) return storeOpenEntity.getM10();
+        if(m.equals("11")) return storeOpenEntity.getM11();
+        if(m.equals("12")) return storeOpenEntity.getM12();
         return 0;
     }
 
