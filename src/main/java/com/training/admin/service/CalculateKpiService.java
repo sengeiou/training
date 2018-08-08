@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * staff 核心业务操作类
@@ -90,13 +91,17 @@ public class CalculateKpiService {
         int lessonCount = queryLessonCount(staffId,month);
         int validMemberCount = queryValidMemberCount(staffId,month);
         int yyts = queryOpenDays(staffEntity.getStoreId(),month);
+        int xkl = 100;
+        if(jks>0){
+            xkl = xks/jks;
+        }
 
         kpiStaffMonthEntity.setXks(""+xks);
         kpiStaffMonthEntity.setJks(""+jks);
+        kpiStaffMonthEntity.setXkl(""+xkl);
         kpiStaffMonthEntity.setSjks(""+lessonCount);
         kpiStaffMonthEntity.setYxhys(""+validMemberCount);
         kpiStaffMonthEntity.setYyts(""+yyts);
-
 
         kpiStaffMonthEntity.setKpiScore("1");
         kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
@@ -105,7 +110,25 @@ public class CalculateKpiService {
     }
 
     private int getXks(String staffId, String month) {
-        return 0;
+        StaffEntity staffEntity = staffDao.getById(staffId);
+        if(staffEntity==null){
+            return 0;
+        }
+        String y = month.substring(0,4);
+        String m = month.substring(5,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+        String sql = "select * from contract where coach = ? and sign_date >= ? and sign_date <= ? ";
+        int xks = 0;
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map)data.get(i);
+            String type = item.get("type").toString();
+            if("续课".equals(type)){
+                xks++;
+            }
+        }
+        return xks;
     }
 
     private int getJks(String staffId, String month) {
