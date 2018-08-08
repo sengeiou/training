@@ -29,6 +29,9 @@ public class RequestContextHelper {
     }
 
     public static Staff getStaff(){
+        if(null==RequestContextHolder.getRequestAttributes()){
+            return null;
+        }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         if(request==null||request.getAttribute("staff")==null){
             return null;
