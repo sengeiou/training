@@ -120,7 +120,7 @@ public class ManualRestController {
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateKpi   ");
-        String staffId = "1530138484216f2f473efbfac4f8a955176f9b5c84d8b";
+        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
         String month = "201807";
         calculateKpiService.calculateStaffKpi(staffId,month);
         return "calculateKpi执行成功";

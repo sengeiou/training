@@ -62,7 +62,7 @@ public class ProcessInstanceService {
 
     private void getSTConcract(String processCode) {
         logger.info("start getSTConcract   time = {} ", ut.currentTime());
-        List<ContractEntity> contractEntityList = null;
+        List<ContractEntity> contractEntityList =  new ArrayList<>();
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();

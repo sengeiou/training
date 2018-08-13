@@ -116,6 +116,9 @@ public class KpiStaffMonthService {
         }
         KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
         BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
+
+        StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
+
         StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
         if(storeEntity!=null){
             kpiStaffMonth.setStoreName(storeEntity.getName());
@@ -123,7 +126,7 @@ public class KpiStaffMonthService {
             kpiStaffMonth.setStoreName("-");
         }
 
-        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(kpiStaffMonth.getTemplateId());
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
         if(kpiTemplateEntity!=null){
             kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
 
