@@ -257,6 +257,11 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setScore("-");
             if(StringUtils.isNotEmpty(kpiStaffMonth.getZykh())){
                 int score = 5*Integer.parseInt(kpiStaffMonth.getZykh());
+                if(score==0){
+                    kpiTemplateQuota.setFinishRate("不通过");
+                }else{
+                    kpiTemplateQuota.setFinishRate("通过");
+                }
                 kpiTemplateQuota.setScore(""+score+".00");
                 kpiTemplateQuota.setKpiScore(""+score+".00");
             }
@@ -265,7 +270,8 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
             if(StringUtils.isNotEmpty(kpiStaffMonth.getTss())){
-                kpiTemplateQuota.setScore(kpiStaffMonth.getTss());
+                kpiTemplateQuota.setFinishRate(kpiStaffMonth.getTss());
+                kpiTemplateQuota.setScore("-"+kpiStaffMonth.getTss());
                 int score = -10*Integer.parseInt(kpiStaffMonth.getTss());
                 kpiTemplateQuota.setKpiScore(""+score+".00");
             }
