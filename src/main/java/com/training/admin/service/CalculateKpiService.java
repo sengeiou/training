@@ -115,12 +115,13 @@ public class CalculateKpiService {
             return 0;
         }
         String y = month.substring(0,4);
-        String m = month.substring(5,6);
+        String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-        String sql = "select * from contract where coach = ? and sign_date >= ? and sign_date <= ? ";
+        String sql = "select * from contract where coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
         int xks = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
+        logger.info(" getXks  name = {} , startDate = {} , endDate = {} , data.size = {} ",staffEntity.getCustname(),startDate,endDate,data.size());
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             String type = item.get("type").toString();
@@ -128,10 +129,13 @@ public class CalculateKpiService {
                 xks++;
             }
         }
+        logger.info(" getXks = {} , staffId = {} , name = {} , month = {} , data.size = {} ",xks,staffId,staffEntity.getCustname(),month,data.size());
         return xks;
     }
 
     private int getJks(String staffId, String month) {
+
+
         return 0;
     }
 
