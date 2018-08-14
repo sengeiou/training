@@ -70,11 +70,22 @@ public class CalculateKpiService {
     private KpiTemplateService kpiTemplateService;
 
     @Autowired
+    private ManualService manualService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
     public void calculateStaffKpi(String staffId,String month) {
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
+        if(kpiStaffMonthEntity==null){
+            int n = manualService.createSingleStaffMonth(staffId,month);
+            if(n==0){
+                return;
+            }
+            kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
+        }
+
         StaffEntity staffEntity = staffDao.getById(staffId);
         String templateId = staffEntity.getTemplateId();
         KpiTemplateEntity kpiTemplateEntity = new KpiTemplateEntity();
@@ -91,10 +102,17 @@ public class CalculateKpiService {
         int lessonCount = queryLessonCount(staffId,month);
         int validMemberCount = queryValidMemberCount(staffId,month);
         int yyts = queryOpenDays(staffEntity.getStoreId(),month);
+
         int xkl = 100;
         if(jks>0){
             xkl = xks/jks;
         }
+
+        int hyd = 0;
+        if(validMemberCount>0&&yyts>0){
+            hyd = lessonCount*100/(validMemberCount*yyts);
+        }
+        logger.info(" hyd  = {}  ",hyd);
 
         kpiStaffMonthEntity.setXks(""+xks);
         kpiStaffMonthEntity.setJks(""+jks);
@@ -102,8 +120,15 @@ public class CalculateKpiService {
         kpiStaffMonthEntity.setSjks(""+lessonCount);
         kpiStaffMonthEntity.setYxhys(""+validMemberCount);
         kpiStaffMonthEntity.setYyts(""+yyts);
+        kpiStaffMonthEntity.setHyd(""+hyd);
 
-        kpiStaffMonthEntity.setKpiScore("1");
+        if(StringUtils.isNotEmpty(templateId)){
+            KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.convertKpiStaffMonth(kpiStaffMonthEntity);
+            kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
+        }
+        else{
+            kpiStaffMonthEntity.setKpiScore("0");
+        }
         kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
 
@@ -140,16 +165,55 @@ public class CalculateKpiService {
     }
 
     private int queryLessonCount(String staffId, String month) {
-        return 0;
+        StaffEntity staffEntity = staffDao.getById(staffId);
+        if(staffEntity==null){
+            return 0;
+        }
+
+        if(StringUtils.isEmpty(staffEntity.getOpenId())){
+            return 0;
+        }
+
+        MemberEntity coach = memberDao.getByOpenId(staffEntity.getOpenId());
+        if(coach==null){
+            return 0;
+        }
+
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+
+        String sql = "select training_id,lesson_id from training where coach_id = ? and type in ('P') and lesson_date >= ? and lesson_date <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{coach.getMemberId(),startDate,endDate});
+
+        return data.size();
     }
 
     private int queryValidMemberCount(String staffId, String month) {
-        return 0;
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+        int count = 0;
+        String sql = "select * from member where coach_staff_id = ? and status in (0) ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
+        for (int i = 0; i < data.size(); i++) {
+            Map member = (Map)data.get(i);
+            String memberId = member.get("member_id").toString();
+            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and type in ('PT','PM') and end_date >= ? " ,new Object[]{memberId,startDate});
+//            logger.info(" cards  = {} , startDate = {} , endDate = {}  ",cards.size(),startDate,endDate);
+            if(cards.size()>0){
+                count++;
+            }
+        }
+        return count;
+
     }
 
     private int queryOpenDays(String storeId,String month) {
         String y = month.substring(0,4);
-        String m = month.substring(5,6);
+        String m = month.substring(4,6);
         StoreOpenEntity storeOpenEntity = storeOpenDao.getById(storeId, y);
         if(storeOpenEntity==null){
             int days = ut.daysOfMonth(y+"-"+m+"-01");

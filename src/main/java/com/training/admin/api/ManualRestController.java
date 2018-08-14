@@ -112,7 +112,7 @@ public class ManualRestController {
     @GetMapping("createStaffMonth")
     public Object createStaffMonth(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" createStaffMonth   ");
-        String month = "201805";
+        String month = "201808";
         manualService.createStaffMonth(month);
         return "createStaffMonth执行成功";
     }
@@ -120,9 +120,15 @@ public class ManualRestController {
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateKpi   ");
-        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
-        String month = "201807";
-        calculateKpiService.calculateStaffKpi(staffId,month);
+//        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
+        String month = "201808";
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff ");
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+
+            String staffId = staff.get("staff_id").toString();
+            calculateKpiService.calculateStaffKpi(staffId,month);
+        }
         return "calculateKpi执行成功";
     }
 

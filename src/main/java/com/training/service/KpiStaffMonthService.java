@@ -110,7 +110,8 @@ public class KpiStaffMonthService {
         return returnPage;
     }
 
-    private KpiStaffMonth convertKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+    public KpiStaffMonth convertKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+        double kpiScore = 0;
         if(kpiStaffMonthEntity==null){
             return null;
         }
@@ -142,7 +143,7 @@ public class KpiStaffMonthService {
                 KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
                 BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
 
-                calculateQuota(kpiTemplateQuota,kpiStaffMonth);
+                kpiScore = kpiScore + calculateQuota(kpiTemplateQuota,kpiStaffMonth);
 
 
                 kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
@@ -151,11 +152,14 @@ public class KpiStaffMonthService {
         }else{
             kpiStaffMonth.setTemplateName("-");
         }
+        logger.info(" convertKpiStaffMonth kpiScore : {}   ",kpiScore);
+        kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
         return kpiStaffMonth;
     }
 
-    private void calculateQuota(KpiTemplateQuota kpiTemplateQuota, KpiStaffMonth kpiStaffMonth) {
+    private double calculateQuota(KpiTemplateQuota kpiTemplateQuota, KpiStaffMonth kpiStaffMonth) {
         logger.info(" calculateQuota kpiTemplateQuota : {} ,kpiStaffMonth = {} ",kpiTemplateQuota,kpiStaffMonth);
+        double kpiScore = 0;
         if(KpiQuotaEnum.k1.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
@@ -165,6 +169,7 @@ public class KpiStaffMonthService {
                 kpiTemplateQuota.setFinishRate(""+tnkh+"%");
                 double score = tnkh*kpiTemplateQuota.getWeight()/100;
                 kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                kpiScore = score;
             }catch (Exception e){
 //                logger.error(" calculateQuota ERRPR : {} ",e.getMessage(),e);
             }
@@ -175,10 +180,30 @@ public class KpiStaffMonthService {
             if(StringUtils.isNotEmpty(kpiStaffMonth.getHyd())){
                 int hyd = Integer.parseInt(kpiStaffMonth.getHyd());
                 kpiTemplateQuota.setFinishRate(""+hyd+"%");
-                double score = (double)hyd*kpiTemplateQuota.getWeight()/100;
-                logger.info(" score = {} ",score);
-                kpiTemplateQuota.setScore(""+hyd+".00");
-                kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+
+                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+//                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);
+
+                    int min = 0;
+                    int max = 999999;
+                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+                        max = Integer.parseInt(kpiQuotaStandard.getMax());
+                    }
+                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+                        min = Integer.parseInt(kpiQuotaStandard.getMin());
+                    }
+                    if(hyd>=min&&hyd<max){
+                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
+                        logger.info(" value = {} ",value);
+                        kpiTemplateQuota.setScore(""+value);
+                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                        kpiScore = score;
+                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                        break;
+                    }
+                }
+
             }
         }else if(KpiQuotaEnum.k3.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
@@ -189,6 +214,7 @@ public class KpiStaffMonthService {
                 kpiTemplateQuota.setFinishRate(""+hydp+"%");
                 double score = (double)hydp*kpiTemplateQuota.getWeight()/100;
                 logger.info(" score = {} ",score);
+                kpiScore = score;
                 kpiTemplateQuota.setScore(""+hydp+".00");
                 kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
             }
@@ -201,7 +227,7 @@ public class KpiStaffMonthService {
                 kpiTemplateQuota.setFinishRate(""+xkl);
                 List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
                 for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);
+//                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);
 
                     int min = 0;
                     int max = 999999;
@@ -216,6 +242,7 @@ public class KpiStaffMonthService {
                         logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(""+value);
                         double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                        kpiScore = score;
                         kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
                         break;
                     }
@@ -231,7 +258,7 @@ public class KpiStaffMonthService {
                 kpiTemplateQuota.setFinishRate(""+zjs);
                 List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
                 for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);
+//                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);
 
                     int min = 0;
                     int max = 999999;
@@ -246,6 +273,7 @@ public class KpiStaffMonthService {
                         logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(""+value);
                         double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                        kpiScore = score;
                         kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
                         break;
                     }
@@ -257,6 +285,7 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setScore("-");
             if(StringUtils.isNotEmpty(kpiStaffMonth.getZykh())){
                 int score = 5*Integer.parseInt(kpiStaffMonth.getZykh());
+                kpiScore = score;
                 if(score==0){
                     kpiTemplateQuota.setFinishRate("不通过");
                 }else{
@@ -273,6 +302,7 @@ public class KpiStaffMonthService {
                 kpiTemplateQuota.setFinishRate(kpiStaffMonth.getTss());
                 kpiTemplateQuota.setScore("-"+kpiStaffMonth.getTss());
                 int score = -10*Integer.parseInt(kpiStaffMonth.getTss());
+                kpiScore = score;
                 kpiTemplateQuota.setKpiScore(""+score+".00");
             }
         }else{
@@ -280,6 +310,7 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setScore("-");
             kpiTemplateQuota.setKpiScore("-");
         }
+        return kpiScore;
     }
 
     /**

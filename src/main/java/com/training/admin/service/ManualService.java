@@ -78,24 +78,38 @@ public class ManualService {
         for (StaffEntity staffEntity : staffList){
             KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
             if(kpiStaffMonthEntity==null){
-                kpiStaffMonthEntity = new KpiStaffMonthEntity();
-                kpiStaffMonthEntity.setStaffId(staffEntity.getStaffId());
-                kpiStaffMonthEntity.setStaffName(staffEntity.getCustname());
-                kpiStaffMonthEntity.setStoreId(staffEntity.getStoreId());
-                kpiStaffMonthEntity.setYear(month.substring(0,4));
-                kpiStaffMonthEntity.setMonth(month);
-                kpiStaffMonthEntity.setKpiScore("0");
-                kpiStaffMonthEntity.setType("");
-                if("教练".equals(staffEntity.getJob())){
-                    kpiStaffMonthEntity.setType("JL");
-                }
-                if("店长".equals(staffEntity.getJob())){
-                    kpiStaffMonthEntity.setType("DZ");
-                }
-                kpiStaffMonthDao.add(kpiStaffMonthEntity);
+                createSingleStaffMonth(staffEntity.getStaffId(),month);
             }
         }
     }
+
+    public int createSingleStaffMonth(String staffId,String month) {
+        int n = 0;
+        StaffEntity staffEntity = staffDao.getById(staffId);
+        if(staffEntity==null){
+            return n;
+        }
+        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+        if(kpiStaffMonthEntity==null){
+            kpiStaffMonthEntity = new KpiStaffMonthEntity();
+            kpiStaffMonthEntity.setStaffId(staffEntity.getStaffId());
+            kpiStaffMonthEntity.setStaffName(staffEntity.getCustname());
+            kpiStaffMonthEntity.setStoreId(staffEntity.getStoreId());
+            kpiStaffMonthEntity.setYear(month.substring(0,4));
+            kpiStaffMonthEntity.setMonth(month);
+            kpiStaffMonthEntity.setKpiScore("0");
+            kpiStaffMonthEntity.setType("");
+            if("教练".equals(staffEntity.getJob())){
+                kpiStaffMonthEntity.setType("JL");
+            }
+            if("店长".equals(staffEntity.getJob())){
+                kpiStaffMonthEntity.setType("DZ");
+            }
+            n = kpiStaffMonthDao.add(kpiStaffMonthEntity);
+        }
+        return n;
+    }
+
 
     public void trainingExcel(String startDate, String endDate) {
         List data = jdbcTemplate.queryForList("select * from training where lesson_date >= ? and lesson_date <= ? and status = 0 " +
