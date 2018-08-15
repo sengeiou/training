@@ -190,7 +190,7 @@ public class CalculateKpiService {
         return data.size();
     }
 
-    private int queryValidMemberCount(String staffId, String month) {
+    public int queryValidMemberCount(String staffId, String month) {
         String y = month.substring(0,4);
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";

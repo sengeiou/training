@@ -343,13 +343,13 @@ public class KpiStaffMonthService {
     @Transactional
     public  ResponseEntity<String> update(KpiStaffMonthEntity kpiStaffMonth){
         logger.info(" KpiStaffMonthService  update , kpiStaffMonth = {} ",kpiStaffMonth);
-        String templateId = kpiStaffMonth.getTemplateId();
-        if(StringUtils.isNotEmpty(templateId)){
-            StaffEntity staffEntity = new StaffEntity();
-            staffEntity.setStaffId(kpiStaffMonth.getStaffId());
-            staffEntity.setTemplateId(kpiStaffMonth.getTemplateId());
-            staffDao.update(staffEntity);
-        }
+//        String templateId = kpiStaffMonth.getTemplateId();
+//        if(StringUtils.isNotEmpty(templateId)){
+//            StaffEntity staffEntity = new StaffEntity();
+//            staffEntity.setStaffId(kpiStaffMonth.getStaffId());
+//            staffEntity.setTemplateId(kpiStaffMonth.getTemplateId());
+//            staffDao.update(staffEntity);
+//        }
         kpiStaffMonth.setTemplateId(null);
         int n = kpiStaffMonthDao.update(kpiStaffMonth);
         if(n==1){

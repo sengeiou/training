@@ -44,6 +44,8 @@ public class Staff {
 
     private String templateId;
 
+    private String templateName;
+
     private String feature;
 
     private Integer status;
@@ -56,7 +58,7 @@ public class Staff {
 
     private Integer memberCount;
 
-    private Integer kpi;
+    private String kpi;
 
     private String newPassword;
 

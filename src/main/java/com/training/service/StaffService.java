@@ -1,12 +1,11 @@
 package com.training.service;
 
+import com.training.admin.service.CalculateKpiService;
 import com.training.dao.*;
-import com.training.domain.Role;
-import com.training.domain.Staff;
-import com.training.domain.StaffMedal;
+import com.training.domain.*;
 import com.training.entity.*;
-import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +45,15 @@ public class StaffService {
 
     @Autowired
     private RoleDao roleDao;
+
+    @Autowired
+    private KpiTemplateDao kpiTemplateDao;
+
+    @Autowired
+    private CalculateKpiService calculateKpiService;
+
+    @Autowired
+    private KpiStaffMonthService kpiStaffMonthService;
 
     /**
      * 新增实体
@@ -196,8 +204,23 @@ public class StaffService {
             roleName = role.getRoleName();
         }
         staff.setRoleName(roleName);
-        staff.setMemberCount(10);
-        staff.setKpi(98);
+
+        if(StringUtils.isNotEmpty(staff.getTemplateId())){
+            KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staff.getTemplateId());
+            staff.setTemplateName(kpiTemplateEntity.getTitle());
+        }else {
+            staff.setTemplateName("-");
+        }
+        String month = ut.currentKpiMonth();
+        int count = calculateKpiService.queryValidMemberCount(staff.getStaffId(), month);
+        staff.setMemberCount(count);
+
+        staff.setKpi("0");
+        KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
+        if(kpiStaffMonth!=null){
+            staff.setKpi(kpiStaffMonth.getKpiScore());
+        }
+
         return staff;
     }
 

@@ -7,6 +7,7 @@ import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.MemberDao;
 import com.training.dao.StaffDao;
+import com.training.domain.KpiStaffMonth;
 import com.training.domain.Member;
 import com.training.domain.PrePayOrder;
 import com.training.domain.User;
@@ -49,6 +50,9 @@ public class WechatService {
     private StaffDao staffDao;
 
     @Autowired
+    private KpiStaffMonthService kpiStaffMonthService;
+
+    @Autowired
     private JwtUtil jwt;
 
     public ResponseEntity<String> getMemberByCode(String code) {
@@ -70,6 +74,11 @@ public class WechatService {
                 StaffEntity staffEntity = staffDao.getByOpenId(memberEntity.getOpenId());
                 if(staffEntity!=null){
                     jo.put("staffId",staffEntity.getStaffId());
+                }
+                jo.put("kpiScore","0");
+                KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
+                if(kpiStaffMonth!=null){
+                    jo.put("kpiScore",kpiStaffMonth.getKpiScore());
                 }
             }
         }else{

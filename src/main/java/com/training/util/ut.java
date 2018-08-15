@@ -178,6 +178,14 @@ public class ut {
 		return df_day.format(new Date()).substring(5,7);//2011-12-07
 	}
 
+	public static String currentKpiMonth(){
+		return currentFullMonth().replace("-","");//2011-12-07
+	}
+
+	public static String currentKpiMonth(int i){
+		return currentFullMonth(i).replace("-","");//2011-12-07
+	}
+
 	public static String currentFullMonth(){
 		return df_day.format(new Date()).substring(0,7);//2011-12-07
 	}
