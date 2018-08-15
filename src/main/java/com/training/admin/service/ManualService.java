@@ -202,5 +202,19 @@ public class ManualService {
         ExcelUtil.writeExcel(excelData,"C://training.xls");
     }
 
+    public int createStoreOpen(String storeId,String year) {
+        StoreEntity storeEntity = storeDao.getById(storeId);
+        if(storeEntity==null){
+            return 0;
+        }
+        List data = jdbcTemplate.queryForList("select * from store_open where store_id = ? and  year = ?",new Object[]{storeId,year});
+        if(data.size()>0){
+            return 0;
+        }
+        String sql = " insert into store_open (store_id, year,created,modified) values (?,?,now(),now()) ";
+        int n = jdbcTemplate.update(sql,new Object[]{storeId,year});
+        return n;
+
+    }
 }
 

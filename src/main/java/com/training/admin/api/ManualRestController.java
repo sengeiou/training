@@ -141,5 +141,17 @@ public class ManualRestController {
         return "trainingExcel执行成功";
     }
 
+    @GetMapping("createStoreOpen")
+    public Object createStoreOpen(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" createStoreOpen   ");
+        String year = "2018";
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store ");
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            String storeId = store.get("store_id").toString();
+            manualService.createStoreOpen(storeId,year);
+        }
+        return "createStoreOpen 执行成功";
+    }
 
 }
