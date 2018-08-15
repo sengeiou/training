@@ -50,6 +50,7 @@ public class StoreOpenService {
      * Created by huai23 on 2018-07-10 20:40:20.
      */ 
     public Page<StoreOpenEntity> find(StoreOpenQuery query , PageRequest page){
+        page.setPageSize(100);
         List<StoreOpenEntity> storeOpenList = storeOpenDao.find(query,page);
         for (StoreOpenEntity storeOpenEntity:storeOpenList){
             StoreEntity storeEntity = storeDao.getById(storeOpenEntity.getStoreId());
