@@ -305,6 +305,34 @@ public class KpiStaffMonthService {
                 kpiScore = score;
                 kpiTemplateQuota.setKpiScore(""+score+".00");
             }
+        }else if(KpiQuotaEnum.k8.getKey().equals(kpiTemplateQuota.getQuotaId())){
+            kpiTemplateQuota.setFinishRate("-");
+            kpiTemplateQuota.setKpiScore("-");
+            kpiTemplateQuota.setScore("-");
+            if(StringUtils.isNotEmpty(kpiStaffMonth.getXswcl())){
+                int xswcl = Integer.parseInt(kpiStaffMonth.getXswcl());
+                kpiTemplateQuota.setFinishRate(xswcl+"%");
+                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+                    int min = 0;
+                    int max = 999999;
+                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+                        max = Integer.parseInt(kpiQuotaStandard.getMax());
+                    }
+                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+                        min = Integer.parseInt(kpiQuotaStandard.getMin());
+                    }
+                    if(xswcl>=min&&xswcl<max){
+                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
+                        logger.info(" value = {} ",value);
+                        kpiTemplateQuota.setScore(""+value);
+                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                        kpiScore = score;
+                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                        break;
+                    }
+                }
+            }
         }else{
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setScore("-");
