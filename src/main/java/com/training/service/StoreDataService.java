@@ -1,7 +1,11 @@
 package com.training.service;
 
+import com.training.admin.service.CalculateKpiService;
+import com.training.admin.service.ManualService;
+import com.training.admin.service.MemberTrainingTaskService;
 import com.training.common.Page;
 import com.training.common.PageRequest;
+import com.training.dao.ContractManualDao;
 import com.training.dao.RoleDao;
 import com.training.dao.StaffDao;
 import com.training.dao.StoreDao;
@@ -16,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,8 +43,67 @@ public class StoreDataService {
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private StoreService storeService;
+
+    @Autowired
+    private StaffService staffService;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private CardService cardService;
+
+    @Autowired
+    private MemberCardService memberCardService;
+
+    @Autowired
+    private ContractService contractService;
+
+    @Autowired
+    private ContractManualService contractManualService;
+
+    @Autowired
+    private ContractManualDao contractManualDao;
+
+    @Autowired
+    private ManualService manualService;
+
+    @Autowired
+    private CalculateKpiService calculateKpiService;
+
+    @Autowired
+    MemberTrainingTaskService memberTrainingTaskService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
 
     public List<StoreData> querySaleMoney(StoreDataQuery query) {
+        logger.info(" StoreDataService   querySaleMoney  query = {} ",query);
+
+        String y = query.getMonth().substring(0,4);
+        String m = query.getMonth().substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+
+        Set<String> staffNameSet = new HashSet<>();
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String custname = staff.get("custname").toString();
+            staffNameSet.add(custname);
+        }
+
+
+        String sql = " SELECT * from contract where sign_date >= ? and sign_date <= ? ";
+        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        for (int i = 0; i < contracts.size(); i++){
+            Map contract = contracts.get(i);
+
+        }
+
         List<StoreData> storeDataList= new ArrayList();
         StoreData sjkxq = new StoreData();
         sjkxq.setLabel("私教课新签");
