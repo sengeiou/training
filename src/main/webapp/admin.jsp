@@ -6,4 +6,4 @@
       <script
         src="https://as.alipayobjects.com/g/component/??console-polyfill/0.2.2/index.js,media-match/2.0.2/media.match.min.js"></script>
   <![endif]--><link rel="stylesheet" href="http://oxmz2m87t.bkt.clouddn.com/trade/build/umi.e9411bb1.css"></head><body><div id="root"></div><script>window.routerBase = "/admin/";
-  window.publicPath = 'http://oxmz2m87t.bkt.clouddn.com/trade/build/';</script><script src="http://oxmz2m87t.bkt.clouddn.com/trade/build/umi.1e13802f.js"></script></body></html>
+  window.publicPath = 'http://oxmz2m87t.bkt.clouddn.com/trade/build/';</script><script src="http://oxmz2m87t.bkt.clouddn.com/trade/build/umi.4201a26c.js"></script></body></html>
