@@ -122,13 +122,23 @@ public class ManualRestController {
         logger.info(" calculateKpi   ");
 //        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
         String month = "201807";
-        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff ");
-        for (int i = 0; i < staffs.size(); i++){
-            Map staff = staffs.get(i);
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
 
+        for (int i = 0; i < coachs.size(); i++){
+            Map staff = coachs.get(i);
+            String staffId = staff.get("staff_id").toString();
+//            calculateKpiService.calculateStaffKpi(staffId,month);
+        }
+
+        List<Map<String,Object>> managers =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '店长' ");
+        for (int i = 0; i < managers.size(); i++){
+            Map staff = managers.get(i);
             String staffId = staff.get("staff_id").toString();
             calculateKpiService.calculateStaffKpi(staffId,month);
         }
+
+        logger.info(" coachs.size() = "+coachs.size());
+        logger.info(" managers.size() = "+managers.size());
         return "calculateKpi执行成功";
     }
 
