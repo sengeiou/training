@@ -127,7 +127,7 @@ public class ManualRestController {
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
-//            calculateKpiService.calculateStaffKpi(staffId,month);
+            calculateKpiService.calculateStaffKpi(staffId,month);
         }
 
         List<Map<String,Object>> managers =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '店长' ");
