@@ -5,16 +5,15 @@ import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
 import com.training.common.Page;
 import com.training.common.PageRequest;
-import com.training.dao.ContractManualDao;
-import com.training.dao.RoleDao;
-import com.training.dao.StaffDao;
-import com.training.dao.StoreDao;
+import com.training.dao.*;
+import com.training.domain.KpiStaffMonth;
 import com.training.domain.Staff;
 import com.training.domain.StoreData;
 import com.training.domain.User;
 import com.training.entity.*;
 import com.training.util.RequestContextHelper;
 import com.training.util.ResponseUtil;
+import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,16 +76,30 @@ public class StoreDataService {
     MemberTrainingTaskService memberTrainingTaskService;
 
     @Autowired
+    private KpiStaffMonthService kpiStaffMonthService;
+
+    @Autowired
+    private KpiStaffMonthDao kpiStaffMonthDao;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
     public List<StoreData> querySaleMoney(StoreDataQuery query) {
         logger.info(" StoreDataService   querySaleMoney  query = {} ",query);
 
-        String y = query.getMonth().substring(0,4);
-        String m = query.getMonth().substring(4,6);
+        String month = query.getMonth();
+        if(month.indexOf("-")>0){
+            month = month.replace("-","");
+        }
+
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
+
+        logger.info(" StoreDataService   querySaleMoney  startDate = {} ",startDate);
+        logger.info(" StoreDataService   querySaleMoney  endDate = {} ",endDate);
 
         Set<String> staffNameSet = new HashSet<>();
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
@@ -96,103 +109,384 @@ public class StoreDataService {
             staffNameSet.add(custname);
         }
 
+        logger.info(" StoreDataService   querySaleMoney  staffs = {} ",staffs.size());
+
+        int sjkxq_count = 0;
+        int sjkxq_lesson=0;
+        double sjkxq_money = 0;
+
+        int sjkxk_count = 0;
+        int sjkxk_lesson=0;
+        double sjkxk_money = 0;
+
+        int sjkzjs_count = 0;
+        int sjkzjs_lesson=0;
+        double sjkzjs_money = 0;
+
+        int ttk_count = 0;
+        int ttk_lesson=0;
+        double ttk_money = 0;
+
+        int tsk_count = 0;
+        int tsk_lesson=0;
+        double tsk_money = 0;
 
         String sql = " SELECT * from contract where sign_date >= ? and sign_date <= ? ";
         List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        logger.info(" StoreDataService   querySaleMoney  contracts = {} ",contracts.size());
+
+        int count = 0;
+
         for (int i = 0; i < contracts.size(); i++){
             Map contract = contracts.get(i);
+            String coach = contract.get("coach").toString();
+            if(coach.indexOf("(")>0){
+                int index = coach.indexOf("(");
+                coach = coach.substring(0,index);
+            }
+            if(coach.indexOf("（")>0){
+                int index = coach.indexOf("（");
+                coach = coach.substring(0,index);
+            }
+            if(!staffNameSet.contains(coach)){
+                continue;
+            }
+            count++;
+            String card_type = contract.get("card_type").toString();
+            int total = 0;
+            double money = 0;
+            try{
+                total = Integer.parseInt(contract.get("total").toString());
+            }catch (Exception e){
 
+            }
+            try{
+                money = Double.parseDouble(contract.get("money").toString());
+            }catch (Exception e){
+
+            }
+
+
+            if("PT".equals(card_type)||"PM".equals(card_type)){
+                String type = contract.get("type").toString();
+
+                if("新会员".equals(type)){
+                    sjkxq_count++;
+                    sjkxq_lesson = sjkxq_lesson + total;
+                    sjkxq_money = sjkxq_money + money;
+                }
+
+                if("续课".equals(type)){
+                    sjkxk_count++;
+                    sjkxk_lesson = sjkxk_lesson + total;
+                    sjkxk_money = sjkxk_money + money;
+                }
+
+                if("转介绍".equals(type)){
+                    sjkzjs_count++;
+                    sjkzjs_lesson = sjkzjs_lesson + total;
+                    sjkzjs_money = sjkzjs_money + money;
+                }
+
+            }else if("TT".equals(card_type)||"TM".equals(card_type)){
+                ttk_count++;
+                ttk_lesson = ttk_lesson + total;
+                ttk_money = ttk_money + money;
+
+            }else if("ST1".equals(card_type)||"ST2".equals(card_type)||"ST3".equals(card_type)){
+                tsk_count++;
+                tsk_lesson = tsk_lesson + total;
+                tsk_money = tsk_money + money;
+
+            }
         }
+        logger.info(" StoreDataService   querySaleMoney  count = {} ",count);
 
         List<StoreData> storeDataList= new ArrayList();
         StoreData sjkxq = new StoreData();
         sjkxq.setLabel("私教课新签");
-        sjkxq.setCount("2");
-        sjkxq.setLesson("10");
-        sjkxq.setMoney("100");
+        sjkxq.setCount(""+sjkxq_count);
+        sjkxq.setLesson(""+sjkxq_lesson);
+        sjkxq.setMoney(ut.getDoubleString(sjkxq_money));
         storeDataList.add(sjkxq);
 
         StoreData sjkxk = new StoreData();
         sjkxk.setLabel("私教课续课");
-        sjkxk.setCount("2");
-        sjkxk.setLesson("10");
-        sjkxk.setMoney("100");
+        sjkxk.setCount(""+sjkxk_count);
+        sjkxk.setLesson(""+sjkxk_lesson);
+        sjkxk.setMoney(ut.getDoubleString(sjkxk_money));
         storeDataList.add(sjkxk);
 
         StoreData sjkzjs = new StoreData();
         sjkzjs.setLabel("私教课转介绍");
-        sjkzjs.setCount("2");
-        sjkzjs.setLesson("10");
-        sjkzjs.setMoney("100");
+        sjkzjs.setCount(""+sjkzjs_count);
+        sjkzjs.setLesson(""+sjkzjs_lesson);
+        sjkzjs.setMoney(ut.getDoubleString(sjkzjs_money));
         storeDataList.add(sjkzjs);
 
         StoreData ttk = new StoreData();
         ttk.setLabel("团体课");
-        ttk.setCount("2");
-        ttk.setLesson("10");
-        ttk.setMoney("100");
+        ttk.setCount(""+ttk_count);
+        ttk.setLesson(""+ttk_lesson);
+        ttk.setMoney(ut.getDoubleString(ttk_money));
         storeDataList.add(ttk);
 
         StoreData tsk = new StoreData();
         tsk.setLabel("特色课");
-        tsk.setCount("2");
-        tsk.setLesson("10");
-        tsk.setMoney("100");
+        tsk.setCount(""+tsk_count);
+        tsk.setLesson(""+tsk_lesson);
+        tsk.setMoney(ut.getDoubleString(tsk_money));
         storeDataList.add(tsk);
 
         return storeDataList;
     }
 
     public List<StoreData> queryIncome(StoreDataQuery query) {
+        String month = query.getMonth();
+        if(month.indexOf("-")>0){
+            month = month.replace("-","");
+        }
+
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+
+        logger.info(" StoreDataService   queryIncome  startDate = {} ",startDate);
+        logger.info(" StoreDataService   queryIncome  endDate = {} ",endDate);
+
+        Set<String> staffIdSet = new HashSet<>();
+        Set<String> staffNameSet = new HashSet<>();
+
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String staff_id = staff.get("staff_id").toString();
+            staffIdSet.add(staff_id);
+            String custname = staff.get("custname").toString();
+            staffNameSet.add(custname);
+        }
+        String sql = " SELECT * from member where created >= ? and created <= ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        logger.info(" StoreDataService   queryIncome  members = {} ",members.size());
+
+        int count = 0;
+        int count_hk = 0;
+        int coun_sk = 0;
+        double money_hk = 0;
+        double money_sk = 0;
+
+        for (int i = 0; i < members.size(); i++) {
+            Map member = members.get(i);
+            String coach_staff_id = member.get("coach_staff_id").toString();
+            if (!staffIdSet.contains(coach_staff_id)) {
+                continue;
+            }
+            count++;
+            String origin = "";
+            if(null!=member.get("origin")){
+                origin = member.get("origin").toString();
+            }
+            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
+                continue;
+            }
+
+            String sql_training = "select * from training where member_id = ? and card_type in ('PT') and  lesson_date >= ? and lesson_date <= ?  ";
+            List trainings = jdbcTemplate.queryForList(sql_training,new Object[]{member.get("member_id").toString(),startDate,endDate});
+
+            logger.info(" StoreDataService   queryIncome  trainings = {} ",trainings.size());
+
+            for (int j = 0; j < trainings.size(); j++) {
+                Map training = (Map)trainings.get(j);
+                String card_no = training.get("card_no").toString();
+                List cards = jdbcTemplate.queryForList("select * from member_card where card_no = ? ",new Object[]{card_no});
+                if(cards.size()>0){
+                    Map card = (Map)cards.get(0);
+                    int total = 0;
+                    double money = 0;
+                    try{
+                        total = Integer.parseInt(card.get("total").toString());
+                    }catch (Exception e){
+
+                    }
+                    try{
+                        money = Double.parseDouble(card.get("money").toString());
+                    }catch (Exception e){
+
+                    }
+                    if(total>0){
+                        money_hk = money_hk+money/total;
+                    }
+                }
+            }
+
+            String sql_card = "select * from member_card where member_id = ? and type in ('PT') and count > 0 and end_date >= ? and end_date <= ?  ";
+            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
+
+            logger.info(" StoreDataService   queryIncome  cards = {} ",cards.size());
+
+            for (int j = 0; j < cards.size(); j++) {
+                Map card = (Map)cards.get(j);
+                int total = 0;
+                int left_count = 0;
+                double money = 0;
+                try{
+                    total = Integer.parseInt(card.get("total").toString());
+                    left_count = Integer.parseInt(card.get("count").toString());
+                }catch (Exception e){
+
+                }
+                try{
+                    money = Double.parseDouble(card.get("money").toString());
+                }catch (Exception e){
+
+                }
+                if(total>0){
+                    money_sk = money_hk+money*left_count/total;
+                }
+
+            }
+        }
+        logger.info(" StoreDataService   queryIncome  count = {} ",count);
+
         List<StoreData> storeDataList= new ArrayList();
 
         StoreData hksr = new StoreData();
         hksr.setLabel("耗课收入");
-        hksr.setValue("3000");
-        hksr.setLesson("10");
+        hksr.setValue(ut.getDoubleString(money_hk));
+        hksr.setLesson(""+count_hk);
         storeDataList.add(hksr);
 
         StoreData sksr = new StoreData();
         sksr.setLabel("死课收入");
-        sksr.setValue("500");
-        sksr.setLesson("4");
+        sksr.setValue(ut.getDoubleString(money_sk));
+        sksr.setLesson(""+count_hk);
         storeDataList.add(sksr);
 
         StoreData yqsr = new StoreData();
         yqsr.setLabel("延期收入");
-        yqsr.setValue("100");
-        yqsr.setLesson("2");
+        yqsr.setValue("0");
+        yqsr.setLesson("0");
         storeDataList.add(yqsr);
 
         return storeDataList;
     }
 
     public List<StoreData> queryChangeRate(StoreDataQuery query) {
+        String month = query.getMonth();
+        if(month.indexOf("-")>0){
+            month = month.replace("-","");
+        }
+
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+
+        logger.info(" StoreDataService   queryChangeRate  startDate = {} ",startDate);
+        logger.info(" StoreDataService   queryChangeRate  endDate = {} ",endDate);
+
+        Set<String> staffIdSet = new HashSet<>();
+        Set<String> staffNameSet = new HashSet<>();
+
+
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String staff_id = staff.get("staff_id").toString();
+            staffIdSet.add(staff_id);
+            String custname = staff.get("custname").toString();
+            staffNameSet.add(custname);
+        }
+        String sql = " SELECT * from member where created >= ? and created <= ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
+
+        int count = 0;
+        int count_dd = 0;
+
+        for (int i = 0; i < members.size(); i++) {
+            Map member = members.get(i);
+            String coach_staff_id = member.get("coach_staff_id").toString();
+            if (!staffIdSet.contains(coach_staff_id)) {
+                continue;
+            }
+            count++;
+            String origin = "";
+            if(null!=member.get("origin")){
+                origin = member.get("origin").toString();
+            }
+            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
+                continue;
+            }
+
+            String sql_card = "select * from member_card where member_id = ? and type = 'TY' and created >= ? and created <= ?  ";
+            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
+            if(cards.size()>0){
+
+            }
+            count_dd++;
+        }
+
+
+        int cjs = 0;
+        String sql_cj = " SELECT * from contract where sign_date >= ? and sign_date <= ? ";
+        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql_cj,new Object[]{startDate,endDate});
+        logger.info(" StoreDataService   queryChangeRate  contracts = {} ",contracts.size());
+        for (int i = 0; i < contracts.size(); i++) {
+            Map contract = contracts.get(i);
+            String coach = contract.get("coach").toString();
+            if (coach.indexOf("(") > 0) {
+                int index = coach.indexOf("(");
+                coach = coach.substring(0, index);
+            }
+            if (coach.indexOf("（") > 0) {
+                int index = coach.indexOf("（");
+                coach = coach.substring(0, index);
+            }
+            if (!staffNameSet.contains(coach)) {
+                continue;
+            }
+            String type = contract.get("type").toString();
+            if("新会员".equals(type)){
+                cjs++;
+            }
+        }
         List<StoreData> storeDataList= new ArrayList();
 
         StoreData xzyxhys = new StoreData();
         xzyxhys.setLabel("新增意向会员数");
-        xzyxhys.setValue("100");
+        xzyxhys.setValue(""+count);
         storeDataList.add(xzyxhys);
 
         StoreData ddrs = new StoreData();
         ddrs.setLabel("到店人数");
-        ddrs.setValue("80");
+        ddrs.setValue(""+count_dd);
         storeDataList.add(ddrs);
+
+        int rate_dd = 0;
+        if(count>0){
+            rate_dd = count_dd*100/count;
+        }
 
         StoreData sksr = new StoreData();
         sksr.setLabel("到店率");
-        sksr.setValue("80%");
+        sksr.setValue(rate_dd+"%");
         storeDataList.add(sksr);
 
         StoreData cjrs = new StoreData();
         cjrs.setLabel("成交人数");
-        cjrs.setValue("70");
+        cjrs.setValue(""+cjs);
         storeDataList.add(cjrs);
+
+        int rate_cj = 0;
+        if(count_dd>0){
+            rate_cj = cjs*100/count_dd;
+        }
 
         StoreData cjl = new StoreData();
         cjl.setLabel("成交率");
-        cjl.setValue("70%");
+        cjl.setValue(rate_cj+"%");
         storeDataList.add(cjl);
 
         return storeDataList;
@@ -236,22 +530,30 @@ public class StoreDataService {
 
     public List<StoreData> queryManagerKpi(StoreDataQuery query) {
         List<StoreData> storeDataList= new ArrayList();
-
-        StoreData manager = new StoreData();
-        manager.setStaffName("张三");
-        manager.setValue("102");
-        storeDataList.add(manager);
-
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? and job = '店长' ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String custname = staff.get("custname").toString();
+            KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff.get("staff_id").toString(),query.getMonth().replace("-",""));
+            StoreData manager = new StoreData();
+            manager.setStaffName(custname);
+            manager.setValue(kpiStaffMonthEntity.getKpiScore());
+            storeDataList.add(manager);
+        }
         return storeDataList;
     }
 
     public List<StoreData> queryCoachKpi(StoreDataQuery query) {
         List<StoreData> storeDataList= new ArrayList();
-        for (int i = 0; i < 15; i++) {
-            StoreData coach = new StoreData();
-            coach.setStaffName("教练-"+i);
-            coach.setValue(""+ (90+i));
-            storeDataList.add(coach);
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? and job = '教练' ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String custname = staff.get("custname").toString();
+            KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff.get("staff_id").toString(),query.getMonth().replace("-",""));
+            StoreData manager = new StoreData();
+            manager.setStaffName(custname);
+            manager.setValue(kpiStaffMonthEntity.getKpiScore());
+            storeDataList.add(manager);
         }
         return storeDataList;
     }
