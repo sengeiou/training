@@ -272,7 +272,7 @@ public class StoreDataService {
 
         int count = 0;
         int count_hk = 0;
-        int coun_sk = 0;
+        int count_sk = 0;
         double money_hk = 0;
         double money_sk = 0;
 
@@ -283,13 +283,13 @@ public class StoreDataService {
                 continue;
             }
             count++;
-            String origin = "";
-            if(null!=member.get("origin")){
-                origin = member.get("origin").toString();
-            }
-            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
-                continue;
-            }
+//            String origin = "";
+//            if(null!=member.get("origin")){
+//                origin = member.get("origin").toString();
+//            }
+//            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
+//                continue;
+//            }
 
             String sql_training = "select * from training where member_id = ? and card_type in ('PT') and  lesson_date >= ? and lesson_date <= ?  ";
             List trainings = jdbcTemplate.queryForList(sql_training,new Object[]{member.get("member_id").toString(),startDate,endDate});
@@ -318,13 +318,18 @@ public class StoreDataService {
                         money_hk = money_hk+money/total;
                     }
                 }
+                count_hk++;
             }
 
-            String sql_card = "select * from member_card where member_id = ? and type in ('PT') and count > 0 and end_date >= ? and end_date <= ?  ";
+            String sql_card = "select * from member_card where member_id = ? and type in ('PT') and count > 0 and end_date >= ? and end_date < ?  ";
+
+            if(ut.passDay(ut.currentDate(),endDate)>0){
+                endDate = ut.currentDate();
+            }
+
             List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
 
             logger.info(" StoreDataService   queryIncome  cards = {} ",cards.size());
-
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);
                 int total = 0;
@@ -345,6 +350,7 @@ public class StoreDataService {
                     money_sk = money_hk+money*left_count/total;
                 }
 
+                count_sk = count_sk + left_count;
             }
         }
         logger.info(" StoreDataService   queryIncome  count = {} ",count);
@@ -360,7 +366,7 @@ public class StoreDataService {
         StoreData sksr = new StoreData();
         sksr.setLabel("死课收入");
         sksr.setValue(ut.getDoubleString(money_sk));
-        sksr.setLesson(""+count_hk);
+        sksr.setLesson(""+count_sk);
         storeDataList.add(sksr);
 
         StoreData yqsr = new StoreData();
@@ -494,35 +500,112 @@ public class StoreDataService {
 
     public List<StoreData> queryMemberData(StoreDataQuery query) {
         List<StoreData> storeDataList= new ArrayList();
+        String month = query.getMonth();
+        if(month.indexOf("-")>0){
+            month = month.replace("-","");
+        }
+
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+
+        logger.info(" StoreDataService   queryMemberData  startDate = {} ",startDate);
+        logger.info(" StoreDataService   queryMemberData  endDate = {} ",endDate);
+
+        Set<String> staffIdSet = new HashSet<>();
+        Set<String> staffNameSet = new HashSet<>();
+
+        int jks = 0;
+        int xks = 0;
+        String qdhydp = "0";
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname,job from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        for (int i = 0; i < staffs.size(); i++){
+            Map staff = staffs.get(i);
+            String staff_id = staff.get("staff_id").toString();
+            staffIdSet.add(staff_id);
+            String custname = staff.get("custname").toString();
+            staffNameSet.add(custname);
+
+            if(staff.get("job")!=null && "店长".equals(staff.get("job").toString())){
+                KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff_id,month);
+
+                logger.info(" StoreDataService   queryMemberData  kpiStaffMonthEntity = {} ",kpiStaffMonthEntity);
+
+
+                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getJks())){
+                    jks = Integer.parseInt(kpiStaffMonthEntity.getJks());
+                }
+                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getXks())){
+                    xks = Integer.parseInt(kpiStaffMonthEntity.getXks());
+                }
+                qdhydp = kpiStaffMonthEntity.getQdhyd();
+            }
+
+        }
+        String sql = " SELECT * from member where created >= ? and created <= ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        logger.info(" StoreDataService   queryMemberData  members = {} ",members.size());
+
+        int count = 0;
+        int count_tk = 0;
+        int count_yx = 0;
+
+
+        for (int i = 0; i < members.size(); i++) {
+            Map member = members.get(i);
+            String coach_staff_id = member.get("coach_staff_id").toString();
+            if (!staffIdSet.contains(coach_staff_id)) {
+                continue;
+            }
+            count++;
+            if("-1".equals(member.get("status").toString())){
+                count_tk++;
+            }
+            String sql_card = "select * from member_card where member_id = ? and type <> 'TY' and end_date >= ?  ";
+            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate()});
+            if(cards.size()>0){
+                count_yx++;
+                logger.info(" StoreDataService   member  name = {} ",member.get("name"));
+            }
+        }
+
+        logger.info(" StoreDataService   queryMemberData  count = {} ",count);
+        logger.info(" StoreDataService   queryMemberData  count_yx = {} ",count_yx);
+        logger.info(" StoreDataService   queryMemberData  count_tk = {} ",count_tk);
 
         StoreData yxhy = new StoreData();
         yxhy.setLabel("有效会员");
-        yxhy.setValue("70");
+        yxhy.setValue(""+count_yx);
         storeDataList.add(yxhy);
 
         StoreData tkrs = new StoreData();
         tkrs.setLabel("停课会员");
-        tkrs.setValue("10");
+        tkrs.setValue(""+count_tk);
         storeDataList.add(tkrs);
 
         StoreData hyd = new StoreData();
         hyd.setLabel("会员活跃度");
-        hyd.setValue("60");
+        hyd.setValue(""+qdhydp);
         storeDataList.add(hyd);
 
         StoreData jkrs = new StoreData();
         jkrs.setLabel("结课人数");
-        jkrs.setValue("50");
+        jkrs.setValue(""+jks);
         storeDataList.add(jkrs);
 
         StoreData xkrs = new StoreData();
         xkrs.setLabel("续课人数");
-        xkrs.setValue("20");
+        xkrs.setValue(""+xks);
         storeDataList.add(xkrs);
 
+        int xkl1 = 100;
+        if(jks>0){
+            xkl1 = xks*100/jks;
+        }
         StoreData xkl = new StoreData();
         xkl.setLabel("续课率");
-        xkl.setValue("40%");
+        xkl.setValue(xkl1+"%");
         storeDataList.add(xkl);
 
         return storeDataList;
