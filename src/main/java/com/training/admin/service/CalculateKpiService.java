@@ -338,9 +338,32 @@ public class CalculateKpiService {
     }
 
     private int getJks(String staffId, String month) {
+        int jks = 0;
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
+        String sql = "select * from member where coach_staff_id = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
+        for (int i = 0; i < data.size(); i++) {
+            Map member = (Map)data.get(i);
+            String memberId = member.get("member_id").toString();
+            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count = 0 and type in ('PT','PM') and end_date >= ? and end_date <= ? " ,new Object[]{memberId,startDate,endDate});
+            for (int j = 0; j < cards.size(); j++) {
+                Map memberCard = (Map)cards.get(j);
+                String cardNo = memberCard.get("card_no").toString();
+                List trainings = jdbcTemplate.queryForList("select * from taraining where card_no = ? and lesson_date >= ? and lesson_date <= ? " ,new Object[]{cardNo,startDate,endDate});
+                if(trainings.size()>0){
+                    jks++;
+                }
+            }
+            String sd = ut.currentDate(endDate,-60);
+            String ed = ut.currentDate(endDate,-30);
+            List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? " ,new Object[]{memberId,startDate,endDate});
+//            jks = jks+cards_end.size();
 
-
-        return 0;
+        }
+        return jks;
     }
 
     private int queryLessonCount(String staffId, String month) {

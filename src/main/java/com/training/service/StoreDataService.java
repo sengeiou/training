@@ -259,6 +259,8 @@ public class StoreDataService {
         Set<String> staffNameSet = new HashSet<>();
 
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        logger.info(" StoreDataService   queryIncome  staffs = {} ",staffs.size());
+
         for (int i = 0; i < staffs.size(); i++){
             Map staff = staffs.get(i);
             String staff_id = staff.get("staff_id").toString();
@@ -347,7 +349,7 @@ public class StoreDataService {
 
                 }
                 if(total>0){
-                    money_sk = money_hk+money*left_count/total;
+                    money_sk = money_sk+money*left_count/total;
                 }
 
                 count_sk = count_sk + left_count;
