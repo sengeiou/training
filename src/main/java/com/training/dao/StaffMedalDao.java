@@ -1,13 +1,16 @@
 package com.training.dao;
 
+import com.training.domain.StaffMedal;
 import com.training.repository.*;
 import com.training.entity.*;
 import com.training.common.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +24,9 @@ public class StaffMedalDao {
 
     @Autowired
     private StaffMedalRepository staffMedalRepository;
+
+    @Autowired
+    private MedalDao medalDao;
 
     /**
      * 新增实体
@@ -93,6 +99,19 @@ public class StaffMedalDao {
         return n;
     }
 
+
+    public List<StaffMedal> queryStaffMedalList(String staffId) {
+        List<StaffMedalEntity> staffMedalEntityList = this.getByStaffId(staffId);
+        List staffMedals = new ArrayList();
+        for (StaffMedalEntity staffMedalEntity:staffMedalEntityList){
+            StaffMedal staffMedal = new StaffMedal();
+            BeanUtils.copyProperties(staffMedalEntity,staffMedal);
+            MedalEntity medalEntity = medalDao.getById(staffMedalEntity.getMedalId());
+            staffMedal.setMedalName(medalEntity.getName());
+            staffMedals.add(staffMedal);
+        }
+        return staffMedals;
+    }
 
 }
 

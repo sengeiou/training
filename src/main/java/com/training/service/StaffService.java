@@ -172,17 +172,8 @@ public class StaffService {
         List<StaffEntity> staffList = staffDao.find(query,page);
         for (StaffEntity staffEntity : staffList) {
             Staff staff = convertEntityToStaff(staffEntity);
-
-            List<StaffMedalEntity> staffMedalEntityList = staffMedalDao.getByStaffId(staffEntity.getStaffId());
-            List staffMedals = new ArrayList();
-            for (StaffMedalEntity staffMedalEntity:staffMedalEntityList){
-                StaffMedal staffMedal = new StaffMedal();
-                BeanUtils.copyProperties(staffMedalEntity,staffMedal);
-                MedalEntity medalEntity = medalDao.getById(staffMedalEntity.getMedalId());
-                staffMedal.setMedalName(medalEntity.getName());
-                staffMedals.add(staffMedal);
-            }
-            staff.setStaffMedalList(staffMedals);
+            List<StaffMedal> staffMedalList = staffMedalDao.queryStaffMedalList(staffEntity.getStaffId());
+            staff.setStaffMedalList(staffMedalList);
             staffs.add(staff);
         }
         Long count = staffDao.count(query);

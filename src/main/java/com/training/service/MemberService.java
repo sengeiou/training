@@ -67,6 +67,9 @@ public class MemberService {
     @Autowired
     private MedalDao medalDao;
 
+    @Autowired
+    private StaffMedalDao staffMedalDao;
+
     /**
      * 新增实体
      * @param member
@@ -564,6 +567,10 @@ public class MemberService {
             }
             lesson.setCoachImage(coach.getImage());
             lesson.setCoachName(staff.getCustname());
+
+            List<StaffMedal> staffMedalList = staffMedalDao.queryStaffMedalList(staff.getStaffId());
+            lesson.setStaffMedalList(staffMedalList);
+
             types.add(lesson);
         }
 
@@ -612,6 +619,10 @@ public class MemberService {
                 coachEntity.setImage(staff.getImage());
             }
             lesson.setCoachImage(coachEntity.getImage());
+
+            List<StaffMedal> staffMedalList = staffMedalDao.queryStaffMedalList(staff.getStaffId());
+            lesson.setStaffMedalList(staffMedalList);
+
             types.add(lesson);
         }
 

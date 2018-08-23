@@ -40,6 +40,9 @@ public class MemberCouponService {
     @Autowired
     private MemberCouponDao memberCouponDao;
 
+    @Autowired
+    private StaffDao staffDao;
+
     /**
      * 新增实体
      * @param memberCoupon
@@ -170,6 +173,12 @@ public class MemberCouponService {
         memberCoupon.setMember(member);
         if(member!=null){
             memberCoupon.setMemberName(member.getName());
+        }
+        if(StringUtils.isNotEmpty(memberCoupon.getUseStaffId())){
+            StaffEntity staffEntity = staffDao.getById(memberCoupon.getUseStaffId());
+            memberCoupon.setUseStaffName(staffEntity.getCustname());
+        }else{
+            memberCoupon.setUseStaffName("-");
         }
         return memberCoupon;
     }

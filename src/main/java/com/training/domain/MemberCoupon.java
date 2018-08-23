@@ -47,6 +47,8 @@ public class MemberCoupon {
 
     private String useStaffId;
 
+    private String useStaffName;
+
     private String creator;
 
     private Date created;

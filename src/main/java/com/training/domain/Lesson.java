@@ -59,4 +59,6 @@ public class Lesson {
 
     private String memberId;
 
+    private List<StaffMedal> staffMedalList;
+
 }
