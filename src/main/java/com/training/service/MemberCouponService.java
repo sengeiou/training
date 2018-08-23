@@ -54,7 +54,7 @@ public class MemberCouponService {
         }
         Staff staff = RequestContextHelper.getStaff();
         if(staff!=null){
-            memberCoupon.setUseStaffId(staff.getStaffId());
+            memberCoupon.setCreator(staff.getStaffId());
         }
         memberCoupon.setOrigin("manual");
         int total = 0;
@@ -100,7 +100,7 @@ public class MemberCouponService {
         }
         Staff staff = RequestContextHelper.getStaff();
         if(staff!=null){
-            memberCoupon.setUseStaffId(staff.getStaffId());
+            memberCoupon.setCreator(staff.getStaffId());
         }
         memberCoupon.setCouponId(getCouponId());
         if(StringUtils.isEmpty(memberCoupon.getOrigin())){

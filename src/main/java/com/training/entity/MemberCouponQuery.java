@@ -44,12 +44,17 @@ public class MemberCouponQuery {
 
     private String useStaffId;
 
+    private String useStaffName;
+
     private String creator;
 
     private Date created;
 
     private Date modified;
 
+    private String useStartDate;
+
+    private String useEndDate;
 
 }
 

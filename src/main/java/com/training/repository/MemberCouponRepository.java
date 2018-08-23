@@ -94,16 +94,18 @@ public interface MemberCouponRepository {
             " <if test=\"query.discount != null\"> AND discount = #{query.discount} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.reduction != null\"> AND reduction = #{query.reduction} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date &gt;= #{query.endDate} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.origin != null\"> AND origin = #{query.origin} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " <if test=\"query.useDate != null\"> AND use_date = #{query.useDate} </if>" +
+            " <if test=\"query.useStartDate != null\"> AND use_date &lt;= #{query.useStartDate} </if>" +
+            " <if test=\"query.useEndDate != null\"> AND use_date &gt;= #{query.useEndDate} </if>" +
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
-            " <if test=\"query.creator != null\"> AND creator = #{query.creator} </if>" +
+            " <if test=\"query.useStaffName != null\"> AND use_staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.useStaffName},'%') )  </if>" +
+            " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
+            " <if test=\"query.startDate != null\"> AND created &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND created &gt;= #{query.endDate} </if>" +
             "</script>")
     Long count(@Param("query") MemberCouponQuery memberCoupon);
 
