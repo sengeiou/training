@@ -52,6 +52,7 @@ public class CreateCardService {
 
     public void createCard() {
         ContractQuery query = new ContractQuery();
+//        query.setProcessInstanceId("7f31e570-e65d-4f17-aa65-0d53187eafa2");
         query.setStatus(0);
 //        query.setContractId("abcdefg");
         PageRequest page = new PageRequest();
@@ -121,11 +122,47 @@ public class CreateCardService {
                 if(contractEntity.getCardType().equals(CardTypeEnum.TM.getKey())){
                     createTM(contractEntity,memberDB);
                 }
+
+                if(contractEntity.getCardType().equals(CardTypeEnum.ST1.getKey())||contractEntity.getCardType().equals(CardTypeEnum.ST2.getKey())||contractEntity.getCardType().equals(CardTypeEnum.ST3.getKey())){
+                    createST(contractEntity,memberDB);
+                }
+
             }catch (Exception e){
                 logger.error(" createCard ERROR :  {} ", e.getMessage());
             }
 
         }
+    }
+
+    private void createST(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
+        logger.info(" ==== createST  contractEntity = {} ", contractEntity);
+        MemberEntity coach = checkContract(contractEntity);
+        MemberCardEntity memberCardEntity = new MemberCardEntity();
+        memberCardEntity.setCardNo(IDUtils.getId());
+        memberCardEntity.setCardId(contractEntity.getCardType());
+        memberCardEntity.setCoachId(coach.getMemberId());
+        memberCardEntity.setStoreId(coach.getStoreId());
+        memberCardEntity.setMemberId(memberDB.getMemberId());
+        memberCardEntity.setType(contractEntity.getCardType());
+        int total = Integer.parseInt(contractEntity.getTotal());
+        memberCardEntity.setCount(total);
+        memberCardEntity.setTotal(total);
+        memberCardEntity.setDays(ut.passDayByDate(contractEntity.getStartDate(),contractEntity.getEndDate()));
+        memberCardEntity.setMoney(contractEntity.getMoney());
+        memberCardEntity.setStartDate(contractEntity.getStartDate());
+        memberCardEntity.setEndDate(contractEntity.getEndDate());
+        memberCardEntity.setContractId(contractEntity.getContractId());
+        memberCardService.add(memberCardEntity);
+        if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
+            StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(memberDB.getMemberId());
+            memberUpdate.setCoachStaffId(staffEntity.getStaffId());
+            int n = memberDao.update(memberUpdate);
+        }
+        contractEntity.setStatus(1);
+        updateContractStatus(contractEntity);
+        logger.info(" createPT  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
     private void dealTK(ContractEntity contractEntity) {
@@ -342,9 +379,35 @@ public class CreateCardService {
     }
 
     @Transactional
-    void createTT(ContractEntity contractEntity, MemberEntity memberDB) {
-
-
+    void createTT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception{
+        logger.info(" ==== createTT  contractEntity = {} ", contractEntity);
+//        MemberEntity coach = checkContract(contractEntity);
+        MemberCardEntity memberCardEntity = new MemberCardEntity();
+        memberCardEntity.setCardNo(IDUtils.getId());
+        memberCardEntity.setCardId(CardTypeEnum.TT.getKey());
+//        memberCardEntity.setCoachId(coach.getMemberId());
+//        memberCardEntity.setStoreId(coach.getStoreId());
+        memberCardEntity.setMemberId(memberDB.getMemberId());
+        memberCardEntity.setType(CardTypeEnum.TT.getKey());
+        int total = Integer.parseInt(contractEntity.getTotal());
+        memberCardEntity.setCount(total);
+        memberCardEntity.setTotal(total);
+        memberCardEntity.setDays(ut.passDayByDate(contractEntity.getStartDate(),contractEntity.getEndDate()));
+        memberCardEntity.setMoney(contractEntity.getMoney());
+        memberCardEntity.setStartDate(contractEntity.getStartDate());
+        memberCardEntity.setEndDate(contractEntity.getEndDate());
+        memberCardEntity.setContractId(contractEntity.getContractId());
+        memberCardService.add(memberCardEntity);
+//        if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
+//            StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
+//            MemberEntity memberUpdate = new MemberEntity();
+//            memberUpdate.setMemberId(memberDB.getMemberId());
+//            memberUpdate.setCoachStaffId(staffEntity.getStaffId());
+//            int n = memberDao.update(memberUpdate);
+//        }
+        contractEntity.setStatus(1);
+        updateContractStatus(contractEntity);
+        logger.info(" createTT  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
     @Transactional

@@ -52,12 +52,112 @@ public class ProcessInstanceService {
         if(processCodeEnum.getKey().equals("TK")){
             getTKConcract(processCodeEnum.getCode());
         }
-
         if(processCodeEnum.getKey().equals("ST")){
             getSTConcract(processCodeEnum.getCode());
         }
-
+        if(processCodeEnum.getKey().equals(CardTypeEnum.TT.getKey())){
+            getTTConcract(processCodeEnum.getCode());
+        }
         logger.info("end getConcract end!");
+    }
+
+    private void getTTConcract(String processCode) {
+        logger.info("start getTTConcract   time = {} ", ut.currentTime());
+        List<ContractEntity> contractEntityList =  new ArrayList<>();
+        Long cursor = 1L;
+        try {
+            String access_token = DingtalkUtil.getSsoToken();
+            String startDate = ut.currentDate(-15);
+            System.out.println(" ================================  startDate = "+startDate);
+            Long startTime = ut.df_day.parse(startDate).getTime();
+            DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
+            SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
+            req.setProcessCode(processCode);
+            req.setStartTime(startTime);
+//        req.setEndTime(endTime);
+            req.setSize(10L);
+            int count = 0;
+            do{
+                System.out.println(" ================================  cursor = "+cursor);
+                req.setCursor(cursor);
+                SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
+                JSONObject result = JSON.parseObject(rsp.getBody());
+                SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
+                SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
+                System.out.println(" ================================  result = "+result);
+                List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
+                count = 0;
+                if(data!=null){
+                    contractEntityList = new ArrayList<>();
+                    count = data.size();
+                    System.out.println(" ================================  data = "+data.size());
+                    for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
+                        System.out.println(" ================================  ");
+                        System.out.println(""+item.getTitle());
+                        if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
+                            if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
+                                ContractEntity contractEntity = converTT(item);
+                                contractEntityList.add(contractEntity);
+                            }else{
+                                logger.info(" refuse  process : {}  ",item);
+                            }
+                        }
+                    }
+                }else{
+                    System.out.println(" ================================  data = null : "+data);
+                }
+                for (int i = 0; i < contractEntityList.size(); i++) {
+                    ContractEntity contractEntity = contractEntityList.get(i);
+                    ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
+                    if(contractEntityDB!=null){
+                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+                        continue;
+                    }
+                    contractService.add(contractEntity);
+                }
+                cursor++;
+            }while(count>0);
+
+        }catch (Exception e){
+            logger.error(" getTTConcract  ERROR = {} ",e.getMessage(),e);
+        }
+        logger.info("end getTTConcract end!");
+    }
+
+    private ContractEntity converTT(SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo) {
+        Map<String,String> contractMap = new HashMap();
+        List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+        for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+            contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+        }
+        ContractEntity contractEntity = new ContractEntity();
+        contractEntity.setProcessInstanceId(processInstanceTopVo.getProcessInstanceId());
+        contractEntity.setCardType(CardTypeEnum.TT.getKey());
+        contractEntity.setContractId(contractMap.get("合同编号"));
+        contractEntity.setContractName(processInstanceTopVo.getTitle());
+        contractEntity.setSignDate(contractMap.get("签约日期"));
+        contractEntity.setMemberName(contractMap.get("会员姓名"));
+        contractEntity.setGender(contractMap.get("会员性别"));
+        contractEntity.setPhone(contractMap.get("会员电话"));
+        contractEntity.setType(contractMap.get("课程类别"));
+        contractEntity.setTotal(contractMap.get("课程节数"));
+        contractEntity.setMoney(contractMap.get("付款金额（元）"));
+        contractEntity.setPayType(contractMap.get("付款方式"));
+        if(StringUtils.isNotEmpty(contractMap.get("[\"开始时间\",\"结束时间\"]"))){
+            String dateStr = contractMap.get("[\"开始时间\",\"结束时间\"]").replace("[","").replace("]","");
+            String[] dates = dateStr.split(",");
+            contractEntity.setStartDate(dates[0].replaceAll("\"",""));
+            contractEntity.setEndDate(dates[1].replaceAll("\"",""));
+        }
+        Map<String,String> feature = new HashMap();
+        feature.put("storeName",contractMap.get("所在部门"));
+        contractEntity.setFeature(JSON.toJSONString(feature));
+        contractEntity.setSalesman(contractMap.get("销售人员"));
+        contractEntity.setCoach(contractMap.get("分配教练"));
+        contractEntity.setRemark(contractMap.get("备注"));
+        contractEntity.setImage(contractMap.get("合同照片"));
+        contractEntity.setForm(JSON.toJSONString(processInstanceTopVo));
+        return contractEntity;
     }
 
     private void getSTConcract(String processCode) {
