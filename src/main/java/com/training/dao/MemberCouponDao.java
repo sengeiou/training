@@ -95,5 +95,10 @@ public class MemberCouponDao {
     }
 
 
+    public List<MemberCouponEntity> getByMemberId(String memberId) {
+        List<MemberCouponEntity> memberCouponEntityList = memberCouponRepository.getByMemberId(memberId);
+        return memberCouponEntityList;
+
+    }
 }
 

@@ -152,5 +152,11 @@ public interface MemberCouponRepository {
             "</script>")
     int useCoupon(@Param("memberCoupon") MemberCouponEntity memberCoupon);
 
+    @Select("<script> SELECT coupon_id,member_id,store_id,type,title,discount,total,reduction,start_date,end_date,content,origin,feature,remark,status,use_date,use_staff_id,creator,created,modified " +
+            " FROM member_coupon " +
+            " WHERE member_id = #{memberId} " +
+            "</script>")
+    List<MemberCouponEntity> getByMemberId(@Param("memberId") String memberId);
+
 }
 

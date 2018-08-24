@@ -2,6 +2,7 @@ package com.training.admin.service;
 
 import com.training.common.*;
 import com.training.dao.*;
+import com.training.domain.MemberCoupon;
 import com.training.entity.*;
 import com.training.service.MemberCardService;
 import com.training.service.MemberCouponService;
@@ -31,6 +32,9 @@ public class MemberTrainingTaskService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private MemberCouponDao memberCouponDao;
 
     @Autowired
     private StaffDao staffDao;
@@ -74,7 +78,7 @@ public class MemberTrainingTaskService {
 
     public String updateMemberMedal() {
         logger.info(" MemberTrainingTaskService updateMemberMedal     ");
-        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT member_id,name,training_hours from member where training_hours >= 8   ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT member_id,name,training_hours from member   ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
             try {
@@ -95,6 +99,13 @@ public class MemberTrainingTaskService {
                 PageRequest pageRequest = new PageRequest();
                 pageRequest.setPageSize(1000);
                 List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);
+
+                Set<String> couponOrigins = new HashSet();
+                List<MemberCouponEntity> memberCouponEntityList = memberCouponDao.getByMemberId(memberId);
+                for (MemberCouponEntity memberCouponEntity :memberCouponEntityList){
+                    couponOrigins.add(memberCouponEntity.getOrigin());
+                }
+
                 int cq1 = 0;
                 int cq2 = 0;
                 int cq3 = 0;
@@ -112,27 +123,72 @@ public class MemberTrainingTaskService {
                     }
                 }
 
+                if(medals.contains(MemberMedalEnum.CQ1.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.CQ1.getKey())){
+                        attendance1(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.CQ1.getKey()) && cq1>=MemberMedalEnum.CQ1.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.CQ1.getKey());
                     attendance1(memberId);
                 }
 
+                if(medals.contains(MemberMedalEnum.CQ2.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.CQ2.getKey())){
+                        attendance2(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.CQ2.getKey()) && cq2>=MemberMedalEnum.CQ2.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.CQ2.getKey());
                     attendance2(memberId);
                 }
 
+                if(medals.contains(MemberMedalEnum.CQ3.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.CQ3.getKey())){
+                        attendance3(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.CQ3.getKey()) && cq3>=MemberMedalEnum.CQ3.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.CQ3.getKey());
                     attendance3(memberId);
                 }
 
+                if(medals.contains(MemberMedalEnum.SJ1.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.SJ1.getKey())){
+                        driverLevel1(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.SJ1.getKey()) && trainingHours>=MemberMedalEnum.SJ1.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.SJ1.getKey());
                     driverLevel1(memberId);
                 }
+
+                if(medals.contains(MemberMedalEnum.SJ2.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.SJ2.getKey())){
+                        driverLevel2(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.SJ2.getKey()) && trainingHours>=MemberMedalEnum.SJ2.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.SJ2.getKey());
                     driverLevel2(memberId);
                 }
+
+                if(medals.contains(MemberMedalEnum.SJ3.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.SJ3.getKey())){
+                        driverLevel3(memberId);
+                    }
+                }
                 if(!medals.contains(MemberMedalEnum.SJ3.getKey()) && trainingHours>=MemberMedalEnum.SJ3.getCount()){
+                    int n = addMemberMedal(memberId,MemberMedalEnum.SJ3.getKey());
                     driverLevel3(memberId);
                 }
+
+                if(medals.contains(MemberMedalEnum.OX.getKey())){
+                    if(!couponOrigins.contains(MemberMedalEnum.OX.getKey())){
+                        heyHeros(memberId);
+                    }
+                }
+
                 total++;
             }catch (Exception e){
                 logger.error(e.getMessage(),e);
@@ -142,8 +198,20 @@ public class MemberTrainingTaskService {
         return "updateMemberMedal执行成功 , total = "+total;
     }
 
+    private void heyHeros(String memberId) {
+        MemberCouponEntity memberCoupon = new MemberCouponEntity();
+        memberCoupon.setMemberId(memberId);
+        memberCoupon.setType(CouponTypeEnum.DZ.getKey());
+        memberCoupon.setTitle("6.8折折扣券");
+        memberCoupon.setDiscount(68);
+        memberCoupon.setStartDate(ut.currentDate());
+        memberCoupon.setEndDate(ut.currentDate(1000));
+        memberCoupon.setOrigin(MemberMedalEnum.OX.getKey());
+        memberCoupon.setContent(MemberMedalEnum.OX.getDesc());
+        memberCouponService.addOne(memberCoupon);
+    }
+
     private void attendance1(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.CQ1.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.MZ.getKey());
@@ -158,7 +226,6 @@ public class MemberTrainingTaskService {
     }
 
     private void attendance2(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.CQ2.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.MZ.getKey());
@@ -173,7 +240,6 @@ public class MemberTrainingTaskService {
     }
 
     private void attendance3(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.CQ3.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.MZ.getKey());
@@ -188,7 +254,6 @@ public class MemberTrainingTaskService {
     }
 
     private void driverLevel1(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.SJ1.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.DZ.getKey());
@@ -202,7 +267,6 @@ public class MemberTrainingTaskService {
     }
 
     private void driverLevel2(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.SJ2.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.DZ.getKey());
@@ -216,7 +280,6 @@ public class MemberTrainingTaskService {
     }
 
     private void driverLevel3(String memberId) {
-        int n = addMemberMedal(memberId,MemberMedalEnum.SJ3.getKey());
         MemberCouponEntity memberCoupon = new MemberCouponEntity();
         memberCoupon.setMemberId(memberId);
         memberCoupon.setType(CouponTypeEnum.DZ.getKey());

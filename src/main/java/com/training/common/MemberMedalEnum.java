@@ -15,6 +15,7 @@ public enum MemberMedalEnum {
     SJ1("SJ1","健身老司机Lv1",36),
     SJ2("SJ2","健身老司机Lv2",64),
     SJ3("SJ3","健身老司机Lv3",108),
+    OX("OX","Hey帮偶像",0),
     ;
 
     private String key;
