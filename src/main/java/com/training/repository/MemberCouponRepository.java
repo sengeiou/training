@@ -80,8 +80,8 @@ public interface MemberCouponRepository {
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
             " <if test=\"query.useStaffName != null\"> AND use_staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.useStaffName},'%') )  </if>" +
             " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
-            " <if test=\"query.startDate != null\"> AND created &lt;= #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND created &gt;= #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &gt;= #{query.endDate} </if>" +
             " order by coupon_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCouponEntity> find(@Param("query") MemberCouponQuery memberCoupon , @Param("page") PageRequest page);
@@ -106,8 +106,8 @@ public interface MemberCouponRepository {
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
             " <if test=\"query.useStaffName != null\"> AND use_staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.useStaffName},'%') )  </if>" +
             " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
-            " <if test=\"query.startDate != null\"> AND created &lt;= #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND created &gt;= #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &gt;= #{query.endDate} </if>" +
             "</script>")
     Long count(@Param("query") MemberCouponQuery memberCoupon);
 
