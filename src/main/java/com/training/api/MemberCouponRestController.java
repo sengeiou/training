@@ -53,7 +53,7 @@ public class MemberCouponRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberCouponQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<MemberCouponEntity> page = memberCouponService.find(query,pageRequest);
+        Page<MemberCoupon> page = memberCouponService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 

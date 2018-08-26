@@ -117,6 +117,42 @@ public class KpiStaffMonthService {
         }
         KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
         BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
+        StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
+        StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
+        if(storeEntity!=null){
+            kpiStaffMonth.setStoreName(storeEntity.getName());
+        }else{
+            kpiStaffMonth.setStoreName("-");
+        }
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
+        if(kpiTemplateEntity!=null){
+            kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
+            kpiStaffMonth.setKpiTemplateQuotaList(new ArrayList<>());
+            KpiTemplateQuotaQuery query = new KpiTemplateQuotaQuery();
+            query.setTemplateId(staffEntity.getTemplateId());
+            PageRequest page = new PageRequest();
+            page.setPageSize(100);
+            List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(query,page);
+            int i = 0;
+            for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
+                KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
+                BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
+                kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
+            }
+        }else{
+            kpiStaffMonth.setTemplateName("-");
+        }
+        logger.info(" convertKpiStaffMonth kpiScore : {}   ",kpiScore);
+        return kpiStaffMonth;
+    }
+
+    public KpiStaffMonth calculateKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+        double kpiScore = 0;
+        if(kpiStaffMonthEntity==null){
+            return null;
+        }
+        KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
+        BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
 
         StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
 

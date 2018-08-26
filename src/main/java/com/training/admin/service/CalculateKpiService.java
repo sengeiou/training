@@ -218,7 +218,7 @@ public class CalculateKpiService {
         kpiStaffMonthEntity.setHyd(""+hyd);
 
         if(StringUtils.isNotEmpty(templateId)){
-            KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.convertKpiStaffMonth(kpiStaffMonthEntity);
+            KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
             kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
         }
         else{

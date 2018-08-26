@@ -129,12 +129,19 @@ public class MemberCouponService {
      * @param query
      * @param page
      * Created by huai23 on 2018-06-30 10:02:47.
-     */ 
-    public Page<MemberCouponEntity> find(MemberCouponQuery query , PageRequest page){
+     */
+    public Page<MemberCoupon> find(MemberCouponQuery query , PageRequest page){
         List<MemberCouponEntity> memberCouponList = memberCouponDao.find(query,page);
+
+        List<MemberCoupon> memberCoupons = new ArrayList<>();
+        for (MemberCouponEntity memberCouponEntity : memberCouponList){
+            MemberCoupon memberCoupon = transferCoupon(memberCouponEntity);
+            memberCoupons.add(memberCoupon);
+        }
+
         Long count = memberCouponDao.count(query);
-        Page<MemberCouponEntity> returnPage = new Page<>();
-        returnPage.setContent(memberCouponList);
+        Page<MemberCoupon> returnPage = new Page<>();
+        returnPage.setContent(memberCoupons);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
@@ -179,6 +186,12 @@ public class MemberCouponService {
             memberCoupon.setUseStaffName(staffEntity.getCustname());
         }else{
             memberCoupon.setUseStaffName("-");
+        }
+        if(StringUtils.isNotEmpty(memberCoupon.getCreator())){
+            StaffEntity staffEntity = staffDao.getById(memberCoupon.getCreator());
+            memberCoupon.setCreator(staffEntity.getCustname());
+        }else{
+            memberCoupon.setCreator("-");
         }
         return memberCoupon;
     }
