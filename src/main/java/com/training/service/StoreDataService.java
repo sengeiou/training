@@ -637,7 +637,11 @@ public class StoreDataService {
             KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff.get("staff_id").toString(),query.getMonth().replace("-",""));
             StoreData manager = new StoreData();
             manager.setStaffName(custname);
-            manager.setValue(kpiStaffMonthEntity.getKpiScore());
+            if(kpiStaffMonthEntity!=null){
+                manager.setValue(kpiStaffMonthEntity.getKpiScore());
+            }else {
+                manager.setValue("0");
+            }
             storeDataList.add(manager);
         }
         return storeDataList;
