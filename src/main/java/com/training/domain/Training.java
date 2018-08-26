@@ -1,6 +1,9 @@
 package com.training.domain;
 
+import com.training.util.ut;
 import lombok.Data;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Date;
 
 /**
@@ -48,6 +51,8 @@ public class Training {
 
     private Integer status;
 
+    private String showStatus;
+
     private Date created;
 
     private Date modified;
@@ -55,6 +60,40 @@ public class Training {
     private Member member;
 
     private String qrCode;
+
+    public String getShowStatus(){
+        if(null==this.status||StringUtils.isEmpty(this.lessonDate)||null==this.startHour||null==this.endHour){
+            return "";
+        }
+        if(status==-1){
+            return "已取消";
+        }
+        if(ut.passDayByDate(this.lessonDate,ut.currentDate())<0){
+            return "预约中";
+        }
+        if(ut.passDayByDate(this.lessonDate,ut.currentDate())>0){
+            if(!StringUtils.isEmpty(signTime)){
+                return "已完成";
+            }else{
+                return "已过期";
+            }
+        }
+        if(ut.passDayByDate(this.lessonDate,ut.currentDate())==0){
+            System.out.println("this.lessonDate="+this.lessonDate+" , ut.currentDate()="+ut.currentDate());
+            int time = ut.currentHour();
+            if(time>this.endHour){
+                if(!StringUtils.isEmpty(signTime)){
+                    return "已完成";
+                }else{
+                    return "已过期";
+                }
+            }else{
+                return "预约中";
+
+            }
+        }
+        return "-";
+    }
 
 }
 

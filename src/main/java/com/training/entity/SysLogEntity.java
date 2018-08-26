@@ -18,6 +18,10 @@ public class SysLogEntity {
 
     private Integer level;
 
+    private String id1;
+
+    private String id2;
+
     private String logText;
 
     private String content;
@@ -27,7 +31,6 @@ public class SysLogEntity {
     private Date created;
 
     private Date modified;
-
 
 }
 

@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * member 核心业务操作类
@@ -70,6 +67,15 @@ public class MemberService {
     @Autowired
     private StaffMedalDao staffMedalDao;
 
+    @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
+    private SysLogDao sysLogDao;
+
+    @Autowired
+    private SysLogService sysLogService;
+
     /**
      * 新增实体
      * @param member
@@ -79,7 +85,18 @@ public class MemberService {
         if(StringUtils.isNotEmpty(member.getPhone())){
             MemberEntity memberDB = this.getByPhone(member.getPhone());
             if(memberDB!=null){
-                return ResponseUtil.exception("添加失败,手机号码已存在 ： "+member.getPhone());
+                String coachStaffId = memberDB.getCoachStaffId();
+                String storeName = "无教练";
+                if(StringUtils.isNotEmpty(coachStaffId)){
+                    StaffEntity staffEntity = staffDao.getById(coachStaffId);
+                    if(staffEntity!=null){
+                        StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+                        if(storeEntity!=null){
+                            storeName = storeEntity.getName();
+                        }
+                    }
+                }
+                return ResponseUtil.exception("添加失败,手机号码已存在 ：会员姓名："+memberDB.getName()+" ,电话："+member.getPhone()+"，所属门店："+storeName);
             }
         }
         member.setMemberId(IDUtils.getId());
@@ -752,6 +769,8 @@ public class MemberService {
         logger.info("  changeCoach  staffRequest = {}", staffRequest);
         logger.info("  changeCoach  member = {}", member);
 
+        MemberEntity memberEntity = memberDao.getById(member.getMemberId());
+
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setStartDate(ut.currentDate());
         trainingQuery.setMemberId(member.getMemberId());
@@ -770,6 +789,42 @@ public class MemberService {
                 return ResponseUtil.exception("更换教练失败,请先取消现有教练的预约课程");
             }
         }
+
+
+
+        MemberCardQuery queryCard = new MemberCardQuery();
+        queryCard.setMemberId(member.getMemberId());
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100);
+        List<MemberCardEntity> memberCardEntityList = memberCardDao.find(queryCard,pageRequest);
+        logger.info("  changeCoach  memberCardEntityList.size() = {}",memberCardEntityList.size());
+
+        boolean hasRealCard = false;
+        for (MemberCardEntity memberCardEntity:memberCardEntityList){
+            if(!memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                hasRealCard = true;
+                break;
+            }
+        }
+        logger.info("  changeCoach  hasRealCard = {}",hasRealCard);
+
+        if(hasRealCard){
+            SysLogQuery query = new SysLogQuery();
+            query.setStartDate(ut.firstDayOfMonth());
+            query.setEndDate(ut.lastDayOfMonth());
+            query.setType(SysLogEnum.CC.getKey());
+            query.setId1(member.getMemberId());
+
+            logger.info(" query = {} ",query);
+            List<SysLogEntity> sysLogEntities = sysLogDao.find(query,new PageRequest());
+            logger.info(" sysLogEntities.size() = {} ",sysLogEntities.size());
+            if(sysLogEntities.size()>0){
+                SysLogEntity sysLogEntity = sysLogEntities.get(0);
+                return ResponseUtil.exception("更换教练失败,本月已经于"+ut.df_time.format(sysLogEntity.getCreated())+"更换过教练");
+            }
+        }
+
+
         StaffEntity staffEntity = staffDao.getById(member.getStaffId());
         logger.info("  changeCoach  staffEntity = {}", staffEntity);
         MemberEntity memberUpdate = new MemberEntity();
@@ -778,6 +833,17 @@ public class MemberService {
         logger.info("  changeCoach  memberUpdate = {}",memberUpdate);
         int n = memberDao.update(memberUpdate);
         if(n==1){
+            SysLogEntity sysLogEntity = new SysLogEntity();
+            sysLogEntity.setLogId(IDUtils.getId());
+            sysLogEntity.setType(SysLogEnum.CC.getKey());
+            sysLogEntity.setLevel(2);
+            sysLogEntity.setId1(member.getMemberId());
+            sysLogEntity.setId2(memberEntity.getCoachStaffId());
+            sysLogEntity.setLogText(memberEntity.getCoachStaffId()+","+staffEntity.getStaffId());
+            sysLogEntity.setContent("");
+            sysLogEntity.setCreated(new Date());
+            sysLogService.add(sysLogEntity);
+
             return ResponseUtil.success("更换教练成功");
         }
         return ResponseUtil.exception("更换教练失败");

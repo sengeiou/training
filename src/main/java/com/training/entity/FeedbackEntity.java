@@ -30,6 +30,13 @@ public class FeedbackEntity {
 
     private Date modified;
 
+    private String memberName;
+
+    private String phone;
+
+    private String storeId;
+
+    private String storeName;
 
 }
 

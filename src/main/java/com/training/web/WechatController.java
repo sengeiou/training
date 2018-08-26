@@ -2,6 +2,7 @@ package com.training.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.training.common.SysLogEnum;
 import com.training.entity.CardEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
@@ -107,7 +108,7 @@ public class WechatController {
             String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
-            sysLogEntity.setType("pay");
+            sysLogEntity.setType(SysLogEnum.PAY.getKey());
             sysLogEntity.setLevel(1);
             sysLogEntity.setLogText(dataStr.length()>1900?dataStr.substring(0,1900):dataStr);
             sysLogEntity.setContent(result);

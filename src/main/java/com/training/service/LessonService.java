@@ -983,12 +983,7 @@ public class LessonService {
             return ResponseUtil.exception("取消约课异常!");
         }
 
-        if(ut.currentFullMonth().equals(lesson.getLessonDate().substring(0,7))){
-
-        }else{
-//            return ResponseUtil.exception("取消约课失败!该课程不是当月课时,不能取消!");
-        }
-
+        //如果已经过期了
         if(ut.passDayByDate(ut.currentDate(),trainingEntity.getLessonDate())<0){
             if(manageFlag){
                 if(StringUtils.isNotEmpty(trainingEntity.getSignTime())){
@@ -997,8 +992,13 @@ public class LessonService {
             }else{
                 return ResponseUtil.exception("取消约课失败!该课程已过期");
             }
+
+            if(!ut.currentFullMonth().equals(lesson.getLessonDate().substring(0,7))){
+                return ResponseUtil.exception("取消约课失败!该课程不是当月课时,不能取消!");
+            }
         }
 
+        // 如果是课程当天
         if(ut.currentDate().equals(trainingEntity.getLessonDate())) {
             if(manageFlag){
 

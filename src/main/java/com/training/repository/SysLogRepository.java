@@ -17,6 +17,8 @@ public interface SysLogRepository {
                 " <if test=\"sysLog.logId != null\"> LOG_ID, </if>" +
                 " <if test=\"sysLog.type != null\"> TYPE, </if>" +
                 " <if test=\"sysLog.level != null\"> LEVEL, </if>" +
+                " <if test=\"sysLog.id1 != null\"> id1, </if>" +
+                " <if test=\"sysLog.id2 != null\"> id2, </if>" +
                 " <if test=\"sysLog.logText != null\"> log_text, </if>" +
                 " <if test=\"sysLog.content != null\"> content, </if>" +
                 " <if test=\"sysLog.remark != null\"> REMARK, </if>" +
@@ -26,6 +28,8 @@ public interface SysLogRepository {
                 " <if test=\"sysLog.logId != null\"> #{sysLog.logId}, </if>" +
                 " <if test=\"sysLog.type != null\"> #{sysLog.type}, </if>" +
                 " <if test=\"sysLog.level != null\"> #{sysLog.level}, </if>" +
+                " <if test=\"sysLog.id1 != null\"> #{sysLog.id1}, </if>" +
+                " <if test=\"sysLog.id2 != null\"> #{sysLog.id2}, </if>" +
                 " <if test=\"sysLog.logText != null\"> #{sysLog.logText}, </if>" +
                 " <if test=\"sysLog.content != null\"> #{sysLog.content}, </if>" +
                 " <if test=\"sysLog.remark != null\"> #{sysLog.remark}, </if>" +
@@ -35,15 +39,19 @@ public interface SysLogRepository {
             "</script>")
     int add(@Param("sysLog") SysLogEntity sysLog);
 
-    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,log_text,content,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,created,modified " +
             " FROM sys_log " +
             " WHERE 1 = 1 " +
             " <if test=\"query.logId != null\"> AND LOG_ID = #{query.logId} </if>" +
             " <if test=\"query.type != null\"> AND TYPE = #{query.type} </if>" +
             " <if test=\"query.level != null\"> AND LEVEL = #{query.level} </if>" +
+            " <if test=\"query.id1 != null\"> AND id1 = #{query.id1} </if>" +
+            " <if test=\"query.id2 != null\"> AND id2 = #{query.id2} </if>" +
             " <if test=\"query.logText != null\"> AND log_text = #{query.logText} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> find(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
@@ -53,13 +61,17 @@ public interface SysLogRepository {
             " <if test=\"query.logId != null\"> AND LOG_ID = #{query.logId} </if>" +
             " <if test=\"query.type != null\"> AND TYPE = #{query.type} </if>" +
             " <if test=\"query.level != null\"> AND LEVEL = #{query.level} </if>" +
+            " <if test=\"query.id1 != null\"> AND id1 = #{query.id1} </if>" +
+            " <if test=\"query.id2 != null\"> AND id2 = #{query.id2} </if>" +
             " <if test=\"query.logText != null\"> AND log_text = #{query.logText} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
             " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             "</script>")
     Long count(@Param("query") SysLogQuery sysLog);
 
-    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,log_text,content,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,created,modified " +
             " FROM sys_log " +
             " WHERE LOG_ID = #{id} " +
             "</script>")

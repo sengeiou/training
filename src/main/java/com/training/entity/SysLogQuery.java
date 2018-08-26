@@ -18,6 +18,10 @@ public class SysLogQuery {
 
     private Integer level;
 
+    private String id1;
+
+    private String id2;
+
     private String logText;
 
     private String content;
@@ -28,6 +32,9 @@ public class SysLogQuery {
 
     private Date modified;
 
+    private String startDate;
+
+    private String endDate;
 
 }
 
