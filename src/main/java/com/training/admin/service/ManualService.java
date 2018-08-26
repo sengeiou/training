@@ -8,14 +8,8 @@ import com.training.domain.KpiStaffMonth;
 import com.training.domain.Member;
 import com.training.domain.MemberCard;
 import com.training.entity.*;
-import com.training.service.CardService;
-import com.training.service.KpiStaffMonthService;
-import com.training.service.MemberService;
-import com.training.service.SysLogService;
-import com.training.util.ExcelUtil;
-import com.training.util.IDUtils;
-import com.training.util.ResponseUtil;
-import com.training.util.ut;
+import com.training.service.*;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +36,9 @@ public class ManualService {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Autowired
+    private StaffService staffService;
 
     @Autowired
     private MemberDao memberDao;
@@ -216,5 +213,72 @@ public class ManualService {
         return n;
 
     }
+
+    public void updateCoachStaff() {
+        logger.info(" updateCoachStaff  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
+        for (int i = 0; i < deptList.size(); i++) {
+            try {
+                Map dept = deptList.get(i);
+                String deptId = dept.get("dept_id").toString();
+                System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
+                List<Map> staffList = DingtalkUtil.getStaffs(dept.get("dept_id").toString());
+                for (int j = 0; j < staffList.size(); j++) {
+                    try{
+                        Map item = staffList.get(j);
+                        System.out.println("userid: " + item.get("userid").toString());
+                        System.out.println("name: " + item.get("name").toString());
+                        String userid = item.get("userid").toString();
+                        StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
+                        if(staffDB!=null){
+                            logger.info(item.get("name").toString()+"已存在，无需重复添加");
+                            StaffEntity staffUpdate = new StaffEntity();
+                            staffUpdate.setStaffId(staffDB.getStaffId());
+                            staffUpdate.setCustname(item.get("name").toString());
+                            staffUpdate.setStoreId(deptId);
+                            if(item.containsKey("position")){
+                                staffUpdate.setJob(item.get("position").toString());
+                            }
+                            staffService.update(staffUpdate);
+                            continue;
+                        }
+                        String position = "";
+                        if(item.containsKey("position")){
+                            position = item.get("position").toString();
+                        }
+                        String mobile = "";
+                        if(item.containsKey("mobile")){
+                            mobile = item.get("mobile").toString();
+                        }
+                        String email = "";
+                        if(item.containsKey("email")){
+                            email = item.get("email").toString();
+                        }
+                        String extattr = "";
+                        if(item.containsKey("extattr")){
+                            extattr = item.get("extattr").toString();
+                        }
+                        StaffEntity staffEntity = new StaffEntity();
+                        staffEntity.setStaffId(IDUtils.getId());
+                        staffEntity.setRelId(item.get("userid").toString());
+                        staffEntity.setStoreId(deptId);
+                        staffEntity.setUsername(item.get("mobile").toString());
+                        staffEntity.setCustname(item.get("name").toString());
+                        staffEntity.setPhone(mobile);
+                        staffEntity.setEmail(email);
+                        staffEntity.setFeature(extattr);
+                        staffEntity.setJob(position);
+                        staffService.add(staffEntity);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }catch (Exception e){
+
+            }
+        }
+    }
+
+
 }
 

@@ -61,7 +61,6 @@ public class StaffService {
      * Created by huai23 on 2018-05-26 13:55:30.
      */ 
     public ResponseEntity<String> add(StaffEntity staff){
-        User user = RequestContextHelper.getUser();
         int n = staffDao.add(staff);
         if(n==1){
             return ResponseUtil.success("添加成功");

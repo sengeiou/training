@@ -318,6 +318,7 @@ public class ProcessInstanceService {
                     }
                 }else{
                     System.out.println(" ================================  data = null : "+data);
+                    break;
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
