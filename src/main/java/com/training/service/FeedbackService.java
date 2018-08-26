@@ -33,6 +33,12 @@ public class FeedbackService {
     @Autowired
     private MemberDao memberDao;
 
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
     /**
      * 新增实体
      * @param feedback
@@ -84,6 +90,9 @@ public class FeedbackService {
      */ 
     public Page<FeedbackEntity> find(FeedbackQuery query , PageRequest page){
         List<FeedbackEntity> feedbackList = feedbackDao.find(query,page);
+        for (FeedbackEntity feedbackDB:feedbackList){
+            convert(feedbackDB);
+        }
         Long count = feedbackDao.count(query);
         Page<FeedbackEntity> returnPage = new Page<>();
         returnPage.setContent(feedbackList);
@@ -121,6 +130,21 @@ public class FeedbackService {
         MemberEntity memberEntity = memberDao.getById(feedbackDB.getMemberId());
         if(memberEntity==null){
             return;
+        }
+        feedbackDB.setMemberName(memberEntity.getName());
+        feedbackDB.setPhone(memberEntity.getPhone());
+        if(StringUtils.isNotEmpty(memberEntity.getCoachStaffId())){
+            StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+            if(staffEntity==null){
+                return;
+            }
+
+            StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+            if(storeEntity==null){
+                return;
+            }
+            feedbackDB.setStoreId(storeEntity.getStoreId());
+            feedbackDB.setStoreName(storeEntity.getName());
         }
 
 
