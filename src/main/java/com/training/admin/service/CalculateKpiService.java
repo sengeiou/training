@@ -352,7 +352,7 @@ public class CalculateKpiService {
             for (int j = 0; j < cards.size(); j++) {
                 Map memberCard = (Map)cards.get(j);
                 String cardNo = memberCard.get("card_no").toString();
-                List trainings = jdbcTemplate.queryForList("select * from taraining where card_no = ? and lesson_date >= ? and lesson_date <= ? " ,new Object[]{cardNo,startDate,endDate});
+                List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date >= ? and lesson_date <= ? " ,new Object[]{cardNo,startDate,endDate});
                 if(trainings.size()>0){
                     jks++;
                 }

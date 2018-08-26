@@ -121,7 +121,7 @@ public class ManualRestController {
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateKpi   ");
 //        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
-        String month = "201808";
+        String month = "201807";
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
 
         for (int i = 0; i < coachs.size(); i++){
