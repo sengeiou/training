@@ -57,12 +57,17 @@ public class TrainingService {
      * @param page
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
-    public Page<TrainingEntity> find(TrainingQuery query , PageRequest page){
+    public Page<Training> find(TrainingQuery query , PageRequest page){
         logger.info(" find   query = {} , page = {} ",query,page);
         List<TrainingEntity> trainingList = trainingDao.find(query,page);
+        List<Training> data = new ArrayList<>();
+        for (TrainingEntity trainingEntity : trainingList){
+            Training training = transferTraining(trainingEntity);
+            data.add(training);
+        }
         Long count = trainingDao.count(query);
-        Page<TrainingEntity> returnPage = new Page<>();
-        returnPage.setContent(trainingList);
+        Page<Training> returnPage = new Page<>();
+        returnPage.setContent(data);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);

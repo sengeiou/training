@@ -110,7 +110,20 @@ public class FeedbackService {
      */ 
     public FeedbackEntity getById(String id){
         FeedbackEntity feedbackDB = feedbackDao.getById(id);
+        convert(feedbackDB);
         return feedbackDB;
+    }
+
+    private void convert(FeedbackEntity feedbackDB) {
+        if(feedbackDB==null||StringUtils.isEmpty(feedbackDB.getMemberId())){
+            return;
+        }
+        MemberEntity memberEntity = memberDao.getById(feedbackDB.getMemberId());
+        if(memberEntity==null){
+            return;
+        }
+
+
     }
 
     /**

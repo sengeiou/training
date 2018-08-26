@@ -53,7 +53,7 @@ public class TrainingRestController {
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute TrainingQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
         query.setStatus(0);
-        Page<TrainingEntity> page = trainingService.find(query,pageRequest);
+        Page<Training> page = trainingService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
