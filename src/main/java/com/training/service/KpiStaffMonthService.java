@@ -188,7 +188,7 @@ public class KpiStaffMonthService {
         }else{
             kpiStaffMonth.setTemplateName("-");
         }
-        logger.info(" convertKpiStaffMonth kpiScore : {}   ",kpiScore);
+        logger.info(" calculateKpiStaffMonth kpiScore : {}   ",kpiScore);
         kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
         return kpiStaffMonth;
     }
