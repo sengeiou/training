@@ -76,6 +76,8 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.isSign != null && query.isSign = 0 \"> AND sign_time = '' </if>" +
+            " <if test=\"query.isSign != null && query.isSign = 1 \"> AND sign_time &gt; '' </if>" +
             " order by lesson_date DESC LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<TrainingEntity> find(@Param("query") TrainingQuery training , @Param("page") PageRequest page);
@@ -100,6 +102,8 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.isSign != null && query.isSign = 0 \"> AND sign_time = '' </if>" +
+            " <if test=\"query.isSign != null && query.isSign = 1 \"> AND sign_time &gt; '' </if>" +
             "</script>")
     Long count(@Param("query") TrainingQuery training);
 

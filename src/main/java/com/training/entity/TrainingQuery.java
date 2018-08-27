@@ -56,5 +56,7 @@ public class TrainingQuery {
 
     private String staffId;
 
+    private String isSign;
+
 }
 
