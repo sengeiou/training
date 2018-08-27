@@ -131,14 +131,13 @@ public class MemberCouponService {
      * Created by huai23 on 2018-06-30 10:02:47.
      */
     public Page<MemberCoupon> find(MemberCouponQuery query , PageRequest page){
+        logger.info(" MemberCouponService query  = {}  ",query);
         List<MemberCouponEntity> memberCouponList = memberCouponDao.find(query,page);
-
         List<MemberCoupon> memberCoupons = new ArrayList<>();
         for (MemberCouponEntity memberCouponEntity : memberCouponList){
             MemberCoupon memberCoupon = transferCoupon(memberCouponEntity);
             memberCoupons.add(memberCoupon);
         }
-
         Long count = memberCouponDao.count(query);
         Page<MemberCoupon> returnPage = new Page<>();
         returnPage.setContent(memberCoupons);
