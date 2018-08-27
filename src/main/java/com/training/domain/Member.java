@@ -82,7 +82,7 @@ public class Member {
 
     private List<MemberMedal> memberMedalList;
 
-    private String showTag;
+    private String showStatus;
 
     public String getShowStatus(){
         if(null!=MemberStatusEnum.getEnumByKey(this.status)){
