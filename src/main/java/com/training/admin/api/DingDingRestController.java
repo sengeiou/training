@@ -210,13 +210,16 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/tzl2.xls");
+        File file = new File("d:/file/guofeng2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
             System.out.println(JSON.toJSONString(item));
             if(i==0){
                 i++;
+                continue;
+            }
+            if(StringUtils.isEmpty(item.get(3))&&StringUtils.isEmpty(item.get(4))){
                 continue;
             }
             ContractManualEntity contractManualEntity = new ContractManualEntity();
@@ -245,6 +248,12 @@ public class DingDingRestController {
 //            String date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(item.get(16))));
             String date1 = item.get(16);
             String date2 = item.get(17);
+            if(date1.length()==5){
+                date1 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(date1)));
+            }
+            if(date2.length()==5){
+                date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(date2)));
+            }
             contractManualEntity.setStartDate(date1);
             contractManualEntity.setEndDate(date2);
             contractManualEntity.setRealFee(item.get(18));
@@ -334,7 +343,7 @@ public class DingDingRestController {
                 logger.info(" ============   "+contractManualEntity.getPhone() +" 不存在 ");
                 continue;
             }
-            String coachId = "123";
+            String coachId = "";
             String cardId = "1";
             if(contractManualEntity.getStatus().indexOf("有效")>=0||contractManualEntity.getStatus().indexOf("停")>=0){
                 logger.info(" ============   "+contractManualEntity.getMemberName() +" , "+contractManualEntity.getPhone() +" count =  "+contractManualEntity.getCount());
@@ -358,12 +367,15 @@ public class DingDingRestController {
                 }
                 MemberCardEntity memberCardEntity = new MemberCardEntity();
                 memberCardEntity.setCardNo(IDUtils.getId());
-                memberCardEntity.setCardId(cardId);
                 memberCardEntity.setCoachId(coachId);
                 memberCardEntity.setContractId(contractManualEntity.getContractId());
                 memberCardEntity.setMemberId(memberEntityDB.getMemberId());
                 if(contractManualEntity.getCardType().indexOf("私教")>=0) {
-                    memberCardEntity.setType(CardTypeEnum.PT.getKey());
+                    if(contractManualEntity.getCardType().indexOf("月")>=0) {
+                        memberCardEntity.setType(CardTypeEnum.PM.getKey());
+                    }else {
+                        memberCardEntity.setType(CardTypeEnum.PT.getKey());
+                    }
                 }
                 if(contractManualEntity.getCardType().indexOf("赠课")>=0) {
                     memberCardEntity.setType(CardTypeEnum.TY.getKey());
@@ -377,6 +389,7 @@ public class DingDingRestController {
                 if(contractManualEntity.getCardType().indexOf("孕产")>=0) {
                     memberCardEntity.setType(CardTypeEnum.ST3.getKey());
                 }
+                memberCardEntity.setCardId(memberCardEntity.getType());
                 memberCardEntity.setCount(count);
                 memberCardEntity.setTotal(total);
                 memberCardEntity.setDays(ut.passDayByDate(contractManualEntity.getStartDate(),contractManualEntity.getEndDate()));
@@ -405,11 +418,10 @@ public class DingDingRestController {
         return "contract_manual3执行成功";
     }
 
-
     @GetMapping("change_valid_date")
     public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   change_valid_date  ");
-        File file = new File("d:/file/dhbg.xls");
+        File file = new File("d:/file/change_card_date.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
         int i = 0;
@@ -426,8 +438,18 @@ public class DingDingRestController {
             if(item.size()>7&&StringUtils.isNotEmpty(item.get(7))){
                 remark = item.get(7);
             }
-            System.out.println(item.get(2)+" , "+item.get(5)+" , "+item.get(6)+" , "+remark);
-            Object[] params = { item.get(5) , item.get(6) , remark , item.get(2) };
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String date1 = item.get(5);
+            String date2 = item.get(6);
+            if(date1.length()==5){
+                date1 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(date1)));
+            }
+            if(date2.length()==5){
+                date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(date2)));
+            }
+            System.out.println(" cardNo = "+item.get(2)+" , startDate = "+date1+" , endDate = "+date2+" , "+remark);
+
+            Object[] params = { date1 , date2 , remark , item.get(2) };
             int n = jdbcTemplate.update(sql,params);
             if(n==1){
                 i++;
