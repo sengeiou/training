@@ -1,5 +1,6 @@
 package com.training.domain;
 
+import com.training.common.MemberStatusEnum;
 import com.training.entity.MemberLogEntity;
 import lombok.Data;
 
@@ -80,6 +81,15 @@ public class Member {
     private Integer starLevel;
 
     private List<MemberMedal> memberMedalList;
+
+    private String showTag;
+
+    public String getShowStatus(){
+        if(null!=MemberStatusEnum.getEnumByKey(this.status)){
+            return MemberStatusEnum.getEnumByKey(this.status).getDesc();
+        }
+        return "";
+    }
 
 }
 
