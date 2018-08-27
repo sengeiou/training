@@ -304,5 +304,41 @@ public class MemberTrainingTaskService {
         return n;
     }
 
+    public String updateMemberStatus() {
+        logger.info(" MemberTrainingTaskService updateMemberStatus     ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member where status not in (9)  ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map member = data.get(i);
+            logger.info(" updateMemberStatus   index = {} , name = {} , phone = {}   ",i,member.get("name"),member.get("phone"));
+            int status = Integer.parseInt(member.get("status").toString());
+            String memberId = member.get("member_id").toString();
+            List<Map<String,Object>> cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ? and type not in ('TY')  ",new Object[]{memberId});
+            if(cards.size()==0){
 
+            }else{
+                boolean isValid = false;
+                for (int j = 0; j < cards.size(); j++) {
+                    Map card = cards.get(j);
+                    int count = Integer.parseInt(card.get("count").toString());
+                    String startDate = card.get("start_date").toString();
+                    String endDate = card.get("end_date").toString();
+                    if(ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
+                        isValid = true;
+                    }
+                }
+                if(isValid){
+                    status = 1;
+                }else {
+                    status = 2;
+                }
+                jdbcTemplate.update(" update member set status = ? where  member_id = ?  ",new Object[]{status,memberId});
+                total++;
+            }
+        }
+        logger.info(" updateMemberStatus执行成功    total = {}  ",total);
+        return "updateMemberStatus执行成功";
+
+
+    }
 }

@@ -27,9 +27,19 @@ public class MemberTask {
     }
 
     /**
-     * 更新学员勋章
+     * 更新学员状态
      */
     @Scheduled(cron = "0 10 2 * * *")
+    public void updateMemberStatus(){
+        logger.info("start updateMemberStatus!  time = {} ", ut.currentTime());
+        memberTrainingTaskService.updateMemberStatus();
+        logger.info("end updateMemberStatus!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 更新学员勋章
+     */
+    @Scheduled(cron = "0 20 2 * * *")
     public void updateMemberMedal(){
         logger.info("start updateMemberMedal!  time = {} ", ut.currentTime());
         memberTrainingTaskService.updateMemberMedal();
