@@ -377,7 +377,7 @@ public class DingDingRestController {
                         memberCardEntity.setType(CardTypeEnum.PT.getKey());
                     }
                 }
-                if(contractManualEntity.getCardType().indexOf("赠课")>=0) {
+                if(contractManualEntity.getCardType().indexOf("赠课")>=0||contractManualEntity.getCardType().indexOf("体验")>=0) {
                     memberCardEntity.setType(CardTypeEnum.TY.getKey());
                 }
                 if(contractManualEntity.getCardType().indexOf("格斗健身")>=0) {
