@@ -11,8 +11,6 @@ import java.util.Date;
 @Data
 public class MemberCard {
 
-    private Long pkId;
-
     private String cardNo;
 
     private String cardId;

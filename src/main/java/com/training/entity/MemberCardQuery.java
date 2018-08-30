@@ -10,8 +10,6 @@ import java.util.Date;
 @Data
 public class MemberCardQuery {
 
-    private Long pkId;
-
     private String cardNo;
 
     private String cardId;

@@ -61,7 +61,7 @@ public interface MemberCardRepository {
             "</script>")
     int add(@Param("memberCard") MemberCardEntity memberCard);
 
-    @Select("<script> SELECT pk_id,card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
@@ -83,7 +83,7 @@ public interface MemberCardRepository {
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " order by pk_id asc LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by card_no asc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCardEntity> find(@Param("query") MemberCardQuery memberCard , @Param("page") PageRequest page);
 
@@ -111,7 +111,7 @@ public interface MemberCardRepository {
             "</script>")
     Long count(@Param("query") MemberCardQuery memberCard);
 
-    @Select("<script> SELECT pk_id,card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE card_no = #{id} " +
             "</script>")
@@ -154,7 +154,7 @@ public interface MemberCardRepository {
             "</script>")
     int delay(@Param("memberCard") MemberCardEntity memberCard);
 
-    @Select("<script> SELECT pk_id,card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
@@ -180,7 +180,7 @@ public interface MemberCardRepository {
             " <if test=\"query.contractId != null\"> AND contract_id = #{query.contractId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
-            " order by pk_id asc LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by card_no asc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCardEntity> findPro(@Param("query") MemberCardQuery memberCard , @Param("page") PageRequest page);
 

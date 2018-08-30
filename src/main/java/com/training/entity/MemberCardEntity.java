@@ -10,8 +10,6 @@ import java.util.Date;
 @Data
 public class MemberCardEntity {
 
-    private Long pkId;
-
     private String cardNo;
 
     private String cardId;

@@ -28,6 +28,7 @@ public class MemberCardDao {
      * Created by huai23 on 2018-05-26 13:53:17.
      */ 
     public int add(MemberCardEntity memberCard){
+        memberCard.setCardNo(null);
         int n = memberCardRepository.add(memberCard);
         return n;
     }
