@@ -47,6 +47,8 @@ public interface FeedbackRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
+            " <if test=\"query.phone != null\"> AND member_id in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id  from member where type = 'M' AND coach_staff_id in ( select staff_id from staff where store_id = #{query.storeId}  )  ) </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<FeedbackEntity> find(@Param("query") FeedbackQuery feedback , @Param("page") PageRequest page);
@@ -60,6 +62,8 @@ public interface FeedbackRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
+            " <if test=\"query.phone != null\"> AND member_id in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id  from member where type = 'M' AND coach_staff_id in ( select staff_id from staff where store_id = #{query.storeId}  )  ) </if>" +
             "</script>")
     Long count(@Param("query") FeedbackQuery feedback);
 

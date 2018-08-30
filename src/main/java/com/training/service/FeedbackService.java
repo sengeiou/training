@@ -89,6 +89,22 @@ public class FeedbackService {
      * Created by huai23 on 2018-05-26 13:54:54.
      */ 
     public Page<FeedbackEntity> find(FeedbackQuery query , PageRequest page){
+        logger.info(" =================   FeedbackService  find  query111 = {}",query);
+        if(StringUtils.isEmpty(query.getTitle())){
+            query.setTitle(null);
+        }
+        if(StringUtils.isEmpty(query.getStoreId())){
+            query.setStoreId(null);
+        }
+        if(StringUtils.isEmpty(query.getPhone())){
+            query.setPhone(null);
+        }
+        if(StringUtils.isNotEmpty(query.getType())){
+            if(query.getType().indexOf("changecoach")>=0){
+                query.setType("change_coach");
+            }
+        }
+        logger.info(" =================   FeedbackService  find  query222 = {}",query);
         List<FeedbackEntity> feedbackList = feedbackDao.find(query,page);
         for (FeedbackEntity feedbackDB:feedbackList){
             convert(feedbackDB);

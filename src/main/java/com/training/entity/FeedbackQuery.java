@@ -34,6 +34,9 @@ public class FeedbackQuery {
 
     private String endDate;
 
+    private String storeId;
+
+    private String phone;
 
 }
 
