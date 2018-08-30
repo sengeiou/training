@@ -58,5 +58,9 @@ public class TrainingQuery {
 
     private String isSign;
 
+    private String name;
+
+    private String phone;
+
 }
 
