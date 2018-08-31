@@ -74,6 +74,10 @@ public class WechatService {
                 StaffEntity staffEntity = staffDao.getByOpenId(memberEntity.getOpenId());
                 if(staffEntity!=null){
                     jo.put("staffId",staffEntity.getStaffId());
+                    jo.put("coachImage","");
+                    if(StringUtils.isNotEmpty(staffEntity.getImage())){
+                        jo.put("coachImage",staffEntity.getImage());
+                    }
                 }
                 jo.put("kpiScore","0");
                 KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
