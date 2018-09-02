@@ -76,6 +76,41 @@ public class MemberTrainingTaskService {
         return "updateTrainingHour执行成功";
     }
 
+    public String updateMemberInfo() {
+        logger.info(" MemberTrainingTaskService updateMemberInfo ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member where coach_staff_id <> ''  ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map member = data.get(i);
+            String memberId = member.get("member_id").toString();
+            String coach_staff_id = member.get("coach_staff_id").toString();
+            StaffEntity staffEntity = staffDao.getById(coach_staff_id);
+            if(staffEntity!=null){
+                jdbcTemplate.update(" update member set store_id = ? where member_id = ? ",new Object[]{staffEntity.getStoreId(),memberId});
+            }
+        }
+        logger.info("total = "+total);
+        return "updateMemberInfo执行成功";
+    }
+
+    public String updateTrainingInfo() {
+        logger.info(" MemberTrainingTaskService updateTrainingInfo ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from training ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map training = data.get(i);
+            String trainingId = training.get("training_id").toString();
+            String coach_id = training.get("coach_id").toString();
+            MemberEntity coach = memberDao.getById(coach_id);
+            StaffEntity staffEntity = staffDao.getByOpenId(coach.getOpenId());
+            if(staffEntity!=null){
+                jdbcTemplate.update(" update training set store_id = ? , staff_id = ?  where training_id = ? ",new Object[]{staffEntity.getStoreId(),staffEntity.getStaffId(),trainingId});
+            }
+        }
+        logger.info("total = "+total);
+        return "updateTrainingInfo执行成功";
+    }
+
     public String updateMemberMedal() {
         logger.info(" MemberTrainingTaskService updateMemberMedal     ");
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT member_id,name,training_hours from member   ");

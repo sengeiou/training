@@ -824,11 +824,11 @@ public class MemberService {
             }
         }
 
-
         StaffEntity staffEntity = staffDao.getById(member.getStaffId());
         logger.info("  changeCoach  staffEntity = {}", staffEntity);
         MemberEntity memberUpdate = new MemberEntity();
         memberUpdate.setMemberId(member.getMemberId());
+        memberUpdate.setStoreId(staffEntity.getStoreId());
         memberUpdate.setCoachStaffId(staffEntity.getStaffId());
         logger.info("  changeCoach  memberUpdate = {}",memberUpdate);
         int n = memberDao.update(memberUpdate);
