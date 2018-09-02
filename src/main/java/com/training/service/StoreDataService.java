@@ -528,13 +528,9 @@ public class StoreDataService {
             staffIdSet.add(staff_id);
             String custname = staff.get("custname").toString();
             staffNameSet.add(custname);
-
             if(staff.get("job")!=null && "店长".equals(staff.get("job").toString())){
                 KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff_id,month);
-
                 logger.info(" StoreDataService   queryMemberData  kpiStaffMonthEntity = {} ",kpiStaffMonthEntity);
-
-
                 if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getJks())){
                     jks = Integer.parseInt(kpiStaffMonthEntity.getJks());
                 }
@@ -554,7 +550,6 @@ public class StoreDataService {
         int count_tk = 0;
         int count_yx = 0;
 
-
         for (int i = 0; i < members.size(); i++) {
             Map member = members.get(i);
             String coach_staff_id = member.get("coach_staff_id").toString();
@@ -562,15 +557,18 @@ public class StoreDataService {
                 continue;
             }
             count++;
+            if("1".equals(member.get("status").toString())){
+                count_yx++;
+            }
             if("9".equals(member.get("status").toString())){
                 count_tk++;
             }
-            String sql_card = "select * from member_card where member_id = ? and type <> 'TY' and end_date >= ?  ";
-            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate()});
-            if(cards.size()>0){
-                count_yx++;
-                logger.info(" StoreDataService   member  name = {} ",member.get("name"));
-            }
+//            String sql_card = "select * from member_card where member_id = ? and type <> 'TY' and end_date >= ?  ";
+//            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate()});
+//            if(cards.size()>0){
+//                count_yx++;
+//                logger.info(" StoreDataService   member  name = {} ",member.get("name"));
+//            }
         }
 
         logger.info(" StoreDataService   queryMemberData  count = {} ",count);
