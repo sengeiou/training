@@ -132,6 +132,16 @@ public class ManualRestController {
         return "createStaffMonth执行成功";
     }
 
+    @GetMapping("kpione")
+    public Object calculateOneKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" calculateOneKpi   ");
+        String staffId = "1530138484178339262d92e074f7497833935433fa6a0";
+        String month = "201807";
+        calculateKpiService.calculateStaffKpi(staffId,month);
+        return "calculateOneKpi执行成功";
+    }
+
+
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateKpi   ");

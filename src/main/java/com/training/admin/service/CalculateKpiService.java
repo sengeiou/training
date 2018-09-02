@@ -330,6 +330,7 @@ public class CalculateKpiService {
             Map item = (Map)data.get(i);
             String type = item.get("type").toString();
             if("续课".equals(type)){
+                logger.info(" getXks"+xks+"  item = {} ",item);
                 xks++;
             }
         }
@@ -337,6 +338,9 @@ public class CalculateKpiService {
         return xks;
     }
 
+    /**
+     *  余额为0 结课+1 , 有效期过期30天以上算结课
+     */
     private int getJks(String staffId, String month) {
         int jks = 0;
         String y = month.substring(0,4);
@@ -348,68 +352,90 @@ public class CalculateKpiService {
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
             String memberId = member.get("member_id").toString();
-            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count = 0 and type in ('PT','PM') and end_date >= ? and end_date <= ? " ,new Object[]{memberId,startDate,endDate});
+            String name = member.get("name").toString();
+            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count = 0 and type in ('PT','PM') and end_date >= ?  " ,new Object[]{memberId,startDate});
             for (int j = 0; j < cards.size(); j++) {
                 Map memberCard = (Map)cards.get(j);
                 String cardNo = memberCard.get("card_no").toString();
                 List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date >= ? and lesson_date <= ? " ,new Object[]{cardNo,startDate,endDate});
                 if(trainings.size()>0){
-                    jks++;
+                    trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date > ? " ,new Object[]{cardNo,endDate});
+                    if(trainings.size()==0){
+                        logger.info(" memberId = {} , cardNo = {} ",memberId,cardNo);
+                        jks++;
+                    }
                 }
             }
-            String sd = ut.currentDate(endDate,-60);
+            String sd = ut.currentDate(startDate,-30);
+            if(ut.passDayByDate(endDate,ut.currentDate())<0){
+                endDate = ut.currentDate();
+            }
             String ed = ut.currentDate(endDate,-30);
-            List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? " ,new Object[]{memberId,startDate,endDate});
-//            jks = jks+cards_end.size();
-
+            List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? " ,new Object[]{memberId,sd,ed});
+//            logger.info(" memberId = {} , sd = {} , ed = {} ,  cards_end.size() = {} ",memberId,sd,ed,cards_end.size());
+            if(cards_end.size()>0){
+                logger.info(" cards_end.size() > 0   memberId = {} ",memberId);
+                jks++;
+            }
         }
+        logger.info(" jks = {} ",jks);
         return jks;
     }
 
     private int queryLessonCount(String staffId, String month) {
-        StaffEntity staffEntity = staffDao.getById(staffId);
-        if(staffEntity==null){
-            return 0;
-        }
-
-        if(StringUtils.isEmpty(staffEntity.getOpenId())){
-            return 0;
-        }
-
-        MemberEntity coach = memberDao.getByOpenId(staffEntity.getOpenId());
-        if(coach==null){
-            return 0;
-        }
-
-        String y = month.substring(0,4);
-        String m = month.substring(4,6);
-        String startDate = y+"-"+m+"-01";
-        String endDate = y+"-"+m+"-31";
-
-        String sql = "select training_id,lesson_id from training where coach_id = ? and type in ('P') and lesson_date >= ? and lesson_date <= ? ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{coach.getMemberId(),startDate,endDate});
-
-        return data.size();
-    }
-
-    public int queryValidMemberCount(String staffId, String month) {
         String y = month.substring(0,4);
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
         int count = 0;
-        String sql = "select * from member where coach_staff_id = ? and status in (0) ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
+        int count_sign = 0;
+        int count_ty = 0;
+        int count_ty_sign = 0;
+        String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and status >= 0 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,startDate,endDate});
         for (int i = 0; i < data.size(); i++) {
-            Map member = (Map)data.get(i);
-            String memberId = member.get("member_id").toString();
-            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and type in ('PT','PM') and end_date >= ? " ,new Object[]{memberId,startDate});
-//            logger.info(" cards  = {} , startDate = {} , endDate = {}  ",cards.size(),startDate,endDate);
-            if(cards.size()>0){
-                count++;
+            Map training = (Map)data.get(i);
+            String type = training.get("type").toString();
+            String card_type = training.get("card_type").toString();
+            String sign_time = training.get("sign_time").toString();
+            if("P".equals(type)){
+                if("PT".equals(card_type)||"PM".equals(card_type)){
+                    count++;
+                    if(StringUtils.isNotEmpty(sign_time)){
+                        count_sign++;
+                    }
+                }else if("TY".equals(card_type)){
+                    count_ty++;
+                    if(StringUtils.isNotEmpty(sign_time)){
+                        count_ty_sign++;
+                    }
+                }
             }
         }
+        logger.info(" queryLessonCount  count = {} , count_sign = {} ,  count_ty = {} , count_ty_sign = {} ",count,count_sign,count_ty,count_ty_sign);
         return count;
+    }
+
+    /**
+     *  有效会员数 ： 非停 非结
+     */
+    public int queryValidMemberCount(String staffId, String month) {
+        int count = 0;
+        String sql = " select * from member where coach_staff_id = ? and status in (1) ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
+//        for (int i = 0; i < data.size(); i++) {
+//            Map member = (Map)data.get(i);
+//            String memberId = member.get("member_id").toString();
+//            String name = member.get("name").toString();
+//            String phone = member.get("phone").toString();
+//            logger.info(" validMemberCount   name = {} , phone = {} ",name,phone);
+//            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and type in ('PT','PM') and end_date >= ? " ,new Object[]{memberId,startDate});
+//            if(cards.size()>0){
+//                count++;
+//            }
+//        }
+        logger.info(" queryValidMemberCount  data.size() = {} , count = {} ",data.size(),count);
+        return data.size();
 
     }
 
