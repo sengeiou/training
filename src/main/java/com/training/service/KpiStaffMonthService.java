@@ -593,7 +593,7 @@ public class KpiStaffMonthService {
     public KpiStaffMonth getStaffKpiDetail(String id,String month){
         logger.info(" getByIdAndMonth , id = {} , month = {}  ",id,month);
         KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getByIdAndMonth(id,month);
-        KpiStaffMonth kpiStaffMonth = convertKpiStaffMonthDetail(kpiStaffMonthDB);
+        KpiStaffMonth kpiStaffMonth = calculateKpiStaffMonth(kpiStaffMonthDB);
         return kpiStaffMonth;
     }
 

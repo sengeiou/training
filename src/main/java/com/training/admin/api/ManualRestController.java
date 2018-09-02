@@ -127,7 +127,7 @@ public class ManualRestController {
         logger.info(" calculateKpi   ");
 //        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
         String month = "201807";
-        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '店长' ");
 
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
