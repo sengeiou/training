@@ -268,8 +268,8 @@ public class StoreDataService {
             String custname = staff.get("custname").toString();
             staffNameSet.add(custname);
         }
-        String sql = " SELECT * from member where created >= ? and created <= ? ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        String sql = " SELECT * from member ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
         logger.info(" StoreDataService   queryIncome  members = {} ",members.size());
 
         int count = 0;
@@ -293,7 +293,7 @@ public class StoreDataService {
 //                continue;
 //            }
 
-            String sql_training = "select * from training where member_id = ? and card_type in ('PT') and  lesson_date >= ? and lesson_date <= ?  ";
+            String sql_training = "select * from training where member_id = ? and card_type in ('PT') and status = 0 and  lesson_date >= ? and lesson_date <= ?  ";
             List trainings = jdbcTemplate.queryForList(sql_training,new Object[]{member.get("member_id").toString(),startDate,endDate});
 
             logger.info(" StoreDataService   queryIncome  trainings = {} ",trainings.size());
@@ -406,8 +406,8 @@ public class StoreDataService {
             String custname = staff.get("custname").toString();
             staffNameSet.add(custname);
         }
-        String sql = " SELECT * from member where created >= ? and created <= ? ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        String sql = " SELECT * from member ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
         logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
 
         int count = 0;
@@ -431,9 +431,9 @@ public class StoreDataService {
             String sql_card = "select * from member_card where member_id = ? and type = 'TY' and created >= ? and created <= ?  ";
             List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
             if(cards.size()>0){
-
+                count_dd++;
             }
-            count_dd++;
+
         }
 
 
@@ -546,7 +546,8 @@ public class StoreDataService {
 
         }
         String sql = " SELECT * from member where created >= ? and created <= ? ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        sql = " SELECT * from member ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
         logger.info(" StoreDataService   queryMemberData  members = {} ",members.size());
 
         int count = 0;
@@ -561,7 +562,7 @@ public class StoreDataService {
                 continue;
             }
             count++;
-            if("-1".equals(member.get("status").toString())){
+            if("9".equals(member.get("status").toString())){
                 count_tk++;
             }
             String sql_card = "select * from member_card where member_id = ? and type <> 'TY' and end_date >= ?  ";

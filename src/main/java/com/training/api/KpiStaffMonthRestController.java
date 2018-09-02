@@ -96,6 +96,20 @@ public class KpiStaffMonthRestController {
     /**
      * 根据ID查询实体
      * Created by huai23 on 2018-07-13 23:24:53.
+     */
+    @RequestMapping (value = "getStaffKpiDetail", method = RequestMethod.GET)
+    public ResponseEntity<String> getStaffKpiDetail(@ModelAttribute KpiStaffMonth kpiStaffMonth,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" KpiStaffMonthRestController   getStaffKpiDetail , kpiStaffMonth = {}  ",kpiStaffMonth);
+        KpiStaffMonth kpiStaffMonthDB = kpiStaffMonthService.getStaffKpiDetail(kpiStaffMonth.getStaffId(),kpiStaffMonth.getMonth());
+        if(kpiStaffMonthDB==null){
+            return ResponseUtil.exception("查无数据");
+        }
+        return ResponseUtil.success(kpiStaffMonthDB);
+    }
+
+    /**
+     * 根据ID查询实体
+     * Created by huai23 on 2018-07-13 23:24:53.
      */ 
     @RequestMapping (value = "getByIdAndMonth", method = RequestMethod.GET)
     public ResponseEntity<String> getByIdAndMonth(@ModelAttribute KpiStaffMonth kpiStaffMonth,HttpServletRequest request, HttpServletResponse response){
