@@ -114,26 +114,29 @@ public class CalculateKpiService {
             xkl = xks/jks;
         }
 
+        int cjs = getCjs(staffId,month);
+        int tcs = getTcs(staffId,month);
+        int zye = getZye(staffId,month);
+
         int hyd = 0;
         if(validMemberCount>0&&yyts>0){
             hyd = lessonCount*100/(validMemberCount*yyts);
         }
 //        logger.info(" hyd  = {}  ",hyd);
         if("店长".equals(staffEntity.getJob())){
-            xks = 0;
-            jks = 0;
-            lessonCount = 0;
-            validMemberCount = 0;
-            hyd = 0;
+            int qdxks = 0;
+            int qdjks = 0;
+            int qdlessonCount = 0;
+            int qdvalidMemberCount = 0;
 
             int qdxkl = 100;
             double qdzjs = 0;
             int qdhydp = 0;
             int qdhyd = 0;
 
-            int zye = 0;
-            int cjs = 0;
-            int tcs = 0;
+            int qdzye = 0;
+            int qdcjs = 0;
+            int qdtcs = 0;
             List<String> staffIdList = queryStoreStaffList(staffEntity.getStoreId(),month);
             int staffCount = staffIdList.size();
             for (String subStaffId : staffIdList){
@@ -146,66 +149,77 @@ public class CalculateKpiService {
                     qdhydp = qdhydp + hydp;
                 }
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getXks())){
-                    xks = xks + Integer.parseInt(subKpiStaffMonthEntity.getXks());
+                    qdxks = qdxks + Integer.parseInt(subKpiStaffMonthEntity.getXks());
                 }
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getJks())){
-                    jks = jks + Integer.parseInt(subKpiStaffMonthEntity.getJks());
+                    qdjks = qdjks + Integer.parseInt(subKpiStaffMonthEntity.getJks());
                 }
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getSjks())){
-                    lessonCount = lessonCount + Integer.parseInt(subKpiStaffMonthEntity.getSjks());
+                    qdlessonCount = qdlessonCount + Integer.parseInt(subKpiStaffMonthEntity.getSjks());
                 }
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getYxhys())){
-                    validMemberCount = validMemberCount + Integer.parseInt(subKpiStaffMonthEntity.getYxhys());
+                    qdvalidMemberCount = qdvalidMemberCount + Integer.parseInt(subKpiStaffMonthEntity.getYxhys());
                 }
-
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getZjs())){
                     qdzjs = qdzjs + Integer.parseInt(subKpiStaffMonthEntity.getZjs());
                 }
-
-                zye = zye + getZye(subStaffId,month);
-                cjs = cjs + getCjs(subStaffId,month);
-                tcs = tcs + getTcs(subStaffId,month);
+                if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getZye())){
+                    qdzye = qdzye + Integer.parseInt(subKpiStaffMonthEntity.getZye());
+                }
+                if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getCjs())){
+                    qdcjs = qdcjs + Integer.parseInt(subKpiStaffMonthEntity.getCjs());
+                }
+                if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getTcs())){
+                    qdtcs = qdtcs + Integer.parseInt(subKpiStaffMonthEntity.getTcs());
+                }
             }
 
-            //计算店长的营业额，成交数和体测数
-            zye = zye + getZye(staffId,month);
-            cjs = cjs + getCjs(staffId,month);
-            tcs = tcs + getTcs(staffId,month);
+            //计算要加上店长的营业额，成交数和体测数
+            qdxks = qdxks + xks;
+            qdjks = qdjks + jks;
+            qdlessonCount = qdlessonCount + lessonCount;
+            qdvalidMemberCount = qdvalidMemberCount + validMemberCount;
+
+            qdzye = qdzye + zye;
+            qdcjs = qdcjs + cjs;
+            qdtcs = qdtcs + tcs;
 
             if(staffCount>0){
                 qdhydp = qdhydp/staffCount;
                 qdzjs = qdzjs/staffCount;
             }
-
-            xkl = 100;
-            if(jks>0){
-                xkl = xks/jks;
-                qdxkl = xks/jks;
+            if(qdjks>0){
+                qdxkl = qdxks/qdjks;
             }
-            if(validMemberCount>0&&yyts>0){
-                hyd = lessonCount*100/(validMemberCount*yyts);
-                qdhyd = lessonCount*100/(validMemberCount*yyts);
+            if(qdvalidMemberCount>0&&yyts>0){
+                qdhyd = qdlessonCount*100/(qdvalidMemberCount*yyts);
             }
 
             int xswcl = 100;
             if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getXsmb())){
                 int xsmb = Integer.parseInt(kpiStaffMonthEntity.getXsmb());
                 if(xsmb>0){
-                    xswcl = zye*100/xsmb;
+                    xswcl = qdzye*100/xsmb;
                 }
             }
             int tczhl = 0;
-            if(tcs>0){
-                tczhl = cjs*100/tcs;
+            if(qdtcs>0){
+                tczhl = qdcjs*100/qdtcs;
             }
-            kpiStaffMonthEntity.setZye(""+zye);
+            kpiStaffMonthEntity.setQdzye(""+qdzye);
+
+            kpiStaffMonthEntity.setQdxks(""+qdxks);
+            kpiStaffMonthEntity.setQdjks(""+qdjks);
+            kpiStaffMonthEntity.setQdyxhys(""+qdvalidMemberCount);
+            kpiStaffMonthEntity.setQdsjks(""+qdlessonCount);
+
             kpiStaffMonthEntity.setXswcl(""+xswcl);
             kpiStaffMonthEntity.setQdxkl(""+qdxkl);
             kpiStaffMonthEntity.setQdhyd(""+qdhyd);
             kpiStaffMonthEntity.setQdhydp(""+qdhydp);
             kpiStaffMonthEntity.setQdzjs(ut.getDoubleString(qdzjs));
-            kpiStaffMonthEntity.setCjs(""+cjs);
-            kpiStaffMonthEntity.setTcs(""+tcs);
+            kpiStaffMonthEntity.setQdcjs(""+qdcjs);
+            kpiStaffMonthEntity.setQdtcs(""+qdtcs);
             kpiStaffMonthEntity.setTczhl(""+tczhl);
         }
 
@@ -216,6 +230,9 @@ public class CalculateKpiService {
         kpiStaffMonthEntity.setYxhys(""+validMemberCount);
         kpiStaffMonthEntity.setYyts(""+yyts);
         kpiStaffMonthEntity.setHyd(""+hyd);
+        kpiStaffMonthEntity.setCjs(""+cjs);
+        kpiStaffMonthEntity.setTcs(""+tcs);
+        kpiStaffMonthEntity.setZye(""+zye);
 
         if(StringUtils.isNotEmpty(templateId)){
             KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);

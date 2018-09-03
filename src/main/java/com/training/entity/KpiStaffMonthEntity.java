@@ -54,9 +54,23 @@ public class KpiStaffMonthEntity {
 
     private String zye;
 
+    private String qdzye;
+
     private String xsmb;
 
     private String xswcl;
+
+    private String qdxks;
+
+    private String qdjks;
+
+    private String qdsjks;
+
+    private String qdfsjks;
+
+    private String qdyxhys;
+
+    private String qdyyts;
 
     private String qdxkl;
 
@@ -69,6 +83,10 @@ public class KpiStaffMonthEntity {
     private String cjs;
 
     private String tcs;
+
+    private String qdcjs;
+
+    private String qdtcs;
 
     private String tczhl;
 

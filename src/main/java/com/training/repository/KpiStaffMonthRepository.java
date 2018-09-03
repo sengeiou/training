@@ -35,7 +35,18 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tss != null\"> tss, </if>" +
                 " <if test=\"kpiStaffMonth.hydp != null\"> hydp, </if>" +
                 " <if test=\"kpiStaffMonth.zye != null\"> zye, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdzye != null\"> qdzye, </if>" +
+
                 " <if test=\"kpiStaffMonth.xsmb != null\"> xsmb, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdxks != null\"> qdxks, </if>" +
+                " <if test=\"kpiStaffMonth.qdjks != null\"> qdjks, </if>" +
+                " <if test=\"kpiStaffMonth.qdsjks != null\"> qdsjks, </if>" +
+                " <if test=\"kpiStaffMonth.qdfsjks != null\"> qdfsjks, </if>" +
+                " <if test=\"kpiStaffMonth.qdyxhys != null\"> qdyxhys, </if>" +
+                " <if test=\"kpiStaffMonth.qdyyts != null\"> qdyyts, </if>" +
+
                 " <if test=\"kpiStaffMonth.xswcl != null\"> xswcl, </if>" +
                 " <if test=\"kpiStaffMonth.qdxkl != null\"> qdxkl, </if>" +
                 " <if test=\"kpiStaffMonth.qdzjs != null\"> qdzjs, </if>" +
@@ -43,6 +54,10 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.qdhyd != null\"> qdhyd, </if>" +
                 " <if test=\"kpiStaffMonth.cjs != null\"> cjs, </if>" +
                 " <if test=\"kpiStaffMonth.tcs != null\"> tcs, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdcjs != null\"> qdcjs, </if>" +
+                " <if test=\"kpiStaffMonth.qdtcs != null\"> qdtcs, </if>" +
+
                 " <if test=\"kpiStaffMonth.tczhl != null\"> tczhl, </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> kpi_score, </if>" +
                 " <if test=\"kpiStaffMonth.kpiData != null\"> kpi_data, </if>" +
@@ -80,14 +95,29 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tss != null\"> #{kpiStaffMonth.tss}, </if>" +
                 " <if test=\"kpiStaffMonth.hydp != null\"> #{kpiStaffMonth.hydp}, </if>" +
                 " <if test=\"kpiStaffMonth.zye != null\"> #{kpiStaffMonth.zye}, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdzye != null\"> #{kpiStaffMonth.qdzye}, </if>" +
+
                 " <if test=\"kpiStaffMonth.xsmb != null\"> #{kpiStaffMonth.xsmb}, </if>" +
                 " <if test=\"kpiStaffMonth.xswcl != null\"> #{kpiStaffMonth.xswcl}, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdxks != null\"> #{kpiStaffMonth.qdxks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdjks != null\"> #{kpiStaffMonth.qdjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdsjks != null\"> #{kpiStaffMonth.qdsjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdfsjks != null\"> #{kpiStaffMonth.qdfsjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdyxhys != null\"> #{kpiStaffMonth.qdyxhys}, </if>" +
+                " <if test=\"kpiStaffMonth.qdyyts != null\"> #{kpiStaffMonth.qdyyts}, </if>" +
+
                 " <if test=\"kpiStaffMonth.qdxkl != null\"> #{kpiStaffMonth.qdxkl}, </if>" +
                 " <if test=\"kpiStaffMonth.qdzjs != null\"> #{kpiStaffMonth.qdzjs}, </if>" +
                 " <if test=\"kpiStaffMonth.qdhydp != null\"> #{kpiStaffMonth.qdhydp}, </if>" +
                 " <if test=\"kpiStaffMonth.qdhyd != null\"> #{kpiStaffMonth.qdhyd}, </if>" +
                 " <if test=\"kpiStaffMonth.cjs != null\"> #{kpiStaffMonth.cjs}, </if>" +
                 " <if test=\"kpiStaffMonth.tcs != null\"> #{kpiStaffMonth.tcs}, </if>" +
+
+                " <if test=\"kpiStaffMonth.qdcjs != null\"> #{kpiStaffMonth.qdcjs}, </if>" +
+                " <if test=\"kpiStaffMonth.qdtcs != null\"> #{kpiStaffMonth.qdtcs}, </if>" +
+
                 " <if test=\"kpiStaffMonth.tczhl != null\"> #{kpiStaffMonth.tczhl}, </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> #{kpiStaffMonth.kpiScore}, </if>" +
                 " <if test=\"kpiStaffMonth.kpiData != null\"> #{kpiStaffMonth.kpiData}, </if>" +
@@ -107,7 +137,8 @@ public interface KpiStaffMonthRepository {
             "</script>")
     int add(@Param("kpiStaffMonth") KpiStaffMonthEntity kpiStaffMonth);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl,qdxkl,qdzjs,qdhydp,qdhyd,cjs,tcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,qdzye," +
+            " xsmb,qdxks,qdjks,qdsjks,qdfsjks,qdyxhys,qdyyts,xswcl,qdxkl,qdzjs,qdhydp,qdhyd,cjs,tcs,qdcjs,qdtcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
             " FROM kpi_staff_month " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
@@ -197,9 +228,9 @@ public interface KpiStaffMonthRepository {
             "</script>")
     Long count(@Param("query") KpiStaffMonthQuery kpiStaffMonth);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,xsmb,xswcl," +
-            " qdxkl,qdzjs,qdhydp,qdhyd,cjs,tcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
-            " FROM kpi_staff_month " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,type,year,month,xks,jks,sjks,fsjks,yxhys,yyts,xkl,hyd,zjs,tnkh,zykh,tss,hydp,zye,qdzye," +
+            " xsmb,qdxks,qdjks,qdsjks,qdfsjks,qdyxhys,qdyyts,xswcl,qdxkl,qdzjs,qdhydp,qdhyd,cjs,tcs,qdcjs,qdtcs,tczhl,kpi_score,kpi_data,param1,param2,param3,param4,param5,param6,param7,param8,remark,status,created,modified " +
+            " FROM kpi_staff_month" +
             " WHERE staff_id = #{id} and month = #{month} " +
             "</script>")
     KpiStaffMonthEntity getByIdAndMonth(@Param("id") String id,@Param("month") String month);
@@ -223,14 +254,25 @@ public interface KpiStaffMonthRepository {
                 " <if test=\"kpiStaffMonth.tss != null\"> tss = #{kpiStaffMonth.tss} , </if>" +
                 " <if test=\"kpiStaffMonth.hydp != null\"> hydp = #{kpiStaffMonth.hydp} , </if>" +
                 " <if test=\"kpiStaffMonth.zye != null\"> zye = #{kpiStaffMonth.zye} , </if>" +
+                " <if test=\"kpiStaffMonth.qdzye != null\"> qdzye = #{kpiStaffMonth.qdzye} , </if>" +
                 " <if test=\"kpiStaffMonth.xsmb != null\"> xsmb = #{kpiStaffMonth.xsmb} , </if>" +
                 " <if test=\"kpiStaffMonth.xswcl != null\"> xswcl = #{kpiStaffMonth.xswcl} , </if>" +
+
+                " <if test=\"kpiStaffMonth.qdxks != null\"> qdxks = #{kpiStaffMonth.qdxks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdjks != null\"> qdjks = #{kpiStaffMonth.qdjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdsjks != null\"> qdsjks = #{kpiStaffMonth.qdsjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdfsjks != null\"> qdfsjks = #{kpiStaffMonth.qdfsjks}, </if>" +
+                " <if test=\"kpiStaffMonth.qdyxhys != null\"> qdyxhys = #{kpiStaffMonth.qdyxhys}, </if>" +
+                " <if test=\"kpiStaffMonth.qdyyts != null\"> qdyyts = #{kpiStaffMonth.qdyyts}, </if>" +
+
                 " <if test=\"kpiStaffMonth.qdxkl != null\"> qdxkl = #{kpiStaffMonth.qdxkl} , </if>" +
                 " <if test=\"kpiStaffMonth.qdzjs != null\"> qdzjs = #{kpiStaffMonth.qdzjs} , </if>" +
                 " <if test=\"kpiStaffMonth.qdhydp != null\"> qdhydp = #{kpiStaffMonth.qdhydp} , </if>" +
                 " <if test=\"kpiStaffMonth.qdhyd != null\"> qdhyd = #{kpiStaffMonth.qdhyd} , </if>" +
                 " <if test=\"kpiStaffMonth.cjs != null\"> cjs = #{kpiStaffMonth.cjs} , </if>" +
                 " <if test=\"kpiStaffMonth.tcs != null\"> tcs = #{kpiStaffMonth.tcs} , </if>" +
+                " <if test=\"kpiStaffMonth.qdcjs != null\"> qdcjs = #{kpiStaffMonth.qdcjs} , </if>" +
+                " <if test=\"kpiStaffMonth.qdtcs != null\"> qdtcs = #{kpiStaffMonth.qdtcs} , </if>" +
                 " <if test=\"kpiStaffMonth.tczhl != null\"> tczhl = #{kpiStaffMonth.tczhl} , </if>" +
                 " <if test=\"kpiStaffMonth.kpiScore != null\"> kpi_score = #{kpiStaffMonth.kpiScore} , </if>" +
                 " <if test=\"kpiStaffMonth.kpiData != null\"> kpi_data = #{kpiStaffMonth.kpiData} , </if>" +
