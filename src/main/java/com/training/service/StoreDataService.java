@@ -268,8 +268,8 @@ public class StoreDataService {
             String custname = staff.get("custname").toString();
             staffNameSet.add(custname);
         }
-        String sql = " SELECT * from member ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
+        String sql = " SELECT * from member where created <= ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         logger.info(" StoreDataService   queryIncome  members = {} ",members.size());
 
         int count = 0;
@@ -301,6 +301,11 @@ public class StoreDataService {
             for (int j = 0; j < trainings.size(); j++) {
                 Map training = (Map)trainings.get(j);
                 String card_no = training.get("card_no").toString();
+                String staff_id = training.get("staff_id").toString();
+                if(!staffIdSet.contains(staff_id)){
+                    logger.info(" **************  error:   training = {} ",training);
+                    continue;
+                }
                 List cards = jdbcTemplate.queryForList("select * from member_card where card_no = ? ",new Object[]{card_no});
                 if(cards.size()>0){
                     Map card = (Map)cards.get(0);
@@ -406,8 +411,8 @@ public class StoreDataService {
             String custname = staff.get("custname").toString();
             staffNameSet.add(custname);
         }
-        String sql = " SELECT * from member ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
+        String sql = " SELECT * from member where created <= ?  ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
 
         int count = 0;
@@ -520,6 +525,7 @@ public class StoreDataService {
 
         int jks = 0;
         int xks = 0;
+        int count_yx = 0;
         String qdhydp = "0";
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname,job from staff where store_id = ? ",new Object[]{query.getStoreId()});
         for (int i = 0; i < staffs.size(); i++){
@@ -531,24 +537,25 @@ public class StoreDataService {
             if(staff.get("job")!=null && "店长".equals(staff.get("job").toString())){
                 KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff_id,month);
                 logger.info(" StoreDataService   queryMemberData  kpiStaffMonthEntity = {} ",kpiStaffMonthEntity);
-                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getJks())){
-                    jks = Integer.parseInt(kpiStaffMonthEntity.getJks());
+                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdjks())){
+                    jks = Integer.parseInt(kpiStaffMonthEntity.getQdjks());
                 }
-                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getXks())){
-                    xks = Integer.parseInt(kpiStaffMonthEntity.getXks());
+                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdxks())){
+                    xks = Integer.parseInt(kpiStaffMonthEntity.getQdxks());
                 }
                 qdhydp = kpiStaffMonthEntity.getQdhyd();
+                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdyxhys())){
+                    count_yx = Integer.parseInt(kpiStaffMonthEntity.getQdyxhys());
+                }
             }
 
         }
-        String sql = " SELECT * from member where created >= ? and created <= ? ";
-        sql = " SELECT * from member ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{});
+        String sql = " SELECT * from member where created <= ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         logger.info(" StoreDataService   queryMemberData  members = {} ",members.size());
 
         int count = 0;
         int count_tk = 0;
-        int count_yx = 0;
 
         for (int i = 0; i < members.size(); i++) {
             Map member = members.get(i);
@@ -557,9 +564,6 @@ public class StoreDataService {
                 continue;
             }
             count++;
-            if("1".equals(member.get("status").toString())){
-                count_yx++;
-            }
             if("9".equals(member.get("status").toString())){
                 count_tk++;
             }

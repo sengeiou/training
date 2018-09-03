@@ -139,6 +139,7 @@ public class CalculateKpiService {
             int qdtcs = 0;
             List<String> staffIdList = queryStoreStaffList(staffEntity.getStoreId(),month);
             int staffCount = staffIdList.size();
+            logger.info(" staffCount  = {}  ",staffCount);
             for (String subStaffId : staffIdList){
                 KpiStaffMonthEntity subKpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(subStaffId,month);
                 if(subKpiStaffMonthEntity==null){
@@ -274,17 +275,20 @@ public class CalculateKpiService {
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
         int count = 0;
-        String sql = "select * from member where coach_staff_id = ? and status in (0) ";
+        String sql = "select * from member where coach_staff_id = ?  ";
+        String sql_card = "select * from member_card where member_id = ? and type = 'TY' and created >= ? and created <= ?  ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{subStaffId});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
             String memberId = member.get("member_id").toString();
-            List cards = jdbcTemplate.queryForList(" select * from member_card where member_id = ? and type <> 'TY'  " ,new Object[]{memberId});
-            if(cards.size()>0){
+            String origin = "";
+            if(null!=member.get("origin")){
+                origin = member.get("origin").toString();
+            }
+            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
                 continue;
             }
-            List ty_cards = jdbcTemplate.queryForList(" select * from member_card where member_id = ? and type in ('TY') and created >= ?  and created <= ? " ,new Object[]{memberId,startDate,endDate});
-//            logger.info(" cards  = {} , startDate = {} , endDate = {}  ",cards.size(),startDate,endDate);
+            List ty_cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
             if(ty_cards.size()>0){
                 count++;
             }
@@ -322,10 +326,10 @@ public class CalculateKpiService {
         for (int i = 0; i < data.size(); i++) {
             Map staff = (Map)data.get(i);
             String staff_id = staff.get("staff_id").toString();
-            int count = queryValidMemberCount(staff_id,month);
-            if(count>0){
+//            int count = queryValidMemberCount(staff_id,month);
+//            if(count>0){
                 staffIdList.add(staff_id);
-            }
+//            }
         }
         return staffIdList;
     }
@@ -364,13 +368,13 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-        String sql = "select * from member where coach_staff_id = ? ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
+        String sql = "select * from member where coach_staff_id = ? and created <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
             String memberId = member.get("member_id").toString();
             String name = member.get("name").toString();
-            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count = 0 and type in ('PT','PM') and end_date >= ?  " ,new Object[]{memberId,startDate});
+            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count = 0 and type in ('PT','PM') and end_date >= ? and created <= ?  " ,new Object[]{memberId,startDate,endDate+" 23:59:59"});
             for (int j = 0; j < cards.size(); j++) {
                 Map memberCard = (Map)cards.get(j);
                 String cardNo = memberCard.get("card_no").toString();
@@ -388,7 +392,7 @@ public class CalculateKpiService {
                 endDate = ut.currentDate();
             }
             String ed = ut.currentDate(endDate,-30);
-            List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? " ,new Object[]{memberId,sd,ed});
+            List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? and created <= ?  " ,new Object[]{memberId,sd,ed,endDate+" 23:59:59"});
 //            logger.info(" memberId = {} , sd = {} , ed = {} ,  cards_end.size() = {} ",memberId,sd,ed,cards_end.size());
             if(cards_end.size()>0){
                 logger.info(" cards_end.size() > 0   memberId = {} ",memberId);
@@ -437,22 +441,31 @@ public class CalculateKpiService {
      *  有效会员数 ： 非停 非结
      */
     public int queryValidMemberCount(String staffId, String month) {
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        String endDate = y+"-"+m+"-31";
         int count = 0;
-        String sql = " select * from member where coach_staff_id = ? and status in (1) ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId});
-//        for (int i = 0; i < data.size(); i++) {
-//            Map member = (Map)data.get(i);
-//            String memberId = member.get("member_id").toString();
-//            String name = member.get("name").toString();
-//            String phone = member.get("phone").toString();
-//            logger.info(" validMemberCount   name = {} , phone = {} ",name,phone);
-//            List cards = jdbcTemplate.queryForList("select * from member_card where member_id = ? and type in ('PT','PM') and end_date >= ? " ,new Object[]{memberId,startDate});
-//            if(cards.size()>0){
-//                count++;
-//            }
-//        }
+        String sql = " select * from member where coach_staff_id = ? and status > 0 and created <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,endDate+" 23:59:59"});
+        for (int i = 0; i < data.size(); i++) {
+            Map member = (Map)data.get(i);
+            String memberId = member.get("member_id").toString();
+            String name = member.get("name").toString();
+            String phone = member.get("phone").toString();
+            String status = member.get("status").toString();
+            if(!"1".equals(status)){
+                logger.info(" validMemberCount   name = {} , phone = {} ",name,phone);
+                List trainings = jdbcTemplate.queryForList("select * from training where member_id = ? and card_type not in ('TY') and lesson_date >= ? and lesson_date <= ? " ,new Object[]{memberId,startDate,endDate});
+                logger.info(" validMemberCount   trainings = {} ",trainings.size());
+                if(trainings.size()==0){
+                    continue;
+                }
+            }
+            count++;
+        }
         logger.info(" queryValidMemberCount  data.size() = {} , count = {} ",data.size(),count);
-        return data.size();
+        return count;
 
     }
 
