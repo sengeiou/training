@@ -333,9 +333,7 @@ public class StoreDataService {
             if(ut.passDay(ut.currentDate(),endDate)>0){
                 endDate = ut.currentDate();
             }
-
-            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
-
+            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate(endDate,-60),ut.currentDate(endDate,-30)});
             logger.info(" StoreDataService   queryIncome  cards = {} ",cards.size());
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);

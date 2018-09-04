@@ -189,4 +189,20 @@ public class ManualRestController {
         return "createStoreOpen 执行成功";
     }
 
+    @GetMapping("exportAllMembers")
+    public Object exportAllMembers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" exportAllMembers   ");
+        manualService.exportAllMembers();
+        return "exportAllMembers";
+    }
+
+    @GetMapping("exportDeadLessonMoney")
+    public Object exportDeadLessonMoney(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" exportDeadLessonMoney  start ");
+        String startDate = "2018-07-01";
+        String endDate = "2018-07-31";
+        manualService.exportDeadLessonMoney(startDate,endDate);
+        return "exportDeadLessonMoney end ";
+    }
+
 }
