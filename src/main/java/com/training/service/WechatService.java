@@ -168,7 +168,7 @@ public class WechatService {
             ResponseUtil.exception("支付金额异常");
         }
         int total_fee = (int)(delayMoney*100);
-        total_fee = 1;
+//        total_fee = 1;
 
         String logId = UUID.randomUUID().toString().replaceAll("-","");
         Map<String, String> param = new HashMap<>();
