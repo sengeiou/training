@@ -71,6 +71,7 @@ public class WechatService {
             jo.put("member", memberEntity);
             jo.put("star",2);
             if(memberEntity.getType().equals("C")){
+                jo.put("kpiScore","0");
                 StaffEntity staffEntity = staffDao.getByOpenId(memberEntity.getOpenId());
                 if(staffEntity!=null){
                     jo.put("staffId",staffEntity.getStaffId());
@@ -78,11 +79,10 @@ public class WechatService {
                     if(StringUtils.isNotEmpty(staffEntity.getImage())){
                         jo.put("coachImage",staffEntity.getImage());
                     }
-                }
-                jo.put("kpiScore","0");
-                KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
-                if(kpiStaffMonth!=null){
-                    jo.put("kpiScore",kpiStaffMonth.getKpiScore());
+                    KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
+                    if(kpiStaffMonth!=null){
+                        jo.put("kpiScore",kpiStaffMonth.getKpiScore());
+                    }
                 }
             }
         }else{
