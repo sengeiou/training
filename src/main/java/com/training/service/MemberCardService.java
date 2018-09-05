@@ -152,7 +152,7 @@ public class MemberCardService {
                 if(memberCard.getDelay()==0){
                     memberCard.setCanDelay(1);
                     memberCard.setDelayFee("0");
-                }else{
+                }else if(memberCard.getDelay()>0){
                     if(StringUtils.isNotEmpty(memberCard.getMoney())){
                         int count = memberCard.getCount();
                         int total = memberCard.getTotal();
