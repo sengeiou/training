@@ -91,7 +91,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 31978073 ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());

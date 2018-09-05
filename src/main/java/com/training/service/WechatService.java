@@ -180,6 +180,9 @@ public class WechatService {
         SysLogEntity sysLogEntity = new SysLogEntity();
         sysLogEntity.setLogId(logId);
         sysLogEntity.setType(SysLogEnum.YQ.getKey());
+        sysLogEntity.setId1(memberCardEntity.getCardNo());
+        sysLogEntity.setId2("order");
+
         sysLogEntity.setLevel(2);
         sysLogEntity.setLogText(JSON.toJSONString(memberCardEntity));
         sysLogEntity.setContent(JSON.toJSONString(memberCardEntity));

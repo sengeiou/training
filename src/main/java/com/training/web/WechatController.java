@@ -90,21 +90,26 @@ public class WechatController {
             String openId = data.get("openid");
             String logId = data.get("out_trade_no");
             String resultStr = "success";
+            SysLogEntity sysLogEntity = new SysLogEntity();
+            sysLogEntity.setLogId(IDUtils.getId());
+            sysLogEntity.setType(SysLogEnum.PAY.getKey());
+            sysLogEntity.setLevel(1);
             try{
-                SysLogEntity sysLogEntity = sysLogDao.getById(logId);
-                if(sysLogEntity!=null && sysLogEntity.getType().equals(SysLogEnum.YQ.getKey())){
-                    String str = sysLogEntity.getLogText();
+                SysLogEntity sysLogDB = sysLogDao.getById(logId);
+                if(sysLogDB!=null && sysLogDB.getType().equals(SysLogEnum.YQ.getKey())){
+                    sysLogEntity.setType(SysLogEnum.YQ.getKey());
+                    String str = sysLogDB.getLogText();
                     MemberCardEntity memberCardEntity = JSON.parseObject(str,MemberCardEntity.class);
                     memberCardService.payDelay(memberCardEntity.getCardNo());
+                    sysLogEntity.setId1(memberCardEntity.getCardNo());
+                    sysLogEntity.setId2("pay");
+                    sysLogEntity.setLevel(2);
                 }
             }catch (Exception e){
                 resultStr = logId+" : "+e.getMessage();
             }
             String dataStr = JSON.toJSONString(data);
-            SysLogEntity sysLogEntity = new SysLogEntity();
-            sysLogEntity.setLogId(IDUtils.getId());
-            sysLogEntity.setType(SysLogEnum.PAY.getKey());
-            sysLogEntity.setLevel(1);
+
             sysLogEntity.setLogText(dataStr.length()>1900?dataStr.substring(0,1900):dataStr);
             sysLogEntity.setContent(result);
             sysLogEntity.setCreated(new Date());
