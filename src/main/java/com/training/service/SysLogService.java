@@ -32,7 +32,6 @@ public class SysLogService {
      * Created by huai23 on 2018-06-03 15:57:51.
      */ 
     public ResponseEntity<String> add(SysLogEntity sysLog){
-        User user = RequestContextHelper.getUser();
         int n = sysLogDao.add(sysLog);
         if(n==1){
             return ResponseUtil.success("添加成功");

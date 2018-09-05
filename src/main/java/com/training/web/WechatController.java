@@ -3,6 +3,7 @@ package com.training.web;
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.training.common.SysLogEnum;
+import com.training.dao.SysLogDao;
 import com.training.entity.CardEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
@@ -46,6 +47,9 @@ public class WechatController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private SysLogDao sysLogDao;
+
     /**
      * 首页
      * Created by huai23 on 2017-11-03 16:44:48.
@@ -84,27 +88,18 @@ public class WechatController {
             logger.info("----openid---  {}" ,data.get("openid"));
             logger.info("----attach---  {}" ,data.get("attach"));
             String openId = data.get("openid");
-            String cardId = data.get("attach");
-
-//            CardEntity card = cardService.getById(cardId);
-//            MemberEntity memberEntity = memberService.getByOpenId(openId);
-//            String coachId = "123";
-//
-//            MemberCardEntity memberCardEntity = new MemberCardEntity();
-//            memberCardEntity.setCardNo(IDUtils.getId());
-//            memberCardEntity.setCardId(cardId);
-//            memberCardEntity.setCoachId(coachId);
-//            memberCardEntity.setStoreId(coachEntity.getStoreId());
-//            memberCardEntity.setMemberId(memberEntity.getMemberId());
-//            memberCardEntity.setType(card.getType());
-//            memberCardEntity.setCount(card.getTotal());
-//            memberCardEntity.setTotal(card.getTotal());
-//            memberCardEntity.setDays(card.getDays());
-//            memberCardEntity.setMoney(card.getPrice());
-//            memberCardEntity.setStartDate(ut.currentDate());
-//            memberCardEntity.setEndDate(ut.currentDate(card.getDays()));
-//            memberCardService.add(memberCardEntity);
-
+            String logId = data.get("out_trade_no");
+            String resultStr = "success";
+            try{
+                SysLogEntity sysLogEntity = sysLogDao.getById(logId);
+                if(sysLogEntity!=null && sysLogEntity.getType().equals(SysLogEnum.YQ.getKey())){
+                    String str = sysLogEntity.getLogText();
+                    MemberCardEntity memberCardEntity = JSON.parseObject(str,MemberCardEntity.class);
+                    memberCardService.payDelay(memberCardEntity.getCardNo());
+                }
+            }catch (Exception e){
+                resultStr = logId+" : "+e.getMessage();
+            }
             String dataStr = JSON.toJSONString(data);
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
@@ -113,10 +108,8 @@ public class WechatController {
             sysLogEntity.setLogText(dataStr.length()>1900?dataStr.substring(0,1900):dataStr);
             sysLogEntity.setContent(result);
             sysLogEntity.setCreated(new Date());
+            sysLogEntity.setRemark(resultStr);
             sysLogService.add(sysLogEntity);
-//            sysLogEntity = sysLogService.getById(sysLogEntity.getLogId());
-//            logger.info("----sysLogEntity---  {}" ,JSON.toJSONString(sysLogEntity));
-//            System.out.println( " sysLogEntity =  "+JSON.toJSONString(sysLogEntity));
             response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
         } catch (Exception e) {
             e.printStackTrace();

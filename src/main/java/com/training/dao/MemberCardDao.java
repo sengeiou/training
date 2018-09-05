@@ -125,5 +125,11 @@ public class MemberCardDao {
         int n = memberCardRepository.delay(card);
         return n;
     }
+
+    public int payDelay(MemberCardEntity card) {
+        int n = memberCardRepository.delay(card);
+        return n;
+    }
+
 }
 

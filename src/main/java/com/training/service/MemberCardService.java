@@ -145,17 +145,27 @@ public class MemberCardService {
         }
         memberCard.setCardType(cardType);
         memberCard.setCanDelay(0);
+        memberCard.setDelayFee("0");
+        memberCard.setDelayDays(60);
         if(memberCard.getType().equals(CardTypeEnum.PT.getKey())||memberCard.getType().equals(CardTypeEnum.TT.getKey())){
             if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
                 if(memberCard.getDelay()==0){
                     memberCard.setCanDelay(1);
+                    memberCard.setDelayFee("0");
+                }else{
+                    if(StringUtils.isNotEmpty(memberCard.getMoney())){
+                        int count = memberCard.getCount();
+                        int total = memberCard.getTotal();
+                        double money = Double.parseDouble(memberCard.getMoney());
+                        double delayMoney = count*money/(total*10);
+                        memberCard.setDelayFee(ut.getDoubleString(delayMoney));
+                        memberCard.setCanDelay(2);
+                    }
                 }
             }
         }else{
 
         }
-        memberCard.setDelayFee("0");
-        memberCard.setDelayDays(60);
         return memberCard;
     }
 
@@ -275,6 +285,29 @@ public class MemberCardService {
         }
         memberCardDB.setEndDate(ut.currentDate(60));
         int n = memberCardDao.freeDelay(memberCardDB);
+        if(n>0){
+            return ResponseUtil.success("免费延期成功");
+        }
+        return ResponseUtil.exception("免费延期失败");
+    }
+
+    /**
+     * 根据cardNo延期
+     * @param cardNo
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public ResponseEntity<String> payDelay(String cardNo){
+        Member member = RequestContextHelper.getMember();
+        logger.info(" =================    payDelay  cardNo = {}",cardNo);
+        if(StringUtils.isEmpty(cardNo)){
+            return ResponseUtil.exception("卡号不能为空");
+        }
+        MemberCardEntity memberCardDB = memberCardDao.getById(cardNo);
+        if(memberCardDB==null){
+            return ResponseUtil.exception("无效卡号");
+        }
+        memberCardDB.setEndDate(ut.currentDate(60));
+        int n = memberCardDao.payDelay(memberCardDB);
         if(n>0){
             return ResponseUtil.success("免费延期成功");
         }

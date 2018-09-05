@@ -11,6 +11,7 @@ public enum SysLogEnum {
 
     PAY("PAY","支付"),
     CC("CC","换教练"),
+    YQ("YQ","付费延期"),
     ;
 
     private String key;

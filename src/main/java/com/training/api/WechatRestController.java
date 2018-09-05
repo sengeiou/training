@@ -90,7 +90,6 @@ public class WechatRestController {
         return wechatService.getMemberByCode(code);
     }
 
-
     /**
      * 根据ID查询实体
      * @param prePayOrder
@@ -100,6 +99,17 @@ public class WechatRestController {
     public ResponseEntity<String> prepay(@RequestBody PrePayOrder prePayOrder, HttpServletRequest request, HttpServletResponse response){
         logger.info("  prepay  prePayOrder = {}",prePayOrder);
         return wechatService.prePayOrder(prePayOrder);
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param prePayOrder
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "preDelayPay", method = RequestMethod.POST)
+    public ResponseEntity<String> preDelayPay(@RequestBody PrePayOrder prePayOrder, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  preDelayPay  prePayDelayOrder = {}",prePayOrder);
+        return wechatService.prePayDelayOrder(prePayOrder);
     }
 
 }

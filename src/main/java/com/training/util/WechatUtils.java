@@ -116,6 +116,54 @@ public class WechatUtils {
         }
     }
 
+    public Map<String, String> prePayDelayOrder(Map<String, String> input) {
+        try {
+            String openid = input.get("openId");
+            String device_info = "1000";
+            String nonce_str = "abc123cba321";
+            String out_trade_no = input.get("logId");
+            Map<String,String> param = new HashMap();
+            param.put("appid",appId);
+            param.put("mch_id",mch_id);
+            param.put("openid",openid);
+            param.put("device_info",device_info);
+            param.put("nonce_str",nonce_str);
+            param.put("sign_type",signType);
+            param.put("body",openid);
+            param.put("detail","detail123");
+            param.put("attach",openid);
+            param.put("out_trade_no",out_trade_no);
+            param.put("fee_type","CNY");
+            param.put("total_fee",input.get("total_fee"));
+            param.put("spbill_create_ip","127.0.0.1");
+            param.put("notify_url",notify_url);
+            param.put("trade_type","JSAPI");
+            String sign = WXPayUtil.generateSignature(param,key);
+//            System.out.println("sign："+sign);
+            param.put("sign",sign);
+            String reqBody = WXPayUtil.mapToXml(param);
+//            System.out.println("reqBody："+reqBody);
+            String data = HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
+            Map<String, String> result = WXPayUtil.xmlToMap(data);
+            System.out.println("请求结果："+data);
+            String timeStamp = ""+System.currentTimeMillis();
+            Map<String, String> signMap = new HashMap<>();
+            signMap.put("appId",appId);
+            signMap.put("timeStamp",timeStamp);
+            signMap.put("nonceStr",nonce_str);
+            signMap.put("package","prepay_id="+result.get("prepay_id"));
+            signMap.put("signType",signType);
+            sign = WXPayUtil.generateSignature(signMap,key);
+            Map<String, String> newResult = new HashMap<>();
+            newResult.putAll(signMap);
+            newResult.put("sign",sign);
+            return newResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static String unifiedorder(String seq_name) {
 //        logger.info(" getOpenIdByCode  code1 = {}",code);
         try {
