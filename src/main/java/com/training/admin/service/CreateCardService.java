@@ -178,12 +178,20 @@ public class CreateCardService {
         String cardNo = contractMap.get("课卡号");
         if(StringUtils.isEmpty(cardNo)){
             logger.error(" dealZK cardNo is null : contractEntity = {} ", contractEntity);
+            ContractEntity contractUpdate = new ContractEntity();
+            contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
+            contractUpdate.setImage(" dealZK cardNo is null ");
+            contractDao.update(contractUpdate);
             return;
         }
 
         MemberEntity member = memberDao.getByPhone(contractEntity.getPhone());
         if(member==null){
             logger.error(" dealZK member is null : contractMap = {} ", contractMap);
+            ContractEntity contractUpdate = new ContractEntity();
+            contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
+            contractUpdate.setImage(" dealZK member is null ");
+            contractDao.update(contractUpdate);
             return;
         }
 
@@ -191,6 +199,10 @@ public class CreateCardService {
         MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
         if(memberCardEntity==null){
             logger.error(" dealTK memberCardEntity is null : contractMap = {} ", contractMap);
+            ContractEntity contractUpdate = new ContractEntity();
+            contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
+            contractUpdate.setImage(" dealTK memberCardEntity is null ");
+            contractDao.update(contractUpdate);
             return;
         }
 
@@ -207,9 +219,17 @@ public class CreateCardService {
                 updateContractStatus(contractEntity);
             }else {
                 logger.error(" ****  dealTK failed : contractEntity = {} ", contractEntity);
+                ContractEntity contractUpdate = new ContractEntity();
+                contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
+                contractUpdate.setImage(" dealTK failed");
+                contractDao.update(contractUpdate);
             }
         }else{
             logger.error(" dealTK 课卡号与转出会员不一致 : cardNo = {} ， member = {} ", cardNo,member);
+            ContractEntity contractUpdate = new ContractEntity();
+            contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
+            contractUpdate.setImage(" dealTK 课卡号与会员不一致 : cardNo = "+cardNo+" ， member =  "+member);
+            contractDao.update(contractUpdate);
         }
     }
 
