@@ -124,9 +124,9 @@ public class ManualService {
         titleRow.add("预约人数");
         titleRow.add("会员卡名称");
         titleRow.add("耗课数量");
-        titleRow.add("实收金额");
+        titleRow.add("单价");
         titleRow.add("合同金额");
-        titleRow.add("购买课程节数");
+        titleRow.add("购买课程节数/天数");
         titleRow.add("预约状态");
         titleRow.add("签到时间");
         System.out.println(data.size());
@@ -175,6 +175,14 @@ public class ManualService {
 
                 memberCardEntity.getMoney();
                 double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
+                if("PM".equals(card_type)||"TM".equals(card_type)){
+                    int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate());
+//                    int leftDays = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate());
+                    if(days>0){
+                        price = Double.parseDouble(memberCardEntity.getMoney())/days;
+                    }
+                    memberCardEntity.setTotal(days);
+                }
                 row.add(storeEntity.getName());
                 row.add("");
                 row.add(lesson_date);

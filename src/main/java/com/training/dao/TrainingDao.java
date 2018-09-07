@@ -71,6 +71,7 @@ public class TrainingDao {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public int update(TrainingEntity training){
+        logger.info("  updateTraining  memberId = {} , lessonDate = {} ,trainingData = {}",training.getMemberId(),training.getLessonDate(),training.getTrainingData());
         int n = trainingRepository.update(training);
         return n;
     }
