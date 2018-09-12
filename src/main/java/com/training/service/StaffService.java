@@ -38,6 +38,9 @@ public class StaffService {
     private StaffDao staffDao;
 
     @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
     private StaffMedalDao staffMedalDao;
 
     @Autowired
@@ -194,6 +197,13 @@ public class StaffService {
             roleName = role.getRoleName();
         }
         staff.setRoleName(roleName);
+
+        StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+        if(storeEntity!=null){
+            staff.setStoreName(storeEntity.getName());
+        }else{
+            staff.setStoreName("无");
+        }
 
         if(StringUtils.isNotEmpty(staff.getTemplateId())){
             KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staff.getTemplateId());

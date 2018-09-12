@@ -118,9 +118,9 @@ public class CalculateKpiService {
         int tcs = getTcs(staffId,month);
         int zye = getZye(staffId,month);
 
-        int hyd = 0;
+        double hyd = 0;
         if(validMemberCount>0&&yyts>0){
-            hyd = lessonCount*100/(validMemberCount*yyts);
+            hyd = (double)lessonCount*100/(validMemberCount*yyts);
         }
 //        logger.info(" hyd  = {}  ",hyd);
         if("店长".equals(staffEntity.getJob())){
@@ -230,7 +230,7 @@ public class CalculateKpiService {
         kpiStaffMonthEntity.setSjks(""+lessonCount);
         kpiStaffMonthEntity.setYxhys(""+validMemberCount);
         kpiStaffMonthEntity.setYyts(""+yyts);
-        kpiStaffMonthEntity.setHyd(""+hyd);
+        kpiStaffMonthEntity.setHyd(""+ut.getDoubleString(hyd));
         kpiStaffMonthEntity.setCjs(""+cjs);
         kpiStaffMonthEntity.setTcs(""+tcs);
         kpiStaffMonthEntity.setZye(""+zye);

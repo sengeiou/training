@@ -143,6 +143,15 @@ public class MemberCardService {
         if(CardTypeEnum.getEnumByKey(memberCard.getType())!=null){
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
         }
+
+        if(memberCard.getType().equals(CardTypeEnum.PM.getKey())||memberCard.getType().equals(CardTypeEnum.TM.getKey())) {
+            int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
+            int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
+            memberCard.setTotal(total);
+            memberCard.setCount(count);
+            memberCard.setDays(total);
+        }
+
         memberCard.setCardType(cardType);
         memberCard.setCanDelay(0);
         memberCard.setDelayFee("0");

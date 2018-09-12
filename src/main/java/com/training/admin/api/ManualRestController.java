@@ -127,7 +127,7 @@ public class ManualRestController {
     @GetMapping("createStaffMonth")
     public Object createStaffMonth(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" createStaffMonth   ");
-        String month = "201807";
+        String month = "201809";
         manualService.createStaffMonth(month);
         return "createStaffMonth执行成功";
     }
@@ -146,7 +146,7 @@ public class ManualRestController {
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateKpi   ");
 //        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
-        String month = "201807";
+        String month = "201809";
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
 
         for (int i = 0; i < coachs.size(); i++){

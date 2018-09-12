@@ -249,7 +249,8 @@ public class KpiStaffMonthService {
             try{
                 int tnkh = Integer.parseInt(kpiStaffMonth.getTnkh());
                 kpiTemplateQuota.setFinishRate(""+tnkh+"%");
-                double score = tnkh*kpiTemplateQuota.getWeight()/100;
+                double d = 1.0;
+                double score = d*tnkh*kpiTemplateQuota.getWeight()/100;
                 kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
                 kpiScore = score;
             }catch (Exception e){
@@ -260,7 +261,7 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
             if(StringUtils.isNotEmpty(kpiStaffMonth.getHyd())){
-                int hyd = Integer.parseInt(kpiStaffMonth.getHyd());
+                double hyd = Double.parseDouble(kpiStaffMonth.getHyd());
                 kpiTemplateQuota.setFinishRate(""+hyd+"%");
 
                 List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
@@ -366,15 +367,16 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
             if(StringUtils.isNotEmpty(kpiStaffMonth.getZykh())){
-                int score = 5*Integer.parseInt(kpiStaffMonth.getZykh());
-                kpiScore = score;
-                if(score==0){
+                int score =0;
+                if("0".equals(kpiStaffMonth.getZykh())){
                     kpiTemplateQuota.setFinishRate("不通过");
+                    score = -5;
                 }else{
                     kpiTemplateQuota.setFinishRate("通过");
                 }
                 kpiTemplateQuota.setScore(""+score+".00");
                 kpiTemplateQuota.setKpiScore(""+score+".00");
+                kpiScore = score;
             }
         }else if(KpiQuotaEnum.k7.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
