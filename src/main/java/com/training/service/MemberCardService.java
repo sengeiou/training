@@ -292,7 +292,7 @@ public class MemberCardService {
         if(memberCardDB.getDelay()>0){
             return ResponseUtil.exception("课卡已经延期过,不能再次免费延期");
         }
-        memberCardDB.setEndDate(ut.currentDate(60));
+        memberCardDB.setEndDate(ut.currentDate(memberCardDB.getEndDate(),60));
         int n = memberCardDao.freeDelay(memberCardDB);
         if(n>0){
             return ResponseUtil.success("免费延期成功");
