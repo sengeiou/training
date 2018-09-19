@@ -230,6 +230,13 @@ public class MemberCouponService {
         if(memberCoupon==null||memberCoupon.getCouponId()==null){
             return ResponseUtil.exception("核销优惠券异常");
         }
+        MemberCouponEntity memberCouponEntity = memberCouponDao.getById(""+memberCoupon.getCouponId());
+        if(ut.passDayByDate(memberCouponEntity.getStartDate(),ut.currentDate())<0){
+            return ResponseUtil.exception("优惠券未生效，请稍后使用");
+        }
+        if(ut.passDayByDate(memberCouponEntity.getEndDate(),ut.currentDate())>0){
+            return ResponseUtil.exception("优惠券已过期，无法使用");
+        }
         Staff staff = RequestContextHelper.getStaff();
         if(staff!=null){
             memberCoupon.setUseStaffId(staff.getStaffId());
