@@ -1,5 +1,6 @@
 package com.training.util;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
@@ -53,6 +54,7 @@ public class SmsUtil {
 
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
         return sendSmsResponse;
     }
 
