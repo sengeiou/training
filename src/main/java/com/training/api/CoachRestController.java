@@ -5,9 +5,11 @@ import com.sun.corba.se.impl.presentation.rmi.IDLTypesUtil;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.domain.Member;
+import com.training.domain.StoreData;
 import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.service.MemberService;
+import com.training.service.StoreDataService;
 import com.training.service.TrainingService;
 import com.training.util.IDUtils;
 import com.training.util.RequestContextHelper;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * member API控制器
@@ -37,6 +40,9 @@ public class CoachRestController {
 
     @Autowired
     private TrainingService trainingService;
+
+    @Autowired
+    private StoreDataService storeDataService;
 
     /**
      * 新增实体
@@ -149,6 +155,19 @@ public class CoachRestController {
     public ResponseEntity<String> qrCode(@ModelAttribute TrainingQuery query, HttpServletRequest request, HttpServletResponse response){
         logger.info("  qrCode  TrainingQuery = {}",query);
         return trainingService.qrCode(query);
+    }
+
+    /**
+     * 分页查询
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "saleMoneyList", method = RequestMethod.GET)
+    public ResponseEntity<String> saleMoneyList(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  saleMoneyList ");
+        List<StoreData> storeDataList = storeDataService.staffSaleMoneyList(query);
+        JSONObject jo = new JSONObject();
+        jo.put("storeDataList", storeDataList);
+        return ResponseUtil.success(jo);
     }
 
 }

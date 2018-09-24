@@ -323,5 +323,36 @@ public class MemberCardService {
         return ResponseUtil.exception("免费延期失败");
     }
 
+
+    /**
+     * 根据ID提前开卡
+     * @param memberCard
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    public ResponseEntity<String> advanceCard(MemberCard memberCard){
+        Member member = RequestContextHelper.getMember();
+        logger.info(" =================    advanceCard  member = {}",member);
+        logger.info(" =================    advanceCard  memberCard = {}",memberCard);
+        if(StringUtils.isEmpty(memberCard.getCardNo())){
+            return ResponseUtil.exception("卡号不能为空");
+        }
+        MemberCardEntity memberCardDB = memberCardDao.getById(memberCard.getCardNo());
+        if(memberCardDB==null){
+            return ResponseUtil.exception("无效卡号");
+        }
+        int passdays = ut.passDayByDate(ut.currentDate(),memberCardDB.getStartDate());
+        if(passdays<=0){
+            return ResponseUtil.exception("此卡已过生效日期，无需提前开卡");
+        }
+        String endDate = ut.currentDate(memberCardDB.getEndDate(),passdays);
+        memberCardDB.setStartDate(ut.currentDate());
+        memberCardDB.setEndDate(endDate);
+        int n = memberCardDao.advanceCard(memberCardDB);
+        if(n>0){
+            return ResponseUtil.success("提前开卡成功");
+        }
+        return ResponseUtil.exception("提前开卡失败");
+    }
+
 }
 

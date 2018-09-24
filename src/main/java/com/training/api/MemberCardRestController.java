@@ -129,5 +129,17 @@ public class MemberCardRestController {
         return memberCardService.freeDelay(memberCard);
     }
 
+
+    /**
+     * 根据ID删除
+     * @param memberCard
+     * Created by huai23 on 2018-05-26 13:53:17.
+     */
+    @RequestMapping (value = "advanceCard", method = RequestMethod.POST)
+    public ResponseEntity<String> advanceCard(@RequestBody MemberCard memberCard,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  advanceCard  memberCard = {}",memberCard);
+        return memberCardService.advanceCard(memberCard);
+    }
+
 }
 

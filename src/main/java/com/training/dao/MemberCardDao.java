@@ -131,5 +131,10 @@ public class MemberCardDao {
         return n;
     }
 
+    public int advanceCard(MemberCardEntity card) {
+        int n = memberCardRepository.advanceCard(card);
+        return n;
+    }
+
 }
 

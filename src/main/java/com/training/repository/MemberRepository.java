@@ -187,5 +187,14 @@ public interface MemberRepository {
     @Update("<script> UPDATE member SET open_id = #{member.openId} , modified = now() WHERE member_id = #{member.memberId}  </script>")
     int bind(@Param("member") MemberEntity member);
 
+    @Update("<script> UPDATE member SET status = -1  WHERE member_id = #{id}  </script>")
+    int close(@Param("id") String id);
+
+    @Update("<script> UPDATE member SET status = 0  WHERE member_id = #{id}  </script>")
+    int restore(@Param("id") String id);
+
+    @Update("<script> UPDATE member SET open_id = '' , nickname = '' , image = ''  WHERE member_id = #{id}  </script>")
+    int logoff(@Param("id") String memberId);
+
 }
 

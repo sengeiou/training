@@ -212,5 +212,10 @@ public interface MemberCardRepository {
             "</script>")
     Long countPro(@Param("query") MemberCardQuery memberCard);
 
+
+    @Update("<script> UPDATE member_card SET start_date = #{memberCard.startDate} , end_date = #{memberCard.endDate} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
+            "</script>")
+    int advanceCard(@Param("memberCard") MemberCardEntity memberCard);
+
 }
 

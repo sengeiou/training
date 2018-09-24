@@ -396,6 +396,40 @@ public class MemberService {
     }
 
     /**
+     * 根据ID闭环
+     * @param id
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public ResponseEntity<String> close(String id){
+        MemberEntity memberEntity = memberDao.getById(id);
+        if(memberEntity.getStatus()!=0){
+            return ResponseUtil.exception("只有意向会员才能转成闭环状态");
+        }
+        int n = memberDao.close(id);
+        if(n==1){
+            return ResponseUtil.success("闭环成功");
+        }
+        return ResponseUtil.exception("闭环操作失败");
+    }
+
+    /**
+     * 根据ID恢复为意向
+     * @param id
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public ResponseEntity<String> restore(String id){
+        MemberEntity memberEntity = memberDao.getById(id);
+        if(memberEntity.getStatus()!=-1){
+            return ResponseUtil.exception("只有闭环会员才能恢复成意向状态");
+        }
+        int n = memberDao.restore(id);
+        if(n==1){
+            return ResponseUtil.success("恢复成功");
+        }
+        return ResponseUtil.exception("恢复操作失败");
+    }
+
+    /**
      * 根据手机号码发送验证码
      * @param member
      * Created by huai23 on 2018-05-26 13:39:33.
@@ -1155,5 +1189,16 @@ public class MemberService {
     }
 
 
+    public ResponseEntity<String> logoff() {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info("  logoff  memberRequest = {}",memberRequest);
+
+        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+        if(memberEntity==null){
+            return ResponseUtil.exception("注销失败，用户非法");
+        }
+        memberDao.logoff(memberEntity.getMemberId());
+        return ResponseUtil.success("微信注销成功");
+    }
 }
 

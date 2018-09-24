@@ -122,6 +122,28 @@ public class MemberRestController {
     }
 
     /**
+     * 根据ID闭环
+     * @param id
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "close/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> close(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  close  id = {}",id);
+        return memberService.close(id);
+    }
+
+    /**
+     * 根据ID恢复为意向
+     * @param id
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "restore/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> restore(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  restore  id = {}",id);
+        return memberService.restore(id);
+    }
+
+    /**
      * 根据手机号码发送验证码
      * @param member
      * Created by huai23 on 2018-05-26 13:39:33.
@@ -215,6 +237,16 @@ public class MemberRestController {
         query.setMemberId(memberId);
         logger.info(" memberRestController  couponList  query = {} , pageRequest = {} ",query,pageRequest);
         return memberCouponService.couponList(query,pageRequest);
+    }
+
+    /**
+     * 注销微信用户
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "logoff", method = RequestMethod.POST)
+    public ResponseEntity<String> logoff(HttpServletRequest request, HttpServletResponse response){
+        logger.info("  logoff   ");
+        return memberService.logoff();
     }
 
 }

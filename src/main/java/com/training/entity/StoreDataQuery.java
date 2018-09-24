@@ -11,8 +11,9 @@ import java.util.Date;
 @Data
 public class StoreDataQuery {
 
-
     private String storeId;
+
+    private String staffId;
 
     private String month;
 

@@ -105,6 +105,26 @@ public class MemberDao {
     }
 
     /**
+     * 根据ID闭环
+     * @param id
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public int close(String id){
+        int n = memberRepository.close(id);
+        return n;
+    }
+
+    /**
+     * 根据ID恢复
+     * @param id
+     * Created by huai23 on 2018-05-26 13:33:17.
+     */
+    public int restore(String id){
+        int n = memberRepository.restore(id);
+        return n;
+    }
+
+    /**
      * 新增实体
      * @param member
      * Created by huai23 on 2018-05-26 13:33:17.
@@ -114,5 +134,9 @@ public class MemberDao {
         return n;
     }
 
+    public int logoff(String memberId) {
+        int n = memberRepository.logoff(memberId);
+        return n;
+    }
 }
 
