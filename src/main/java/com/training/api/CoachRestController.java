@@ -163,7 +163,7 @@ public class CoachRestController {
      */
     @RequestMapping (value = "saleMoneyList", method = RequestMethod.GET)
     public ResponseEntity<String> saleMoneyList(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  saleMoneyList ");
+        logger.info("  saleMoneyList query = {} ",query);
         List<StoreData> storeDataList = storeDataService.staffSaleMoneyList(query);
         JSONObject jo = new JSONObject();
         jo.put("storeDataList", storeDataList);
