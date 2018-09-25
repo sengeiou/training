@@ -39,6 +39,8 @@ public class Lesson {
 
     private Integer maxCount;
 
+    private Integer memberCount;
+
     private String trainingData;
 
     private String feature;
@@ -58,6 +60,9 @@ public class Lesson {
     private String trainingId;
 
     private String memberId;
+
+    // 1v2的课程
+    private String memberImage;
 
     private List<StaffMedal> staffMedalList;
 

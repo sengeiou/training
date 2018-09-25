@@ -262,14 +262,17 @@ public class LessonService {
 //                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
 //                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
                 if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
+                    lesson.setMemberCount(1);
                     if(trainingEntity.getCardType().equals(CardTypeEnum.PT.getKey())||trainingEntity.getCardType().equals(CardTypeEnum.TY.getKey())
                             ||trainingEntity.getCardType().equals(CardTypeEnum.TT.getKey())||trainingEntity.getCardType().equals(CardTypeEnum.TM.getKey())){
                         lesson.setQuota(0);
                     }
                     if(trainingEntity.getCardType().equals(CardTypeEnum.PM.getKey())){
+                        MemberEntity memberEntity = memberDao.getById(trainingEntity.getMemberId());
+                        lesson.setMemberImage(memberEntity.getImage());
                         lesson.setQuota(lesson.getQuota()-1);
+                        lesson.setMemberCount(2);
                     }
-
                     if(lesson.getQuota()<0){
                         lesson.setQuota(0);
                     }

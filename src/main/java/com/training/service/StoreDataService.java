@@ -655,34 +655,34 @@ public class StoreDataService {
             current.setMonth(query.getMonth());
             current.setCount("1");
             current.setMoney("1500");
-            storeDataList.add(current);
+//            storeDataList.add(current);
             return storeDataList;
         }
 
-        StoreData m201809 = new StoreData();
-        m201809.setMonth("201809");
-        m201809.setCount("1");
-        m201809.setMoney("1500");
-        storeDataList.add(m201809);
-
-
-        StoreData m201808 = new StoreData();
-        m201808.setMonth("201808");
-        m201808.setCount("2");
-        m201808.setMoney("2500");
-        storeDataList.add(m201808);
-
-        StoreData m201807 = new StoreData();
-        m201807.setMonth("201807");
-        m201807.setCount("3");
-        m201807.setMoney("3500");
-        storeDataList.add(m201807);
-
-        StoreData m201806 = new StoreData();
-        m201806.setMonth("201806");
-        m201806.setCount("4");
-        m201806.setMoney("41500");
-        storeDataList.add(m201806);
+//        StoreData m201809 = new StoreData();
+//        m201809.setMonth("201809");
+//        m201809.setCount("1");
+//        m201809.setMoney("1500");
+//        storeDataList.add(m201809);
+//
+//
+//        StoreData m201808 = new StoreData();
+//        m201808.setMonth("201808");
+//        m201808.setCount("2");
+//        m201808.setMoney("2500");
+//        storeDataList.add(m201808);
+//
+//        StoreData m201807 = new StoreData();
+//        m201807.setMonth("201807");
+//        m201807.setCount("3");
+//        m201807.setMoney("3500");
+//        storeDataList.add(m201807);
+//
+//        StoreData m201806 = new StoreData();
+//        m201806.setMonth("201806");
+//        m201806.setCount("4");
+//        m201806.setMoney("41500");
+//        storeDataList.add(m201806);
 
         return storeDataList;
     }

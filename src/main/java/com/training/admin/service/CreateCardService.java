@@ -304,6 +304,7 @@ public class CreateCardService {
         memberCardEntity.setContractId(contractEntity.getContractId());
         memberCardService.add(memberCardEntity);
 
+        //todo  check
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
             StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
             MemberEntity memberUpdate = new MemberEntity();
