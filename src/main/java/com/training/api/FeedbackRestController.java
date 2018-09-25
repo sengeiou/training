@@ -95,10 +95,38 @@ public class FeedbackRestController {
      * 根据实体更新
      * @param feedback
      * Created by huai23 on 2018-05-26 13:54:54.
-     */ 
-    @RequestMapping (value = "update", method = RequestMethod.POST)
-    public ResponseEntity<String> update(@RequestBody FeedbackEntity feedback,HttpServletRequest request, HttpServletResponse response){
-        logger.info("  update  feedback = {}",feedback);
+     */
+//    @RequestMapping (value = "update", method = RequestMethod.POST)
+//    public ResponseEntity<String> update(@RequestBody FeedbackEntity feedback,HttpServletRequest request, HttpServletResponse response){
+//        logger.info("  update  feedback = {}",feedback);
+//        return feedbackService.update(feedback);
+//    }
+
+    /**
+     * 根据实体更新
+     * @param feedback
+     * Created by huai23 on 2018-05-26 13:54:54.
+     */
+    @RequestMapping (value = "updateTrackTag", method = RequestMethod.POST)
+    public ResponseEntity<String> updateTrackTag(@RequestBody FeedbackEntity feedback,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  updateTrackTag  feedback = {}",feedback);
+        FeedbackEntity update = new FeedbackEntity();
+        update.setFeedbackId(feedback.getFeedbackId());
+        update.setTrackTag(feedback.getTrackTag());
+        return feedbackService.update(update);
+    }
+
+    /**
+     * 根据实体更新
+     * @param feedback
+     * Created by huai23 on 2018-05-26 13:54:54.
+     */
+    @RequestMapping (value = "updateStatus", method = RequestMethod.POST)
+    public ResponseEntity<String> updateStatus(@RequestBody FeedbackEntity feedback,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  updateStatus  updateStatus = {}",feedback);
+        FeedbackEntity update = new FeedbackEntity();
+        update.setFeedbackId(feedback.getFeedbackId());
+        update.setStatus(feedback.getStatus());
         return feedbackService.update(feedback);
     }
 

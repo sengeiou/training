@@ -54,6 +54,8 @@ public class ContractEntity {
 
     private Integer status;
 
+    private String reason;
+
     private Date created;
 
     private Date modified;

@@ -172,7 +172,10 @@ public class FeedbackService {
      * Created by huai23 on 2018-05-26 13:54:54.
      */ 
     public  ResponseEntity<String> update(FeedbackEntity feedback){
+        logger.info("  FeedbackService   update  feedback = {}",feedback);
         int n = feedbackDao.update(feedback);
+        logger.info("  FeedbackService   update  n = {}",n);
+
         if(n==1){
             return ResponseUtil.success("修改成功");
         }

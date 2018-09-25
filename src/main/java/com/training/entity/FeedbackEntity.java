@@ -26,6 +26,10 @@ public class FeedbackEntity {
 
     private String remark;
 
+    private Integer trackTag;
+
+    private Integer status;
+
     private Date created;
 
     private Date modified;

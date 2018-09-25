@@ -31,9 +31,9 @@ public class GenEntityMysql {
     private boolean f_sql = false; // 是否需要导入包java.sql.*
 
     //数据库连接
-    private static final String URL ="jdbc:mysql://rm-m5emzop7xhs38s4am.mysql.rds.aliyuncs.com:3306/training?rewriteBatchedStatements=true&allowMultiQueries=true&characterEncoding=utf-8&useSSL=true";
+    private static final String URL ="jdbc:mysql://localhost:3306/training?rewriteBatchedStatements=true&allowMultiQueries=true&characterEncoding=utf-8&useSSL=true";
     private static final String NAME = "root";
-    private static final String PASS = "Jordan23";
+    private static final String PASS = "jordan23";
     private static final String DRIVER ="com.mysql.jdbc.Driver";
 
     //创建连接

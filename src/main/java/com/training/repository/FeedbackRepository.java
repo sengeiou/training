@@ -37,7 +37,7 @@ public interface FeedbackRepository {
             "</script>")
     int add(@Param("feedback") FeedbackEntity feedback);
 
-    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,created,modified " +
+    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,track_tag,status,created,modified " +
             " FROM feedback " +
             " WHERE 1 = 1 " +
             " <if test=\"query.feedbackId != null\"> AND feedback_id = #{query.feedbackId} </if>" +
@@ -67,19 +67,21 @@ public interface FeedbackRepository {
             "</script>")
     Long count(@Param("query") FeedbackQuery feedback);
 
-    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,created,modified " +
+    @Select("<script> SELECT pk_id,feedback_id,member_id,type,title,content,image,remark,track_tag,status,created,modified " +
             " FROM feedback " +
             " WHERE feedback_id = #{id} " +
             "</script>")
     FeedbackEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE feedback SET " +
-                " <if test=\"feedback.feedbackId != null\"> feedback_id = #{feedback.feedbackId} , </if>" +
-                " <if test=\"feedback.memberId != null\"> member_id = #{feedback.memberId} , </if>" +
-                " <if test=\"feedback.title != null\"> title = #{feedback.title} , </if>" +
-                " <if test=\"feedback.content != null\"> content = #{feedback.content} , </if>" +
-                " <if test=\"feedback.image != null\"> image = #{feedback.image} , </if>" +
-                " <if test=\"feedback.remark != null\"> remark = #{feedback.remark} , </if>" +
+//                " <if test=\"feedback.feedbackId != null\"> feedback_id = #{feedback.feedbackId} , </if>" +
+//                " <if test=\"feedback.memberId != null\"> member_id = #{feedback.memberId} , </if>" +
+//                " <if test=\"feedback.title != null\"> title = #{feedback.title} , </if>" +
+//                " <if test=\"feedback.content != null\"> content = #{feedback.content} , </if>" +
+//                " <if test=\"feedback.image != null\"> image = #{feedback.image} , </if>" +
+//                " <if test=\"feedback.remark != null\"> remark = #{feedback.remark} , </if>" +
+                " <if test=\"feedback.trackTag != null\"> track_tag = #{feedback.trackTag} , </if>" +
+                " <if test=\"feedback.status != null\"> status = #{feedback.status} , </if>" +
                 " modified = now() " +
             " WHERE feedback_id = #{feedback.feedbackId} " +
             "</script>")

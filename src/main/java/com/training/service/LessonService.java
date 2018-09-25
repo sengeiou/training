@@ -268,10 +268,12 @@ public class LessonService {
                         lesson.setQuota(0);
                     }
                     if(trainingEntity.getCardType().equals(CardTypeEnum.PM.getKey())){
-                        MemberEntity memberEntity = memberDao.getById(trainingEntity.getMemberId());
-                        lesson.setMemberImage(memberEntity.getImage());
                         lesson.setQuota(lesson.getQuota()-1);
                         lesson.setMemberCount(2);
+                        if(!trainingEntity.getMemberId().equals(query.getMemberId())){
+                            MemberEntity memberEntity = memberDao.getById(trainingEntity.getMemberId());
+                            lesson.setMemberImage(memberEntity.getImage());
+                        }
                     }
                     if(lesson.getQuota()<0){
                         lesson.setQuota(0);

@@ -65,7 +65,8 @@ public interface ContractRepository {
             "</script>")
     int add(@Param("contract") ContractEntity contract);
 
-    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,form,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date," +
+            " image,form,status,created,modified ,image as reason " +
             " FROM contract " +
             " WHERE 1 = 1 " +
             " <if test=\"query.processInstanceId != null\"> AND process_instance_id = #{query.processInstanceId} </if>" +
@@ -79,13 +80,12 @@ public interface ContractRepository {
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.payType != null\"> AND pay_type = #{query.payType} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND sign_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND sign_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.coach != null\"> AND coach = #{query.coach} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
-            " <if test=\"query.signDate != null\"> AND sign_date = #{query.signDate} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
@@ -105,19 +105,19 @@ public interface ContractRepository {
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.total != null\"> AND total = #{query.total} </if>" +
             " <if test=\"query.payType != null\"> AND pay_type = #{query.payType} </if>" +
-            " <if test=\"query.startDate != null\"> AND start_date &lt;= #{query.startDate} </if>" +
-            " <if test=\"query.endDate != null\"> AND end_date &gt; #{query.endDate} </if>" +
+            " <if test=\"query.startDate != null\"> AND sign_date &lt;= #{query.startDate} </if>" +
+            " <if test=\"query.endDate != null\"> AND sign_date &gt; #{query.endDate} </if>" +
             " <if test=\"query.salesman != null\"> AND salesman = #{query.salesman} </if>" +
             " <if test=\"query.coach != null\"> AND coach = #{query.coach} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
-            " <if test=\"query.signDate != null\"> AND sign_date = #{query.signDate} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             "</script>")
     Long count(@Param("query") ContractQuery contract);
 
-    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image,form,status,created,modified " +
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image," +
+            " form,status,created,modified ,image as reason " +
             " FROM contract " +
             " WHERE process_instance_id = #{id} " +
             "</script>")
