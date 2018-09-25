@@ -304,6 +304,9 @@ public class CreateCardService {
         memberCardEntity.setContractId(contractEntity.getContractId());
         memberCardService.add(memberCardEntity);
 
+        contractEntity.setStatus(1);
+        updateContractStatus(contractEntity);
+
         //todo  check
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
             StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
@@ -312,9 +315,6 @@ public class CreateCardService {
             memberUpdate.setCoachStaffId(staffEntity.getStaffId());
             int n = memberDao.update(memberUpdate);
         }
-
-        contractEntity.setStatus(1);
-        updateContractStatus(contractEntity);
 
         logger.info(" createPT  success : memberCardEntity = {}  ", memberCardEntity);
     }
@@ -385,6 +385,9 @@ public class CreateCardService {
         memberCardEntity.setContractId(contractEntity.getContractId());
         memberCardService.add(memberCardEntity);
 
+        contractEntity.setStatus(1);
+        updateContractStatus(contractEntity);
+
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
             StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
             MemberEntity memberUpdate = new MemberEntity();
@@ -392,9 +395,6 @@ public class CreateCardService {
             memberUpdate.setCoachStaffId(staffEntity.getStaffId());
             int n = memberDao.update(memberUpdate);
         }
-
-        contractEntity.setStatus(1);
-        updateContractStatus(contractEntity);
 
         logger.info(" createPM  success : memberCardEntity = {}  ", memberCardEntity);
     }
