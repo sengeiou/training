@@ -210,7 +210,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/qihang2.xls");
+        File file = new File("d:/file/gangxia.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -365,6 +365,7 @@ public class DingDingRestController {
                 if(count==0){
                     continue;
                 }
+                logger.info(" ============  "+contractManualEntity.getMemberName() +" ,  total = "+ total  + " , count = " + count);
                 MemberCardEntity memberCardEntity = new MemberCardEntity();
                 memberCardEntity.setCardNo(IDUtils.getId());
                 memberCardEntity.setCoachId(coachId);
@@ -421,7 +422,7 @@ public class DingDingRestController {
     @GetMapping("change_valid_date")
     public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   change_valid_date  ");
-        File file = new File("d:/file/change_card_date.xls");
+        File file = new File("d:/file/change_card_date2.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
         int i = 0;

@@ -1197,6 +1197,11 @@ public class MemberService {
         if(memberEntity==null){
             return ResponseUtil.exception("注销失败，用户非法");
         }
+
+        if(memberEntity.getType().equals("C")){
+            return ResponseUtil.exception("教练不能在此注销，请联系管理员");
+        }
+
         memberDao.logoff(memberEntity.getMemberId());
         return ResponseUtil.success("微信注销成功");
     }
