@@ -180,7 +180,9 @@ public class TrainingService {
         }
         MemberEntity memberEntity = memberService.getById(trainingEntity.getMemberId());
         Member member = new Member();
-        BeanUtils.copyProperties(memberEntity,member);
+        if(memberEntity!=null){
+            BeanUtils.copyProperties(memberEntity,member);
+        }
         training.setMember(member);
         return training;
     }
