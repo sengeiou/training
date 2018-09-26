@@ -344,7 +344,7 @@ public class MemberCardService {
         if(passdays<=0){
             return ResponseUtil.exception("此卡已过生效日期，无需提前开卡");
         }
-        String endDate = ut.currentDate(memberCardDB.getEndDate(),passdays);
+        String endDate = ut.currentDate(memberCardDB.getEndDate(),(0-passdays));
         memberCardDB.setStartDate(ut.currentDate());
         memberCardDB.setEndDate(endDate);
         int n = memberCardDao.advanceCard(memberCardDB);
