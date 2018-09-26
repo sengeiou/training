@@ -651,49 +651,49 @@ public class StoreDataService {
     public List<StoreData> staffSaleMoneyList(StoreDataQuery query) {
         String staffId = query.getStaffId();
         StaffEntity staffEntity = staffDao.getById(staffId);
-
         List<StoreData> storeDataList= new ArrayList();
         if(StringUtils.isNotEmpty(query.getMonth())){
-            StoreData current = new StoreData();
-            current.setMonth(query.getMonth());
-            current.setCount("1");
-            current.setMoney("1500");
-//            storeDataList.add(current);
+            String month = query.getMonth();
+            if(month.length()==6){
+                month = month.substring(0,4)+"-"+month.substring(4,6);
+            }
+            StoreData current = this.queryOneMonthstaffSaleMoney(staffEntity,month);
+            storeDataList.add(current);
             return storeDataList;
         }
-
-//        StoreData m201809 = new StoreData();
-//        m201809.setMonth("201809");
-//        m201809.setCount("1");
-//        m201809.setMoney("1500");
-//        storeDataList.add(m201809);
-//
-//
-//        StoreData m201808 = new StoreData();
-//        m201808.setMonth("201808");
-//        m201808.setCount("2");
-//        m201808.setMoney("2500");
-//        storeDataList.add(m201808);
-//
-//        StoreData m201807 = new StoreData();
-//        m201807.setMonth("201807");
-//        m201807.setCount("3");
-//        m201807.setMoney("3500");
-//        storeDataList.add(m201807);
-//
-//        StoreData m201806 = new StoreData();
-//        m201806.setMonth("201806");
-//        m201806.setCount("4");
-//        m201806.setMoney("41500");
-//        storeDataList.add(m201806);
-
+        for (int i = 0; i < 3 ; i++) {
+            String month = ut.currentFullMonth(0-i);
+            StoreData current = this.queryOneMonthstaffSaleMoney(staffEntity,month);
+            storeDataList.add(current);
+        }
         return storeDataList;
     }
 
     StoreData queryOneMonthstaffSaleMoney(StaffEntity staffEntity,String month){
         StoreData storeData = new StoreData();
-
-
+        String sql = " select * from contract where type in ('新会员','续课','转介绍') and sign_date >= '"+month+"-01"+"' and sign_date <=  '"+month+"-31"+"' and salesman like '%"+staffEntity.getCustname()+"%'";
+        List data = jdbcTemplate.queryForList(sql);
+        int count = 0;
+        double money = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map)data.get(i);
+            String salesman = item.get("salesman").toString();
+            if (salesman.indexOf("(") > 0) {
+                int index = salesman.indexOf("(");
+                salesman = salesman.substring(0, index);
+            }
+            if (salesman.indexOf("（") > 0) {
+                int index = salesman.indexOf("（");
+                salesman = salesman.substring(0, index);
+            }
+            if(salesman.equals(staffEntity.getCustname())){
+                count++;
+                money = money + Double.parseDouble(item.get("money").toString());
+            }
+        }
+        storeData.setMonth(month);
+        storeData.setCount(""+count);
+        storeData.setMonth(ut.getDoubleString(money));
         return storeData;
     }
 

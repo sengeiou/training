@@ -883,7 +883,7 @@ public class ut {
 	public static void main(String[] args) {
 //		System.out.println(passMonth("2017-11","2016-11"));
 //		System.out.println(currentMonth("2017-11",-1));
-		System.out.println(isValidEmail("wangyanqing@vip.163.com"));
+//		System.out.println(isValidEmail("wangyanqing@vip.163.com"));
 //
 //		System.out.println(isValidTelephone("010-12345678"));
 //		System.out.println(isValidTelephone("010-12345678-12234a"));
@@ -891,6 +891,10 @@ public class ut {
 //		System.out.println(isValidTelephone("01012345678"));
 
 //		System.out.println(passDay("2016-10-02","2017-12-07"));
+
+		String month = "201809";
+		month = month.substring(0,4)+"-"+month.substring(4,6);
+		System.out.println(month);
 
 	}
 }
