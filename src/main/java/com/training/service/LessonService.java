@@ -65,6 +65,9 @@ public class LessonService {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private StoreDao storeDao;
+
     /**
      * 新增实体
      * @param lesson
@@ -377,13 +380,21 @@ public class LessonService {
             Lesson lesson = new Lesson();
             lesson.setLessonId(lessonSettingEntity.getLessonId());
             lesson.setTitle(lessonSettingEntity.getTitle());
-
             StaffEntity staffDB = staffDao.getById(lessonSettingEntity.getCoachId());
-            if(staffDB!=null){
-                lesson.setCoachName(staffDB.getCustname());
+            if(staffDB==null){
+                continue;
             }else{
-                lesson.setCoachName("暂无");
+                lesson.setCoachName(staffDB.getCustname());
             }
+
+            //如果教练当前所属的门店和课程设置的门店不匹配，跳过
+            if(!staffDB.getStoreId().equals(lessonSettingEntity.getStoreId())){
+                continue;
+            }
+
+            StoreEntity storeEntity = storeDao.getById(staffDB.getStoreId());
+            lesson.setStoreId(storeEntity.getStoreId());
+            lesson.setStoreName(storeEntity.getName());
             lesson.setStartHour(lessonSettingEntity.getStartHour());
             lesson.setEndHour(lessonSettingEntity.getEndHour());
             lesson.setCoachId(lessonSettingEntity.getCoachId());

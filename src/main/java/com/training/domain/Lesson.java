@@ -13,6 +13,8 @@ public class Lesson {
 
     private String storeId;
 
+    private String storeName;
+
     private String title;
 
     private String type;
