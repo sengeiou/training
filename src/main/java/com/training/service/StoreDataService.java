@@ -649,6 +649,9 @@ public class StoreDataService {
     }
 
     public List<StoreData> staffSaleMoneyList(StoreDataQuery query) {
+        String staffId = query.getStaffId();
+        StaffEntity staffEntity = staffDao.getById(staffId);
+
         List<StoreData> storeDataList= new ArrayList();
         if(StringUtils.isNotEmpty(query.getMonth())){
             StoreData current = new StoreData();
@@ -686,5 +689,13 @@ public class StoreDataService {
 
         return storeDataList;
     }
+
+    StoreData queryOneMonthstaffSaleMoney(StaffEntity staffEntity,String month){
+        StoreData storeData = new StoreData();
+
+
+        return storeData;
+    }
+
 }
 
