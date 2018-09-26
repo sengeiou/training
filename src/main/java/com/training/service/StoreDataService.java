@@ -664,12 +664,14 @@ public class StoreDataService {
         for (int i = 0; i < 3 ; i++) {
             String month = ut.currentFullMonth(0-i);
             StoreData current = this.queryOneMonthstaffSaleMoney(staffEntity,month);
+            logger.info("  queryOneMonthstaffSaleMoney  current = {}",current);
             storeDataList.add(current);
         }
         return storeDataList;
     }
 
     StoreData queryOneMonthstaffSaleMoney(StaffEntity staffEntity,String month){
+        logger.info("  queryOneMonthstaffSaleMoney   staff = {} and month = {}",staffEntity.getCustname(),month);
         StoreData storeData = new StoreData();
         String sql = " select * from contract where type in ('新会员','续课','转介绍') and sign_date >= '"+month+"-01"+"' and sign_date <=  '"+month+"-31"+"' and salesman like '%"+staffEntity.getCustname()+"%'";
         List data = jdbcTemplate.queryForList(sql);
@@ -693,7 +695,7 @@ public class StoreDataService {
         }
         storeData.setMonth(month);
         storeData.setCount(""+count);
-        storeData.setMonth(ut.getDoubleString(money));
+        storeData.setMoney(ut.getDoubleString(money));
         return storeData;
     }
 
