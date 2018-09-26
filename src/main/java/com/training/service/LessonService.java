@@ -733,6 +733,10 @@ public class LessonService {
         if(coachId==null){
             return ResponseUtil.exception("约课失败!教练信息获取失败!");
         }
+
+        MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
+        StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+
         trainingEntity.setCoachId(coachId);
         trainingEntity.setStartHour(Integer.parseInt(startHour));
         trainingEntity.setEndHour(Integer.parseInt(endHour));
@@ -740,7 +744,8 @@ public class LessonService {
         trainingEntity.setLessonId(lessonId);
         trainingEntity.setType(type);
         trainingEntity.setTitle(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
-        trainingEntity.setStoreId(memberCardEntity.getStoreId());
+        trainingEntity.setStaffId(staffEntity.getStaffId());
+        trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
         int n = trainingDao.add(trainingEntity);
@@ -833,7 +838,8 @@ public class LessonService {
         trainingEntity.setLessonId(lessonId);
         trainingEntity.setType(lesson.getType());
         trainingEntity.setTitle(lessonSettingEntity.getTitle());
-        trainingEntity.setStoreId(lessonSettingEntity.getStoreId());
+        trainingEntity.setStaffId(staffEntity.getStaffId());
+        trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
         int n = trainingDao.add(trainingEntity);
@@ -1021,10 +1027,14 @@ public class LessonService {
         trainingEntity.setTrainingId(IDUtils.getId());
         trainingEntity.setMemberId(lesson.getMemberId());
 
-        coachId = memberService.getCoachIdByMemberId(lesson.getMemberId());
+
         if(coachId==null){
             return ResponseUtil.exception("约课失败!教练信息获取失败!");
         }
+
+        MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
+        StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+
         trainingEntity.setCoachId(coachId);
         trainingEntity.setStartHour(Integer.parseInt(startHour));
         trainingEntity.setEndHour(Integer.parseInt(endHour));
@@ -1032,7 +1042,8 @@ public class LessonService {
         trainingEntity.setLessonId(lessonId);
         trainingEntity.setType(type);
         trainingEntity.setTitle("私教课");
-        trainingEntity.setStoreId(memberCardEntity.getStoreId());
+        trainingEntity.setStaffId(staffEntity.getStaffId());
+        trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
         int n = trainingDao.add(trainingEntity);

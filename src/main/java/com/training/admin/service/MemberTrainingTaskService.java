@@ -94,8 +94,8 @@ public class MemberTrainingTaskService {
     }
 
     public String updateTrainingInfo() {
-        logger.info(" MemberTrainingTaskService updateTrainingInfo ");
-        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from training ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from training where staff_id = '' or store_id = '' ");
+        logger.info(" MemberTrainingTaskService updateTrainingInfo data.size =  "+data.size());
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
             Map training = data.get(i);
@@ -105,6 +105,7 @@ public class MemberTrainingTaskService {
             StaffEntity staffEntity = staffDao.getByOpenId(coach.getOpenId());
             if(staffEntity!=null){
                 jdbcTemplate.update(" update training set store_id = ? , staff_id = ?  where training_id = ? ",new Object[]{staffEntity.getStoreId(),staffEntity.getStaffId(),trainingId});
+                total++;
             }
         }
         logger.info("total = "+total);

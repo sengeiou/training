@@ -26,6 +26,8 @@ public class TrainingEntity {
 
     private String coachId;
 
+    private String staffId;
+
     private String cardNo;
 
     private String cardType;
