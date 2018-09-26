@@ -389,10 +389,10 @@ public class LessonService {
 
             //如果教练当前所属的门店和课程设置的门店不匹配，跳过
             if(!staffDB.getStoreId().equals(lessonSettingEntity.getStoreId())){
-                continue;
+//                continue;
             }
 
-            StoreEntity storeEntity = storeDao.getById(staffDB.getStoreId());
+            StoreEntity storeEntity = storeDao.getById(lessonSettingEntity.getStoreId());
             lesson.setStoreId(storeEntity.getStoreId());
             lesson.setStoreName(storeEntity.getName());
             lesson.setStartHour(lessonSettingEntity.getStartHour());
