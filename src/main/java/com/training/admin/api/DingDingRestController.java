@@ -460,4 +460,13 @@ public class DingDingRestController {
         return "change_valid_date执行成功";
     }
 
+
+    public static void main(String[] args) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble("43248")));
+
+        System.out.println(date);
+
+    }
 }
