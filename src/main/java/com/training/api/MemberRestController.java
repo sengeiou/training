@@ -9,6 +9,7 @@ import com.training.entity.*;
 import com.training.common.*;
 import com.training.util.IDUtils;
 import com.training.util.RequestContextHelper;
+import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -265,9 +266,13 @@ public class MemberRestController {
     @RequestMapping(value = "exportMember")
     public ResponseEntity<String> exportMember(@ModelAttribute MemberQuery query , HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         logger.info(" exportContact  start MemberQuery = {}",query);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100000);
+        Page<Member> page = memberService.find(query,pageRequest);
+        logger.info(" exportMember  page.getContent().size() = {} ",page.getContent().size());
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
-        String[] headers = { "姓名", "性别","电子邮箱", "手机号", "QQ" , "微信", "公司", "地址", "邮编", "国籍", "身份证号"};
+        String[] headers = { "姓名", "手机号","性别","年龄","身高", "来源" , "教练", "备注", "状态", "创建时间"};
         String fileName = "member-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
@@ -284,7 +289,14 @@ public class MemberRestController {
             }
         }
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
-        PageRequest page = new PageRequest();
+
+        try {
+            exportMemberExcel("member", headers,page.getContent(), new FileOutputStream(targetFile));
+            logger.info("filename = {}",targetFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Map result = new HashMap();
         String id = IDUtils.getId();
         ConstData.data.put(id,fileName);
@@ -294,7 +306,7 @@ public class MemberRestController {
     }
 
 
-    public void exportMemberExcel(String title, String[] headers, List<MemberEntity> dataset, OutputStream out) {
+    public void exportMemberExcel(String title, String[] headers, List<Member> dataset, OutputStream out) {
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -350,12 +362,13 @@ public class MemberRestController {
             HSSFRichTextString text = new HSSFRichTextString(headers[i]);
             cell.setCellValue(text);
         }
+
         for (short i = 0; i < dataset.size(); i++)
         {
             try
             {
                 HSSFRow rowContact = sheet.createRow(i+1);
-                MemberEntity member = dataset.get(i);
+                Member member = dataset.get(i);
                 HSSFCell cell0 = rowContact.createCell(0);
                 cell0.setCellStyle(style2);
                 cell0.setCellValue(new HSSFRichTextString(member.getName()));
@@ -366,39 +379,47 @@ public class MemberRestController {
 
                 HSSFCell cell2 = rowContact.createCell(2);
                 cell2.setCellStyle(style2);
-                cell2.setCellValue(new HSSFRichTextString(member.getEmail()));
-
+                if(member.getGender()!=null){
+                    cell2.setCellValue(new HSSFRichTextString(GenderEnum.getEnumByKey(member.getGender()).getDesc()));
+                }else{
+                    cell2.setCellValue(new HSSFRichTextString(" "));
+                }
                 HSSFCell cell3 = rowContact.createCell(3);
                 cell3.setCellStyle(style2);
-                cell3.setCellValue(new HSSFRichTextString(member.getPhone()));
+                if(member.getAge()==null){
+                    cell3.setCellValue(new HSSFRichTextString(" "));
+                }else{
+                    cell3.setCellValue(new HSSFRichTextString(""+member.getAge()));
+                }
 
                 HSSFCell cell4 = rowContact.createCell(4);
                 cell4.setCellStyle(style2);
-                cell4.setCellValue(new HSSFRichTextString(member.getPhone()));
+                if(member.getHeight()==null){
+                    cell4.setCellValue(new HSSFRichTextString(" "));
+                }else{
+                    cell4.setCellValue(new HSSFRichTextString(""+member.getHeight()));
+                }
 
                 HSSFCell cell5 = rowContact.createCell(5);
                 cell5.setCellStyle(style2);
-                cell5.setCellValue(new HSSFRichTextString(member.getPhone()));
+                cell5.setCellValue(new HSSFRichTextString(member.getOrigin()));
 
                 HSSFCell cell6 = rowContact.createCell(6);
                 cell6.setCellStyle(style2);
-                cell6.setCellValue(new HSSFRichTextString(member.getPhone()));
+                cell6.setCellValue(new HSSFRichTextString(member.getCoachName()));
 
                 HSSFCell cell7 = rowContact.createCell(7);
                 cell7.setCellStyle(style2);
-                cell7.setCellValue(new HSSFRichTextString(member.getAddress()));
+                cell7.setCellValue(new HSSFRichTextString(member.getRemark()));
 
                 HSSFCell cell8 = rowContact.createCell(8);
                 cell8.setCellStyle(style2);
-                cell8.setCellValue(new HSSFRichTextString(member.getPhone()));
+                cell8.setCellValue(new HSSFRichTextString(member.getShowStatus()));
 
                 HSSFCell cell9 = rowContact.createCell(9);
                 cell9.setCellStyle(style2);
-                cell9.setCellValue(new HSSFRichTextString(member.getPhone()));
+                cell9.setCellValue(new HSSFRichTextString(ut.df_day.format(member.getCreated())));
 
-                HSSFCell cell10 = rowContact.createCell(10);
-                cell10.setCellStyle(style2);
-                cell10.setCellValue(new HSSFRichTextString(member.getIdCard()));
             }
             catch (Exception e)
             {

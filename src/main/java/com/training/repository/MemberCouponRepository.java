@@ -82,7 +82,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &gt;= #{query.startDate} </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &lt;= #{query.endDate} </if>" +
-            " order by coupon_id desc LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by created desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberCouponEntity> find(@Param("query") MemberCouponQuery memberCoupon , @Param("page") PageRequest page);
 
