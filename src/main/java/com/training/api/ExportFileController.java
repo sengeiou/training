@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.config.ConstData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +26,17 @@ public class ExportFileController {
         logger.info(" exportContact  start File.id = {}",id);
         try {
             response.setContentType("application/msexcel;charset=UTF-8");// 定义输出类型
-            String fileName = "file";
+            String fileName = "member-1538063172871.xls";
+            logger.info(" exportContact  ConstData.data = {}",ConstData.data);
+            if(ConstData.data.containsKey(id)){
+                fileName = ConstData.data.get(id).toString();
+            }
 //          getResponse().setContentType("application/x-download;charset=UTF-8");
             response.setHeader("Content-Disposition","attachment;filename="+new String(fileName.getBytes(),"iso-8859-1"));
             //读取文件
-            String path = "";
-            InputStream in = new FileInputStream(path);
+            String path = request.getSession().getServletContext().getRealPath("/export/member/");
+
+            InputStream in = new FileInputStream(path+fileName);
             OutputStream out = response.getOutputStream();
             //写文件
             int b;

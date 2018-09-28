@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.config.ConstData;
 import com.training.domain.Lesson;
 import com.training.domain.Member;
 import com.training.domain.Training;
@@ -263,11 +264,11 @@ public class MemberRestController {
 
     @RequestMapping(value = "exportMember")
     public ResponseEntity<String> exportMember(@ModelAttribute MemberQuery query , HttpServletRequest request, HttpServletResponse response, ModelMap model) {
-        logger.info(" exportContact  start ContactQuery = {}",query);
+        logger.info(" exportContact  start MemberQuery = {}",query);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "姓名", "性别","电子邮箱", "手机号", "QQ" , "微信", "公司", "地址", "邮编", "国籍", "身份证号"};
-        String fileName = "contact-"+System.currentTimeMillis()+".xls";
+        String fileName = "member-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
         logger.info(" pathf.getPath() = {} " , pathf.getPath());
@@ -286,6 +287,7 @@ public class MemberRestController {
         PageRequest page = new PageRequest();
         Map result = new HashMap();
         String id = IDUtils.getId();
+        ConstData.data.put(id,fileName);
         String url = "/api/export/file/"+id;
         result.put("url",url);
         return ResponseUtil.success("导出会员成功！",result);

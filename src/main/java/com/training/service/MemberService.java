@@ -897,8 +897,11 @@ public class MemberService {
         page.setPageSize(1000);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();
-        for (MemberEntity trainingEntity : memberList){
-            Member member = transferMember(trainingEntity);
+        for (MemberEntity memberEntity : memberList){
+            if(memberEntity.getStatus()==-1){
+                continue;
+            }
+            Member member = transferMember(memberEntity);
             data.add(member);
         }
 
