@@ -252,7 +252,11 @@ public class MemberCouponService {
     public ResponseEntity<String> couponList(MemberCouponQuery query, PageRequest page) {
         logger.info("  couponList  query = {} , pageRequest = {} ",query,page);
         page.setPageSize(1000);
+        query.setStatus(0);
         List<MemberCouponEntity> memberCouponList = memberCouponDao.find(query,page);
+        query.setStatus(1);
+        List<MemberCouponEntity> usedMemberCouponList = memberCouponDao.find(query,page);
+        memberCouponList.addAll(usedMemberCouponList);
         return ResponseUtil.success(memberCouponList);
     }
 
