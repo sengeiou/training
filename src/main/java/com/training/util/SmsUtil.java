@@ -374,14 +374,14 @@ public class SmsUtil {
     public static void main(String[] args) throws Exception {
 //        SmsUtil.sendLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
 //        SmsUtil.sendCancelLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
-//        SmsUtil.sendAddMemberNotice("18618191128","【张三】","13812348899");
+        SmsUtil.sendAddMemberNotice("13810248890","【 胡汉三】","13988888888");
 //        SmsUtil.sendChangeCoachNotice("18618191128","紫竹桥","【李四】","【张三】");
 //        SmsUtil.sendAddMemberMsgNotice("18618191128","紫竹桥","【李四】","【张三】");
 
 //        SmsUtil.sendTrainingNoticeToCoach("18618191128","紫竹桥","【李四】","36");
 //        SmsUtil.sendTrainingNoticeToMember("18618191128","50");
 
-        SmsUtil.sendCardEndNoticeToCoach("18618191128","望京","【王五】");
+//        SmsUtil.sendCardEndNoticeToCoach("13810248890","测试门","【二狗子】");
 //        SmsUtil.sendCardEndNoticeToMember("18618191128","私教次卡");
 
 
