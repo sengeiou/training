@@ -854,7 +854,7 @@ public class MemberService {
             logger.info(" sysLogEntities.size() = {} ",sysLogEntities.size());
             if(sysLogEntities.size()>0){
                 SysLogEntity sysLogEntity = sysLogEntities.get(0);
-                return ResponseUtil.exception("更换教练失败,本月已经于"+ut.df_time.format(sysLogEntity.getCreated())+"更换过教练");
+//                return ResponseUtil.exception("更换教练失败,本月已经于"+ut.df_time.format(sysLogEntity.getCreated())+"更换过教练");
             }
         }
 

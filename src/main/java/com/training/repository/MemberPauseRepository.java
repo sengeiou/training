@@ -70,13 +70,9 @@ public interface MemberPauseRepository {
     MemberPauseEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE member_pause SET " +
-                " <if test=\"memberPause.memberId != null\"> member_id = #{memberPause.memberId} , </if>" +
-                " <if test=\"memberPause.pauseDate != null\"> pause_date = #{memberPause.pauseDate} , </if>" +
-                " <if test=\"memberPause.pauseStaffId != null\"> pause_staff_id = #{memberPause.pauseStaffId} , </if>" +
                 " <if test=\"memberPause.restoreDate != null\"> restore_date = #{memberPause.restoreDate} , </if>" +
                 " <if test=\"memberPause.restoreStaffId != null\"> restore_staff_id = #{memberPause.restoreStaffId} , </if>" +
                 " <if test=\"memberPause.status != null\"> status = #{memberPause.status} , </if>" +
-                " <if test=\"memberPause.creater != null\"> creater = #{memberPause.creater} , </if>" +
                 " modified = now() " +
             " WHERE member_id = #{memberPause.memberId} " +
             "</script>")

@@ -5,6 +5,7 @@ import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.ContractManualDao;
+import com.training.dao.MemberDao;
 import com.training.dao.MemberPauseDao;
 import com.training.domain.Member;
 import com.training.entity.*;
@@ -42,6 +43,9 @@ public class DingDingRestController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberDao memberDao;
 
     @Autowired
     private CardService cardService;
@@ -91,7 +95,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store where store_id = 31978073 ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -210,7 +214,7 @@ public class DingDingRestController {
     public Object contract_manual(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   contract_manual  ");
 
-        File file = new File("d:/file/gangxia.xls");
+        File file = new File("d:/file/kaifuwanda.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         int i = 0;
         for (List<String> item : data){
@@ -422,10 +426,11 @@ public class DingDingRestController {
     @GetMapping("change_valid_date")
     public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   change_valid_date  ");
-        File file = new File("d:/file/change_card_date2.xls");
+        File file = new File("d:/file/change_card_date3.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
         int i = 0;
+        int pauseCount = 0;
         for (List<String> item : data){
 //            System.out.println(JSON.toJSONString(item));
             if(i==0){
@@ -436,9 +441,15 @@ public class DingDingRestController {
                 continue;
             }
             String remark = "";
+            String pauseDate = "";
             if(item.size()>7&&StringUtils.isNotEmpty(item.get(7))){
                 remark = item.get(7);
             }
+            if(item.size()>8&&StringUtils.isNotEmpty(item.get(8))){
+                pauseDate = item.get(8);
+            }
+            String phone = item.get(1);
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date1 = item.get(5);
             String date2 = item.get(6);
@@ -448,15 +459,37 @@ public class DingDingRestController {
             if(date2.length()==5){
                 date2 = sdf.format(HSSFDateUtil.getJavaDate(Double.parseDouble(date2)));
             }
-            System.out.println(" cardNo = "+item.get(2)+" , startDate = "+date1+" , endDate = "+date2+" , "+remark);
-
+            System.out.println(" phone = "+item.get(1)+" cardNo = "+item.get(2)+" , startDate = "+date1+" , endDate = "+date2+" , remark = "+remark+" pauseDate = "+pauseDate);
             Object[] params = { date1 , date2 , remark , item.get(2) };
             int n = jdbcTemplate.update(sql,params);
             if(n==1){
                 i++;
             }
+
+            if(StringUtils.isNotEmpty(pauseDate)){
+                MemberEntity memberEntity = memberService.getByPhone(phone);
+                if(memberEntity!=null){
+                    MemberPauseEntity memberPauseEntity = new MemberPauseEntity();
+                    memberPauseEntity.setMemberId(memberEntity.getMemberId());
+                    memberPauseEntity.setPauseDate(pauseDate);
+                    memberPauseEntity.setPauseStaffId("1530138483828d2e5f2703bda4e64a91adf7e69cb39a4");
+                    n = memberPauseDao.add(memberPauseEntity);
+                    if(n==1){
+                        MemberEntity memberUpdate = new MemberEntity();
+                        memberUpdate.setMemberId(memberEntity.getMemberId());
+                        memberUpdate.setStatus(9);
+                        n = memberDao.update(memberUpdate);
+                        System.out.println("  pauseMember    n = "+n);
+                        pauseCount++;
+                    }
+                }
+
+            }
+
         }
         System.out.println(" count = "+i);
+        System.out.println(" pauseCount = "+i);
+
         return "change_valid_date执行成功";
     }
 
