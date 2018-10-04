@@ -64,7 +64,7 @@ public class BackupService {
         String backupDate = ut.currentDate();
         String tableName = "member_his_"+ut.currentMonth();
         System.out.println(" backupMember  tableName = "+tableName);
-        String sql = " INSERT into member_his_201809  select null, '"+backupDate+"',a.member_id,IFNULL(b.store_id,''),a.phone,a.coach_staff_id,a.training_hours,a.open_id,a.status ,a.created,a.modified from member a LEFT JOIN staff b on a.coach_staff_id = b.staff_id ";
+        String sql = " INSERT into "+tableName+"  select null, '"+backupDate+"',a.member_id,IFNULL(b.store_id,''),a.phone,a.coach_staff_id,a.training_hours,a.open_id,a.status ,a.created,a.modified from member a LEFT JOIN staff b on a.coach_staff_id = b.staff_id ";
         try{
             int n = jdbcTemplate.update(sql);
             System.out.println(" backupMember  n = "+n);

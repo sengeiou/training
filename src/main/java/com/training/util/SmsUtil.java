@@ -374,7 +374,7 @@ public class SmsUtil {
     public static void main(String[] args) throws Exception {
 //        SmsUtil.sendLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
 //        SmsUtil.sendCancelLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
-        SmsUtil.sendAddMemberNotice("13810248890","【 胡汉三】","13988888888");
+        SmsUtil.sendAddMemberNotice("13426474340","【 刘德华】","13988888888");
 //        SmsUtil.sendChangeCoachNotice("18618191128","紫竹桥","【李四】","【张三】");
 //        SmsUtil.sendAddMemberMsgNotice("18618191128","紫竹桥","【李四】","【张三】");
 

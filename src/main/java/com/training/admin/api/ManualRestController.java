@@ -205,4 +205,21 @@ public class ManualRestController {
         return "exportDeadLessonMoney end ";
     }
 
+    @GetMapping("backupMembers")
+    public Object backupMembers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" backupMembers  start ");
+        String backupDate = "2018-10-02";
+        String tableName = "member_his_10";
+        System.out.println(" backupMember  tableName = "+tableName);
+        String sql = " INSERT into "+tableName+"  select null, '"+backupDate+"',a.member_id,IFNULL(b.store_id,''),a.phone,a.coach_staff_id,a.training_hours,a.open_id,a.status ,a.created,a.modified from member a LEFT JOIN staff b on a.coach_staff_id = b.staff_id and  a.created <= '2010-10-02 23:59:59'  ";
+        try{
+            int n = jdbcTemplate.update(sql);
+            System.out.println(" backupMember  n = "+n);
+        }catch (Exception e){
+            System.out.println(" backupMember  ERROR : "+e.getMessage());
+//            logger.error(" backupMember  ERROR : {}" , e.getMessage(),e);
+        }
+        return "backupMembers end ";
+    }
+
 }
