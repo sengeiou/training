@@ -38,7 +38,7 @@ public class CoachKpiUpdateService {
     private JdbcTemplate jdbcTemplate;
 
     public void execute() {
-        logger.info(" calculateKpi   ");
+        logger.info(" =======   CoachKpiUpdateService  execute start  ");
         String month = ut.currentFullMonth().replace("-","");
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
         for (int i = 0; i < coachs.size(); i++){
@@ -52,6 +52,7 @@ public class CoachKpiUpdateService {
             String staffId = staff.get("staff_id").toString();
             calculateKpiService.calculateStaffKpi(staffId,month);
         }
+        logger.info(" =======   CoachKpiUpdateService  execute end  ");
     }
 
 }
