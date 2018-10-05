@@ -204,7 +204,7 @@ public class ManualService {
                 logger.error(" training = "+ JSON.toJSONString(training),e);
             }
         }
-        ExcelUtil.writeExcel(excelData,"C://training.xls");
+        ExcelUtil.writeExcel(excelData,"C://training201809.xls");
     }
 
     public int createStoreOpen(String storeId,String year) {

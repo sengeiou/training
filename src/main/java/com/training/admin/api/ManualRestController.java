@@ -170,8 +170,8 @@ public class ManualRestController {
     @GetMapping("trainingExcel")
     public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" trainingExcel   ");
-        String startDate = "2018-08-01";
-        String endDate = "2018-08-31";
+        String startDate = "2018-09-01";
+        String endDate = "2018-09-30";
         manualService.trainingExcel(startDate,endDate);
         return "trainingExcel执行成功";
     }
