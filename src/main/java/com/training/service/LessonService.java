@@ -5,8 +5,7 @@ import com.training.dao.*;
 import com.training.domain.*;
 import com.training.entity.*;
 import com.training.common.*;
-import com.training.util.IDUtils;
-import com.training.util.ut;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
@@ -14,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.training.util.ResponseUtil;
-import com.training.util.RequestContextHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -762,6 +759,11 @@ public class LessonService {
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
+            try{
+                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour(),"特色课");
+            }catch (Exception e){
+
+            }
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!该时段课程已约满!");
@@ -856,6 +858,11 @@ public class LessonService {
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
+            try{
+                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour(),"团体课");
+            }catch (Exception e){
+
+            }
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!");
@@ -1060,6 +1067,11 @@ public class LessonService {
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
+            try{
+                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour(),"私教课");
+            }catch (Exception e){
+
+            }
             return ResponseUtil.success("约课成功");
         }
         return ResponseUtil.exception("约课失败!该时段课程已约满!");
@@ -1075,6 +1087,9 @@ public class LessonService {
         if(StringUtils.isEmpty(lesson.getMemberId())){
             lesson.setMemberId(memberRequest.getMemberId());
         }
+
+
+        MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
 
         boolean manageFlag = false;
         if(StringUtils.isNotEmpty(memberRequest.getStaffId())){
@@ -1120,6 +1135,11 @@ public class LessonService {
             int n = trainingDao.update(trainingUpdate);
             if(n==1){
                 n = memberCardDao.addCount(trainingEntity.getCardNo());
+                try{
+                    SmsUtil.sendCancelLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour(),trainingEntity.getTitle());
+                }catch (Exception e){
+
+                }
                 return ResponseUtil.success("取消成功!");
             }
         }
