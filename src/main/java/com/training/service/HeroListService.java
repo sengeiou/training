@@ -88,7 +88,8 @@ public class HeroListService {
             if(staffEntity==null){
                 staff.setStoreName(" ");
             }else{
-                StoreEntity storeEntity = storeDao.getById(staff.getStoreId());
+                staff.setImage(staffEntity.getImage());
+                StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
                 staff.setStoreName(storeEntity.getName());
             }
             staff.setHeroNumber(item.get("total").toString());
