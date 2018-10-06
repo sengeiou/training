@@ -47,7 +47,7 @@ public class HeroListService {
 
     public List<Staff> lessonList() {
         List<Staff> staffList = new ArrayList<>();
-        String sql = "select staff_id ,  count(1) sjks from training where lesson_date >= ? and lesson_date <= ? and status >= 0 group by staff_id order by sjks desc limit 0,10";
+        String sql = "select staff_id ,  count(1) sjks from training where lesson_date >= ? and lesson_date <= ? and status >= 0 group by staff_id order by sjks desc limit 0,50";
         List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth(),ut.lastDayOfMonth()});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
@@ -62,7 +62,7 @@ public class HeroListService {
 
     public List<Staff> moneyList() {
         List<Staff> staffList = new ArrayList<>();
-        String sql = "select salesman ,  sum(money) total from contract where sign_date >= ? and type = '续课' group by salesman order by total desc limit 0,10 ";
+        String sql = "select salesman ,  sum(money) total from contract where sign_date >= ? and type = '续课' group by salesman order by total desc limit 0,50 ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth()});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
@@ -100,7 +100,7 @@ public class HeroListService {
 
     public List<Staff> activeRateList() {
         List<Staff> staffList = new ArrayList<>();
-        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by hyd desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
+        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by hyd desc limit 0,50 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
