@@ -760,7 +760,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour(),"特色课");
+                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"特色课");
             }catch (Exception e){
 
             }
@@ -859,7 +859,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour(),"团体课");
+                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"团体课");
             }catch (Exception e){
 
             }
@@ -1068,7 +1068,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour(),"私教课");
+                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"私教课");
             }catch (Exception e){
 
             }
@@ -1128,6 +1128,8 @@ public class LessonService {
             }
         }
 
+        StaffEntity staffEntity = staffDao.getById(trainingEntity.getStaffId());
+
         if(trainingEntity.getMemberId().equals(lesson.getMemberId())){
             TrainingEntity trainingUpdate = new TrainingEntity();
             trainingUpdate.setTrainingId(trainingEntity.getTrainingId());
@@ -1136,9 +1138,13 @@ public class LessonService {
             if(n==1){
                 n = memberCardDao.addCount(trainingEntity.getCardNo());
                 try{
-                    SmsUtil.sendCancelLessonNotice(memberEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour(),trainingEntity.getTitle());
+                    logger.info(" staff = {} , ",staffEntity);
+                    logger.info(" trainingEntity = {} , ",trainingEntity);
+
+                    SmsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),trainingEntity.getTitle());
                 }catch (Exception e){
 
+                    e.printStackTrace();
                 }
                 return ResponseUtil.success("取消成功!");
             }

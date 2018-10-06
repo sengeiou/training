@@ -21,6 +21,7 @@ public interface TrainingRepository {
                 " <if test=\"training.type != null\"> type, </if>" +
                 " <if test=\"training.memberId != null\"> member_id, </if>" +
                 " <if test=\"training.coachId != null\"> coach_id, </if>" +
+                " <if test=\"training.staffId != null\"> staff_id, </if>" +
                 " <if test=\"training.cardNo != null\"> card_no, </if>" +
                 " <if test=\"training.cardType != null\"> card_type, </if>" +
                 " <if test=\"training.lessonDate != null\"> lesson_date, </if>" +
@@ -40,6 +41,7 @@ public interface TrainingRepository {
                 " <if test=\"training.type != null\"> #{training.type}, </if>" +
                 " <if test=\"training.memberId != null\"> #{training.memberId}, </if>" +
                 " <if test=\"training.coachId != null\"> #{training.coachId}, </if>" +
+                " <if test=\"training.staffId != null\"> #{training.staffId}, </if>" +
                 " <if test=\"training.cardNo != null\"> #{training.cardNo}, </if>" +
                 " <if test=\"training.cardType != null\"> #{training.cardType}, </if>" +
                 " <if test=\"training.lessonDate != null\"> #{training.lessonDate}, </if>" +
@@ -55,7 +57,7 @@ public interface TrainingRepository {
             "</script>")
     int add(@Param("training") TrainingEntity training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
             " FROM training " +
             " WHERE 1 = 1 " +
             " <if test=\"query.trainingId != null\"> AND training_id = #{query.trainingId} </if>" +
@@ -113,7 +115,7 @@ public interface TrainingRepository {
             "</script>")
     Long count(@Param("query") TrainingQuery training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
             " FROM training " +
             " WHERE training_id = #{id} " +
             "</script>")
