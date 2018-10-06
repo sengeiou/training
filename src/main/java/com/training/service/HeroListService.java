@@ -47,7 +47,7 @@ public class HeroListService {
 
     public List<Staff> lessonList() {
         List<Staff> staffList = new ArrayList<>();
-        String sql = "select staff_id ,  count(1) sjks from training where lesson_date >= ? and lesson_date <= ?  group by staff_id order by sjks desc limit 0,10";
+        String sql = "select staff_id ,  count(1) sjks from training where lesson_date >= ? and lesson_date <= ? and status >= 0 group by staff_id order by sjks desc limit 0,10";
         List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth(),ut.lastDayOfMonth()});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
