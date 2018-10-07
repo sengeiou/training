@@ -109,8 +109,8 @@ public class ManualService {
 
 
     public void trainingExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from training where lesson_date >= ? and lesson_date <= ? and status = 0 " +
-                " order by coach_id , lesson_date ",new Object[]{startDate,endDate});
+        List data = jdbcTemplate.queryForList("select * from training where card_type in ('PM' ) and lesson_date >= ? and lesson_date <= ? and status >= 0 " +
+                " order by staff_id , lesson_date ",new Object[]{startDate,endDate});
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
         titleRow.add("门店");
@@ -124,6 +124,9 @@ public class ManualService {
         titleRow.add("预约人数");
         titleRow.add("会员卡名称");
         titleRow.add("耗课数量");
+        titleRow.add("会员卡号");
+        titleRow.add("有效期开始");
+        titleRow.add("有效期结束");
         titleRow.add("单价");
         titleRow.add("合同金额");
         titleRow.add("购买课程节数/天数");
@@ -136,7 +139,7 @@ public class ManualService {
                 List<String> row = new ArrayList();
                 training = (Map)training;
                 String memberId = ((Map) training).get("member_id").toString();
-                String coachId = ((Map) training).get("coach_id").toString();
+                String staff_id = ((Map) training).get("staff_id").toString();
                 String lesson_date = ((Map) training).get("lesson_date").toString();
                 String start_hour = ((Map) training).get("start_hour").toString();
                 String end_hour = ((Map) training).get("end_hour").toString();
@@ -151,15 +154,7 @@ public class ManualService {
                     logger.error(" member==null ,  "+ JSON.toJSONString(training));
                     continue;
                 }
-                MemberEntity coach = memberDao.getById(coachId);
-
-                if(coach==null){
-                    logger.error(" coach==null ,  "+ JSON.toJSONString(training));
-                    continue;
-                }
-
-                StaffEntity staffEntity = staffDao.getByOpenId(coach.getOpenId());
-
+                StaffEntity staffEntity = staffDao.getById(staff_id);
                 if(staffEntity==null){
                     logger.error(" staffEntity==null ,  "+ JSON.toJSONString(training));
                     continue;
@@ -176,7 +171,7 @@ public class ManualService {
                 memberCardEntity.getMoney();
                 double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
                 if("PM".equals(card_type)||"TM".equals(card_type)){
-                    int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate());
+                    int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
 //                    int leftDays = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate());
                     if(days>0){
                         price = Double.parseDouble(memberCardEntity.getMoney())/days;
@@ -194,6 +189,9 @@ public class ManualService {
                 row.add("1");
                 row.add(CardTypeEnum.getEnumByKey(card_type).getDesc());
                 row.add("1");
+                row.add(memberCardEntity.getCardNo());
+                row.add(memberCardEntity.getStartDate());
+                row.add(memberCardEntity.getEndDate());
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());

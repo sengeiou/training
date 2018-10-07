@@ -107,7 +107,7 @@ public class CalculateKpiService {
         int jks = getJks(staffId,month);
         int lessonCount = queryLessonCount(staffId,month);
         int validMemberCount = queryValidMemberCount(staffId,month);
-        int yyts = queryOpenDays(staffEntity.getStoreId(),month);
+//        int yyts = queryOpenDays(staffEntity.getStoreId(),month);
 
         int xkl = 100;
         if(jks>0){
@@ -119,8 +119,8 @@ public class CalculateKpiService {
         int zye = getZye(staffId,month);
 
         double hyd = 0;
-        if(validMemberCount>0&&yyts>0){
-            hyd = (double)lessonCount*100/(validMemberCount*yyts);
+        if(validMemberCount>0){
+            hyd = (double)lessonCount*100/validMemberCount;
         }
 //        logger.info(" hyd  = {}  ",hyd);
         if("店长".equals(staffEntity.getJob())){
@@ -192,8 +192,8 @@ public class CalculateKpiService {
             if(qdjks>0){
                 qdxkl = qdxks/qdjks;
             }
-            if(qdvalidMemberCount>0&&yyts>0){
-                qdhyd = qdlessonCount*100/(qdvalidMemberCount*yyts);
+            if(qdvalidMemberCount>0){
+                qdhyd = qdlessonCount*100/qdvalidMemberCount;
             }
 
             int xswcl = 100;
@@ -229,7 +229,7 @@ public class CalculateKpiService {
         kpiStaffMonthEntity.setXkl(""+xkl);
         kpiStaffMonthEntity.setSjks(""+lessonCount);
         kpiStaffMonthEntity.setYxhys(""+validMemberCount);
-        kpiStaffMonthEntity.setYyts(""+yyts);
+        kpiStaffMonthEntity.setYyts("");
         kpiStaffMonthEntity.setHyd(""+ut.getDoubleString(hyd));
         kpiStaffMonthEntity.setCjs(""+cjs);
         kpiStaffMonthEntity.setTcs(""+tcs);
@@ -408,6 +408,11 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
+
+        if(ut.passDayByDate(ut.currentDate(),endDate)>0){
+            endDate = ut.currentDate();
+        }
+
         int count = 0;
         int count_sign = 0;
         int count_ty = 0;
@@ -445,28 +450,22 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
+
+        if(ut.passDayByDate(ut.currentDate(),endDate)>0){
+            endDate = ut.currentDate();
+        }
+
+        String tableName = "member_his_"+m;
         int count = 0;
-        String sql = " select * from member where coach_staff_id = ? and status > 0 and created <= ? ";
+        String sql = " select * from "+tableName+" where coach_staff_id = ? and status in (1) and created <= ? ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
-            String memberId = member.get("member_id").toString();
-            String name = member.get("name").toString();
-            String phone = member.get("phone").toString();
-            String status = member.get("status").toString();
-            if(!"1".equals(status)){
-                logger.info(" validMemberCount   name = {} , phone = {} ",name,phone);
-                List trainings = jdbcTemplate.queryForList("select * from training where member_id = ? and card_type not in ('TY') and lesson_date >= ? and lesson_date <= ? " ,new Object[]{memberId,startDate,endDate});
-                logger.info(" validMemberCount   trainings = {} ",trainings.size());
-                if(trainings.size()==0){
-                    continue;
-                }
-            }
+
             count++;
         }
         logger.info(" queryValidMemberCount  data.size() = {} , count = {} ",data.size(),count);
         return count;
-
     }
 
     private int queryOpenDays(String storeId,String month) {
