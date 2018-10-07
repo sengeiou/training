@@ -1,5 +1,6 @@
 package com.training.admin.task;
 
+import com.training.admin.service.BackupService;
 import com.training.admin.service.CoachKpiUpdateService;
 import com.training.admin.service.ManualService;
 import com.training.util.ut;
@@ -23,7 +24,7 @@ public class CoachTask {
     /**
      * 更新教练KPI
      */
-    @Scheduled(cron = "0 10 1 * * *")
+    @Scheduled(cron = "0 30 23 * * *")
     public void updateCoachStaff(){
         logger.info("start updateCoachStaff!  time = {} ", ut.currentTime());
         manualService.updateCoachStaff();
@@ -33,7 +34,7 @@ public class CoachTask {
     /**
      * 更新教练KPI
      */
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 55 23 * * *")
     public void updateCoachKpi(){
         logger.info("start updateMemberTrainingTimes!  time = {} ", ut.currentTime());
         coachKpiUpdateService.execute();
