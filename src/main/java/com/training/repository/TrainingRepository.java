@@ -67,6 +67,7 @@ public interface TrainingRepository {
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
+            " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.cardType != null\"> AND card_type = #{query.cardType} </if>" +
             " <if test=\"query.lessonDate != null\"> AND lesson_date = #{query.lessonDate} </if>" +
@@ -96,6 +97,7 @@ public interface TrainingRepository {
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
+            " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.cardType != null\"> AND card_type = #{query.cardType} </if>" +
             " <if test=\"query.lessonDate != null\"> AND lesson_date = #{query.lessonDate} </if>" +
