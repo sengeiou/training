@@ -58,48 +58,49 @@ public class TrainingTaskService {
 
         List data = jdbcTemplate.queryForList(sql,new Object[]{});
         logger.info("  updateShowTag data.size()  = {}",data.size());
-
         for (int i = 0; i < data.size(); i++) {
-            logger.info("  updateShowTag i = {}",i);
             Map training = (Map) data.get(i);
-            int showTag = 0;
-            String trainingId = training.get("training_id").toString();
-
-            Integer status = Integer.parseInt(training.get("status").toString());
-            Integer startHour = Integer.parseInt(training.get("start_hour").toString());
-            Integer endHour = Integer.parseInt(training.get("end_hour").toString());
-            String lessonDate = training.get("lesson_date").toString();
-
-            String signTime = "";
-            if(training.get("sign_time")!=null){
-                signTime = training.get("sign_time").toString();
-            }
-            if(status==-1){
-                continue;
-            }
-            if(ut.passDayByDate(lessonDate,ut.currentDate())<0){
-                continue;
-            }
-            if(ut.passDayByDate(lessonDate,ut.currentDate())>0){
-                if(!StringUtils.isEmpty(signTime)){
-                    showTag = 1;
-                }else{
-                    showTag = 2;
+            try{
+                logger.info("  updateShowTag i = {}",i);
+                int showTag = 0;
+                String trainingId = training.get("training_id").toString();
+                Integer status = Integer.parseInt(training.get("status").toString());
+                Integer startHour = Integer.parseInt(training.get("start_hour").toString());
+                Integer endHour = Integer.parseInt(training.get("end_hour").toString());
+                String lessonDate = training.get("lesson_date").toString();
+                String signTime = "";
+                if(training.get("sign_time")!=null){
+                    signTime = training.get("sign_time").toString();
                 }
-            }
-            if(ut.passDayByDate(lessonDate,ut.currentDate())==0){
-                System.out.println("lessonDate="+lessonDate+" , ut.currentDate()="+ut.currentDate());
-                int time = ut.currentHour();
-                if(time>endHour){
+                if(status==-1){
+                    continue;
+                }
+                if(ut.passDayByDate(lessonDate,ut.currentDate())<0){
+                    continue;
+                }
+                if(ut.passDayByDate(lessonDate,ut.currentDate())>0){
                     if(!StringUtils.isEmpty(signTime)){
                         showTag = 1;
                     }else{
                         showTag = 2;
                     }
                 }
-            }
-            if(showTag>0){
-                jdbcTemplate.update(update_sql,new Object[]{showTag,trainingId});
+                if(ut.passDayByDate(lessonDate,ut.currentDate())==0){
+                    System.out.println("lessonDate="+lessonDate+" , ut.currentDate()="+ut.currentDate());
+                    int time = ut.currentHour();
+                    if(time>endHour){
+                        if(!StringUtils.isEmpty(signTime)){
+                            showTag = 1;
+                        }else{
+                            showTag = 2;
+                        }
+                    }
+                }
+                if(showTag>0){
+                    jdbcTemplate.update(update_sql,new Object[]{showTag,trainingId});
+                }
+            }catch (Exception e){
+                logger.error("  updateShowTag  ERROR  training_id = {}",training.get("training_id"),e);
             }
         }
     }
