@@ -1,5 +1,6 @@
 package com.training.domain;
 
+import com.training.common.TrainingShowTagEnum;
 import com.training.util.ut;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -61,38 +62,44 @@ public class Training {
 
     private String qrCode;
 
-    public String getShowStatus(){
-        if(null==this.status||StringUtils.isEmpty(this.lessonDate)||null==this.startHour||null==this.endHour){
-            return "";
-        }
-        if(status==-1){
-            return "已取消";
-        }
-        if(ut.passDayByDate(this.lessonDate,ut.currentDate())<0){
-            return "预约中";
-        }
-        if(ut.passDayByDate(this.lessonDate,ut.currentDate())>0){
-            if(!StringUtils.isEmpty(signTime)){
-                return "已完成";
-            }else{
-                return "已过期";
-            }
-        }
-        if(ut.passDayByDate(this.lessonDate,ut.currentDate())==0){
-            System.out.println("this.lessonDate="+this.lessonDate+" , ut.currentDate()="+ut.currentDate());
-            int time = ut.currentHour();
-            if(time>this.endHour){
-                if(!StringUtils.isEmpty(signTime)){
-                    return "已完成";
-                }else{
-                    return "已过期";
-                }
-            }else{
-                return "预约中";
+    private Integer showTag;
 
-            }
+    public String getShowStatus(){
+        if(TrainingShowTagEnum.getEnumByKey(this.showTag)==null){
+            return "-";
         }
-        return "-";
+        return TrainingShowTagEnum.getEnumByKey(this.showTag).getDesc();
+//        if(null==this.status||StringUtils.isEmpty(this.lessonDate)||null==this.startHour||null==this.endHour){
+//            return "";
+//        }
+//        if(status==-1){
+//            return "已取消";
+//        }
+//        if(ut.passDayByDate(this.lessonDate,ut.currentDate())<0){
+//            return "预约中";
+//        }
+//        if(ut.passDayByDate(this.lessonDate,ut.currentDate())>0){
+//            if(!StringUtils.isEmpty(signTime)){
+//                return "已完成";
+//            }else{
+//                return "已过期";
+//            }
+//        }
+//        if(ut.passDayByDate(this.lessonDate,ut.currentDate())==0){
+//            System.out.println("this.lessonDate="+this.lessonDate+" , ut.currentDate()="+ut.currentDate());
+//            int time = ut.currentHour();
+//            if(time>this.endHour){
+//                if(!StringUtils.isEmpty(signTime)){
+//                    return "已完成";
+//                }else{
+//                    return "已过期";
+//                }
+//            }else{
+//                return "预约中";
+//
+//            }
+//        }
+//        return "-";
     }
 
 }

@@ -31,6 +31,7 @@ public interface TrainingRepository {
                 " <if test=\"training.feature != null\"> feature, </if>" +
                 " <if test=\"training.remark != null\"> remark, </if>" +
                 " <if test=\"training.status != null\"> status, </if>" +
+                " <if test=\"training.showTag != null\"> show_tag, </if>" +
                 " created , " +
                 " modified " +
             " ) VALUES ( " +
@@ -51,13 +52,15 @@ public interface TrainingRepository {
                 " <if test=\"training.feature != null\"> #{training.feature}, </if>" +
                 " <if test=\"training.remark != null\"> #{training.remark}, </if>" +
                 " <if test=\"training.status != null\"> #{training.status}, </if>" +
+                " <if test=\"training.showTag != null\"> #{training.showTag}, </if>" +
                 " now() , " +
                 " now() " +
             " ) " +
             "</script>")
     int add(@Param("training") TrainingEntity training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data," +
+            " sign_time,feature,remark,status,show_tag,created,modified " +
             " FROM training " +
             " WHERE 1 = 1 " +
             " <if test=\"query.trainingId != null\"> AND training_id = #{query.trainingId} </if>" +
@@ -79,6 +82,7 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.showTag != null\"> AND show_tag = #{query.showTag} </if>" +
             " <if test=\"query.isSign != null and query.isSign == '0'.toString() \"> AND sign_time = '' </if>" +
             " <if test=\"query.isSign != null and query.isSign == '1'.toString() \"> AND sign_time &gt; '' </if>" +
             " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
@@ -109,6 +113,7 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.showTag != null\"> AND show_tag = #{query.showTag} </if>" +
             " <if test=\"query.isSign != null and query.isSign == '0'.toString() \"> AND sign_time = '' </if>" +
             " <if test=\"query.isSign != null and query.isSign == '1'.toString() \"> AND sign_time &gt; '' </if>" +
             " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
@@ -117,7 +122,8 @@ public interface TrainingRepository {
             "</script>")
     Long count(@Param("query") TrainingQuery training);
 
-    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data,sign_time,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data," +
+            " sign_time,feature,remark,status,show_tag,created,modified " +
             " FROM training " +
             " WHERE training_id = #{id} " +
             "</script>")
@@ -140,8 +146,9 @@ public interface TrainingRepository {
                 " <if test=\"training.feature != null\"> feature = #{training.feature} , </if>" +
                 " <if test=\"training.remark != null\"> remark = #{training.remark} , </if>" +
                 " <if test=\"training.status != null\"> status = #{training.status} , </if>" +
+                " <if test=\"training.showTag != null\"> show_tag = #{training.showTag} , </if>" +
                 " modified = now() " +
-            " WHERE training_id = #{training.trainingId} " +
+                " WHERE training_id = #{training.trainingId} " +
             "</script>")
     int update(@Param("training") TrainingEntity training);
 
@@ -150,7 +157,7 @@ public interface TrainingRepository {
             "</script>")
     int delete(@Param("id") String id);
 
-    @Update("<script> UPDATE training SET sign_time = #{training.signTime} , modified = now() " +
+    @Update("<script> UPDATE training SET sign_time = #{training.signTime} , show_tag = 1 ,  modified = now() " +
             " WHERE training_id = #{training.trainingId} " +
             "</script>")
     int signIn(@Param("training") TrainingEntity training);

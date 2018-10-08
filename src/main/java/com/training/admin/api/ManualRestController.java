@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
+import com.training.admin.service.TrainingTaskService;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
@@ -64,6 +65,8 @@ public class ManualRestController {
     @Autowired
     private ContractManualDao contractManualDao;
 
+    @Autowired
+    private TrainingTaskService trainingTaskService;
 
     @Autowired
     private ManualService manualService;
@@ -232,5 +235,14 @@ public class ManualRestController {
         return "monthCardExcel执行成功";
     }
 
+
+    @GetMapping("updateShowTag")
+    public Object updateShowTag(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" updateShowTag   ");
+        String startDate = "2018-09-01";
+        String endDate = "2018-09-30";
+        trainingTaskService.updateShowTag();
+        return "updateShowTag";
+    }
 
 }

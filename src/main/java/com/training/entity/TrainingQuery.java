@@ -46,6 +46,8 @@ public class TrainingQuery {
 
     private Integer status;
 
+    private Integer showTag;
+
     private Date created;
 
     private Date modified;
