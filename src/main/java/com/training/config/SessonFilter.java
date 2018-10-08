@@ -91,11 +91,13 @@ public class SessonFilter implements Filter {
                 String json = claims.getSubject();
                 if(uri.indexOf("/manage/")>=0||uri.indexOf("/lessonSetting/")>=0||uri.indexOf("/api/memberLog")>=0){
                     Staff staff = JSONObject.parseObject(json, Staff.class);
+                    System.out.println("");
                     req.setAttribute("staff",staff);
                 }else{
                     Member member = JSONObject.parseObject(json, Member.class);
                     req.setAttribute("member",member);
                 }
+                System.out.println("member="+json);
 
                 Staff staff = JSONObject.parseObject(json, Staff.class);
                 if(StringUtils.isNotEmpty(staff.getStaffId())){

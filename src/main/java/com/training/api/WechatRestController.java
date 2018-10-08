@@ -86,7 +86,20 @@ public class WechatRestController {
      */
     @RequestMapping (value = "code/{code}", method = RequestMethod.GET)
     public ResponseEntity<String> getMemberByCode(@PathVariable String code, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  /api/wechat/code  token  = {}",request.getParameter("token"));
+//        logger.info("  /api/wechat/code  token  = {}",request.getParameter("token"));
+        String remoteAddr = "";
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+        if(remoteAddr.equals("58.247.206.155")||remoteAddr.equals("58.247.206.150")){
+//            logger.error("  /api/wechat/code  remoteAddr  = {}   return  NULL ",remoteAddr);
+            return null;
+        }else{
+            logger.info("  /api/wechat/code  remoteAddr  = {}",remoteAddr);
+        }
         return wechatService.getMemberByCode(code);
     }
 
