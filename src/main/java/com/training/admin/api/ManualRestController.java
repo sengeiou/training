@@ -199,8 +199,8 @@ public class ManualRestController {
     @GetMapping("exportDeadLessonMoney")
     public Object exportDeadLessonMoney(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" exportDeadLessonMoney  start ");
-        String startDate = "2018-07-01";
-        String endDate = "2018-07-31";
+        String startDate = "2018-09-01";
+        String endDate = "2018-09-30";
         manualService.exportDeadLessonMoney(startDate,endDate);
         return "exportDeadLessonMoney end ";
     }
@@ -221,5 +221,16 @@ public class ManualRestController {
         }
         return "backupMembers end ";
     }
+
+
+    @GetMapping("monthCardExcel")
+    public Object monthCardExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" monthCardExcel   ");
+        String startDate = "2018-09-01";
+        String endDate = "2018-09-30";
+        manualService.monthCardExcel(startDate,endDate);
+        return "monthCardExcel执行成功";
+    }
+
 
 }

@@ -205,6 +205,73 @@ public class ManualService {
         ExcelUtil.writeExcel(excelData,"C://training201809.xls");
     }
 
+
+    public void monthCardExcel(String startDate, String endDate) {
+        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' )  order by card_no desc ",new Object[]{ });
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("会员卡号");
+        titleRow.add("卡类型");
+        titleRow.add("会员姓名");
+        titleRow.add("会员电话");
+        titleRow.add("有效期开始");
+        titleRow.add("有效期结束");
+        titleRow.add("单价");
+        titleRow.add("合同金额");
+        titleRow.add("购买课程节数/天数");
+        System.out.println(data.size());
+        excelData.add(titleRow);
+        for(Object card : data){
+            try {
+                List<String> row = new ArrayList();
+                String memberId = ((Map) card).get("member_id").toString();
+                String card_no = ((Map) card).get("card_no").toString();
+                String type = ((Map) card).get("type").toString();
+                MemberEntity member = memberDao.getById(memberId);
+                if(member==null){
+                    logger.error(" member==null ,  "+ JSON.toJSONString(card));
+                    continue;
+                }
+                StaffEntity staffEntity = staffDao.getById(member.getCoachStaffId());
+                if(staffEntity==null){
+                    logger.error(" staffEntity==null ,  "+ JSON.toJSONString(member));
+                    continue;
+                }
+
+                StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+                MemberCardEntity memberCardEntity = memberCardDao.getById(card_no);
+
+                if(memberCardEntity==null){
+                    logger.error(" memberCardEntity==null ,  "+ JSON.toJSONString(card));
+                    continue;
+                }
+
+                memberCardEntity.getMoney();
+                double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
+                int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
+                if(days>0){
+                    price = Double.parseDouble(memberCardEntity.getMoney())/days;
+                }
+                memberCardEntity.setTotal(days);
+                row.add(storeEntity.getName());
+                row.add(memberCardEntity.getCardNo());
+                row.add(CardTypeEnum.getEnumByKey(type).getDesc());
+                row.add(member.getName());
+                row.add(member.getPhone());
+                row.add(memberCardEntity.getStartDate());
+                row.add(memberCardEntity.getEndDate());
+                row.add(ut.getDoubleString(price));
+                row.add(memberCardEntity.getMoney());
+                row.add(""+memberCardEntity.getTotal());
+                excelData.add(row);
+            }catch (Exception e){
+                logger.error(" training = "+ JSON.toJSONString(card),e);
+            }
+        }
+        ExcelUtil.writeExcel(excelData,"C://monthCard"+System.currentTimeMillis()+".xls");
+    }
+
     public int createStoreOpen(String storeId,String year) {
         StoreEntity storeEntity = storeDao.getById(storeId);
         if(storeEntity==null){
