@@ -54,10 +54,13 @@ public class TrainingTaskService {
 
     public void updateShowTag() {
         String sql = " select * from  training where show_tag = 0  ";
-        String update_sql = " update training set show_tag = ? ,  modified = now()  where  WHERE training_id =  ? ";
+        String update_sql = " update training set show_tag = ? ,  modified = now()  where  training_id =  ? ";
 
         List data = jdbcTemplate.queryForList(sql,new Object[]{});
+        logger.info("  updateShowTag data.size()  = {}",data.size());
+
         for (int i = 0; i < data.size(); i++) {
+            logger.info("  updateShowTag i = {}",i);
             Map training = (Map) data.get(i);
             int showTag = 0;
             String trainingId = training.get("training_id").toString();
