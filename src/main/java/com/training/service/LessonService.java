@@ -1134,6 +1134,7 @@ public class LessonService {
             TrainingEntity trainingUpdate = new TrainingEntity();
             trainingUpdate.setTrainingId(trainingEntity.getTrainingId());
             trainingUpdate.setStatus(-1);
+            trainingUpdate.setShowTag(-1);
             int n = trainingDao.update(trainingUpdate);
             if(n==1){
                 n = memberCardDao.addCount(trainingEntity.getCardNo());

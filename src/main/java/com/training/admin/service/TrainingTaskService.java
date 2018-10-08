@@ -73,7 +73,7 @@ public class TrainingTaskService {
                     signTime = training.get("sign_time").toString();
                 }
                 if(status==-1){
-                    continue;
+                    showTag = -1;
                 }
                 if(ut.passDayByDate(lessonDate,ut.currentDate())<0){
                     continue;
@@ -96,7 +96,7 @@ public class TrainingTaskService {
                         }
                     }
                 }
-                if(showTag>0){
+                if(showTag!=0){
                     jdbcTemplate.update(update_sql,new Object[]{showTag,trainingId});
                 }
             }catch (Exception e){
