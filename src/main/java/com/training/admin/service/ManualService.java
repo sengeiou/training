@@ -415,7 +415,7 @@ public class ManualService {
         titleRow.add("死课收入金额");
         excelData.add(titleRow);
 
-        String sql = " SELECT * from member where created <= ? ";
+        String sql = " SELECT * from member where status <> 9 and created <= ? ";
         List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         logger.info(" exportDeadLessonMoney  members = {} ",members.size());
         List deadList = new ArrayList();
