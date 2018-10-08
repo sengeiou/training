@@ -220,6 +220,9 @@ public class ManualService {
         titleRow.add("单价");
         titleRow.add("合同金额");
         titleRow.add("购买课程节数/天数");
+        titleRow.add("当月天数");
+        titleRow.add("耗课总金额");
+
         System.out.println(data.size());
         excelData.add(titleRow);
         for(Object card : data){
@@ -247,11 +250,15 @@ public class ManualService {
                     continue;
                 }
 
+                int monthDays = ut.passDayByDate(startDate,endDate)+1;
+                double money = 0;
+
                 memberCardEntity.getMoney();
                 double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
                 int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
                 if(days>0){
                     price = Double.parseDouble(memberCardEntity.getMoney())/days;
+                    money = price*monthDays;
                 }
                 memberCardEntity.setTotal(days);
                 row.add(storeEntity.getName());
@@ -264,6 +271,10 @@ public class ManualService {
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());
+
+                row.add(""+monthDays);
+                row.add(ut.getDoubleString(money));
+
                 excelData.add(row);
             }catch (Exception e){
                 logger.error(" training = "+ JSON.toJSONString(card),e);
