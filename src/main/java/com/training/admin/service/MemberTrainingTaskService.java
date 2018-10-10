@@ -377,4 +377,26 @@ public class MemberTrainingTaskService {
 
 
     }
+
+    public String updateMemberCoupon() {
+        logger.info(" MemberTrainingTaskService updateMemberCoupon     ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member_coupon where status = 0  ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map memberCoupon = data.get(i);
+            try{
+                String endDate = memberCoupon.get("end_date").toString();
+                logger.info(" updateMemberCoupon   index = {} , coupon_id = {} , end_date = {}   ",i,memberCoupon.get("coupon_id"),endDate);
+                if(ut.passDayByDate(endDate,ut.currentDate())>0){
+                    jdbcTemplate.update(" update member_coupon set status = -1 where  coupon_id = ?  ",new Object[]{memberCoupon.get("coupon_id")});
+                    total++;
+                }
+            }catch (Exception e){
+                logger.error(" updateMemberCoupon  ERROR  index = {} , memberCoupon = {}  ",i,memberCoupon,e);
+            }
+        }
+        logger.info(" updateMemberCoupon执行成功    total = {}  ",total);
+        return "updateMemberCoupon执行成功";
+    }
+
 }

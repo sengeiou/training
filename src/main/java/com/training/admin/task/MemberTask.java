@@ -46,4 +46,14 @@ public class MemberTask {
         logger.info("end updateMemberMedal!  time = {} ", ut.currentTime());
     }
 
+    /**
+     * 更新学员勋章
+     */
+    @Scheduled(cron = "0 0 1 * * *")
+    public void updateMemberCoupon(){
+        logger.info("start updateMemberCoupon!  time = {} ", ut.currentTime());
+        memberTrainingTaskService.updateMemberCoupon();
+        logger.info("end updateMemberCoupon!  time = {} ", ut.currentTime());
+    }
+
 }

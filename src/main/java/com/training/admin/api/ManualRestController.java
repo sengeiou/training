@@ -117,6 +117,11 @@ public class ManualRestController {
         return memberTrainingTaskService.updateMemberMedal();
     }
 
+    @GetMapping("updateMemberCoupon")
+    public Object updateMemberCoupon(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return memberTrainingTaskService.updateMemberCoupon();
+    }
+
     @GetMapping("updateMemberInfo")
     public Object updateMemberInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return memberTrainingTaskService.updateMemberInfo();
