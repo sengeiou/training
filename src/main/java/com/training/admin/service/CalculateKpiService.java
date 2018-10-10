@@ -417,7 +417,7 @@ public class CalculateKpiService {
         int count_sign = 0;
         int count_ty = 0;
         int count_ty_sign = 0;
-        String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and status >= 0 ";
+        String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1  ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,startDate,endDate});
         for (int i = 0; i < data.size(); i++) {
             Map training = (Map)data.get(i);
