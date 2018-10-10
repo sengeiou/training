@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * staff 核心业务操作类
@@ -403,6 +401,13 @@ public class CalculateKpiService {
         return jks;
     }
 
+
+    /**
+     * KPI计算仅统计已经签到的私教课，包括特色课
+     * @param staffId
+     * @param month
+     * @return
+     */
     private int queryLessonCount(String staffId, String month) {
         String y = month.substring(0,4);
         String m = month.substring(4,6);
@@ -419,6 +424,9 @@ public class CalculateKpiService {
         int count_ty_sign = 0;
         String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1  ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,startDate,endDate});
+
+//        Set<String> lessonIds = new HashSet<>();
+
         for (int i = 0; i < data.size(); i++) {
             Map training = (Map)data.get(i);
             String type = training.get("type").toString();
@@ -436,10 +444,15 @@ public class CalculateKpiService {
                         count_ty_sign++;
                     }
                 }
+            }else if(type.startsWith("S")){
+                count++;
+                if(StringUtils.isNotEmpty(sign_time)){
+                    count_sign++;
+                }
             }
         }
         logger.info(" queryLessonCount  count = {} , count_sign = {} ,  count_ty = {} , count_ty_sign = {} ",count,count_sign,count_ty,count_ty_sign);
-        return count;
+        return count_sign;
     }
 
     /**

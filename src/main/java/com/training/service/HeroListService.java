@@ -48,7 +48,7 @@ public class HeroListService {
     public List<Staff> lessonList() {
         List<Staff> staffList = new ArrayList<>();
         String sql = "select staff_id ,  count(1) sjks from training where lesson_date >= ? and lesson_date <= ? and show_tag = 1 group by staff_id order by sjks desc limit 0,30";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth(),ut.currentDate()});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth(),ut.currentDate(-1)});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
@@ -62,8 +62,8 @@ public class HeroListService {
 
     public List<Staff> moneyList() {
         List<Staff> staffList = new ArrayList<>();
-        String sql = "select salesman ,  sum(money) total from contract where sign_date >= ? and type = '续课' group by salesman order by total desc limit 0,30 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth()});
+        String sql = "select salesman ,  sum(money) total from contract where sign_date >= ?  and sign_date <= ? and type = '续课' group by salesman order by total desc limit 0,30 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{ut.firstDayOfMonth(),ut.currentDate(-1)});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             String staffName = item.get("salesman").toString();
