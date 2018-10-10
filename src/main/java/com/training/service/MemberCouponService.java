@@ -257,6 +257,9 @@ public class MemberCouponService {
         query.setStatus(1);
         List<MemberCouponEntity> usedMemberCouponList = memberCouponDao.find(query,page);
         memberCouponList.addAll(usedMemberCouponList);
+        query.setStatus(-1);
+        List<MemberCouponEntity> passMemberCouponList = memberCouponDao.find(query,page);
+        memberCouponList.addAll(passMemberCouponList);
         return ResponseUtil.success(memberCouponList);
     }
 
