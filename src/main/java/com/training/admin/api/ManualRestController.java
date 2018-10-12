@@ -1,10 +1,7 @@
 package com.training.admin.api;
 
 import com.alibaba.fastjson.JSON;
-import com.training.admin.service.CalculateKpiService;
-import com.training.admin.service.ManualService;
-import com.training.admin.service.MemberTrainingTaskService;
-import com.training.admin.service.TrainingTaskService;
+import com.training.admin.service.*;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
@@ -76,6 +73,9 @@ public class ManualRestController {
 
     @Autowired
     MemberTrainingTaskService memberTrainingTaskService;
+
+    @Autowired
+    CreateCardService createCardService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -248,6 +248,18 @@ public class ManualRestController {
         String endDate = "2018-09-30";
         trainingTaskService.updateShowTag();
         return "updateShowTag";
+    }
+
+
+    @GetMapping("dealContract")
+    public Object dealContract(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" dealContract start  ");
+        String id = "f383ac47-14ac-40ae-b7d8-f5ae1e4a5c92";
+        String memberId = "15391682440744e73a7d6d7c54f1dbaa8bb5bcf0d423f";
+        ContractEntity contractEntity = contractService.getById(id);
+        MemberEntity memberDB = memberService.getById(memberId);
+        createCardService.createPT(contractEntity,memberDB);
+        return "dealContract end";
     }
 
 }

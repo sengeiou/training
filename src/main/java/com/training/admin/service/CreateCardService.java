@@ -134,7 +134,7 @@ public class CreateCardService {
         }
     }
 
-    private void createST(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
+    public void createST(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
         logger.info(" ==== createST  contractEntity = {} ", contractEntity);
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
@@ -165,7 +165,7 @@ public class CreateCardService {
         logger.info(" createPT  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
-    private void dealTK(ContractEntity contractEntity) {
+    public void dealTK(ContractEntity contractEntity) {
         logger.info(" dealTK contractEntity :  {} ", contractEntity);
         String phone = contractEntity.getPhone();
         SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
@@ -233,7 +233,7 @@ public class CreateCardService {
         }
     }
 
-    private void dealZK(ContractEntity contractEntity) {
+    public void dealZK(ContractEntity contractEntity) {
         logger.info(" dealZK contractEntity :  {} ", contractEntity);
         String phone = contractEntity.getPhone();
         SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
@@ -284,7 +284,7 @@ public class CreateCardService {
     }
 
     @Transactional
-    void createPT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception {
+    public void createPT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception {
         logger.info(" ==== createPT  contractEntity = {} ", contractEntity);
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
@@ -319,7 +319,7 @@ public class CreateCardService {
         logger.info(" createPT  success : memberCardEntity = {}  ", memberCardEntity);
     }
 
-    private MemberEntity checkContract(ContractEntity contractEntity) throws Exception {
+    public MemberEntity checkContract(ContractEntity contractEntity) throws Exception {
         String staffName = contractEntity.getCoach();
         staffName = staffName.replaceAll("（","(").replaceAll("）",")");
         if(staffName.indexOf("(")>0){
@@ -366,7 +366,7 @@ public class CreateCardService {
     }
 
     @Transactional
-    void createPM(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
+    public void createPM(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
@@ -400,7 +400,7 @@ public class CreateCardService {
     }
 
     @Transactional
-    void createTT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception{
+    public void createTT(ContractEntity contractEntity, MemberEntity memberDB) throws Exception{
         logger.info(" ==== createTT  contractEntity = {} ", contractEntity);
 //        MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
@@ -432,7 +432,7 @@ public class CreateCardService {
     }
 
     @Transactional
-    void createTM(ContractEntity contractEntity, MemberEntity memberDB) {
+    public void createTM(ContractEntity contractEntity, MemberEntity memberDB) {
 
 
     }
