@@ -1162,7 +1162,7 @@ public class MemberService {
 
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberId(member.getMemberId());
-        memberEntity.setStatus(0);
+        memberEntity.setStatus(1);
         int n = memberDao.update(memberEntity);
         if(n==1){
             return ResponseUtil.success("复课成功");
