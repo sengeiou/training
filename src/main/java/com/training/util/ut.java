@@ -880,6 +880,16 @@ public class ut {
 		return true;
 	}
 
+	public static String getDateFromTimeStamp(Long timeStamp) {
+		try {
+			Date d = new Date(timeStamp);
+			return df_day.format(d);
+		}catch (Exception e){
+			return null;
+		}
+	}
+
+
 	public static void main(String[] args) {
 //		System.out.println(passMonth("2017-11","2016-11"));
 //		System.out.println(currentMonth("2017-11",-1));

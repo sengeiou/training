@@ -46,6 +46,8 @@ public class StaffEntity {
 
     private Integer star;
 
+    private String hiredDate;
+
     private Date created;
 
     private Date modified;

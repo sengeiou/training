@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class DingDingRestController {
     @GetMapping("staff")
     public Object staff(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   staff  ");
-        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
+        List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
             System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
@@ -108,6 +109,12 @@ public class DingDingRestController {
                     System.out.println("userid: " + item.get("userid").toString());
                     System.out.println("name: " + item.get("name").toString());
 
+                    String hiredDate = "";
+                    if(item.containsKey("hiredDate")){
+                        hiredDate = ut.getDateFromTimeStamp(Long.parseLong(item.get("hiredDate").toString()));
+                    }
+                    System.out.println(" hiredDate = "+hiredDate);
+
                     String userid = item.get("userid").toString();
                     StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
                     if(staffDB!=null){
@@ -116,6 +123,7 @@ public class DingDingRestController {
                         staffUpdate.setStaffId(staffDB.getStaffId());
                         staffUpdate.setCustname(item.get("name").toString());
                         staffUpdate.setStoreId(deptId);
+                        staffUpdate.setHiredDate(hiredDate);
                         if(item.containsKey("position")){
                             staffUpdate.setJob(item.get("position").toString());
                         }
@@ -139,6 +147,7 @@ public class DingDingRestController {
                         extattr = item.get("extattr").toString();
                     }
 
+
                     StaffEntity staffEntity = new StaffEntity();
                     staffEntity.setStaffId(IDUtils.getId());
                     staffEntity.setRelId(item.get("userid").toString());
@@ -149,6 +158,7 @@ public class DingDingRestController {
                     staffEntity.setEmail(email);
                     staffEntity.setFeature(extattr);
                     staffEntity.setJob(position);
+                    staffEntity.setHiredDate(hiredDate);
                     staffService.add(staffEntity);
                 }catch (Exception e){
                     e.printStackTrace();

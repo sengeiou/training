@@ -70,5 +70,7 @@ public class Staff {
 
     private Integer star;
 
+    private String hiredDate;
+
 }
 

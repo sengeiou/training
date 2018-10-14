@@ -312,6 +312,13 @@ public class ManualService {
                         Map item = staffList.get(j);
                         System.out.println("userid: " + item.get("userid").toString());
                         System.out.println("name: " + item.get("name").toString());
+
+                        String hiredDate = "";
+                        if(item.containsKey("hiredDate")){
+                            hiredDate = ut.getDateFromTimeStamp(Long.parseLong(item.get("hiredDate").toString()));
+                        }
+                        System.out.println(" hiredDate = "+hiredDate);
+
                         String userid = item.get("userid").toString();
                         StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
                         if(staffDB!=null){
@@ -320,6 +327,7 @@ public class ManualService {
                             staffUpdate.setStaffId(staffDB.getStaffId());
                             staffUpdate.setCustname(item.get("name").toString());
                             staffUpdate.setStoreId(deptId);
+                            staffUpdate.setHiredDate(hiredDate);
                             if(item.containsKey("position")){
                                 staffUpdate.setJob(item.get("position").toString());
                             }
@@ -352,6 +360,7 @@ public class ManualService {
                         staffEntity.setEmail(email);
                         staffEntity.setFeature(extattr);
                         staffEntity.setJob(position);
+                        staffEntity.setHiredDate(hiredDate);
                         staffService.add(staffEntity);
                     }catch (Exception e){
                         e.printStackTrace();

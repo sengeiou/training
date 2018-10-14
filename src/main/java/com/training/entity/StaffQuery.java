@@ -46,6 +46,8 @@ public class StaffQuery {
 
     private Integer star;
 
+    private String hiredDate;
+
     private Date created;
 
     private Date modified;
