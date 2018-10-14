@@ -68,6 +68,7 @@ public class Staff {
 
     private List<StaffMedal> staffMedalList;
 
+    private Integer star;
 
 }
 

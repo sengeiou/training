@@ -76,7 +76,7 @@ public class BackupService {
 
     public void backupStaff() {
         String backupDate = ut.currentDate();
-        String sql = "  INSERT into staff_his  select null,staff_id,store_id,role_id,username,`password`,custname,email,phone,job,image,open_id,union_id,template_id,feature,`status`,rel_id,created,modified, '"+backupDate+"' from staff  ";
+        String sql = "  INSERT into staff_his  select null,staff_id,store_id,role_id,username,`password`,custname,email,phone,job,image,open_id,union_id,template_id,feature,`status`,rel_id,star,created,modified, '"+backupDate+"' from staff  ";
         try{
             int n = jdbcTemplate.update(sql);
             System.out.println(" backupStaff  n = "+n);

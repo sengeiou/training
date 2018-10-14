@@ -73,13 +73,14 @@ public class WechatService {
             member.setMemberId(memberEntity.getMemberId());
             member.setType(memberEntity.getType());
             jo.put("member", memberEntity);
-            jo.put("star",2);
+            jo.put("star",0);
             if(memberEntity.getType().equals("C")){
                 jo.put("kpiScore","0");
                 StaffEntity staffEntity = staffDao.getByOpenId(memberEntity.getOpenId());
                 if(staffEntity!=null){
                     jo.put("staffId",staffEntity.getStaffId());
                     jo.put("coachImage","");
+                    jo.put("star",staffEntity.getStar());
                     if(StringUtils.isNotEmpty(staffEntity.getImage())){
                         jo.put("coachImage",staffEntity.getImage());
                     }

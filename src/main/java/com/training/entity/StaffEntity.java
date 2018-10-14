@@ -44,6 +44,8 @@ public class StaffEntity {
 
     private String relId;
 
+    private Integer star;
+
     private Date created;
 
     private Date modified;

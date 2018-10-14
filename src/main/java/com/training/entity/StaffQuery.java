@@ -44,6 +44,8 @@ public class StaffQuery {
 
     private String relId;
 
+    private Integer star;
+
     private Date created;
 
     private Date modified;
