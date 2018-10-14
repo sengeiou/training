@@ -195,7 +195,7 @@ public class TrainingService {
      */
     public Page<Training> findByStaff(TrainingQuery query , PageRequest page){
         logger.info("findByStaff  query = {} , page = {} ", query,page);
-        query.setStatus(0);
+//        query.setStatus(0);
         List<TrainingEntity> trainingList = trainingDao.find(query,page);
         List<Training> data = new ArrayList<>();
         for (TrainingEntity trainingEntity : trainingList){
