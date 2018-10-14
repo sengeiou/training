@@ -878,6 +878,19 @@ public class MemberService {
             sysLogEntity.setCreated(new Date());
             sysLogService.add(sysLogEntity);
 
+            if(StringUtils.isEmpty(memberEntity.getCoachStaffId()) || (StringUtils.isNotEmpty(memberEntity.getStoreId())&&!memberEntity.getStoreId().equals(staffEntity.getStoreId())) ){
+                List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
+                for (StaffEntity manager : managers){
+                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                        try {
+                            SmsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
             return ResponseUtil.success("更换教练成功");
         }
         return ResponseUtil.exception("更换教练失败");

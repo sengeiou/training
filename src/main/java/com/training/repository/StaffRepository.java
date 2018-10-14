@@ -151,5 +151,11 @@ public interface StaffRepository {
     @Update("<script> UPDATE staff SET open_id = #{staff.openId} , modified = now() WHERE staff_id = #{staff.staffId}  </script>")
     int bind(@Param("staff") StaffEntity staff);
 
+    @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,created,modified " +
+            " FROM staff " +
+            " WHERE store_id = #{storeId} and job = '店长' " +
+            "</script>")
+    List<StaffEntity> getManagerByStoreId(@Param("storeId") String storeId);
+
 }
 
