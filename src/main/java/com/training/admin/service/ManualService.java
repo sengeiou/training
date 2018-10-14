@@ -2,13 +2,9 @@ package com.training.admin.service;
 
 import com.alibaba.fastjson.JSON;
 import com.training.common.CardTypeEnum;
-import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.*;
-import com.training.domain.KpiStaffMonth;
 import com.training.domain.Member;
-import com.training.domain.MemberCard;
-import com.training.domain.StoreData;
 import com.training.entity.*;
 import com.training.service.*;
 import com.training.util.*;
@@ -16,10 +12,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 /**
@@ -47,13 +41,7 @@ public class ManualService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private SysLogService sysLogService;
-
-    @Autowired
-    private CardService cardService;
 
     @Autowired
     private MemberService memberService;

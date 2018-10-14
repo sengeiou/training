@@ -48,9 +48,6 @@ public class ManualRestController {
     private MemberService memberService;
 
     @Autowired
-    private CardService cardService;
-
-    @Autowired
     private MemberCardService memberCardService;
 
     @Autowired

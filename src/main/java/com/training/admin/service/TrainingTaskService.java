@@ -1,7 +1,6 @@
 package com.training.admin.service;
 
 import com.training.dao.*;
-import com.training.service.CardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.ut;
@@ -37,13 +36,7 @@ public class TrainingTaskService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private SysLogService sysLogService;
-
-    @Autowired
-    private CardService cardService;
 
     @Autowired
     private MemberService memberService;

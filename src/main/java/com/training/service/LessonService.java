@@ -39,9 +39,6 @@ public class LessonService {
     private MemberCardDao memberCardDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private TrainingService trainingService;
 
     @Autowired

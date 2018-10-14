@@ -3,7 +3,6 @@ package com.training.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPayUtil;
-import com.training.entity.CardEntity;
 import com.training.service.MemberCardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

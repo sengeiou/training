@@ -1,25 +1,18 @@
 package com.training.admin.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.training.common.CardTypeEnum;
-import com.training.common.Const;
 import com.training.common.PageRequest;
 import com.training.dao.*;
 import com.training.domain.MemberCard;
-import com.training.domain.Staff;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberCardQuery;
 import com.training.entity.MemberEntity;
 import com.training.entity.StaffEntity;
-import com.training.service.CardService;
-import com.training.service.MemberCardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.IDUtils;
-import com.training.util.JwtUtil;
 import com.training.util.ResponseUtil;
 import com.training.util.ut;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +44,7 @@ public class AdminService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private SysLogService sysLogService;
-
-    @Autowired
-    private CardService cardService;
 
     @Autowired
     private MemberService memberService;

@@ -36,9 +36,6 @@ public class WechatService {
     private MemberService memberService;
 
     @Autowired
-    private CardService cardService;
-
-    @Autowired
     private WechatUtils wechatUtils;
 
     @Autowired

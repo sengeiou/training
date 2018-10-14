@@ -1,28 +1,14 @@
 package com.training.admin.service;
 
-import com.training.common.CardTypeEnum;
-import com.training.common.PageRequest;
 import com.training.dao.*;
-import com.training.domain.MemberCard;
-import com.training.entity.MemberCardEntity;
-import com.training.entity.MemberCardQuery;
-import com.training.entity.MemberEntity;
-import com.training.entity.StaffEntity;
-import com.training.service.CardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
-import com.training.util.IDUtils;
-import com.training.util.ResponseUtil;
 import com.training.util.ut;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * staff 核心业务操作类
@@ -46,13 +32,7 @@ public class BackupService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private SysLogService sysLogService;
-
-    @Autowired
-    private CardService cardService;
 
     @Autowired
     private MemberService memberService;

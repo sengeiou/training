@@ -43,9 +43,6 @@ public class MemberCardService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private RoleDao roleDao;
 
     /**

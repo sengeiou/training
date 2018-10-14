@@ -49,9 +49,6 @@ public class DingDingRestController {
     private MemberDao memberDao;
 
     @Autowired
-    private CardService cardService;
-
-    @Autowired
     private MemberCardService memberCardService;
 
     @Autowired

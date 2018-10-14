@@ -38,9 +38,6 @@ public class MemberService {
     private RoleDao roleDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private JwtUtil jwt;
 
     @Autowired

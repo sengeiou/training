@@ -38,13 +38,7 @@ public class CalculateKpiService {
     private StaffDao staffDao;
 
     @Autowired
-    private CardDao cardDao;
-
-    @Autowired
     private SysLogService sysLogService;
-
-    @Autowired
-    private CardService cardService;
 
     @Autowired
     private MemberService memberService;
