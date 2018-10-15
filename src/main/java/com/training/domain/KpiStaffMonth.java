@@ -126,5 +126,7 @@ public class KpiStaffMonth {
 
     private List<KpiTemplateQuota> kpiTemplateQuotaList;
 
+    private String star;
+
 }
 

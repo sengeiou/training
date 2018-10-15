@@ -150,6 +150,10 @@ public class KpiStaffMonthService {
             kpiStaffMonth.setTemplateName("-");
         }
         logger.info(" convertKpiStaffMonth kpiScore : {}   ",kpiScore);
+        kpiStaffMonth.setStar("0");
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam1())){
+            kpiStaffMonth.setStar(kpiStaffMonthEntity.getParam1());
+        }
         return kpiStaffMonth;
     }
 
