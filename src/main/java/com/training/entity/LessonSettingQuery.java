@@ -48,6 +48,8 @@ public class LessonSettingQuery {
 
     private Date modified;
 
+    private String queryDate;
+
 
 }
 

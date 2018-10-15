@@ -1,5 +1,6 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
 import com.training.domain.*;
@@ -42,9 +43,6 @@ public class LessonService {
     private TrainingService trainingService;
 
     @Autowired
-    private LessonSettingDao lessonSettingDao;
-
-    @Autowired
     private StaffDao staffDao;
 
     @Autowired
@@ -61,6 +59,9 @@ public class LessonService {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Autowired
+    private LessonSettingDao lessonSettingDao;
 
     /**
      * 新增实体
@@ -176,6 +177,8 @@ public class LessonService {
             query.setMemberId(memberRequest.getMemberId());
         }
 
+        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+
         String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
         logger.info(" quertPersonalSchedule  coachId = {} ",coachId);
         query.setCoachId(coachId);
@@ -240,6 +243,15 @@ public class LessonService {
                 }
             }
         }
+
+        LessonSettingQuery lessonSettingQuery = new LessonSettingQuery();
+        lessonSettingQuery.setCoachId(memberEntity.getCoachStaffId());
+        lessonSettingQuery.setStartDate(query.getLessonDate());
+        lessonSettingQuery.setEndDate(query.getLessonDate());
+        lessonSettingQuery.setStatus(0);
+        List<LessonSettingEntity> lessonSettingList = lessonSettingDao.find(lessonSettingQuery,page);
+        logger.info(" quertPersonalSchedule  lessonSettingList.size() = {} ",lessonSettingList.size());
+
         logger.info(" quertPersonalSchedule  filterCoachRestEntityList.size() = {} ",filterCoachRestEntityList.size());
         for (int i = 0; i < Const.times.size(); i++) {
             int startHour = Const.times.get(i);
@@ -268,8 +280,8 @@ public class LessonService {
                         lesson.setQuota(lesson.getQuota()-1);
                         lesson.setMemberCount(2);
                         if(!trainingEntity.getMemberId().equals(query.getMemberId())){
-                            MemberEntity memberEntity = memberDao.getById(trainingEntity.getMemberId());
-                            lesson.setMemberImage(memberEntity.getImage());
+                            MemberEntity this_member = memberDao.getById(trainingEntity.getMemberId());
+                            lesson.setMemberImage(this_member.getImage());
                         }
                     }
                     if(lesson.getQuota()<0){
@@ -291,6 +303,24 @@ public class LessonService {
                     break;
                 }
             }
+            for(LessonSettingEntity lessonSettingEntity: lessonSettingList){
+                int index = ut.indexOfWeek(query.getLessonDate());
+                String[] days = lessonSettingEntity.getWeekRepeat().split(",");
+//                logger.info(" ***********   lessonSettingEntity   query.getLessonDate() = {},  index = {} ,  lesson.getStartHour() = {} ",query.getLessonDate(),index , JSON.toJSONString(days));
+                if(days.length>=index){
+                    if(days[index-1].equals("0")){
+                        continue;
+                    }
+                }
+                if(lessonSettingEntity.getStartHour() >= endHour || lessonSettingEntity.getEndHour() <= startHour){
+
+                }else{
+                    lesson.setStatus(-1);
+                    break;
+                }
+
+            }
+
             lesson.setType(LessonTypeEnum.P.getKey());
             lessonList.add(lesson);
         }
@@ -487,6 +517,16 @@ public class LessonService {
                 }
             }
         }
+        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+
+        LessonSettingQuery lessonSettingQuery = new LessonSettingQuery();
+        lessonSettingQuery.setCoachId(memberEntity.getCoachStaffId());
+        lessonSettingQuery.setStartDate(query.getLessonDate());
+        lessonSettingQuery.setEndDate(query.getLessonDate());
+        lessonSettingQuery.setStatus(0);
+        List<LessonSettingEntity> lessonSettingList = lessonSettingDao.find(lessonSettingQuery,page);
+        logger.info(" quertSpecialSchedule  lessonSettingList.size() = {} ",lessonSettingList.size());
+
         logger.info(" quertSpecialSchedule  filterCoachRestEntityList.size() = {} ",filterCoachRestEntityList.size());
         for (int i = 0; i < Const.times.size(); i++) {
             int startHour = Const.times.get(i);
@@ -533,6 +573,25 @@ public class LessonService {
                     break;
                 }
             }
+
+            for(LessonSettingEntity lessonSettingEntity: lessonSettingList){
+                int index = ut.indexOfWeek(query.getLessonDate());
+                String[] days = lessonSettingEntity.getWeekRepeat().split(",");
+//                logger.info(" ***********   lessonSettingEntity   query.getLessonDate() = {},  index = {} ,  lesson.getStartHour() = {} ",query.getLessonDate(),index , JSON.toJSONString(days));
+                if(days.length>=index){
+                    if(days[index-1].equals("0")){
+                        continue;
+                    }
+                }
+                if(lessonSettingEntity.getStartHour() >= endHour || lessonSettingEntity.getEndHour() <= startHour){
+
+                }else{
+                    lesson.setStatus(-1);
+                    break;
+                }
+
+            }
+
             lesson.setType(LessonTypeEnum.P.getKey());
             lessonList.add(lesson);
         }
