@@ -177,7 +177,7 @@ public class LessonService {
             query.setMemberId(memberRequest.getMemberId());
         }
 
-        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+        MemberEntity memberEntity = memberDao.getById(query.getMemberId());
 
         String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
         logger.info(" quertPersonalSchedule  coachId = {} ",coachId);
@@ -517,7 +517,7 @@ public class LessonService {
                 }
             }
         }
-        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+        MemberEntity memberEntity = memberDao.getById(query.getMemberId());
 
         LessonSettingQuery lessonSettingQuery = new LessonSettingQuery();
         lessonSettingQuery.setCoachId(memberEntity.getCoachStaffId());
