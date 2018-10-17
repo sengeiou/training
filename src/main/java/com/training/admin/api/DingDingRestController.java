@@ -433,7 +433,7 @@ public class DingDingRestController {
     @GetMapping("change_valid_date")
     public Object change_valid_date(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" DingDingRestController   change_valid_date  ");
-        File file = new File("d:/file/change_card_date3.xls");
+        File file = new File("d:/file/change_card_date5.xls");
         List<List<String>> data = ExcelUtil.readExcel(file);
         String sql = "update member_card  set start_date = ? , end_date = ? , remark = ? , modified = now() where card_no = ? ";
         int i = 0;

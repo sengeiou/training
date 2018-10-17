@@ -99,6 +99,22 @@ public class MemberService {
         member.setMemberId(IDUtils.getId());
         int n = memberDao.add(member);
         if(n==1){
+
+            MemberEntity memberEntity = memberDao.getById(member.getMemberId());
+            if(!StringUtils.isEmpty(member.getCoachStaffId())){
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
+                for (StaffEntity manager : managers){
+                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                        try {
+                            SmsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");
