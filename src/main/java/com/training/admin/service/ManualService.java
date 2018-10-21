@@ -488,7 +488,7 @@ public class ManualService {
             }
         }
         logger.info(" exportDeadLessonMoney     deadList = {} ",deadList.size());
-        ExcelUtil.writeExcel(excelData,"C://deadlesson_"+ut.currentDate()+".xls");
+        ExcelUtil.writeExcel(excelData,"C://deadlesson_"+endDate.replaceAll("-","")+".xls");
 
     }
 
