@@ -62,7 +62,7 @@ public class FeedbackService {
                 StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
                 List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                 for (StaffEntity manager : managers){
-                    manager.setPhone("18618191128");
+//                    manager.setPhone("18618191128");
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
                             if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
@@ -105,7 +105,7 @@ public class FeedbackService {
                 List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                 logger.info(" changeCoach   managers = {} ",managers.size());
                 for (StaffEntity manager : managers){
-                    manager.setPhone("18618191128");
+//                    manager.setPhone("18618191128");
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
                             if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
