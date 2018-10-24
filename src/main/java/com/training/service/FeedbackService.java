@@ -1,20 +1,19 @@
 package com.training.service;
 
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.training.dao.*;
 import com.training.domain.Member;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
-import com.training.util.IDUtils;
-import com.training.util.ut;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.training.util.ResponseUtil;
-import com.training.util.RequestContextHelper;
 
 import java.util.List;
 
@@ -48,6 +47,7 @@ public class FeedbackService {
         if(StringUtils.isEmpty(feedback.getContent())){
             return ResponseUtil.exception("请输入反馈内容");
         }
+        feedback.setContent(EmojiUtils.filterEmoji(feedback.getContent(),"[emoji]"));
         Member member = RequestContextHelper.getMember();
         MemberEntity memberEntity = memberDao.getById(member.getMemberId());
         feedback.setFeedbackId(IDUtils.getId());
@@ -57,6 +57,27 @@ public class FeedbackService {
         feedback.setTitle(title);
         int n = feedbackDao.add(feedback);
         if(n==1){
+            if(!StringUtils.isEmpty(memberEntity.getCoachStaffId())){
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+                List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
+                for (StaffEntity manager : managers){
+                    manager.setPhone("18618191128");
+                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                        try {
+                            if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
+                                SendSmsResponse sendSmsResponse = SmsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                logger.info(" sendChangeCoachNotice   success sendSmsResponse = {} ",sendSmsResponse);
+                            }else if(feedback.getType().equals(FeedbackTypeEnum.feedback.getKey())){
+                                SendSmsResponse sendSmsResponse = SmsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                logger.info(" sendChangeCoachNotice   success sendAddMemberMsgNotice = {} ",sendSmsResponse);
+                            }
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");
@@ -70,6 +91,7 @@ public class FeedbackService {
     public ResponseEntity<String> changeCoach(FeedbackEntity feedback){
         Member member = RequestContextHelper.getMember();
         MemberEntity memberEntity = memberDao.getById(member.getMemberId());
+        logger.info(" changeCoach   memberEntity= {}",memberEntity);
         feedback.setFeedbackId(IDUtils.getId());
         feedback.setMemberId(memberEntity.getMemberId());
         feedback.setType("change_coach");
@@ -77,6 +99,28 @@ public class FeedbackService {
         feedback.setContent(memberEntity.getName()+"于"+ ut.currentDate()+"请求更换教练");
         int n = feedbackDao.add(feedback);
         if(n==1){
+            if(!StringUtils.isEmpty(memberEntity.getCoachStaffId())){
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
+                List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
+                logger.info(" changeCoach   managers = {} ",managers.size());
+                for (StaffEntity manager : managers){
+                    manager.setPhone("18618191128");
+                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                        try {
+                            if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
+                                SendSmsResponse sendSmsResponse = SmsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                logger.info(" sendChangeCoachNotice   success sendSmsResponse = {} ",sendSmsResponse);
+                            }else if(feedback.getType().equals(FeedbackTypeEnum.feedback.getKey())){
+                                SendSmsResponse sendSmsResponse = SmsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                logger.info(" sendChangeCoachNotice   success sendAddMemberMsgNotice = {} ",sendSmsResponse);
+                            }
+                        } catch (ClientException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
             return ResponseUtil.success("您的请求已经收到，稍后会有客服与您联系");
         }
         return ResponseUtil.exception("请求失败，请稍后再试");
