@@ -22,7 +22,7 @@ public class SmsLogEntity {
 
     private String staffId;
 
-    private Long cardNo;
+    private String cardNo;
 
     private String trainingId;
 
