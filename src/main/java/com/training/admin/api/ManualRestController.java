@@ -75,6 +75,9 @@ public class ManualRestController {
     CreateCardService createCardService;
 
     @Autowired
+    MemberTaskService memberTaskService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("updateCoachStaffId")
@@ -257,6 +260,26 @@ public class ManualRestController {
         MemberEntity memberDB = memberService.getById(memberId);
         createCardService.createPT(contractEntity,memberDB);
         return "dealContract end";
+    }
+
+    /**
+     * 出勤提醒
+     */
+    @GetMapping("sendTrainingNotice")
+    public void sendTrainingNotice(){
+        logger.info("start sendTrainingNotice!  time = {} ", ut.currentTime());
+        memberTaskService.sendTrainingNotice();
+        logger.info("end sendTrainingNotice!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 卡到期提醒
+     */
+    @GetMapping("sendCardEndNotice")
+    public void sendCardEndNotice(){
+        logger.info("start sendCardEndNotice!  time = {} ", ut.currentTime());
+        memberTaskService.sendCardEndNotice();
+        logger.info("end sendCardEndNotice!  time = {} ", ut.currentTime());
     }
 
 }

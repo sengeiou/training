@@ -351,7 +351,10 @@ public class MemberTrainingTaskService {
             String memberId = member.get("member_id").toString();
             List<Map<String,Object>> cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ? and type not in ('TY')  ",new Object[]{memberId});
             if(cards.size()==0){
-
+                if(status!=0){
+                    status = 0;
+                    jdbcTemplate.update(" update member set status = ? where  member_id = ?  ",new Object[]{status,memberId});
+                }
             }else{
                 boolean isValid = false;
                 for (int j = 0; j < cards.size(); j++) {

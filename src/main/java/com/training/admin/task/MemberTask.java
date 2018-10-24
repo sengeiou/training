@@ -1,5 +1,6 @@
 package com.training.admin.task;
 
+import com.training.admin.service.MemberTaskService;
 import com.training.admin.service.MemberTrainingTaskService;
 import com.training.util.ut;
 import org.slf4j.Logger;
@@ -15,6 +16,9 @@ public class MemberTask {
 
     @Autowired
     MemberTrainingTaskService memberTrainingTaskService;
+
+    @Autowired
+    MemberTaskService memberTaskService;
 
     /**
      * 更新学员的训练时长
@@ -55,5 +59,26 @@ public class MemberTask {
         memberTrainingTaskService.updateMemberCoupon();
         logger.info("end updateMemberCoupon!  time = {} ", ut.currentTime());
     }
+
+    /**
+     * 出勤提醒
+     */
+    @Scheduled(cron = "0 0 10 * * *")
+    public void sendTrainingNotice(){
+        logger.info("start sendTrainingNotice!  time = {} ", ut.currentTime());
+        memberTaskService.sendTrainingNotice();
+        logger.info("end sendTrainingNotice!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 卡到期提醒
+     */
+    @Scheduled(cron = "0 5 10 * * *")
+    public void sendCardEndNotice(){
+        logger.info("start sendCardEndNotice!  time = {} ", ut.currentTime());
+        memberTaskService.sendCardEndNotice();
+        logger.info("end sendCardEndNotice!  time = {} ", ut.currentTime());
+    }
+
 
 }
