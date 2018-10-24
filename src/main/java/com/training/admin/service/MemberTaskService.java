@@ -82,7 +82,7 @@ public class MemberTaskService {
                 if(CollectionUtils.isEmpty(trainingList)){
                     List cardList =  jdbcTemplate.queryForList(card_sql,new Object[]{memberId,ut.currentDate(),ut.currentDate()});
                     System.out.println(" memberId = "+memberId+" , name = "+member.get("name")+" , cardList = "+cardList.size());
-                    if(cardList.size()>0 && total < 3000){
+                    if(cardList.size()>0 && total < 1000){
                         SmsUtil.sendTrainingNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
                         Thread.sleep(20);
                         SmsUtil.sendTrainingNoticeToMember(phone,"10");
