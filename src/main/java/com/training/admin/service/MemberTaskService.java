@@ -1,9 +1,8 @@
 package com.training.admin.service;
 
-import com.training.common.CouponTypeEnum;
-import com.training.common.LessonTypeEnum;
-import com.training.common.MemberMedalEnum;
-import com.training.common.PageRequest;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
+import com.training.common.*;
 import com.training.dao.*;
 import com.training.entity.*;
 import com.training.service.MemberCardService;
@@ -11,6 +10,7 @@ import com.training.service.MemberCouponService;
 import com.training.util.SmsUtil;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,20 @@ public class MemberTaskService {
                     System.out.println(" memberId = "+memberId+" , name = "+member.get("name")+" , cardList = "+cardList.size());
                     if(cardList.size()>0 && total < 3){
                         SmsUtil.sendTrainingNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
+                        Thread.sleep(20);
                         SmsUtil.sendTrainingNoticeToMember(phone,"10");
+                        Thread.sleep(20);
+                        List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
+                        for (StaffEntity manager : managers){
+                            if(StringUtils.isNotEmpty(manager.getPhone())){
+                                try {
+                                    SmsUtil.sendTrainingNoticeToCoach(manager.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
+                                    Thread.sleep(20);
+                                } catch (ClientException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                     }
                     total++;
                 }
