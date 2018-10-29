@@ -70,10 +70,11 @@ public class MemberTaskService {
 
     public void sendTrainingNotice() {
         logger.info(" MemberTaskService sendTrainingNotice   start  ");
-        String sql = " select training_id from training where member_id = ? and `status` = 0 and lesson_date <  ? ";
-        String card_sql = " select card_no, member_id , type , start_date,end_date ,count, total  from member_card where member_id = ? and type not  in ('TY','ST1','ST2','ST3','ST4','ST5','ST6') and `start_date` <= ? and end_date >=  ? ";
+        String sql = " select training_id from training where member_id = ? and `status` = 0 and lesson_date >=  ? ";
+        String card_sql = " select card_no, member_id , type , start_date,end_date ,count, total  from member_card where member_id = ? and type not  in ('TY') and `start_date` <= ? and end_date >  ? ";
         String sql_log = " select * from sms_log where member_id = ? and type = ? and send_time >= ? ";
 
+        // 1. 先找出所有有效会员
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT member_id ,name,phone, coach_staff_id from member where status = 1  ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
@@ -86,9 +87,12 @@ public class MemberTaskService {
                 StaffEntity staffEntity = staffDao.getById(staffId);
                 StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
 
+                // 2. 查询从十天前算起都没有上课和约课记录的用户
                 List trainingList =  jdbcTemplate.queryForList(sql,new Object[]{memberId,ut.currentDate(-10)});
                 if(CollectionUtils.isEmpty(trainingList)){
-                    List cardList =  jdbcTemplate.queryForList(card_sql,new Object[]{memberId,ut.currentDate(),ut.currentDate()});
+
+                    // 3. 查询用户有没有可用的课卡，体验卡除外
+                    List cardList =  jdbcTemplate.queryForList(card_sql,new Object[]{memberId,ut.currentDate(-10),ut.currentDate()});
                     System.out.println(" memberId = "+memberId+" , name = "+member.get("name")+" , cardList = "+cardList.size());
                     if(cardList.size()>0 && total < 1000){
                         List logs = jdbcTemplate.queryForList(sql_log,new Object[]{memberId,SmsLogEnum.TRAINING_NOTICE.getKey(),ut.currentDate(-15)+" 00:00:00"});
