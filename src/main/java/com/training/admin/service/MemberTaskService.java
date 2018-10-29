@@ -95,7 +95,7 @@ public class MemberTaskService {
                     List cardList =  jdbcTemplate.queryForList(card_sql,new Object[]{memberId,ut.currentDate(-10),ut.currentDate()});
                     System.out.println(" memberId = "+memberId+" , name = "+member.get("name")+" , cardList = "+cardList.size());
                     if(cardList.size()>0 && total < 1000){
-                        List logs = jdbcTemplate.queryForList(sql_log,new Object[]{memberId,SmsLogEnum.TRAINING_NOTICE.getKey(),ut.currentDate(-15)+" 00:00:00"});
+                        List logs = jdbcTemplate.queryForList(sql_log,new Object[]{memberId,SmsLogEnum.TRAINING_NOTICE.getKey(),ut.currentDate(-12)+" 00:00:00"});
                         if(logs.size()>0){
                             logger.info(" sendTrainingNotice  hasSend , member =  {} , log = {}  ",member , logs.get(0));
                             continue;
