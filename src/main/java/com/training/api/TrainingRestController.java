@@ -128,7 +128,9 @@ public class TrainingRestController {
      */
     @RequestMapping (value = "findByStaff", method = RequestMethod.GET)
     public ResponseEntity<String> findByStaff(@ModelAttribute TrainingQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" TrainingRestController.findByStaff pageRequest = {} ",pageRequest);
         Page<Training> page = trainingService.findByStaff(query,pageRequest);
+        logger.info(" TrainingRestController.findByStaff getContent().size() = {} ",page.getContent().size());
         return ResponseUtil.success(page);
     }
 
