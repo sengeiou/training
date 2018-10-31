@@ -129,6 +129,7 @@ public class MemberTrainingTaskService {
                 }
                 TrainingQuery query = new TrainingQuery();
                 query.setMemberId(memberId);
+                query.setCardType(CardTypeEnum.PT.getKey());
                 query.setStartDate(ut.currentDate(-90));
                 query.setEndDate(ut.currentDate());
                 query.setStatus(0);
