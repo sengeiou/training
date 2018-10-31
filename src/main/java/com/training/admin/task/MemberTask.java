@@ -53,7 +53,7 @@ public class MemberTask {
     /**
      * 更新学员勋章
      */
-    @Scheduled(cron = "0 0 1 * * *")
+    @Scheduled(cron = "0 40 2 * * *")
     public void updateMemberCoupon(){
         logger.info("start updateMemberCoupon!  time = {} ", ut.currentTime());
         memberTrainingTaskService.updateMemberCoupon();

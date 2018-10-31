@@ -290,15 +290,22 @@ public class ManualRestController {
         logger.info("start deleteMonthMedal!  time = {} ", ut.currentTime());
         List<Map<String,Object>> medals =  jdbcTemplate.queryForList(" SELECT * from member_medal where medal_id <> 'OX' ");
         int error = 0;
+        int success = 0;
         for (int i = 0; i < medals.size(); i++){
             Map medal = medals.get(i);
+            String pk_id = medal.get("pk_id").toString();
             String memberId = medal.get("member_id").toString();
             List cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ?  and type = 'PT' ",new Object[]{memberId});
             if(cards.size()==0){
                 error++;
+                int n = jdbcTemplate.update("DELETE from member_medal where pk_id = ? ",new Object[]{pk_id});
+                if(n==1){
+                    success++;
+                }
             }
         }
         logger.info(" error = {} ", error);
+        logger.info(" success = {} ", success);
         logger.info("end deleteMonthMedal!  time = {} ", ut.currentTime());
     }
 
@@ -311,8 +318,10 @@ public class ManualRestController {
         List<Map<String,Object>> coupons =  jdbcTemplate.queryForList(" SELECT * from member_coupon where origin like '%CQ%' or origin like '%SJ%' ");
         int error = 0;
         int canDelete = 0;
+        int success = 0;
         for (int i = 0; i < coupons.size(); i++){
             Map coupon = coupons.get(i);
+            String coupon_id = coupon.get("coupon_id").toString();
             String memberId = coupon.get("member_id").toString();
             String status = coupon.get("status").toString();
             List cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ?  and type = 'PT' ",new Object[]{memberId});
@@ -321,11 +330,16 @@ public class ManualRestController {
                 logger.info(" memberId = {} ", memberId);
                 if(status.equals("0")){
                     canDelete++;
+                    int n = jdbcTemplate.update("DELETE from member_coupon where coupon_id = ? ",new Object[]{coupon_id});
+                    if(n==1){
+                        success++;
+                    }
                 }
             }
         }
         logger.info(" error = {} ", error);
         logger.info(" canDelete = {} ", canDelete);
+        logger.info(" success = {} ", success);
         logger.info("end deleteMonthMedal2!  time = {} ", ut.currentTime());
     }
 
