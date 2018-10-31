@@ -282,4 +282,51 @@ public class ManualRestController {
         logger.info("end sendCardEndNotice!  time = {} ", ut.currentTime());
     }
 
+    /**
+     * 卡到期提醒
+     */
+    @GetMapping("deleteMonthMedal")
+    public void deleteMonthMedal(){
+        logger.info("start deleteMonthMedal!  time = {} ", ut.currentTime());
+        List<Map<String,Object>> medals =  jdbcTemplate.queryForList(" SELECT * from member_medal where medal_id <> 'OX' ");
+        int error = 0;
+        for (int i = 0; i < medals.size(); i++){
+            Map medal = medals.get(i);
+            String memberId = medal.get("member_id").toString();
+            List cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ?  and type = 'PT' ",new Object[]{memberId});
+            if(cards.size()==0){
+                error++;
+            }
+        }
+        logger.info(" error = {} ", error);
+        logger.info("end deleteMonthMedal!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 卡到期提醒
+     */
+    @GetMapping("deleteMonthMedal2")
+    public void deleteMonthMedal2(){
+        logger.info("start deleteMonthMedal2!  time = {} ", ut.currentTime());
+        List<Map<String,Object>> coupons =  jdbcTemplate.queryForList(" SELECT * from member_coupon where origin like '%CQ%' or origin like '%SJ%' ");
+        int error = 0;
+        int canDelete = 0;
+        for (int i = 0; i < coupons.size(); i++){
+            Map coupon = coupons.get(i);
+            String memberId = coupon.get("member_id").toString();
+            String status = coupon.get("status").toString();
+            List cards = jdbcTemplate.queryForList(" SELECT * from member_card where member_id = ?  and type = 'PT' ",new Object[]{memberId});
+            if(cards.size()==0){
+                error++;
+                logger.info(" memberId = {} ", memberId);
+                if(status.equals("0")){
+                    canDelete++;
+                }
+            }
+        }
+        logger.info(" error = {} ", error);
+        logger.info(" canDelete = {} ", canDelete);
+        logger.info("end deleteMonthMedal2!  time = {} ", ut.currentTime());
+    }
+
 }
