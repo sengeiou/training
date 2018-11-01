@@ -97,7 +97,7 @@ public class ManualService {
 
 
     public void trainingExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from training where card_type in ('PM' ) and lesson_date >= ? and lesson_date <= ? and status >= 0 " +
+        List data = jdbcTemplate.queryForList("select * from training where card_type in ('PM','PT' ) and lesson_date >= ? and lesson_date <= ? and status >= 0 " +
                 " order by staff_id , lesson_date ",new Object[]{startDate,endDate});
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
@@ -190,7 +190,7 @@ public class ManualService {
                 logger.error(" training = "+ JSON.toJSONString(training),e);
             }
         }
-        ExcelUtil.writeExcel(excelData,"C://training201809.xls");
+        ExcelUtil.writeExcel(excelData,"C://training201810.xls");
     }
 
 
@@ -492,5 +492,67 @@ public class ManualService {
 
     }
 
+    public void exportStaffMember(String date) {
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("教练姓名");
+        titleRow.add("日期");
+        titleRow.add("意向会员数");
+        titleRow.add("有效会员数");
+        titleRow.add("结课会员数");
+        titleRow.add("停课会员数");
+        titleRow.add("总会员数");
+        excelData.add(titleRow);
+        String sql = " SELECT * from member_his_10 where backup_date = ? ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{date});
+
+        String sql_srtaff = " SELECT  a.* , b.name store_name from staff a, store b where a.store_id = b.store_id  order by a.store_id  ";
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(sql_srtaff,new Object[]{});
+        for (int i = 0; i < staffs.size(); i++) {
+            Map staff = staffs.get(i);
+            int count_0 = 0;
+            int count_1 = 0;
+            int count_2 = 0;
+            int count_9 = 0;
+            int total = 0;
+            for (int j = 0; j < members.size(); j++) {
+                Map member = members.get(j);
+                if(member.get("coach_staff_id")==null){
+                    continue;
+                }
+                String staffId = member.get("coach_staff_id").toString();
+                if(staff.get("staff_id").toString().equals(staffId)){
+                    total++;
+                    String status = member.get("status").toString();
+                    if(status.equals("0")){
+                        count_0++;
+                    }
+                    if(status.equals("1")){
+                        count_1++;
+                    }
+                    if(status.equals("2")){
+                        count_2++;
+                    }
+                    if(status.equals("9")){
+                        count_9++;
+                    }
+                }
+            }
+            List<String> row = new ArrayList();
+            row.add(staff.get("store_name").toString());
+            row.add(staff.get("custname").toString());
+            row.add(date);
+            row.add(""+count_0);
+            row.add(""+count_1);
+            row.add(""+count_2);
+            row.add(""+count_9);
+            row.add(""+total);
+            excelData.add(row);
+        }
+        logger.info(" exportDeadLessonMoney     excelData = {} ",excelData.size());
+        ExcelUtil.writeExcel(excelData,"C://staff_member_"+date.replaceAll("-","")+".xls");
+
+    }
 }
 
