@@ -152,26 +152,21 @@ public class ManualRestController {
 
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" calculateKpi   ");
-//        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
+        logger.info(" =======   calculateKpi  execute start  ");
         String month = "201810";
-        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '教练' ");
-
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') ");
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
             calculateKpiService.calculateStaffKpi(staffId,month);
         }
-
-        List<Map<String,Object>> managers =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job = '店长' ");
-        for (int i = 0; i < managers.size(); i++){
-            Map staff = managers.get(i);
-            String staffId = staff.get("staff_id").toString();
-            calculateKpiService.calculateStaffKpi(staffId,month);
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            String store_id = store.get("store_id").toString();
+            calculateKpiService.calculateStoreKpi(store_id,month);
         }
-
-        logger.info(" coachs.size() = "+coachs.size());
-        logger.info(" managers.size() = "+managers.size());
+        logger.info(" =======   calculateKpi  execute end  ");
         return "calculateKpi执行成功";
     }
 

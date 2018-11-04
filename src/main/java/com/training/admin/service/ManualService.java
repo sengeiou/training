@@ -72,7 +72,15 @@ public class ManualService {
         int n = 0;
         StaffEntity staffEntity = staffDao.getById(staffId);
         if(staffEntity==null){
-            return n;
+            StoreEntity storeEntity = storeDao.getById(staffId);
+            if(storeEntity==null){
+                return n;
+            }
+            staffEntity = new StaffEntity();
+            staffEntity.setStaffId(staffId);
+            staffEntity.setCustname("全店");
+            staffEntity.setStoreId(storeEntity.getStoreId());
+            staffEntity.setJob("全店");
         }
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
         if(kpiStaffMonthEntity==null){
@@ -84,6 +92,7 @@ public class ManualService {
             kpiStaffMonthEntity.setMonth(month);
             kpiStaffMonthEntity.setKpiScore("0");
             kpiStaffMonthEntity.setType("");
+            kpiStaffMonthEntity.setType("QD");
             if("教练".equals(staffEntity.getJob())){
                 kpiStaffMonthEntity.setType("JL");
             }

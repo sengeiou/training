@@ -206,21 +206,27 @@ public class KpiStaffMonthService {
 
         StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
 
-        StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
+        String templateId = "";
+        String storeId = "";
+        if(staffEntity==null){
+            storeId = kpiStaffMonthEntity.getStaffId();
+            templateId = "15342960149761174910b207e4dc9b41f3eca88a0f041";
+        }else{
+
+        }
+        StoreEntity storeEntity = storeDao.getById(storeId);
         if(storeEntity!=null){
             kpiStaffMonth.setStoreName(storeEntity.getName());
         }else{
             kpiStaffMonth.setStoreName("-");
         }
 
-        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(templateId);
         if(kpiTemplateEntity!=null){
             kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
-
             kpiStaffMonth.setKpiTemplateQuotaList(new ArrayList<>());
-
             KpiTemplateQuotaQuery query = new KpiTemplateQuotaQuery();
-            query.setTemplateId(staffEntity.getTemplateId());
+            query.setTemplateId(templateId);
             PageRequest page = new PageRequest();
             page.setPageSize(100);
             List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(query,page);
@@ -228,10 +234,7 @@ public class KpiStaffMonthService {
             for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
                 KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
                 BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
-
                 kpiScore = kpiScore + calculateQuota(kpiTemplateQuota,kpiStaffMonth);
-
-
                 kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
             }
 
@@ -327,22 +330,22 @@ public class KpiStaffMonthService {
             System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
             int xks = 0;
             int jks = 0;
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getXks())){
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonth.getXks());
             }
-            if(StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getXks());
             }
-            if(StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getXks());
             }
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getJks())){
+            if(kpiStaffMonth!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonth.getJks());
             }
-            if(StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getJks());
             }
-            if(StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getJks());
             }
             int xkl = 100;
@@ -389,13 +392,13 @@ public class KpiStaffMonthService {
             System.out.println(" zjs-0 = "+kpiStaffMonth.getZjs());
             System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
             System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
-            if(StringUtils.isEmpty(kpiStaffMonth.getZjs())){
+            if(kpiStaffMonth!=null&&StringUtils.isEmpty(kpiStaffMonth.getZjs())){
                 kpiStaffMonth.setZjs("0");
             }
-            if(StringUtils.isEmpty(kpiStaffMonthEntity1.getZjs())){
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isEmpty(kpiStaffMonthEntity1.getZjs())){
                 kpiStaffMonthEntity1.setZjs("0");
             }
-            if(StringUtils.isEmpty(kpiStaffMonthEntity2.getZjs())){
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isEmpty(kpiStaffMonthEntity2.getZjs())){
                 kpiStaffMonthEntity2.setZjs("0");
             }
             if(StringUtils.isNotEmpty(kpiStaffMonth.getZjs())){
