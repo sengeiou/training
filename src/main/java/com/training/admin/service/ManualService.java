@@ -97,7 +97,7 @@ public class ManualService {
 
 
     public void trainingExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from training where card_type in ('PM','PT' ) and lesson_date >= ? and lesson_date <= ? and status >= 0 " +
+        List data = jdbcTemplate.queryForList("select * from training where  lesson_date >= ? and lesson_date <= ? and status >= 0 " +
                 " order by staff_id , lesson_date ",new Object[]{startDate,endDate});
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
