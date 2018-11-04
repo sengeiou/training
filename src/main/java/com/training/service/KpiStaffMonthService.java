@@ -212,7 +212,8 @@ public class KpiStaffMonthService {
             storeId = kpiStaffMonthEntity.getStaffId();
             templateId = "15342960149761174910b207e4dc9b41f3eca88a0f041";
         }else{
-
+            templateId = staffEntity.getTemplateId();
+            storeId = staffEntity.getStoreId();
         }
         StoreEntity storeEntity = storeDao.getById(storeId);
         if(storeEntity!=null){
