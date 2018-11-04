@@ -103,7 +103,7 @@ public class CalculateKpiService {
 
         int xkl = 100;
         if(jks>0){
-            xkl = xks/jks;
+            xkl = 100*xks/jks;
         }
 
         int cjs = getCjs(staffId,month);
