@@ -162,6 +162,11 @@ public class KpiStaffMonthService {
         if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam1())){
             kpiStaffMonth.setStar(kpiStaffMonthEntity.getParam1());
         }
+        kpiStaffMonth.setRestDays(kpiStaffMonth.getParam2());
+        kpiStaffMonth.setExtraXks(kpiStaffMonth.getParam3());
+        kpiStaffMonth.setExtraJks(kpiStaffMonth.getParam4());
+        kpiStaffMonth.setExtraScore(kpiStaffMonth.getParam5());
+
         return kpiStaffMonth;
     }
 
@@ -782,6 +787,10 @@ public class KpiStaffMonthService {
 //            staffDao.update(staffEntity);
 //        }
         kpiStaffMonth.setTemplateId(null);
+        kpiStaffMonth.setParam2(kpiStaffMonth.getRestDays());
+        kpiStaffMonth.setParam3(kpiStaffMonth.getExtraXks());
+        kpiStaffMonth.setParam4(kpiStaffMonth.getExtraJks());
+        kpiStaffMonth.setParam5(kpiStaffMonth.getExtraScore());
         int n = kpiStaffMonthDao.update(kpiStaffMonth);
         if(n==1){
             return ResponseUtil.success("修改成功");

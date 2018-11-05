@@ -106,9 +106,14 @@ public class MemberService {
             MemberEntity memberEntity = memberDao.getById(member.getMemberId());
             if(!StringUtils.isEmpty(member.getCoachStaffId())){
                 StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                try {
+                    smsUtil.sendAddMemberNotice(staffEntity.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                }
                 List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                 for (StaffEntity manager : managers){
-                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                    if(StringUtils.isNotEmpty(manager.getPhone()) && !manager.getPhone().equals(staffEntity.getPhone())){
                         try {
                             smsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
                         } catch (ClientException e) {
@@ -895,9 +900,14 @@ public class MemberService {
             sysLogService.add(sysLogEntity);
 
             if(StringUtils.isEmpty(memberEntity.getCoachStaffId()) || (StringUtils.isNotEmpty(memberEntity.getStoreId())&&!memberEntity.getStoreId().equals(staffEntity.getStoreId())) ){
+                try {
+                    smsUtil.sendAddMemberNotice(staffEntity.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                } catch (ClientException e) {
+                    e.printStackTrace();
+                }
                 List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                 for (StaffEntity manager : managers){
-                    if(StringUtils.isNotEmpty(manager.getPhone())){
+                    if(StringUtils.isNotEmpty(manager.getPhone()) && !manager.getPhone().equals(staffEntity.getPhone())){
                         try {
                             smsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
                         } catch (ClientException e) {
