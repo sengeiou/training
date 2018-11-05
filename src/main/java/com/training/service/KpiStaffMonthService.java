@@ -122,6 +122,9 @@ public class KpiStaffMonthService {
         KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
         BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
         StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
+        if(staffEntity==null){
+            return null;
+        }
         StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
         if(storeEntity!=null){
             kpiStaffMonth.setStoreName(storeEntity.getName());
