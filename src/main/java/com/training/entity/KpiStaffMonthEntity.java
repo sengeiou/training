@@ -94,6 +94,14 @@ public class KpiStaffMonthEntity {
 
     private String kpiData;
 
+    private String restDays;
+
+    private String extraXks;
+
+    private String extraJks;
+
+    private String extraScore;
+
     private String param1;
 
     private String param2;
