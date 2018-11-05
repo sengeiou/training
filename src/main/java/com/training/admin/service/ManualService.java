@@ -204,7 +204,7 @@ public class ManualService {
 
 
     public void monthCardExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' )  order by card_no desc ",new Object[]{ });
+        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
         titleRow.add("门店");
@@ -217,7 +217,7 @@ public class ManualService {
         titleRow.add("单价");
         titleRow.add("合同金额");
         titleRow.add("购买课程节数/天数");
-        titleRow.add("当月天数");
+        titleRow.add("耗课天数");
         titleRow.add("耗课总金额");
 
         System.out.println(data.size());
@@ -228,6 +228,9 @@ public class ManualService {
                 String memberId = ((Map) card).get("member_id").toString();
                 String card_no = ((Map) card).get("card_no").toString();
                 String type = ((Map) card).get("type").toString();
+                String start_date = ((Map) card).get("start_date").toString();
+                String end_date = ((Map) card).get("end_date").toString();
+
                 MemberEntity member = memberDao.getById(memberId);
                 if(member==null){
                     logger.error(" member==null ,  "+ JSON.toJSONString(card));
@@ -249,6 +252,11 @@ public class ManualService {
 
                 int monthDays = ut.passDayByDate(startDate,endDate)+1;
                 double money = 0;
+
+                int monthDays2 = ut.passDayByDate(startDate,end_date)+1;
+                if(monthDays>monthDays2){
+                    monthDays = monthDays2;
+                }
 
                 memberCardEntity.getMoney();
                 double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
