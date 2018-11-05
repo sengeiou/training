@@ -78,6 +78,9 @@ public class KpiStaffMonthService {
         List<KpiStaffMonth> kpiList = new ArrayList();
         for(KpiStaffMonthEntity kpiStaffMonthEntity :kpiStaffMonthList){
             KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthEntity);
+            if(kpiStaffMonth==null){
+                continue;
+            }
             kpiList.add(kpiStaffMonth);
         }
         Long count = kpiStaffMonthDao.count(query);
@@ -115,6 +118,8 @@ public class KpiStaffMonthService {
     }
 
     public KpiStaffMonth convertKpiStaffMonth(KpiStaffMonthEntity kpiStaffMonthEntity) {
+        logger.info(" convertKpiStaffMonth   kpiStaffMonthEntity = {} ",kpiStaffMonthEntity);
+
         double kpiScore = 0;
         if(kpiStaffMonthEntity==null){
             return null;
@@ -744,6 +749,7 @@ public class KpiStaffMonthService {
     public KpiStaffMonth getByIdAndMonth(String id,String month){
         logger.info(" getByIdAndMonth , id = {} , month = {}  ",id,month);
         KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getByIdAndMonth(id,month);
+        logger.info(" getByIdAndMonth , kpiStaffMonthDB = {}  ",kpiStaffMonthDB);
         KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthDB);
         return kpiStaffMonth;
     }
