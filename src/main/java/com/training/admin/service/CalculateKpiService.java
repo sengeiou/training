@@ -149,15 +149,15 @@ public class CalculateKpiService {
             kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,month);
         }
 
-        int qdxks = 0;
-        int qdjks = 0;
+        double qdxks = 0;
+        double qdjks = 0;
         int qdlessonCount = 0;
         int qdvalidMemberCount = 0;
 
         int qdxkl = 100;
         double qdzjs = 0;
         int qdhydp = 0;
-        int qdhyd = 0;
+        double qdhyd = 0;
 
         int qdzye = 0;
         int qdcjs = 0;
@@ -203,12 +203,12 @@ public class CalculateKpiService {
         if(staffCount>0){
             qdhydp = qdhydp/staffCount;
             qdzjs = qdzjs/staffCount;
+            qdxks = qdxks/staffCount;
+            qdjks = qdjks/staffCount;
         }
-        if(qdjks>0){
-            qdxkl = qdxks/qdjks;
-        }
+
         if(qdvalidMemberCount>0){
-            qdhyd = qdlessonCount*100/qdvalidMemberCount;
+            qdhyd = (double)qdlessonCount*100/qdvalidMemberCount;
         }
 
         int xswcl = 100;
@@ -231,13 +231,12 @@ public class CalculateKpiService {
 
         kpiStaffMonthEntity.setXswcl(""+xswcl);
         kpiStaffMonthEntity.setQdxkl(""+qdxkl);
-        kpiStaffMonthEntity.setQdhyd(""+qdhyd);
+        kpiStaffMonthEntity.setQdhyd(""+ut.getDoubleString(qdhyd));
         kpiStaffMonthEntity.setQdhydp(""+qdhydp);
         kpiStaffMonthEntity.setQdzjs(ut.getDoubleString(qdzjs));
         kpiStaffMonthEntity.setQdcjs(""+qdcjs);
         kpiStaffMonthEntity.setQdtcs(""+qdtcs);
         kpiStaffMonthEntity.setTczhl(""+tczhl);
-
 
         KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
         kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
@@ -246,7 +245,6 @@ public class CalculateKpiService {
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
 
     }
-
 
     private int getZye(String staffId, String month) {
         StaffEntity staffEntity = staffDao.getById(staffId);
@@ -257,7 +255,7 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-        String sql = "select * from contract where coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
+        String sql = "select * from contract where salesman like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
         int yye = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
         for (int i = 0; i < data.size(); i++) {
@@ -290,7 +288,7 @@ public class CalculateKpiService {
             if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
                 continue;
             }
-            List ty_cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
+            List ty_cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate+" 00:00:00",endDate+" 23:59:59"});
             if(ty_cards.size()>0){
                 count++;
             }
@@ -307,13 +305,16 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-        String sql = "select * from contract where coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
+        String sql = "select * from contract where card_type in ('PT','PM') and salesman like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
         int cjs = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             String type = item.get("type").toString();
             if("新会员".equals(type)){
+                cjs++;
+            }
+            if("转介绍".equals(type)){
                 cjs++;
             }
         }

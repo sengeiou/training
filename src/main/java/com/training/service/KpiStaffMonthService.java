@@ -331,7 +331,7 @@ public class KpiStaffMonthService {
             System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
             int xks = 0;
             int jks = 0;
-            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getXks())){
+            if(kpiStaffMonth!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonth.getXks());
             }
             if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
@@ -460,114 +460,195 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getXswcl())){
-                int xswcl = Integer.parseInt(kpiStaffMonth.getXswcl());
-                kpiTemplateQuota.setFinishRate(xswcl+"%");
-                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
-                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    int min = 0;
-                    int max = 999999;
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
-                        max = Integer.parseInt(kpiQuotaStandard.getMax());
-                    }
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
-                        min = Integer.parseInt(kpiQuotaStandard.getMin());
-                    }
-                    if(xswcl>=min&&xswcl<max){
-                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
-                        kpiTemplateQuota.setScore(""+value);
-                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
-                        kpiScore = score;
-                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
-                        break;
-                    }
+
+            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
+            int qdzye = 0;
+            if(kpiStaffMonthEntity0!=null && StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdzye())){
+                qdzye = Integer.parseInt(kpiStaffMonthEntity0.getQdzye());
+            }
+
+            int xswcl = 100;
+            if(StringUtils.isNotEmpty(kpiStaffMonth.getXsmb())){
+                int xsmb = Integer.parseInt(kpiStaffMonth.getXsmb());
+                if(xsmb>0){
+                    xswcl = qdzye*100/xsmb;
                 }
             }
+
+            kpiTemplateQuota.setFinishRate(xswcl+"%");
+            List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+            for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+                int min = 0;
+                int max = 999999;
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+                    max = Integer.parseInt(kpiQuotaStandard.getMax());
+                }
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+                    min = Integer.parseInt(kpiQuotaStandard.getMin());
+                }
+                if(xswcl>=min&&xswcl<max){
+                    int value = Integer.parseInt(kpiQuotaStandard.getScore());
+                    logger.info(" value = {} ",value);
+                    kpiTemplateQuota.setScore(""+value);
+                    double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                    kpiScore = score;
+                    kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                    break;
+                }
+            }
+
         }else if(KpiQuotaEnum.k9.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdxkl())){
-                int qdxkl = Integer.parseInt(kpiStaffMonth.getQdxkl());
-                kpiTemplateQuota.setFinishRate(qdxkl+"%");
-                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
-                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    int min = 0;
-                    int max = 999999;
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
-                        max = Integer.parseInt(kpiQuotaStandard.getMax());
-                    }
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
-                        min = Integer.parseInt(kpiQuotaStandard.getMin());
-                    }
-                    if(qdxkl>=min&&qdxkl<max){
-                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
-                        kpiTemplateQuota.setScore(""+value);
-                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
-                        kpiScore = score;
-                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
-                        break;
-                    }
+
+            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
+            System.out.println(month);
+            String month1 = ut.currentFullMonth(month,-1).replace("-","");
+            String month2= ut.currentFullMonth(month,-2).replace("-","");
+            System.out.println(month1);
+            System.out.println(month2);
+
+            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
+            KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
+            KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
+
+            System.out.println(" xks-0 = "+kpiStaffMonthEntity0.getXks());
+            System.out.println(" xks-1 = "+kpiStaffMonthEntity1.getXks());
+            System.out.println(" xks-2 = "+kpiStaffMonthEntity2.getXks());
+            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
+            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
+            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
+            int xks = 0;
+            int jks = 0;
+            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getXks())){
+                xks = xks + Integer.parseInt(kpiStaffMonthEntity0.getXks());
+            }
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
+                xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getXks());
+            }
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
+                xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getXks());
+            }
+            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getJks())){
+                jks = jks + Integer.parseInt(kpiStaffMonthEntity0.getJks());
+            }
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
+                jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getJks());
+            }
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
+                jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getJks());
+            }
+            int qdxkl = 100;
+            if(jks>0){
+                qdxkl = 100*xks/jks;
+            }
+
+            kpiTemplateQuota.setFinishRate(qdxkl+"%");
+            List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+            for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+                int min = 0;
+                int max = 999999;
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+                    max = Integer.parseInt(kpiQuotaStandard.getMax());
+                }
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+                    min = Integer.parseInt(kpiQuotaStandard.getMin());
+                }
+                if(qdxkl>=min&&qdxkl<max){
+                    int value = Integer.parseInt(kpiQuotaStandard.getScore());
+                    logger.info(" value = {} ",value);
+                    kpiTemplateQuota.setScore(""+value);
+                    double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                    kpiScore = score;
+                    kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                    break;
                 }
             }
+
         }else if(KpiQuotaEnum.k10.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdzjs())){
-                double qdzjs = Double.parseDouble(kpiStaffMonth.getQdzjs());
-                kpiTemplateQuota.setFinishRate(kpiStaffMonth.getQdzjs());
-                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
-                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    double min = 0;
-                    double max = 999999;
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
-                        max = Double.parseDouble(kpiQuotaStandard.getMax());
-                    }
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
-                        min = Double.parseDouble(kpiQuotaStandard.getMin());
-                    }
-                    if(qdzjs>=min&&qdzjs<max){
-                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
-                        kpiTemplateQuota.setScore(""+value);
-                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
-                        kpiScore = score;
-                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
-                        break;
-                    }
+
+            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
+            System.out.println(month);
+            String month1 = ut.currentFullMonth(month,-1).replace("-","");
+            String month2= ut.currentFullMonth(month,-2).replace("-","");
+            System.out.println(month1);
+            System.out.println(month2);
+
+            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
+            KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
+            KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
+
+            System.out.println(" zjs-0 = "+kpiStaffMonthEntity0.getZjs());
+            System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
+            System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
+            double zjs0 = 0;
+            double zjs1 = 0;
+            double zjs2 = 0;
+            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getZjs())){
+                zjs0 = Double.parseDouble(kpiStaffMonthEntity0.getZjs());
+            }
+            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getZjs())){
+                zjs1 = Double.parseDouble(kpiStaffMonthEntity1.getZjs());
+            }
+            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getZjs())){
+                zjs2 = Double.parseDouble(kpiStaffMonthEntity2.getZjs());
+            }
+
+            double qdzjs = (zjs0 + zjs1 + zjs2)/3;
+            kpiTemplateQuota.setFinishRate(kpiStaffMonth.getQdzjs());
+            List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+            for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+                double min = 0;
+                double max = 999999;
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+                    max = Double.parseDouble(kpiQuotaStandard.getMax());
+                }
+                if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+                    min = Double.parseDouble(kpiQuotaStandard.getMin());
+                }
+                if(qdzjs>=min&&qdzjs<max){
+                    int value = Integer.parseInt(kpiQuotaStandard.getScore());
+                    logger.info(" value = {} ",value);
+                    kpiTemplateQuota.setScore(""+value);
+                    double score = (double)value*kpiTemplateQuota.getWeight()/100;
+                    kpiScore = score;
+                    kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+                    break;
                 }
             }
+
         }else if(KpiQuotaEnum.k11.getKey().equals(kpiTemplateQuota.getQuotaId())){
-            kpiTemplateQuota.setFinishRate("-");
-            kpiTemplateQuota.setKpiScore("-");
-            kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdhydp())){
-                int qdhydp = Integer.parseInt(kpiStaffMonth.getQdhydp());
-                kpiTemplateQuota.setFinishRate(qdhydp+"%");
-                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
-                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-                    int min = 0;
-                    int max = 999999;
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
-                        max = Integer.parseInt(kpiQuotaStandard.getMax());
-                    }
-                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
-                        min = Integer.parseInt(kpiQuotaStandard.getMin());
-                    }
-                    if(qdhydp>=min&&qdhydp<max){
-                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
-                        kpiTemplateQuota.setScore(""+value);
-                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
-                        kpiScore = score;
-                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
-                        break;
-                    }
-                }
-            }
+            kpiTemplateQuota.setFinishRate("0");
+            kpiTemplateQuota.setKpiScore("0");
+            kpiTemplateQuota.setScore("0");
+//            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdhydp())){
+//                int qdhydp = Integer.parseInt(kpiStaffMonth.getQdhydp());
+//                kpiTemplateQuota.setFinishRate(qdhydp+"%");
+//                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
+//                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
+//                    int min = 0;
+//                    int max = 999999;
+//                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
+//                        max = Integer.parseInt(kpiQuotaStandard.getMax());
+//                    }
+//                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
+//                        min = Integer.parseInt(kpiQuotaStandard.getMin());
+//                    }
+//                    if(qdhydp>=min&&qdhydp<max){
+//                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
+//                        logger.info(" value = {} ",value);
+//                        kpiTemplateQuota.setScore(""+value);
+//                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
+//                        kpiScore = score;
+//                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
+//                        break;
+//                    }
+//                }
+//            }
         }else if(KpiQuotaEnum.k12.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
