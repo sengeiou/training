@@ -513,12 +513,12 @@ public class KpiStaffMonthService {
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
             KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
 
-            System.out.println(" xks-0 = "+kpiStaffMonthEntity0.getXks());
-            System.out.println(" xks-1 = "+kpiStaffMonthEntity1.getXks());
-            System.out.println(" xks-2 = "+kpiStaffMonthEntity2.getXks());
-            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
-            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
-            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
+//            System.out.println(" xks-0 = "+kpiStaffMonthEntity0.getXks());
+//            System.out.println(" xks-1 = "+kpiStaffMonthEntity1.getXks());
+//            System.out.println(" xks-2 = "+kpiStaffMonthEntity2.getXks());
+//            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
+//            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
+//            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
             int xks = 0;
             int jks = 0;
             if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getXks())){
@@ -582,9 +582,9 @@ public class KpiStaffMonthService {
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
             KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
 
-            System.out.println(" zjs-0 = "+kpiStaffMonthEntity0.getZjs());
-            System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
-            System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
+//            System.out.println(" zjs-0 = "+kpiStaffMonthEntity0.getZjs());
+//            System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
+//            System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
             double zjs0 = 0;
             double zjs1 = 0;
             double zjs2 = 0;
