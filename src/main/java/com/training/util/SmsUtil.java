@@ -3,20 +3,25 @@ package com.training.util;
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.dm.model.v20151123.SingleSendMailRequest;
-import com.aliyuncs.dm.model.v20151123.SingleSendMailResponse;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.training.domain.Email;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import javax.annotation.PostConstruct;
 
 @Service
 public class SmsUtil {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Value("${sms.send}")
+    public boolean sendTag;
 
     //产品名称:云通信短信API产品,开发者无需替换
     static final String product = "Dysmsapi";
@@ -26,7 +31,12 @@ public class SmsUtil {
     static final String accessKeyId = "LTAI3S8lfxPGqzDm";
     static final String accessKeySecret = "eje76N1240vOyP6ory77jFjzKOe8ax";
 
-    public static SendSmsResponse sendCode(String phone, String code) throws ClientException {
+    private IAcsClient acsClient;
+
+    @PostConstruct
+    public void init()  throws ClientException{
+        logger.info(">>>>>>>>>  SmsUtil.init start <<<<<<<<<<<");
+
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
@@ -34,8 +44,12 @@ public class SmsUtil {
         //初始化acsClient,暂不支持region化
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
+        acsClient = new DefaultAcsClient(profile);
 
+        logger.info(">>>>>>>>>  SmsUtil.init end <<<<<<<<<<<");
+    }
+
+    public SendSmsResponse sendCode(String phone, String code) throws ClientException {
         //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
@@ -54,12 +68,11 @@ public class SmsUtil {
         request.setOutId("huai23");
 
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendLessonNotice(String phone, String name, String date, String lessonType) throws ClientException {
+    public SendSmsResponse sendLessonNotice(String phone, String name, String date, String lessonType) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
@@ -69,14 +82,7 @@ public class SmsUtil {
         if(StringUtils.isEmpty(lessonType)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -91,12 +97,11 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendCancelLessonNotice(String phone, String name, String date, String lessonType) throws ClientException {
+    public SendSmsResponse sendCancelLessonNotice(String phone, String name, String date, String lessonType) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
@@ -106,14 +111,7 @@ public class SmsUtil {
         if(StringUtils.isEmpty(lessonType)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -128,26 +126,18 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendAddMemberNotice(String phone, String name, String memberPhone) throws ClientException {
+    public SendSmsResponse sendAddMemberNotice(String phone, String name, String memberPhone) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
         if(StringUtils.isEmpty(name)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -162,26 +152,18 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendChangeCoachNotice(String phone, String store,String coach, String name) throws ClientException {
+    public SendSmsResponse sendChangeCoachNotice(String phone, String store,String coach, String name) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
         if(StringUtils.isEmpty(name)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -196,26 +178,18 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendAddMemberMsgNotice(String phone, String store,String coach, String name) throws ClientException {
+    public SendSmsResponse sendAddMemberMsgNotice(String phone, String store,String coach, String name) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
         if(StringUtils.isEmpty(name)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -230,26 +204,18 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendTrainingNoticeToCoach(String phone, String store,String name, String day) throws ClientException {
+    public SendSmsResponse sendTrainingNoticeToCoach(String phone, String store,String name, String day) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
         if(StringUtils.isEmpty(name)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
+
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -264,26 +230,17 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendTrainingNoticeToMember(String phone,String day) throws ClientException {
+    public SendSmsResponse sendTrainingNoticeToMember(String phone,String day) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
         if(StringUtils.isEmpty(day)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -298,12 +255,11 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendCardEndNoticeToCoach(String phone,String store , String name) throws ClientException {
+    public SendSmsResponse sendCardEndNoticeToCoach(String phone,String store , String name) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
@@ -313,14 +269,6 @@ public class SmsUtil {
         if(StringUtils.isEmpty(name)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -335,23 +283,14 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
         return sendSmsResponse;
     }
 
-    public static SendSmsResponse sendCardEndNoticeToMember(String phone,String card) throws ClientException {
+    public SendSmsResponse sendCardEndNoticeToMember(String phone,String card) throws ClientException {
         if(StringUtils.isEmpty(phone)){
             return null;
         }
-        //可自助调整超时时间
-        System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
-        System.setProperty("sun.net.client.defaultReadTimeout", "10000");
-        //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
-        IAcsClient acsClient = new DefaultAcsClient(profile);
-        //组装请求对象-具体描述见控制台-文档部分内容
         SendSmsRequest request = new SendSmsRequest();
         //必填:待发送手机号
         request.setPhoneNumbers(phone);
@@ -366,15 +305,34 @@ public class SmsUtil {
         //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
         request.setOutId("huai23");
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        System.out.println("sendSmsResponse = "+JSON.toJSON(sendSmsResponse));
+        SendSmsResponse sendSmsResponse = sendSms(request);
+        return sendSmsResponse;
+    }
+
+    private SendSmsResponse sendSms(SendSmsRequest request) throws ClientException {
+        SendSmsResponse sendSmsResponse = null;
+        if(sendTag){
+            sendSmsResponse = acsClient.getAcsResponse(request);
+        }else{
+            sendSmsResponse = createResponse();
+        }
+        logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));
+        return sendSmsResponse;
+    }
+
+    private SendSmsResponse createResponse() {
+        SendSmsResponse sendSmsResponse = new SendSmsResponse();
+        sendSmsResponse.setBizId("");
+        sendSmsResponse.setCode("");
+        sendSmsResponse.setMessage("");
+        sendSmsResponse.setRequestId("");
         return sendSmsResponse;
     }
 
     public static void main(String[] args) throws Exception {
 //        SmsUtil.sendLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
 //        SmsUtil.sendCancelLessonNotice("18618191128","【张三】","2018-09-30 20:30","团体课");
-        SmsUtil.sendAddMemberNotice("13426474340","【 刘德华】","13988888888");
+//        SmsUtil.sendAddMemberNotice("13426474340","【 刘德华】","13988888888");
 //        SmsUtil.sendChangeCoachNotice("18618191128","紫竹桥","【李四】","【张三】");
 //        SmsUtil.sendAddMemberMsgNotice("18618191128","紫竹桥","【李四】","【张三】");
 
@@ -384,6 +342,7 @@ public class SmsUtil {
 //        SmsUtil.sendCardEndNoticeToCoach("13810248890","测试门","【二狗子】");
 //        SmsUtil.sendCardEndNoticeToMember("18618191128","私教次卡");
 
+        System.out.println(new SmsUtil().sendTag);
 
     }
 

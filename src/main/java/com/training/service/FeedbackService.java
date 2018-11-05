@@ -38,6 +38,9 @@ public class FeedbackService {
     @Autowired
     private StoreDao storeDao;
 
+    @Autowired
+    private SmsUtil smsUtil;
+
     /**
      * 新增实体
      * @param feedback
@@ -66,10 +69,10 @@ public class FeedbackService {
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
                             if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
-                                SendSmsResponse sendSmsResponse = SmsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                SendSmsResponse sendSmsResponse = smsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
                                 logger.info(" sendChangeCoachNotice   success sendSmsResponse = {} ",sendSmsResponse);
                             }else if(feedback.getType().equals(FeedbackTypeEnum.feedback.getKey())){
-                                SendSmsResponse sendSmsResponse = SmsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                SendSmsResponse sendSmsResponse = smsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
                                 logger.info(" sendChangeCoachNotice   success sendAddMemberMsgNotice = {} ",sendSmsResponse);
                             }
                         } catch (ClientException e) {
@@ -109,10 +112,10 @@ public class FeedbackService {
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
                             if(feedback.getType().equals(FeedbackTypeEnum.change_coach.getKey())){
-                                SendSmsResponse sendSmsResponse = SmsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                SendSmsResponse sendSmsResponse = smsUtil.sendChangeCoachNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
                                 logger.info(" sendChangeCoachNotice   success sendSmsResponse = {} ",sendSmsResponse);
                             }else if(feedback.getType().equals(FeedbackTypeEnum.feedback.getKey())){
-                                SendSmsResponse sendSmsResponse = SmsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
+                                SendSmsResponse sendSmsResponse = smsUtil.sendAddMemberMsgNotice(manager.getPhone(), storeEntity.getName(),staffEntity.getCustname(),memberEntity.getName());
                                 logger.info(" sendChangeCoachNotice   success sendAddMemberMsgNotice = {} ",sendSmsResponse);
                             }
                         } catch (ClientException e) {

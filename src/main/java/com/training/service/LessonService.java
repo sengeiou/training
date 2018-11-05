@@ -1,6 +1,5 @@
 package com.training.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
 import com.training.domain.*;
@@ -8,13 +7,11 @@ import com.training.entity.*;
 import com.training.common.*;
 import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +59,9 @@ public class LessonService {
 
     @Autowired
     private LessonSettingDao lessonSettingDao;
+
+    @Autowired
+    private SmsUtil smsUtil;
 
     /**
      * 新增实体
@@ -816,7 +816,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"特色课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"特色课");
             }catch (Exception e){
 
             }
@@ -915,7 +915,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"团体课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"团体课");
             }catch (Exception e){
 
             }
@@ -1124,7 +1124,7 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                SmsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"私教课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"私教课");
             }catch (Exception e){
 
             }
@@ -1198,7 +1198,7 @@ public class LessonService {
                     logger.info(" staff = {} , ",staffEntity);
                     logger.info(" trainingEntity = {} , ",trainingEntity);
 
-                    SmsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),trainingEntity.getTitle());
+                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),trainingEntity.getTitle());
                 }catch (Exception e){
 
                     e.printStackTrace();

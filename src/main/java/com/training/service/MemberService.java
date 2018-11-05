@@ -73,6 +73,9 @@ public class MemberService {
     @Autowired
     private SysLogService sysLogService;
 
+    @Autowired
+    private SmsUtil smsUtil;
+
     /**
      * 新增实体
      * @param member
@@ -107,7 +110,7 @@ public class MemberService {
                 for (StaffEntity manager : managers){
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
-                            SmsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                            smsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
                         } catch (ClientException e) {
                             e.printStackTrace();
                         }
@@ -458,7 +461,7 @@ public class MemberService {
 //        code = "1234";
         Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
         try {
-            SmsUtil.sendCode(member.getPhone(),code);
+            smsUtil.sendCode(member.getPhone(),code);
             logger.info(" memberRestController  sendCode  getPhone = {} , code = {} ",member.getPhone(),code);
             return ResponseUtil.success("发送验证码成功");
         } catch (ClientException e) {
@@ -896,7 +899,7 @@ public class MemberService {
                 for (StaffEntity manager : managers){
                     if(StringUtils.isNotEmpty(manager.getPhone())){
                         try {
-                            SmsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
+                            smsUtil.sendAddMemberNotice(manager.getPhone(), memberEntity.getName(),memberEntity.getPhone());
                         } catch (ClientException e) {
                             e.printStackTrace();
                         }

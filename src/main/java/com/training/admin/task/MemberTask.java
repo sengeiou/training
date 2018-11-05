@@ -63,7 +63,7 @@ public class MemberTask {
     /**
      * 出勤提醒
      */
-    @Scheduled(cron = "0 0 10 * * *")
+//    @Scheduled(cron = "0 0 10 * * *")
     public void sendTrainingNotice(){
         logger.info("start sendTrainingNotice!  time = {} ", ut.currentTime());
         memberTaskService.sendTrainingNotice();
@@ -73,7 +73,7 @@ public class MemberTask {
     /**
      * 卡到期提醒
      */
-    @Scheduled(cron = "0 5 10 * * *")
+//    @Scheduled(cron = "0 5 10 * * *")
     public void sendCardEndNotice(){
         logger.info("start sendCardEndNotice!  time = {} ", ut.currentTime());
         memberTaskService.sendCardEndNotice();

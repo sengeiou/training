@@ -1,18 +1,10 @@
 package com.training.admin.api;
 
-import com.alibaba.fastjson.JSON;
 import com.training.admin.service.*;
-import com.training.common.CardTypeEnum;
-import com.training.common.Page;
-import com.training.common.PageRequest;
 import com.training.dao.ContractManualDao;
 import com.training.entity.*;
 import com.training.service.*;
-import com.training.util.DingtalkUtil;
-import com.training.util.ExcelUtil;
-import com.training.util.IDUtils;
-import com.training.util.ut;
-import org.apache.commons.collections.CollectionUtils;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -69,16 +58,19 @@ public class ManualRestController {
     private CalculateKpiService calculateKpiService;
 
     @Autowired
-    MemberTrainingTaskService memberTrainingTaskService;
+    private MemberTrainingTaskService memberTrainingTaskService;
 
     @Autowired
-    CreateCardService createCardService;
+    private CreateCardService createCardService;
 
     @Autowired
-    MemberTaskService memberTaskService;
+    private MemberTaskService memberTaskService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private SmsUtil smsUtil;
 
     @GetMapping("updateCoachStaffId")
     public Object updateCoachStaffId(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -345,6 +337,16 @@ public class ManualRestController {
         logger.info(" canDelete = {} ", canDelete);
         logger.info(" success = {} ", success);
         logger.info("end deleteMonthMedal2!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * sendTest
+     */
+    @GetMapping("sendTest")
+    public void sendTest(){
+        logger.info("start sendTest!  time = {} ", ut.currentTime());
+        logger.info(" smsUtil.sendTag = {}",smsUtil.sendTag);
+        logger.info("end sendTest!  time = {} ", ut.currentTime());
     }
 
 }

@@ -66,6 +66,9 @@ public class MemberTaskService {
     SmsLogDao smsLogDao;
 
     @Autowired
+    SmsUtil smsUtil;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void sendTrainingNotice() {
@@ -101,7 +104,7 @@ public class MemberTaskService {
                             continue;
                         }
 
-                        SmsUtil.sendTrainingNoticeToMember(phone,"10");
+                        smsUtil.sendTrainingNoticeToMember(phone,"10");
                         Thread.sleep(20);
 
                         SmsLogEntity smsLog= new SmsLogEntity();
@@ -114,14 +117,14 @@ public class MemberTaskService {
                         smsLog.setSendTime(ut.currentTime());
                         int n = smsLogDao.add(smsLog);
 
-                        SmsUtil.sendTrainingNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
+                        smsUtil.sendTrainingNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
                         Thread.sleep(20);
 
                         List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                         for (StaffEntity manager : managers){
                             if(StringUtils.isNotEmpty(manager.getPhone())){
                                 try {
-                                    SmsUtil.sendTrainingNoticeToCoach(manager.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
+                                    smsUtil.sendTrainingNoticeToCoach(manager.getPhone(),storeEntity.getName().replaceAll("店",""),name,"10");
                                     Thread.sleep(20);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -170,7 +173,7 @@ public class MemberTaskService {
                     StaffEntity staffEntity = staffDao.getById(staffId);
                     StoreEntity storeEntity = storeDao.getById(staffEntity.getStoreId());
 
-                    SmsUtil.sendCardEndNoticeToMember(memberEntity.getPhone(),cardNo);
+                    smsUtil.sendCardEndNoticeToMember(memberEntity.getPhone(),cardNo);
                     Thread.sleep(20);
 
                     SmsLogEntity smsLog= new SmsLogEntity();
@@ -183,14 +186,14 @@ public class MemberTaskService {
                     smsLog.setSendTime(ut.currentTime());
                     int n = smsLogDao.add(smsLog);
 
-                    SmsUtil.sendCardEndNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),memberEntity.getName());
+                    smsUtil.sendCardEndNoticeToCoach(staffEntity.getPhone(),storeEntity.getName().replaceAll("店",""),memberEntity.getName());
                     Thread.sleep(20);
 
                     List<StaffEntity> managers = staffDao.getManagerByStoreId(staffEntity.getStoreId());
                     for (StaffEntity manager : managers){
                         if(StringUtils.isNotEmpty(manager.getPhone())){
                             try {
-                                SmsUtil.sendCardEndNoticeToCoach(manager.getPhone(),storeEntity.getName().replaceAll("店",""),memberEntity.getName());
+                                smsUtil.sendCardEndNoticeToCoach(manager.getPhone(),storeEntity.getName().replaceAll("店",""),memberEntity.getName());
                                 Thread.sleep(20);
                             } catch (Exception e) {
                                 e.printStackTrace();
