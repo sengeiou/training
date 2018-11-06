@@ -6,8 +6,7 @@ import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
-import com.training.util.QrCodeUtils;
-import com.training.util.ut;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.training.util.ResponseUtil;
-import com.training.util.RequestContextHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +41,9 @@ public class TrainingService {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public ResponseEntity<String> add(TrainingEntity training){
+        if(StringUtils.isNotEmpty(training.getTrainingData())){
+            training.setTrainingData(EmojiUtils.filterEmoji(training.getTrainingData(),"[emoji]"));
+        }
         int n = trainingDao.add(training);
         if(n==1){
             return ResponseUtil.success("添加成功");
