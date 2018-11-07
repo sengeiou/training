@@ -255,7 +255,15 @@ public class KpiStaffMonthService {
         }else{
             kpiStaffMonth.setTemplateName("-");
         }
-        logger.info(" calculateKpiStaffMonth kpiScore : {}   ",kpiScore);
+        if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
+            double extraScore = Double.parseDouble(kpiStaffMonth.getExtraScore());
+            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
+            kpiScore = kpiScore + extraScore;
+            if(kpiScore<0){
+                kpiScore = 0;
+            }
+        }
+        logger.info(" calculateKpiStaffMonth final kpiScore : {}   ",kpiScore);
         kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
         return kpiStaffMonth;
     }

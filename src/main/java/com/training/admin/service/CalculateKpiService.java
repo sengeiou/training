@@ -102,8 +102,18 @@ public class CalculateKpiService {
 //        int yyts = queryOpenDays(staffEntity.getStoreId(),month);
 
         int xkl = 100;
-        if(jks>0){
-            xkl = 100*xks/jks;
+        int exXks = 0;
+        int exJks = 0;
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam3())){
+            exXks = (int)Double.parseDouble(kpiStaffMonthEntity.getParam3());
+        }
+
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam4())){
+            exJks = (int)Double.parseDouble(kpiStaffMonthEntity.getParam4());
+        }
+
+        if((jks+exJks)>0){
+            xkl = 100*(xks+exXks)/(jks+exJks);
         }
 
         int cjs = getCjs(staffId,month);
@@ -112,7 +122,19 @@ public class CalculateKpiService {
 
         double hyd = 0;
         if(validMemberCount>0){
-            hyd = (double)lessonCount*100/validMemberCount;
+            String y = month.substring(0,4);
+            String m = month.substring(4,6);
+            String startDate = y+"-"+m+"-01";
+            int days = ut.daysOfMonth(startDate);
+            int restDays = 0;
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam2())){
+                restDays = Integer.parseInt(kpiStaffMonthEntity.getParam2());
+            }
+            int average = 0;
+            if(days>0){
+                average = validMemberCount/days;
+            }
+            hyd = (double)lessonCount*100/(validMemberCount-average*restDays);
         }
 //        logger.info(" hyd  = {}  ",hyd);
 
@@ -140,6 +162,11 @@ public class CalculateKpiService {
     }
 
     public void calculateStoreKpi(String storeId,String month) {
+        String y = month.substring(0,4);
+        String m = month.substring(4,6);
+        String startDate = y+"-"+m+"-01";
+        int days = ut.daysOfMonth(startDate);
+
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,month);
         if(kpiStaffMonthEntity==null){
             int n = manualService.createSingleStaffMonth(storeId,month);
@@ -177,14 +204,34 @@ public class CalculateKpiService {
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getXks())){
                 qdxks = qdxks + Integer.parseInt(subKpiStaffMonthEntity.getXks());
             }
+
+            if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getParam3())){
+                qdxks = qdxks + (int)Double.parseDouble(subKpiStaffMonthEntity.getParam3());
+            }
+
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getJks())){
                 qdjks = qdjks + Integer.parseInt(subKpiStaffMonthEntity.getJks());
             }
+
+            if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getParam4())){
+                qdxks = qdxks + (int)Double.parseDouble(subKpiStaffMonthEntity.getParam4());
+            }
+
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getSjks())){
                 qdlessonCount = qdlessonCount + Integer.parseInt(subKpiStaffMonthEntity.getSjks());
             }
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getYxhys())){
-                qdvalidMemberCount = qdvalidMemberCount + Integer.parseInt(subKpiStaffMonthEntity.getYxhys());
+                int validMemberCount = Integer.parseInt(subKpiStaffMonthEntity.getYxhys());
+                int restDays = 0;
+                if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getParam2())){
+                    restDays = Integer.parseInt(subKpiStaffMonthEntity.getParam2());
+                }
+                int average = 0;
+                if(days>0){
+                    average = validMemberCount/days;
+                }
+                validMemberCount = validMemberCount - average*restDays;
+                qdvalidMemberCount = qdvalidMemberCount + validMemberCount;
             }
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getZjs())){
                 qdzjs = qdzjs + Integer.parseInt(subKpiStaffMonthEntity.getZjs());
@@ -346,7 +393,7 @@ public class CalculateKpiService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-        String sql = "select * from contract where coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
+        String sql = "select * from contract where card_type in ('PT','PM') and coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
         int xks = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
         logger.info(" getXks  name = {} , startDate = {} , endDate = {} , data.size = {} ",staffEntity.getCustname(),startDate,endDate,data.size());
