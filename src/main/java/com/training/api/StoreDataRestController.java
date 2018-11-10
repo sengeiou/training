@@ -153,7 +153,7 @@ public class StoreDataRestController {
         String path = request.getSession().getServletContext().getRealPath("/export/report");
         logger.info(" path = {} ",path);
         String[] headers = { "门店", "来源","新增数量","到店数量","成交数量", "成交金额"};
-        String fileName = "member-"+System.currentTimeMillis()+".xls";
+        String fileName = "MarketingReport-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
         logger.info(" pathf.getPath() = {} " , pathf.getPath());
