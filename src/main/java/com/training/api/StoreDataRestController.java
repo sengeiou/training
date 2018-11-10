@@ -3,6 +3,7 @@ package com.training.api;
 import com.alibaba.fastjson.JSONObject;
 import com.training.common.Page;
 import com.training.common.PageRequest;
+import com.training.domain.MarketReportData;
 import com.training.domain.StoreData;
 import com.training.entity.StoreDataQuery;
 import com.training.entity.StoreEntity;
@@ -111,8 +112,18 @@ public class StoreDataRestController {
         return ResponseUtil.success(jo);
     }
 
-
-
+    /**
+     * 查询
+     * @param query
+     * Created by huai23 on 2018-05-26 13:43:38.
+     */
+    @RequestMapping (value = "queryMarketingReport", method = RequestMethod.GET)
+    public ResponseEntity<String> queryMarketingReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        List<MarketReportData> dataList = storeDataService.queryMarketingReport(query);
+        JSONObject jo = new JSONObject();
+        jo.put("data", dataList);
+        return ResponseUtil.success(jo);
+    }
 
 }
 

@@ -6,10 +6,7 @@ import com.training.admin.service.MemberTrainingTaskService;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.dao.*;
-import com.training.domain.KpiStaffMonth;
-import com.training.domain.Staff;
-import com.training.domain.StoreData;
-import com.training.domain.User;
+import com.training.domain.*;
 import com.training.entity.*;
 import com.training.util.RequestContextHelper;
 import com.training.util.ResponseUtil;
@@ -694,6 +691,37 @@ public class StoreDataService {
         storeData.setCount(""+count);
         storeData.setMoney(ut.getDoubleString(money));
         return storeData;
+    }
+
+    public List<MarketReportData> queryMarketingReport(StoreDataQuery query) {
+        StoreEntity storeEntity = storeDao.getById(query.getStoreId());
+        List<MarketReportData> dataList= new ArrayList();
+        if(storeEntity==null){
+            return dataList;
+        }
+        String startDate = ut.firstDayOfMonth()+" 00:00:00";
+        String endDate = ut.lastDayOfMonth()+" 23:59:59";
+        if(StringUtils.isNotEmpty(query.getStartDate())){
+            startDate = query.getStartDate()+" 00:00:00";
+        }
+        if(StringUtils.isNotEmpty(query.getEndDate())){
+            endDate = query.getEndDate()+" 23:59:59";
+        }
+        String sql = " select origin , count(1) total from member where store_id = ? and created >= ? and created <= ? group by origin ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate,endDate});
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map) data.get(i);
+            MarketReportData marketReportData = new MarketReportData();
+            marketReportData.setStoreId(storeEntity.getStoreId());
+            marketReportData.setStoreName(storeEntity.getName());
+            marketReportData.setOrigin(item.get("origin").toString());
+            marketReportData.setNewCount(Integer.parseInt(item.get("total").toString()));
+            marketReportData.setArriveCount(1);
+            marketReportData.setOrderCount(1);
+            marketReportData.setMoney("9999");
+            dataList.add(marketReportData);
+        }
+        return dataList;
     }
 
 }

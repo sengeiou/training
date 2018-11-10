@@ -17,5 +17,9 @@ public class StoreDataQuery {
 
     private String month;
 
+    private String startDate;
+
+    private String endDate;
+
 }
 
