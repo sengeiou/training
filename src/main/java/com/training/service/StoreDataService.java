@@ -3,22 +3,17 @@ package com.training.service;
 import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
-import com.training.common.Page;
-import com.training.common.PageRequest;
 import com.training.dao.*;
 import com.training.domain.*;
 import com.training.entity.*;
-import com.training.util.RequestContextHelper;
-import com.training.util.ResponseUtil;
 import com.training.util.ut;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 /**
@@ -699,29 +694,79 @@ public class StoreDataService {
         if(storeEntity==null){
             return dataList;
         }
-        String startDate = ut.firstDayOfMonth()+" 00:00:00";
-        String endDate = ut.lastDayOfMonth()+" 23:59:59";
+        String startDate = ut.firstDayOfMonth();
+        String endDate = ut.lastDayOfMonth();
         if(StringUtils.isNotEmpty(query.getStartDate())){
-            startDate = query.getStartDate()+" 00:00:00";
+            startDate = query.getStartDate();
         }
         if(StringUtils.isNotEmpty(query.getEndDate())){
-            endDate = query.getEndDate()+" 23:59:59";
+            endDate = query.getEndDate();
         }
-        String sql = " select origin , count(1) total from member where store_id = ? and created >= ? and created <= ? group by origin ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate,endDate});
+        String sql = " select member_id,phone,store_id,coach_staff_id, origin from member where store_id = ? and created >= ? and created <= ? and origin <> '' ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
+        Map<String,MarketReportData> dataMap = new HashMap();
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map) data.get(i);
-            MarketReportData marketReportData = new MarketReportData();
-            marketReportData.setStoreId(storeEntity.getStoreId());
-            marketReportData.setStoreName(storeEntity.getName());
-            marketReportData.setOrigin(item.get("origin").toString());
-            marketReportData.setNewCount(Integer.parseInt(item.get("total").toString()));
-            marketReportData.setArriveCount(1);
-            marketReportData.setOrderCount(1);
-            marketReportData.setMoney("9999");
+            String memberId = item.get("member_id").toString();
+            String phone = item.get("phone").toString();
+            String origin = item.get("origin").toString();
+
+            MarketReportData marketReportData = null;
+            if(dataMap.containsKey(origin)){
+                marketReportData = dataMap.get(origin);
+            }else{
+                marketReportData = new MarketReportData();
+                marketReportData.setStoreId(storeEntity.getStoreId());
+                marketReportData.setStoreName(storeEntity.getName());
+                marketReportData.setOrigin(origin);
+                marketReportData.setNewCount(0);
+                marketReportData.setArriveCount(0);
+                marketReportData.setOrderCount(0);
+                marketReportData.setMoney("0");
+                dataMap.put(origin,marketReportData);
+            }
+            marketReportData.setNewCount(marketReportData.getNewCount()+1);
+            if(hasTYCard(memberId,startDate,endDate)){
+                marketReportData.setArriveCount(marketReportData.getArriveCount()+1);
+            }
+            List<ContractEntity> contracts = getContract(memberId,phone,startDate,endDate);
+            if(CollectionUtils.isNotEmpty(contracts)){
+                marketReportData.setOrderCount(marketReportData.getOrderCount()+1);
+                for (ContractEntity contractEntity:contracts){
+                    if(StringUtils.isNotEmpty(contractEntity.getMoney())){
+                        try {
+                            double money = Double.parseDouble(marketReportData.getMoney())+Double.parseDouble(contractEntity.getMoney());
+                            marketReportData.setMoney(ut.getDoubleString(money));
+                        }catch (Exception e){
+
+                        }
+                    }
+                }
+            }
             dataList.add(marketReportData);
         }
         return dataList;
+    }
+
+    private List getContract(String memberId, String phone, String startDate, String endDate) {
+        List<ContractEntity> result = new ArrayList<>();
+        String sql = "select * from contract where phone = ? and type = '新会员' and sign_date >= ? and sign_date <= ?  ";
+        List contracts = jdbcTemplate.queryForList(sql,new Object[]{phone,startDate,endDate});
+        for (int i = 0; i < contracts.size(); i++) {
+            Map item = (Map) contracts.get(i);
+            ContractEntity contractEntity = new ContractEntity();
+            contractEntity.setMoney(item.get("money").toString());
+            result.add(contractEntity);
+        }
+        return contracts;
+    }
+
+
+
+    private boolean hasTYCard(String memberId, String startDate, String endDate) {
+        String sql = "select * from member_card where member_id = ? and type = 'TY'  and created >= ? and created <= ? ";
+        List cards = jdbcTemplate.queryForList(sql,new Object[]{memberId,startDate+" 00:00:00",endDate+" 23:59:59"});
+        return cards.size()>0;
     }
 
 }
