@@ -119,9 +119,11 @@ public class StoreDataRestController {
      */
     @RequestMapping (value = "queryMarketingReport", method = RequestMethod.GET)
     public ResponseEntity<String> queryMarketingReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryMarketingReport  query = {}",query);
         List<MarketReportData> dataList = storeDataService.queryMarketingReport(query);
         JSONObject jo = new JSONObject();
         jo.put("data", dataList);
+        logger.info("  queryMarketingReport  dataList = {}",dataList);
         return ResponseUtil.success(jo);
     }
 
