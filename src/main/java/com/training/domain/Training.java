@@ -32,6 +32,8 @@ public class Training {
 
     private String coachId;
 
+    private String coachName;
+
     private String cardNo;
 
     private String cardType;

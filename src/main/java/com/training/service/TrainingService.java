@@ -35,6 +35,10 @@ public class TrainingService {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
     /**
      * 新增实体
      * @param training
@@ -182,6 +186,12 @@ public class TrainingService {
         Member member = new Member();
         if(memberEntity!=null){
             BeanUtils.copyProperties(memberEntity,member);
+        }
+        StaffEntity staffEntity = staffDao.getById(trainingEntity.getStaffId());
+        if(staffEntity!=null){
+            training.setCoachName(staffEntity.getCustname());
+        }else{
+            training.setCoachName("未知");
         }
         training.setMember(member);
         return training;
