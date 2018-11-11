@@ -9,6 +9,7 @@ import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,9 @@ public class LessonService {
 
     @Autowired
     private SmsUtil smsUtil;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 新增实体
@@ -619,6 +623,11 @@ public class LessonService {
             return ResponseUtil.exception("您处于停课状态，不能约课");
         }
 
+        int count = queryOrderLessonCount(lesson.getMemberId());
+        if(count>=3){
+            return ResponseUtil.exception("每个会员最多提前约三节课，你目前不能再约课了！");
+        }
+
         String type = lesson.getType();
         if(StringUtils.isEmpty(type)){
             return ResponseUtil.exception("约课异常!");
@@ -635,6 +644,29 @@ public class LessonService {
         }
 
         return ResponseUtil.exception("约课失败!");
+    }
+
+    private int queryOrderLessonCount(String memberId) {
+        int count = 0;
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setStartDate(ut.currentDate());
+        trainingQuery.setMemberId(memberId);
+        trainingQuery.setStatus(0);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100);
+        List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,pageRequest);
+        for (TrainingEntity trainingEntity:trainingEntityList){
+            if(trainingEntity.getLessonDate().equals(ut.currentDate())){
+                int startHour = trainingEntity.getStartHour();
+                int now = ut.currentHour();
+                if(startHour>now){
+                    count++;
+                }
+            }else {
+                count++;
+            }
+        }
+        return count;
     }
 
     private ResponseEntity<String> orderSpecial(Lesson lesson) {
