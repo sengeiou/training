@@ -337,5 +337,17 @@ public class StaffService {
 
         return ResponseUtil.success(staff);
     }
+
+    public ResponseEntity<String> resetPwd(StaffEntity staff) {
+        String pwd = "123456";
+        StaffEntity staffUpdate = new StaffEntity();
+        staffUpdate.setStaffId(staff.getStaffId());
+        staffUpdate.setPassword(pwd);
+        int n = staffDao.update(staffUpdate);
+        if(n==1){
+            return ResponseUtil.success("密码重置成功，新密码:"+pwd+"，请及时登陆修改");
+        }
+        return ResponseUtil.exception("密码重置失败");
+    }
 }
 

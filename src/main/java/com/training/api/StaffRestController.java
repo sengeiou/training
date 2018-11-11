@@ -128,5 +128,17 @@ public class StaffRestController {
         return staffService.delete(id);
     }
 
+
+    /**
+     * 根据实体更新
+     * @param staff
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "resetPwd", method = RequestMethod.POST)
+    public ResponseEntity<String> resetPwd(@RequestBody StaffEntity staff,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  resetPwd  staff = {}",staff);
+        return staffService.resetPwd(staff);
+    }
+
 }
 
