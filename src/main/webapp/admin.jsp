@@ -6,4 +6,4 @@
       <script
         src="https://as.alipayobjects.com/g/component/??console-polyfill/0.2.2/index.js,media-match/2.0.2/media.match.min.js"></script>
   <![endif]--><link rel="stylesheet" href="http://cdn.huai23.com/trade/build/umi.7105f55c.css"></head><body><div id="root"></div><script>window.routerBase = "/admin/";
-  window.publicPath = 'http://cdn.huai23.com/trade/build/';</script><script src="http://cdn.huai23.com/trade/build/umi.83792d62.js"></script></body></html>
+  window.publicPath = 'http://cdn.huai23.com/trade/build/';</script><script src="http://cdn.huai23.com/trade/build/umi.53aad101.js"></script></body></html>
