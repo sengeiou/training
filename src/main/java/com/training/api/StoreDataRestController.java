@@ -150,7 +150,7 @@ public class StoreDataRestController {
         pageRequest.setPageSize(100000);
         List<MarketReportData> dataList = storeDataService.queryMarketingReport(query);
         logger.info(" exportMarketingReport  dataList.size() = {} ",dataList.size());
-        String path = request.getSession().getServletContext().getRealPath("/export/report");
+        String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "门店", "来源","新增数量","到店数量","成交数量", "成交金额"};
         String fileName = "MarketingReport-"+System.currentTimeMillis()+".xls";

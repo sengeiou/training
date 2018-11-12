@@ -709,7 +709,7 @@ public class StoreDataService {
             Map item = (Map) data.get(i);
             String memberId = item.get("member_id").toString();
             String phone = item.get("phone").toString();
-            String origin = item.get("origin").toString();
+            String origin = item.get("origin").toString().trim();
 
             MarketReportData marketReportData = null;
             if(dataMap.containsKey(origin)){
@@ -743,6 +743,9 @@ public class StoreDataService {
                     }
                 }
             }
+        }
+        for ( MarketReportData marketReportData : dataMap.values()){
+            logger.info(" marketReportData = {} ",marketReportData);
             dataList.add(marketReportData);
         }
         return dataList;
@@ -758,7 +761,7 @@ public class StoreDataService {
             contractEntity.setMoney(item.get("money").toString());
             result.add(contractEntity);
         }
-        return contracts;
+        return result;
     }
 
 
