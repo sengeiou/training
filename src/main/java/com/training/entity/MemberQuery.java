@@ -68,5 +68,7 @@ public class MemberQuery {
 
     private String endDate;
 
+    private Integer isStoreQuery;
+
 }
 

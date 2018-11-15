@@ -150,6 +150,7 @@ public class MemberService {
                 query.setStoreId(null);
             }
         }else{
+            query.setIsStoreQuery(1);
             if(staffDB.getUsername().equals("admin")){
 
             }else{

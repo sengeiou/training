@@ -88,7 +88,7 @@ public interface MemberRepository {
             " <if test=\"query.idCard != null\"> AND id_card = #{query.idCard} </if>" +
             " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
             " <if test=\"query.coachStaffId != null\"> AND coach_staff_id = #{query.coachStaffId} </if>" +
-            " <if test=\"query.coachStaffId == null and query.storeId != null \"> AND coach_staff_id > 0 </if>" +
+            " <if test=\"query.isStoreQuery != null\"> AND coach_staff_id > 0 </if>" +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.trainingHours != null\"> AND training_hours = #{query.trainingHours} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
@@ -121,7 +121,7 @@ public interface MemberRepository {
             " <if test=\"query.idCard != null\"> AND id_card = #{query.idCard} </if>" +
             " <if test=\"query.address != null\"> AND address = #{query.address} </if>" +
             " <if test=\"query.coachStaffId != null\"> AND coach_staff_id = #{query.coachStaffId} </if>" +
-            " <if test=\"query.coachStaffId == null and query.storeId != null \"> AND coach_staff_id > 0 </if>" +
+            " <if test=\"query.isStoreQuery != null\"> AND coach_staff_id > 0 </if>" +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.trainingHours != null\"> AND training_hours = #{query.trainingHours} </if>" +
             " <if test=\"query.openId != null\"> AND open_id = #{query.openId} </if>" +
