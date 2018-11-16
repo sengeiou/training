@@ -32,5 +32,25 @@ public class SysLogEntity {
 
     private Date modified;
 
+    private String storeId;
+
+    private String storeName;
+
+    private String memberId;
+
+    private String name;
+
+    private String date;
+
+    private String staffId;
+
+    private String staffName;
+
+    private String staffName2;
+
+    private String cardNo;
+
+    private String cardType;
+
 }
 

@@ -102,6 +102,29 @@ public class SysLogRestController {
         return sysLogService.delete(id);
     }
 
+    /**
+     * 分页查询延期日志
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-03 15:57:51.
+     */
+    @RequestMapping (value = "findDelayLog", method = RequestMethod.GET)
+    public ResponseEntity<String> findDelayLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<SysLogEntity> page = sysLogService.findDelayLog(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+    /**
+     * 分页查询更换教练日志
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-03 15:57:51.
+     */
+    @RequestMapping (value = "findChangeCoachLog", method = RequestMethod.GET)
+    public ResponseEntity<String> findChangeCoachLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<SysLogEntity> page = sysLogService.findChangeCoachLog(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
 
 }
 

@@ -1,5 +1,7 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -25,6 +27,18 @@ public class SysLogService {
 
     @Autowired
     private SysLogDao sysLogDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private MemberCardDao memberCardDao;
 
     /**
      * 新增实体
@@ -103,5 +117,45 @@ public class SysLogService {
     }
 
 
+    public Page<SysLogEntity> findDelayLog(SysLogQuery query, PageRequest page) {
+        query.setType("YQ");
+        query.setId2("pay");
+        query.setRemark("success");
+        List<SysLogEntity> sysLogList = sysLogDao.find(query,page);
+        for (SysLogEntity sysLogEntity:sysLogList){
+            sysLogEntity.setCardNo(sysLogEntity.getId1());
+            JSONObject data = JSON.parseObject(sysLogEntity.getLogText());
+            String id = data.getString("out_trade_no");
+            logger.info(" out_trade_no = {} ",data.getString("out_trade_no"));
+            SysLogEntity subLog = sysLogDao.getById(id);
+            if(subLog!=null){
+                JSONObject subData = JSON.parseObject(subLog.getLogText());
+                String memberId = subData.getString("memberId");
+                String type = subData.getString("type");
+                sysLogEntity.setCardType(CardTypeEnum.getEnumByKey(type).getDesc());
+                MemberEntity memberEntity = memberDao.getById(memberId);
+                StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
+                sysLogEntity.setMemberId(memberId);
+                sysLogEntity.setName(memberEntity.getName());
+                sysLogEntity.setStoreId(storeEntity.getStoreId());
+                sysLogEntity.setStoreName(storeEntity.getName());
+            }
+            sysLogEntity.setContent(null);
+            sysLogEntity.setLogText(null);
+        }
+        Long count = sysLogDao.count(query);
+        Page<SysLogEntity> returnPage = new Page<>();
+        returnPage.setContent(sysLogList);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+    public Page<SysLogEntity> findChangeCoachLog(SysLogQuery query, PageRequest page) {
+
+
+        return null;
+    }
 }
 

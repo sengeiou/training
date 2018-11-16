@@ -36,5 +36,18 @@ public class SysLogQuery {
 
     private String endDate;
 
+    private String storeId;
+
+    private String staffId;
+
+    private String memberId;
+
+    private String cardNo;
+
+    private String name;
+
+    private String phone;
+
+
 }
 
