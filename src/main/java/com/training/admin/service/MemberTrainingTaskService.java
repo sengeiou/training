@@ -148,6 +148,9 @@ public class MemberTrainingTaskService {
                 int cq2 = 0;
                 int cq3 = 0;
                 for (TrainingEntity trainingEntity :trainingList){
+                    if(StringUtils.isEmpty(trainingEntity.getSignTime())){
+                        continue;
+                    }
                     if(trainingEntity.getType().equals(LessonTypeEnum.P.getKey())||trainingEntity.getType().startsWith(LessonTypeEnum.S.getKey())){
                         if(ut.passDayByDate(ut.currentDate(-30),trainingEntity.getLessonDate())>=0){
                             cq1++;
