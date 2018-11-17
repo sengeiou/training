@@ -136,6 +136,7 @@ public class MemberCouponService {
         List<MemberCoupon> memberCoupons = new ArrayList<>();
         for (MemberCouponEntity memberCouponEntity : memberCouponList){
             MemberCoupon memberCoupon = transferCoupon(memberCouponEntity);
+            logger.info(" memberCoupon  = {}  ",memberCoupon);
             memberCoupons.add(memberCoupon);
         }
         Long count = memberCouponDao.count(query);

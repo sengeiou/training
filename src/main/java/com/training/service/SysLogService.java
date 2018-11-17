@@ -6,6 +6,7 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -126,6 +127,9 @@ public class SysLogService {
             sysLogEntity.setCardNo(sysLogEntity.getId1());
             JSONObject data = JSON.parseObject(sysLogEntity.getLogText());
             String id = data.getString("out_trade_no");
+            String total_fee = data.getString("total_fee");
+            sysLogEntity.setMoney(ut.getDoubleString(Double.parseDouble(total_fee)/100));
+            sysLogEntity.setDate(ut.df_day.format(sysLogEntity.getCreated()));
             logger.info(" out_trade_no = {} ",data.getString("out_trade_no"));
             SysLogEntity subLog = sysLogDao.getById(id);
             if(subLog!=null){

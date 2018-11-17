@@ -1248,5 +1248,23 @@ public class MemberService {
         memberDao.logoff(memberEntity.getMemberId());
         return ResponseUtil.success("微信注销成功");
     }
+
+    public ResponseEntity<String> logoffByStaff() {
+        Member memberRequest = RequestContextHelper.getMember();
+        logger.info("  logoffByStaff  memberRequest = {}",memberRequest);
+
+        MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
+        if(memberEntity==null){
+            return ResponseUtil.exception("注销失败，用户非法");
+        }
+
+        if(!memberEntity.getType().equals("M")){
+            return ResponseUtil.exception("会员不能在此注销，请联系管理员");
+        }
+
+//        memberDao.logoff(memberEntity.getMemberId());
+        return ResponseUtil.success("微信注销成功");
+    }
+
 }
 

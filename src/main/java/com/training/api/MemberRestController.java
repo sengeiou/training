@@ -262,6 +262,17 @@ public class MemberRestController {
         return memberService.logoff();
     }
 
+    /**
+     * 注销微信用户
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "logoffByStaff", method = RequestMethod.POST)
+    public ResponseEntity<String> logoffByStaff(HttpServletRequest request, HttpServletResponse response){
+        logger.info("  logoffByStaff   ");
+        return memberService.logoffByStaff();
+    }
+
+
 
     @RequestMapping(value = "exportMember")
     public ResponseEntity<String> exportMember(@ModelAttribute MemberQuery query , HttpServletRequest request, HttpServletResponse response, ModelMap model) {

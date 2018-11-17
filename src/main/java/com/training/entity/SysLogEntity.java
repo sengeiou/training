@@ -52,5 +52,7 @@ public class SysLogEntity {
 
     private String cardType;
 
+    private String money;
+
 }
 

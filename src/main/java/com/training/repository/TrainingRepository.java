@@ -82,7 +82,7 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " <if test=\"query.showTag != null\"> AND show_tag = #{query.showTag} </if>" +
+            " <if test=\"query.showTag != null\"> AND show_tag in ( #{query.showTag} ) </if>" +
             " <if test=\"query.isSign != null and query.isSign == '0'.toString() \"> AND sign_time = '' </if>" +
             " <if test=\"query.isSign != null and query.isSign == '1'.toString() \"> AND sign_time &gt; '' </if>" +
             " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
@@ -113,7 +113,7 @@ public interface TrainingRepository {
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " <if test=\"query.showTag != null\"> AND show_tag = #{query.showTag} </if>" +
+            " <if test=\"query.showTag != null\"> AND show_tag in ( #{query.showTag} ) </if>" +
             " <if test=\"query.isSign != null and query.isSign == '0'.toString() \"> AND sign_time = '' </if>" +
             " <if test=\"query.isSign != null and query.isSign == '1'.toString() \"> AND sign_time &gt; '' </if>" +
             " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +

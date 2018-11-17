@@ -78,6 +78,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.useStartDate != null\"> AND use_date &gt;= #{query.useStartDate} </if>" +
             " <if test=\"query.useEndDate != null\"> AND use_date &lt;= #{query.useEndDate} </if>" +
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
+            " <if test=\"query.memberName != null\"> AND member_id in ( select member_id from member where name like CONCAT('%',#{query.memberName},'%') )  </if>" +
             " <if test=\"query.useStaffName != null\"> AND use_staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.useStaffName},'%') )  </if>" +
             " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &gt;= #{query.startDate} </if>" +
@@ -104,6 +105,7 @@ public interface MemberCouponRepository {
             " <if test=\"query.useStartDate != null\"> AND use_date &gt;= #{query.useStartDate} </if>" +
             " <if test=\"query.useEndDate != null\"> AND use_date &lt;= #{query.useEndDate} </if>" +
             " <if test=\"query.useStaffId != null\"> AND use_staff_id = #{query.useStaffId} </if>" +
+            " <if test=\"query.memberName != null\"> AND member_id in ( select member_id from member where name like CONCAT('%',#{query.memberName},'%') )  </if>" +
             " <if test=\"query.useStaffName != null\"> AND use_staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.useStaffName},'%') )  </if>" +
             " <if test=\"query.creator != null\"> AND creator in ( select staff_id from staff where custname like CONCAT('%',#{query.creator},'%') )  </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d') &gt;= #{query.startDate} </if>" +

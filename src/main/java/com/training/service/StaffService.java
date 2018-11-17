@@ -117,6 +117,7 @@ public class StaffService {
         List<StaffEntity> staffList = staffDao.find(query,page);
         for (StaffEntity staffEntity : staffList) {
             Staff staff = convertEntityToStaff(staffEntity);
+            staff.setStar(2);
             staffs.add(staff);
         }
         Long count = staffDao.count(query);

@@ -56,5 +56,7 @@ public class MemberCouponQuery {
 
     private String useEndDate;
 
+    private String memberName;
+
 }
 
