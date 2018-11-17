@@ -133,7 +133,7 @@ public class MemberTrainingTaskService {
                 query.setStartDate(ut.currentDate(-90));
                 query.setEndDate(ut.currentDate());
                 query.setStatus(0);
-                query.setShowTag(TrainingShowTagEnum.finish.getKey());
+                query.setShowTag(""+TrainingShowTagEnum.finish.getKey());
                 PageRequest pageRequest = new PageRequest();
                 pageRequest.setPageSize(1000);
                 List<TrainingEntity> trainingList =  trainingDao.find(query,pageRequest);

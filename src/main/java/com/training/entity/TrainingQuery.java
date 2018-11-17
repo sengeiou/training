@@ -46,7 +46,7 @@ public class TrainingQuery {
 
     private Integer status;
 
-    private Integer showTag;
+    private String showTag;
 
     private Date created;
 
