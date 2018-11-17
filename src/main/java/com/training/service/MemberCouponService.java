@@ -185,7 +185,10 @@ public class MemberCouponService {
             StaffEntity staffEntity = staffDao.getById(memberCoupon.getUseStaffId());
             memberCoupon.setUseStaffName(staffEntity.getCustname());
         }else{
-            memberCoupon.setUseStaffName("-");
+            memberCoupon.setUseStaffName(" ");
+        }
+        if(StringUtils.isEmpty(memberCoupon.getUseDate())){
+            memberCoupon.setUseDate(" ");
         }
         if(StringUtils.isNotEmpty(memberCoupon.getCreator())){
             StaffEntity staffEntity = staffDao.getById(memberCoupon.getCreator());

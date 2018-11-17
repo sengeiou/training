@@ -1,9 +1,11 @@
 package com.training.api;
 
+import com.training.config.ConstData;
 import com.training.domain.MemberCard;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 import com.alibaba.fastjson.JSONObject;
+import java.io.File;
 import java.io.IOException;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * member_card API控制器
@@ -139,6 +143,46 @@ public class MemberCardRestController {
     public ResponseEntity<String> advanceCard(@RequestBody MemberCard memberCard,HttpServletRequest request, HttpServletResponse response){
         logger.info("  advanceCard  memberCard = {}",memberCard);
         return memberCardService.advanceCard(memberCard);
+    }
+
+
+    @RequestMapping(value = "exportCard")
+    public ResponseEntity<String> exportCard(@ModelAttribute MemberCardQuery query , HttpServletRequest request, HttpServletResponse response) {
+        logger.info(" exportCard   query = {}",query);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100000);
+        String path = request.getSession().getServletContext().getRealPath("/export/member");
+        logger.info(" path = {} ",path);
+        String[] headers = { "卡号", "会员姓名","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","剩余次数"};
+        String fileName = "card-"+System.currentTimeMillis()+".xls";
+        File targetFile = new File(path+"/"+ fileName);
+        File pathf = new File(path);
+        logger.info(" pathf.getPath() = {} " , pathf.getPath());
+        logger.info(" targetFile.getPath() = {} " , targetFile.getPath());
+        if(!pathf.exists()){
+            pathf.mkdir();
+        }
+        if(!targetFile.exists()){
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info(" targetFile.exists() = {} " , targetFile.exists());
+
+        try {
+            logger.info("filename = {}",targetFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map result = new HashMap();
+        String id = IDUtils.getId();
+        ConstData.data.put(id,fileName);
+        String url = "/api/export/file/"+id;
+        result.put("url",url);
+        return ResponseUtil.success("导出会员卡信息成功！",result);
     }
 
 }

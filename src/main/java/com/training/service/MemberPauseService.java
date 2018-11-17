@@ -4,6 +4,7 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,18 @@ public class MemberPauseService {
 
     @Autowired
     private MemberPauseDao memberPauseDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private MemberCardDao memberCardDao;
 
     /**
      * 新增实体
@@ -48,6 +61,40 @@ public class MemberPauseService {
      */ 
     public Page<MemberPauseEntity> find(MemberPauseQuery query , PageRequest page){
         List<MemberPauseEntity> memberPauseList = memberPauseDao.find(query,page);
+        for (MemberPauseEntity memberPauseEntity : memberPauseList){
+            String memberId = memberPauseEntity.getMemberId();
+            String pauseStaffId = memberPauseEntity.getPauseStaffId();
+            String restoreStaffId = memberPauseEntity.getRestoreStaffId();
+
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            memberPauseEntity.setName(memberEntity.getName());
+            memberPauseEntity.setPhone(memberEntity.getPhone());
+
+            StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
+            memberPauseEntity.setStoreId(storeEntity.getStoreId());
+            memberPauseEntity.setStoreName(storeEntity.getName());
+
+            if(StringUtils.isNotEmpty(pauseStaffId)){
+                StaffEntity pauseStaffEntity = staffDao.getById(pauseStaffId);
+                memberPauseEntity.setPauseStaffName(pauseStaffEntity.getCustname());
+            }else{
+                memberPauseEntity.setPauseStaffName(" ");
+            }
+
+            if(StringUtils.isNotEmpty(restoreStaffId)){
+                StaffEntity restoreStaffEntity = staffDao.getById(restoreStaffId);
+                memberPauseEntity.setRestoreStaffName(restoreStaffEntity.getCustname());
+            }else{
+                memberPauseEntity.setRestoreStaffName(" ");
+            }
+
+            if(memberPauseEntity.getStatus()==1){
+                memberPauseEntity.setShowStatus("停课中");
+            }else if(memberPauseEntity.getStatus()==0){
+                memberPauseEntity.setShowStatus("已复课");
+            }
+
+        }
         Long count = memberPauseDao.count(query);
         Page<MemberPauseEntity> returnPage = new Page<>();
         returnPage.setContent(memberPauseList);

@@ -47,6 +47,8 @@ public interface MemberPauseRepository {
             " <if test=\"query.restoreStaffId != null\"> AND restore_staff_id = #{query.restoreStaffId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberPauseEntity> find(@Param("query") MemberPauseQuery memberPause , @Param("page") PageRequest page);
@@ -60,6 +62,8 @@ public interface MemberPauseRepository {
             " <if test=\"query.restoreStaffId != null\"> AND restore_staff_id = #{query.restoreStaffId} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             "</script>")
     Long count(@Param("query") MemberPauseQuery memberPause);
 

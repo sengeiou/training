@@ -18,6 +18,8 @@ public class MemberCardQuery {
 
     private String coachId;
 
+    private String saleStaffId;
+
     private String storeId;
 
     private String type;
@@ -55,6 +57,8 @@ public class MemberCardQuery {
     private String name;
 
     private String phone;
+
+
 
 }
 

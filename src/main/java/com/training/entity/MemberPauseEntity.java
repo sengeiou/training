@@ -14,15 +14,25 @@ public class MemberPauseEntity {
 
     private String memberId;
 
+    private String name;
+
+    private String phone;
+
     private String pauseDate;
 
     private String pauseStaffId;
+
+    private String pauseStaffName;
 
     private String restoreDate;
 
     private String restoreStaffId;
 
+    private String restoreStaffName;
+
     private Integer status;
+
+    private String showStatus;
 
     private String creater;
 
@@ -30,6 +40,9 @@ public class MemberPauseEntity {
 
     private Date modified;
 
+    private String storeId;
+
+    private String storeName;
 
 }
 

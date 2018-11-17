@@ -157,9 +157,45 @@ public class SysLogService {
     }
 
     public Page<SysLogEntity> findChangeCoachLog(SysLogQuery query, PageRequest page) {
+        query.setType("CC");
+        List<SysLogEntity> sysLogList = sysLogDao.find(query,page);
+        for (SysLogEntity sysLogEntity:sysLogList){
+            String memberId = sysLogEntity.getId1();
+            String staffId = sysLogEntity.getId2();
+            sysLogEntity.setDate(ut.df_day.format(sysLogEntity.getCreated()));
 
+            String[] ids = sysLogEntity.getLogText().split(",");
+            String staffId2 = ids[1];
 
-        return null;
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            sysLogEntity.setMemberId(memberId);
+            sysLogEntity.setName(memberEntity.getName());
+            sysLogEntity.setPhone(memberEntity.getPhone());
+
+            StaffEntity staffEntity1 = staffDao.getById(staffId);
+            StaffEntity staffEntity2 = staffDao.getById(staffId2);
+            StoreEntity storeEntity1 = storeDao.getById(staffEntity1.getStoreId());
+            StoreEntity storeEntity2 = storeDao.getById(staffEntity2.getStoreId());
+
+            sysLogEntity.setStoreId(storeEntity1.getStoreId());
+            sysLogEntity.setStoreName(storeEntity1.getName());
+            sysLogEntity.setStoreId2(storeEntity2.getStoreId());
+            sysLogEntity.setStoreName2(storeEntity2.getName());
+
+            sysLogEntity.setStaffName(staffEntity1.getCustname());
+            sysLogEntity.setStaffName2(staffEntity2.getCustname());
+
+            sysLogEntity.setContent(null);
+            sysLogEntity.setLogText(null);
+        }
+        Long count = sysLogDao.count(query);
+        Page<SysLogEntity> returnPage = new Page<>();
+        returnPage.setContent(sysLogList);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
     }
+
 }
 

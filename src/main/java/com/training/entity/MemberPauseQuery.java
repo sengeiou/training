@@ -30,6 +30,9 @@ public class MemberPauseQuery {
 
     private Date modified;
 
+    private String startDate;
+
+    private String endDate;
 
 }
 

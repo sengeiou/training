@@ -40,6 +40,8 @@ public class SysLogEntity {
 
     private String name;
 
+    private String phone;
+
     private String date;
 
     private String staffId;
@@ -53,6 +55,10 @@ public class SysLogEntity {
     private String cardType;
 
     private String money;
+
+    private String storeId2;
+
+    private String storeName2;
 
 }
 
