@@ -25,6 +25,10 @@ public class MemberCard {
 
     private String coachName;
 
+    private String saleStaffId;
+
+    private String saleStaffName;
+
     private String storeId;
 
     private String storeName;
