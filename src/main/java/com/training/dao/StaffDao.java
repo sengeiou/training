@@ -137,5 +137,21 @@ public class StaffDao {
         return n;
     }
 
+    public StaffEntity getByCustname(String staffName) {
+        StaffQuery query = new StaffQuery();
+        query.setCustname(staffName);
+        PageRequest page = new PageRequest();
+        page.setPageSize(1000);
+        List<StaffEntity> staffs = this.find(query,new PageRequest());
+        StaffEntity staffEntity = null;
+        for (StaffEntity staff : staffs){
+            if(staff.getCustname().trim().equals(staffName)){
+                staffEntity = staff;
+                break;
+            }
+        }
+        return staffEntity;
+    }
+
 }
 

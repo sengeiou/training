@@ -81,12 +81,14 @@ public class MemberTrainingTaskService {
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member where coach_staff_id <> ''  ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
+            logger.info(" updateMemberInfo  i = {} ",i);
             Map member = data.get(i);
             String memberId = member.get("member_id").toString();
             String coach_staff_id = member.get("coach_staff_id").toString();
             StaffEntity staffEntity = staffDao.getById(coach_staff_id);
             if(staffEntity!=null){
                 jdbcTemplate.update(" update member set store_id = ? where member_id = ? ",new Object[]{staffEntity.getStoreId(),memberId});
+                total++;
             }
         }
         logger.info("total = "+total);

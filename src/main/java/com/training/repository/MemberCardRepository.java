@@ -217,5 +217,11 @@ public interface MemberCardRepository {
             "</script>")
     int advanceCard(@Param("memberCard") MemberCardEntity memberCard);
 
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+            " FROM member_card " +
+            " WHERE contract_id = #{contractId} " +
+            "</script>")
+    List<MemberCardEntity> getByContractId(@Param("contractId") String contractId);
+
 }
 

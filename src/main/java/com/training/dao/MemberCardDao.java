@@ -3,6 +3,8 @@ package com.training.dao;
 import com.training.repository.*;
 import com.training.entity.*;
 import com.training.common.PageRequest;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -136,5 +138,15 @@ public class MemberCardDao {
         return n;
     }
 
+    public MemberCardEntity getByContractId(String contractId) {
+        if(StringUtils.isEmpty(contractId)){
+            return null;
+        }
+        List<MemberCardEntity> memberCardDBs = memberCardRepository.getByContractId(contractId);
+        if(CollectionUtils.isNotEmpty(memberCardDBs)){
+            return memberCardDBs.get(0);
+        }
+        return null;
+    }
 }
 

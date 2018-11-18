@@ -67,6 +67,12 @@ public class ManualRestController {
     private MemberTaskService memberTaskService;
 
     @Autowired
+    private ContractAdminService contractAdminService;
+
+    @Autowired
+    private KpiStaffDetailAdminService kpiStaffDetailAdminService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -122,6 +128,11 @@ public class ManualRestController {
     @GetMapping("updateTrainingInfo")
     public Object updateTrainingInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return memberTrainingTaskService.updateTrainingInfo();
+    }
+
+    @GetMapping("updateContractInfo")
+    public Object updateContractInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return contractAdminService.updateContractInfo();
     }
 
     @GetMapping("createStaffMonth")
@@ -347,6 +358,18 @@ public class ManualRestController {
         logger.info("start sendTest!  time = {} ", ut.currentTime());
         logger.info(" smsUtil.sendTag = {}",smsUtil.sendTag);
         logger.info("end sendTest!  time = {} ", ut.currentTime());
+    }
+
+
+    /**
+     * sendTest
+     */
+    @GetMapping("dealXk")
+    public void dealXk(){
+        logger.info("start dealXk!  time = {} ", ut.currentTime());
+        String month = "2018-08";
+        kpiStaffDetailAdminService.dealXk(month);
+        logger.info("end dealXk!  time = {} ", ut.currentTime());
     }
 
 }
