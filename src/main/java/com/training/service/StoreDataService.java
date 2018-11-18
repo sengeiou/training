@@ -9,6 +9,7 @@ import com.training.entity.*;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -795,27 +796,64 @@ public class StoreDataService {
 
     private FinanceTimesCardReportData randomFinanceTimesCardReportData() {
         FinanceTimesCardReportData financeTimesCardReportData = new FinanceTimesCardReportData();
-        financeTimesCardReportData.setStoreId("1");
+        financeTimesCardReportData.setStoreId(""+RandomUtils.nextInt(new Random(10)));
         financeTimesCardReportData.setStoreName("测试门店");
         financeTimesCardReportData.setMonth("2018-10");
         financeTimesCardReportData.setSaleMoney("SaleMoney");
         financeTimesCardReportData.setSaleLessonCount("saleLessonCount");
+        financeTimesCardReportData.setWaitingLessonMoney("WaitingLessonMoney");
+        financeTimesCardReportData.setWaitingLessonCount("WaitingLessonCount");
+        financeTimesCardReportData.setUsedLessonMoney("UsedLessonMoney");
+        financeTimesCardReportData.setUsedLessonCount("UsedLessonCount");
+        financeTimesCardReportData.setDeadLessonMoney("DeadLessonMoney");
+        financeTimesCardReportData.setDeadLessonCount("DeadLessonCoun");
+        financeTimesCardReportData.setDelayMoney("DelayMoney");
+        financeTimesCardReportData.setOutLessonMoney("OutLessonMoney");
+        financeTimesCardReportData.setOutLessonCount("OutLessonCount");
+        financeTimesCardReportData.setInLessonMoney("InLessonMoney");
+        financeTimesCardReportData.setInLessonCount("InLessonCount");
+        financeTimesCardReportData.setBackLessonMoney("BackLessonMoney");
+        financeTimesCardReportData.setBackLessonCount("BackLessonCount");
         return financeTimesCardReportData;
     }
 
     private FinanceMonthCardReportData randomFinanceMonthCardReportData() {
         FinanceMonthCardReportData financeMonthCardReportData = new FinanceMonthCardReportData();
-        financeMonthCardReportData.setStoreId("1");
+        financeMonthCardReportData.setStoreId(""+RandomUtils.nextInt(new Random(10)));
         financeMonthCardReportData.setStoreName("测试门店");
+        financeMonthCardReportData.setMonth("2018-10");
+        financeMonthCardReportData.setSaleMoney("SaleMoney");
+        financeMonthCardReportData.setSaleDaysCount("SaleDaysCount");
+        financeMonthCardReportData.setWaitingDaysMoney("WaitingDaysMoney");
+        financeMonthCardReportData.setWaitingDaysCount("WaitingDaysCount");
+        financeMonthCardReportData.setUsedDaysMoney("UsedDaysMoney");
+        financeMonthCardReportData.setUsedDaysCount("UsedDaysCount");
+        financeMonthCardReportData.setOutDaysMoney("OutDaysMoney");
+        financeMonthCardReportData.setInDaysMoney("InDaysMoney");
+        financeMonthCardReportData.setBackDaysMoney("BackDaysMoney");
         return financeMonthCardReportData;
     }
 
     private FinanceStaffReportData randomFinanceStaffReportData() {
         FinanceStaffReportData financeStaffReportData = new FinanceStaffReportData();
-        financeStaffReportData.setStaffId("123");
+        financeStaffReportData.setStaffId(""+RandomUtils.nextInt(new Random(100)));
         financeStaffReportData.setStaffName("测试员工");
-        financeStaffReportData.setStoreId("1");
+        financeStaffReportData.setStoreId(""+RandomUtils.nextInt(new Random(10)));
         financeStaffReportData.setStoreName("测试门店");
+        financeStaffReportData.setMonth("2018-10");
+        financeStaffReportData.setPhone("Phone");
+        financeStaffReportData.setStar("Star");
+        financeStaffReportData.setJob("Job");
+        financeStaffReportData.setTemplateName("TemplateName");
+        financeStaffReportData.setKpiScore("100");
+        financeStaffReportData.setSaleMoney("");
+        financeStaffReportData.setXkMoney("");
+        financeStaffReportData.setTimesCardLessonCount("TimesCardLessonCount");
+        financeStaffReportData.setMonthCardSingleLessonCount("MonthCardSingleLessonCount");
+        financeStaffReportData.setMonthCardMultiLessonCount("MonthCardMultiLessonCount");
+        financeStaffReportData.setTyCardMultiLessonCount("TyCardMultiLessonCount");
+        financeStaffReportData.setSpecialLessonCount("SpecialLessonCount");
+        financeStaffReportData.setTeamLessonCount("TeamLessonCount");
         return financeStaffReportData;
     }
 
