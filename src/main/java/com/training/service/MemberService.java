@@ -1429,6 +1429,9 @@ public class MemberService {
         if(memberEntity==null){
             return ResponseUtil.exception("用户无效");
         }
+        if(memberEntity.getStatus().equals(MemberStatusEnum.PAUSE.getKey())){
+            return ResponseUtil.success("0");
+        }
         MemberCardQuery query = new MemberCardQuery();
         query.setMemberId(memberId);
         query.setStartDate(ut.currentDate());
@@ -1469,6 +1472,9 @@ public class MemberService {
         MemberEntity memberEntity = memberDao.getById(memberId);
         if(memberEntity==null){
             return ResponseUtil.exception("用户无效");
+        }
+        if(!memberEntity.getStatus().equals(MemberStatusEnum.PAUSE.getKey())){
+            return ResponseUtil.success("0");
         }
         MemberPauseQuery query = new MemberPauseQuery();
         query.setMemberId(memberId);
