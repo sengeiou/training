@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * kpi_staff_detail API控制器
- * Created by huai23 on 2018-11-18 10:53:42.
+ * Created by huai23 on 2018-11-18 12:13:37.
  */ 
 @RestController
 @RequestMapping("/api/kpiStaffDetail")
@@ -33,7 +33,7 @@ public class KpiStaffDetailRestController {
     /**
      * 新增实体
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody KpiStaffDetailEntity kpiStaffDetail,HttpServletRequest request, HttpServletResponse response){
@@ -45,7 +45,7 @@ public class KpiStaffDetailRestController {
      * 分页查询
      * @param query
      * @param pageRequest
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute KpiStaffDetailQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
@@ -56,7 +56,7 @@ public class KpiStaffDetailRestController {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "count", method = RequestMethod.GET)
     public ResponseEntity<String> count(@ModelAttribute KpiStaffDetailQuery query,HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,7 @@ public class KpiStaffDetailRestController {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
@@ -83,7 +83,7 @@ public class KpiStaffDetailRestController {
     /**
      * 根据实体更新
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody KpiStaffDetailEntity kpiStaffDetail,HttpServletRequest request, HttpServletResponse response){
@@ -94,7 +94,7 @@ public class KpiStaffDetailRestController {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){

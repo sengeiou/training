@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * kpi_staff_detail 核心业务操作类
- * Created by huai23 on 2018-11-18 10:53:42.
+ * Created by huai23 on 2018-11-18 12:13:37.
  */ 
 @Service
 public class KpiStaffDetailService {
@@ -29,7 +29,7 @@ public class KpiStaffDetailService {
     /**
      * 新增实体
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public ResponseEntity<String> add(KpiStaffDetailEntity kpiStaffDetail){
         User user = RequestContextHelper.getUser();
@@ -44,7 +44,7 @@ public class KpiStaffDetailService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public Page<KpiStaffDetailEntity> find(KpiStaffDetailQuery query , PageRequest page){
         List<KpiStaffDetailEntity> kpiStaffDetailList = kpiStaffDetailDao.find(query,page);
@@ -60,7 +60,7 @@ public class KpiStaffDetailService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public Long count(KpiStaffDetailQuery query){
         Long count = kpiStaffDetailDao.count(query);
@@ -70,7 +70,7 @@ public class KpiStaffDetailService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public KpiStaffDetailEntity getById(String id){
         KpiStaffDetailEntity kpiStaffDetailDB = kpiStaffDetailDao.getById(id);
@@ -80,7 +80,7 @@ public class KpiStaffDetailService {
     /**
      * 根据实体更新
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public  ResponseEntity<String> update(KpiStaffDetailEntity kpiStaffDetail){
         int n = kpiStaffDetailDao.update(kpiStaffDetail);
@@ -93,7 +93,7 @@ public class KpiStaffDetailService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = kpiStaffDetailDao.delete(id);

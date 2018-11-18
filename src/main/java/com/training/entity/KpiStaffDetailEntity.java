@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * kpi_staff_detail 实体类
- * Created by huai23 on 2018-11-18 10:53:42.
+ * Created by huai23 on 2018-11-18 12:13:37.
  */ 
 @Data
 public class KpiStaffDetailEntity {
@@ -16,9 +16,11 @@ public class KpiStaffDetailEntity {
 
     private String contractId;
 
-    private String month;
-
     private String type;
+
+    private String cardType;
+
+    private String month;
 
     private String staffId;
 

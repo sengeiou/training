@@ -367,7 +367,15 @@ public class ManualRestController {
     @GetMapping("dealXk")
     public void dealXk(){
         logger.info("start dealXk!  time = {} ", ut.currentTime());
-        String month = "2018-08";
+        String month = "2018-07";
+        kpiStaffDetailAdminService.dealXk(month);
+        month = "2018-08";
+        kpiStaffDetailAdminService.dealXk(month);
+        month = "2018-09";
+        kpiStaffDetailAdminService.dealXk(month);
+        month = "2018-10";
+        kpiStaffDetailAdminService.dealXk(month);
+        month = "2018-11";
         kpiStaffDetailAdminService.dealXk(month);
         logger.info("end dealXk!  time = {} ", ut.currentTime());
     }

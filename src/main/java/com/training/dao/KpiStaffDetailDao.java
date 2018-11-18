@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * kpi_staff_detail 数据库操作类
- * Created by huai23 on 2018-11-18 10:53:42.
+ * Created by huai23 on 2018-11-18 12:13:37.
  */ 
 @Service
 public class KpiStaffDetailDao {
@@ -25,7 +25,7 @@ public class KpiStaffDetailDao {
     /**
      * 新增实体
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public int add(KpiStaffDetailEntity kpiStaffDetail){
         int n = kpiStaffDetailRepository.add(kpiStaffDetail);
@@ -36,7 +36,7 @@ public class KpiStaffDetailDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public List<KpiStaffDetailEntity> find(KpiStaffDetailQuery query , PageRequest page){
         List<KpiStaffDetailEntity> kpiStaffDetailList = kpiStaffDetailRepository.find(query,page);
@@ -46,7 +46,7 @@ public class KpiStaffDetailDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public Long count(KpiStaffDetailQuery query){
         Long n = kpiStaffDetailRepository.count(query);
@@ -56,7 +56,7 @@ public class KpiStaffDetailDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public KpiStaffDetailEntity getById(String id){
         KpiStaffDetailEntity kpiStaffDetailDB = kpiStaffDetailRepository.getById(id);
@@ -66,7 +66,7 @@ public class KpiStaffDetailDao {
     /**
      * 根据实体更新
      * @param kpiStaffDetail
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public int update(KpiStaffDetailEntity kpiStaffDetail){
         int n = kpiStaffDetailRepository.update(kpiStaffDetail);
@@ -76,7 +76,7 @@ public class KpiStaffDetailDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-11-18 10:53:42.
+     * Created by huai23 on 2018-11-18 12:13:37.
      */ 
     public int delete(String id){
         int n = kpiStaffDetailRepository.delete(id);
