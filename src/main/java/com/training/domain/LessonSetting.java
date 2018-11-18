@@ -47,6 +47,8 @@ public class LessonSetting {
 
     private String feature;
 
+    private String image;
+
     private String remark;
 
     private Integer status;
