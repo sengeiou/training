@@ -393,13 +393,13 @@ public class ManualRestController {
     public void dealJk(){
         logger.info("start dealJk!  time = {} ", ut.currentTime());
         String month = "2018-07";
-//        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealJk(month);
         month = "2018-08";
-//        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealJk(month);
         month = "2018-09";
-//        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealJk(month);
         month = "2018-10";
-//        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealJk(month);
         month = "2018-11";
         kpiStaffDetailAdminService.dealJk(month);
         logger.info("end dealJk!  time = {} ", ut.currentTime());
