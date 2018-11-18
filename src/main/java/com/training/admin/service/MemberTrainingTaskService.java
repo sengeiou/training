@@ -409,4 +409,33 @@ public class MemberTrainingTaskService {
         return "updateMemberCoupon执行成功";
     }
 
+    public Object updateMemberCardStatus() {
+        logger.info(" updateMemberCardStatus  执行开始  ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member_card where status in (0,1)  ");
+        int total = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map card = data.get(i);
+            try{
+                String cardNo = card.get("card_no").toString();
+                String startDate = card.get("start_date").toString();
+                String endDate = card.get("end_date").toString();
+                int count = Integer.parseInt(card.get("count").toString());
+                logger.info(" updateMemberCardStatus   index = {} , card_no = {} , end_date = {}   ",i,card.get("card_no"),endDate);
+                if(ut.passDayByDate(ut.currentDate(),startDate)>0){
+                    jdbcTemplate.update(" update member_card set status = 0 where  card_no = ?  ",new Object[]{cardNo});
+                }else if(ut.passDayByDate(endDate,ut.currentDate())>0){
+                    jdbcTemplate.update(" update member_card set status = 2 where  card_no = ?  ",new Object[]{cardNo});
+                }else if(count==0){
+                    jdbcTemplate.update(" update member_card set status = 2 where  card_no = ?  ",new Object[]{cardNo});
+                }else {
+                    jdbcTemplate.update(" update member_card set status = 1 where  card_no = ?  ",new Object[]{cardNo});
+                }
+                total++;
+            }catch (Exception e){
+                logger.error(" updateMemberCoupon  ERROR  index = {} , card = {}  ",i,card,e);
+            }
+        }
+        logger.info(" updateMemberCardStatus执行成功    total = {}  ",total);
+        return "updateMemberCardStatus执行成功";
+    }
 }

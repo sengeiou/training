@@ -1389,7 +1389,6 @@ public class MemberService {
             return ResponseUtil.success("设置角色成功");
         }
         return ResponseUtil.exception("设置角色失败");
-
     }
 
 

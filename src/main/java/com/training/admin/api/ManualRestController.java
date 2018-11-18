@@ -135,6 +135,11 @@ public class ManualRestController {
         return contractAdminService.updateContractInfo();
     }
 
+    @GetMapping("updateMemberCardStatus")
+    public Object updateMemberCardStatus(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return memberTrainingTaskService.updateMemberCardStatus();
+    }
+
     @GetMapping("createStaffMonth")
     public Object createStaffMonth(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" createStaffMonth   ");
