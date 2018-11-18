@@ -1296,6 +1296,7 @@ public class MemberService {
         int n = memberPauseDao.add(memberPauseEntity);
         if(n==1){
             n = memberDao.update(memberUpdate);
+            jdbcTemplate.update(" update member_card set status = 9 where member_id = ? and status in ( 0 , 1 ) ",new Object[]{memberId});
             return ResponseUtil.success("停课成功");
         }
         return ResponseUtil.exception("停课失败");
@@ -1363,6 +1364,7 @@ public class MemberService {
             memberUpdate.setMemberId(memberId);
             memberUpdate.setStatus(1);
             int n = memberDao.update(memberUpdate);
+            jdbcTemplate.update(" update member_card set status = 1 where member_id = ? and status = 9 ",new Object[]{memberId});
             if(n==1){
                 return ResponseUtil.success("复课成功");
             }
