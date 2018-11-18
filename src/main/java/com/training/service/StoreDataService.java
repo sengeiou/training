@@ -797,7 +797,9 @@ public class StoreDataService {
         FinanceTimesCardReportData financeTimesCardReportData = new FinanceTimesCardReportData();
         financeTimesCardReportData.setStoreId("1");
         financeTimesCardReportData.setStoreName("测试门店");
-
+        financeTimesCardReportData.setMonth("2018-10");
+        financeTimesCardReportData.setSaleMoney("SaleMoney");
+        financeTimesCardReportData.setSaleLessonCount("saleLessonCount");
         return financeTimesCardReportData;
     }
 

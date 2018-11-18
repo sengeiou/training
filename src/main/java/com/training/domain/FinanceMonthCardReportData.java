@@ -17,21 +17,21 @@ public class FinanceMonthCardReportData {
 
     private String saleMoney;
 
-    private Integer saleDaysCount;
+    private String saleDaysCount;
 
-    private Integer waitingDaysMoney;
+    private String waitingDaysMoney;
 
-    private Integer waitingDaysCount;
+    private String waitingDaysCount;
 
-    private Integer usedDaysMoney;
+    private String usedDaysMoney;
 
-    private Integer usedDaysCount;
+    private String usedDaysCount;
 
-    private Integer outDaysMoney;
+    private String outDaysMoney;
 
-    private Integer inDaysMoney;
+    private String inDaysMoney;
 
-    private Integer backDaysMoney;
+    private String backDaysMoney;
 
 
 }

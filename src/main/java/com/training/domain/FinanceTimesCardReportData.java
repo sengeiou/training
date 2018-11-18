@@ -17,33 +17,33 @@ public class FinanceTimesCardReportData {
 
     private String saleMoney;
 
-    private Integer saleLessonCount;
+    private String saleLessonCount;
 
-    private Integer waitingLessonMoney;
+    private String waitingLessonMoney;
 
-    private Integer waitingLessonCount;
+    private String waitingLessonCount;
 
-    private Integer usedLessonMoney;
+    private String usedLessonMoney;
 
-    private Integer usedLessonCount;
+    private String usedLessonCount;
 
-    private Integer deadLessonMoney;
+    private String deadLessonMoney;
 
-    private Integer deadLessonCount;
+    private String deadLessonCount;
 
     private String delayMoney;
 
-    private Integer outLessonMoney;
+    private String outLessonMoney;
 
-    private Integer outLessonCount;
+    private String outLessonCount;
 
-    private Integer inLessonMoney;
+    private String inLessonMoney;
 
-    private Integer inLessonCount;
+    private String inLessonCount;
 
-    private Integer backLessonMoney;
+    private String backLessonMoney;
 
-    private Integer backLessonCount;
+    private String backLessonCount;
 
 }
 

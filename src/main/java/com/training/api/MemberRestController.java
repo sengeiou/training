@@ -459,7 +459,7 @@ public class MemberRestController {
      * 会员能否自己停课
      * Created by huai23 on 2018-05-26 13:55:30.
      */
-    @RequestMapping (value = "canPauseBySelf", method = RequestMethod.POST)
+    @RequestMapping (value = "canPauseBySelf", method = RequestMethod.GET)
     public ResponseEntity<String> canPauseBySelf(HttpServletRequest request, HttpServletResponse response){
         Member member = RequestContextHelper.getMember();
         String memberId = member.getMemberId();
@@ -472,7 +472,7 @@ public class MemberRestController {
      * 会员能否自己复课
      * Created by huai23 on 2018-05-26 13:55:30.
      */
-    @RequestMapping (value = "canRestoreBySelf", method = RequestMethod.POST)
+    @RequestMapping (value = "canRestoreBySelf", method = RequestMethod.GET)
     public ResponseEntity<String> canRestoreBySelf(HttpServletRequest request, HttpServletResponse response){
         Member member = RequestContextHelper.getMember();
         String memberId = member.getMemberId();
