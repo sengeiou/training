@@ -1,5 +1,6 @@
 package com.training.admin.task;
 
+import com.training.admin.service.ContractAdminService;
 import com.training.admin.service.CreateCardService;
 import com.training.admin.service.MemberTrainingTaskService;
 import com.training.admin.service.ProcessInstanceService;
@@ -20,12 +21,16 @@ public class MemberCardTask {
     CreateCardService createCardService;
 
     @Autowired
+    private ContractAdminService contractAdminService;
+
+    @Autowired
     private MemberTrainingTaskService memberTrainingTaskService;
 
     @Scheduled(cron = "0 30 * * * *")
     public void createCard(){
         logger.info("start createCard scheduled!  time = {} ", ut.currentTime());
         createCardService.createCard();
+        contractAdminService.updateContractInfo();
         logger.info("end createCard scheduled!  time = {} ", ut.currentTime());
     }
 

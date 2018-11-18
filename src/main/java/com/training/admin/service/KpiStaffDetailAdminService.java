@@ -1,10 +1,12 @@
 package com.training.admin.service;
 
+import com.training.common.CardTypeEnum;
 import com.training.dao.ContractDao;
 import com.training.dao.KpiStaffDetailDao;
 import com.training.dao.MemberDao;
 import com.training.dao.StaffDao;
 import com.training.entity.KpiStaffDetailEntity;
+import com.training.entity.MemberEntity;
 import com.training.service.MemberCardService;
 import com.training.util.ut;
 import org.slf4j.Logger;
@@ -126,13 +128,65 @@ public class KpiStaffDetailAdminService {
         return xks;
     }
 
-    public void dealJk(String day) {
-        logger.info(" =======   KpiStaffDetailService  dealXk  day = {} ",day);
-
-
-
-
-
+    public int dealJk(String month) {
+        logger.info(" =======   KpiStaffDetailService  dealJk  month = {} ",month);
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        if(ut.currentDate().indexOf(month)==0){
+            if(ut.passDayByDate(ut.currentDate(),endDate)>0){
+                endDate = ut.currentDate();
+            }
+        }
+        int jks = 0;
+        String sql = "select * from member_card where type in ('PT','PM') and start_date <= ?  and end_date >= ? and created <= ? ";
+        List cards = jdbcTemplate.queryForList(sql ,new Object[]{endDate,startDate,endDate+" 23:59:59"});
+        for (int i = 0; i < cards.size(); i++) {
+            Map memberCard = (Map)cards.get(i);
+            try {
+                String memberId = memberCard.get("member_id").toString();
+                String cardNo = memberCard.get("card_no").toString();
+                String type = memberCard.get("type").toString();
+                Integer count = Integer.parseInt(memberCard.get("count").toString());
+                String startDateCard = memberCard.get("start_date").toString();
+                String endDateCard = memberCard.get("end_date").toString();
+                boolean isJk = false;
+                if(type.equals(CardTypeEnum.PM.getKey())){
+                    if(ut.passDayByDate(endDateCard,endDate)>0){
+                        isJk = true;
+                    }
+                }
+                if(type.equals(CardTypeEnum.PT.getKey())){
+                    if(count>0){
+                        continue;
+                    }
+                    List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date > ? " ,new Object[]{cardNo,endDate});
+                    if(trainings.size()==0){
+                        isJk = true;
+                    }
+                }
+                if(isJk){
+                    MemberEntity memberEntity = memberDao.getById(memberId);
+                    KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
+                    kpiStaffDetailEntity.setMonth(month);
+                    kpiStaffDetailEntity.setCardNo(cardNo);
+                    kpiStaffDetailEntity.setContractId("");
+                    kpiStaffDetailEntity.setType("JK");
+                    kpiStaffDetailEntity.setCardType(type);
+                    kpiStaffDetailEntity.setMemberId(memberId);
+                    kpiStaffDetailEntity.setStoreId(memberEntity.getStoreId());
+                    kpiStaffDetailEntity.setStaffId(memberEntity.getCoachStaffId());
+                    int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+                    if(n>0){
+                        jks++;
+                    }
+                }
+            }catch (Exception e){
+                logger.error("  dealJkERROR : memberCard = {} ",memberCard);
+            }
+        }
+        logger.info(" =======   KpiStaffDetailService  dealJk  startDate = {} , endDate = {} ",startDate,endDate);
+        logger.info(" dealJk  ,jks = {} , month = {} , cards.size = {} ",jks,month,cards.size());
+        return jks;
     }
 
 

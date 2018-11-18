@@ -372,6 +372,7 @@ public class ManualRestController {
     @GetMapping("dealXk")
     public void dealXk(){
         logger.info("start dealXk!  time = {} ", ut.currentTime());
+        contractAdminService.updateContractInfo();
         String month = "2018-07";
         kpiStaffDetailAdminService.dealXk(month);
         month = "2018-08";
@@ -383,6 +384,25 @@ public class ManualRestController {
         month = "2018-11";
         kpiStaffDetailAdminService.dealXk(month);
         logger.info("end dealXk!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * sendTest
+     */
+    @GetMapping("dealJk")
+    public void dealJk(){
+        logger.info("start dealJk!  time = {} ", ut.currentTime());
+        String month = "2018-07";
+//        kpiStaffDetailAdminService.dealJk(month);
+        month = "2018-08";
+//        kpiStaffDetailAdminService.dealJk(month);
+        month = "2018-09";
+//        kpiStaffDetailAdminService.dealJk(month);
+        month = "2018-10";
+//        kpiStaffDetailAdminService.dealJk(month);
+        month = "2018-11";
+        kpiStaffDetailAdminService.dealJk(month);
+        logger.info("end dealJk!  time = {} ", ut.currentTime());
     }
 
 }
