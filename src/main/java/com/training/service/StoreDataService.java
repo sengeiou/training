@@ -770,5 +770,53 @@ public class StoreDataService {
         return cards.size()>0;
     }
 
+    public List<FinanceTimesCardReportData> queryFinanceTimesCardReport(StoreDataQuery query) {
+        List<FinanceTimesCardReportData> dataList= new ArrayList();
+
+        dataList.add(randomFinanceTimesCardReportData());
+
+        return dataList;
+    }
+
+    public List<FinanceMonthCardReportData> queryFinanceMonthCardReport(StoreDataQuery query) {
+        List<FinanceMonthCardReportData> dataList= new ArrayList();
+
+        dataList.add(randomFinanceMonthCardReportData());
+
+        return dataList;
+    }
+
+    public List<FinanceStaffReportData> queryFinanceStaffReport(StoreDataQuery query) {
+        List<FinanceStaffReportData> dataList= new ArrayList();
+        dataList.add(randomFinanceStaffReportData());
+
+        return dataList;
+    }
+
+    private FinanceTimesCardReportData randomFinanceTimesCardReportData() {
+        FinanceTimesCardReportData financeTimesCardReportData = new FinanceTimesCardReportData();
+        financeTimesCardReportData.setStoreId("1");
+        financeTimesCardReportData.setStoreName("测试门店");
+
+        return financeTimesCardReportData;
+    }
+
+    private FinanceMonthCardReportData randomFinanceMonthCardReportData() {
+        FinanceMonthCardReportData financeMonthCardReportData = new FinanceMonthCardReportData();
+        financeMonthCardReportData.setStoreId("1");
+        financeMonthCardReportData.setStoreName("测试门店");
+        return financeMonthCardReportData;
+    }
+
+    private FinanceStaffReportData randomFinanceStaffReportData() {
+        FinanceStaffReportData financeStaffReportData = new FinanceStaffReportData();
+        financeStaffReportData.setStaffId("123");
+        financeStaffReportData.setStaffName("测试员工");
+        financeStaffReportData.setStoreId("1");
+        financeStaffReportData.setStoreName("测试门店");
+        return financeStaffReportData;
+    }
+
+
 }
 

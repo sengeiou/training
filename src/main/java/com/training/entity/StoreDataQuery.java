@@ -17,6 +17,12 @@ public class StoreDataQuery {
 
     private String month;
 
+    private String phone;
+
+    private String templateId;
+
+    private String job;
+
     private String startDate;
 
     private String endDate;

@@ -5,9 +5,7 @@ import com.training.common.GenderEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
 import com.training.config.ConstData;
-import com.training.domain.MarketReportData;
-import com.training.domain.Member;
-import com.training.domain.StoreData;
+import com.training.domain.*;
 import com.training.entity.MemberQuery;
 import com.training.entity.StoreDataQuery;
 import com.training.entity.StoreEntity;
@@ -139,6 +137,51 @@ public class StoreDataRestController {
         JSONObject jo = new JSONObject();
         jo.put("data", dataList);
         logger.info("  queryMarketingReport  dataList = {}",dataList);
+        return ResponseUtil.success(jo);
+    }
+
+    /**
+     * 查询次卡报表
+     * @param query
+     * Created by huai23 on 2018-05-26 13:43:38.
+     */
+    @RequestMapping (value = "queryFinanceTimesCardReport", method = RequestMethod.GET)
+    public ResponseEntity<String> queryFinanceTimesCardReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceTimesCardReport  query = {}",query);
+        List<FinanceTimesCardReportData> dataList = storeDataService.queryFinanceTimesCardReport(query);
+        JSONObject jo = new JSONObject();
+        jo.put("data", dataList);
+        logger.info("  queryFinanceTimesCardReport  dataList = {}",dataList);
+        return ResponseUtil.success(jo);
+    }
+
+    /**
+     * 查询月卡报表
+     * @param query
+     * Created by huai23 on 2018-05-26 13:43:38.
+     */
+    @RequestMapping (value = "queryFinanceMonthCardReport", method = RequestMethod.GET)
+    public ResponseEntity<String> queryFinanceMonthCardReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceMonthCardReport  query = {}",query);
+        List<FinanceMonthCardReportData> dataList = storeDataService.queryFinanceMonthCardReport(query);
+        JSONObject jo = new JSONObject();
+        jo.put("data", dataList);
+        logger.info("  queryFinanceMonthCardReport  dataList = {}",dataList);
+        return ResponseUtil.success(jo);
+    }
+
+    /**
+     * 查询员工薪资报表
+     * @param query
+     * Created by huai23 on 2018-05-26 13:43:38.
+     */
+    @RequestMapping (value = "queryFinanceStaffReport", method = RequestMethod.GET)
+    public ResponseEntity<String> queryFinanceStaffReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceStaffReport  query = {}",query);
+        List<FinanceStaffReportData> dataList = storeDataService.queryFinanceStaffReport(query);
+        JSONObject jo = new JSONObject();
+        jo.put("data", dataList);
+        logger.info("  queryFinanceStaffReport  dataList = {}",dataList);
         return ResponseUtil.success(jo);
     }
 

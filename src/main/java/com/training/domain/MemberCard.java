@@ -75,5 +75,8 @@ public class MemberCard {
 
     private Integer delayDays;
 
+    private String showStatus = " ";
+
+
 }
 
