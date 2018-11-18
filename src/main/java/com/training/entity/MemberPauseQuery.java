@@ -14,7 +14,7 @@ public class MemberPauseQuery {
 
     private String memberId;
 
-    private String card_no;
+    private String cardNo;
 
     private String pauseDate;
 
