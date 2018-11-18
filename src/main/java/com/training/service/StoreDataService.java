@@ -753,7 +753,7 @@ public class StoreDataService {
 
     private List getContract(String memberId, String phone, String startDate, String endDate) {
         List<ContractEntity> result = new ArrayList<>();
-        String sql = "select * from contract where phone = ? and type = '新会员' and sign_date >= ? and sign_date <= ?  ";
+        String sql = "select * from contract where phone = ? and type in ('新会员','转介绍') and sign_date >= ? and sign_date <= ?  ";
         List contracts = jdbcTemplate.queryForList(sql,new Object[]{phone,startDate,endDate});
         for (int i = 0; i < contracts.size(); i++) {
             Map item = (Map) contracts.get(i);
@@ -763,8 +763,6 @@ public class StoreDataService {
         }
         return result;
     }
-
-
 
     private boolean hasTYCard(String memberId, String startDate, String endDate) {
         String sql = "select * from member_card where member_id = ? and type = 'TY'  and created >= ? and created <= ? ";

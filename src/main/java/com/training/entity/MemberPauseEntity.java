@@ -18,6 +18,8 @@ public class MemberPauseEntity {
 
     private String phone;
 
+    private String cardNo;
+
     private String pauseDate;
 
     private String pauseStaffId;

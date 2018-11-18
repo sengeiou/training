@@ -454,5 +454,56 @@ public class MemberRestController {
             }
         }
     }
+
+    /**
+     * 会员能否自己停课
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "canPauseBySelf", method = RequestMethod.POST)
+    public ResponseEntity<String> canPauseBySelf(HttpServletRequest request, HttpServletResponse response){
+        Member member = RequestContextHelper.getMember();
+        String memberId = member.getMemberId();
+        logger.info("  canPauseBySelf  memberId = {}",memberId);
+        return memberService.canPauseBySelf(memberId);
+    }
+
+
+    /**
+     * 会员能否自己复课
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "canRestoreBySelf", method = RequestMethod.POST)
+    public ResponseEntity<String> canRestoreBySelf(HttpServletRequest request, HttpServletResponse response){
+        Member member = RequestContextHelper.getMember();
+        String memberId = member.getMemberId();
+        logger.info("  canRestoreBySelf  memberId = {}",memberId);
+        return memberService.canRestoreBySelf(memberId);
+    }
+
+
+    /**
+     * 会员自己停课
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "pauseMemberBySelf", method = RequestMethod.POST)
+    public ResponseEntity<String> pauseMemberBySelf(HttpServletRequest request, HttpServletResponse response){
+        Member member = RequestContextHelper.getMember();
+        String memberId = member.getMemberId();
+        logger.info("  pauseMemberBySelf  memberId = {}",memberId);
+        return memberService.pauseMemberBySelf(memberId);
+    }
+
+    /**
+     * 会员自己复课
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "restoreMemberBySelf", method = RequestMethod.POST)
+    public ResponseEntity<String> restoreMemberBySelf(HttpServletRequest request, HttpServletResponse response){
+        Member member = RequestContextHelper.getMember();
+        String memberId = member.getMemberId();
+        logger.info("  restoreMemberBySelf  memberId = {}",memberId);
+        return memberService.restoreMemberBySelf(memberId);
+    }
+
 }
 

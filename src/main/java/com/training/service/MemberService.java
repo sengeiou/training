@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,9 @@ public class MemberService {
 
     @Autowired
     private SmsUtil smsUtil;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 新增实体
@@ -959,11 +963,11 @@ public class MemberService {
     public ResponseEntity<String> getCanUseCardList(Lesson lesson) {
         logger.info("  getCanUseCardList  lesson = {}", lesson);
         List cards = new ArrayList();
-        MemberCardQuery query = new MemberCardQuery();
         if(StringUtils.isEmpty(lesson.getMemberId())){
             logger.info("  getCanUseCardList  getMemberId = {}", lesson.getMemberId());
             return ResponseUtil.success(cards);
         }
+        MemberCardQuery query = new MemberCardQuery();
         query.setMemberId(lesson.getMemberId());
         query.setStatus(0);
         query.setStartDate(ut.currentDate());
@@ -1210,6 +1214,160 @@ public class MemberService {
         return ResponseUtil.exception("复课失败");
     }
 
+    @Transactional
+    public ResponseEntity<String> pauseMemberBySelf(String memberId) {
+        logger.info("  pauseMemberBySelf  member = {}", memberId);
+        if(StringUtils.isEmpty(memberId)){
+            return ResponseUtil.exception("停课参数异常");
+        }
+        MemberEntity memberEntity = memberDao.getById(memberId);
+        if(memberEntity==null){
+            return ResponseUtil.exception("停课会员未知异常");
+        }
+        if(memberEntity.getStatus()==9){
+            return ResponseUtil.exception("您已已处于停课状态！");
+        }
+
+        MemberCardQuery query = new MemberCardQuery();
+        query.setMemberId(memberId);
+        query.setStartDate(ut.currentDate());
+        query.setEndDate(ut.currentDate());
+        PageRequest page = new PageRequest();
+        page.setPageSize(1000);
+        List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+        logger.info("  canPauseBySelf   cardList.size() = {}", cardList.size());
+        boolean canPause = false;
+        String cardNo = "";
+        for (MemberCardEntity memberCardEntity : cardList){
+            if(!memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())){
+                continue;
+            }
+            int count = 0;
+            if(memberCardEntity.getDays()<90){
+                continue;
+            }else if(memberCardEntity.getDays()>=90&&memberCardEntity.getDays()<180){
+                count = 1;
+            }else if(memberCardEntity.getDays()>=180&&memberCardEntity.getDays()<360){
+                count = 2;
+            }else if(memberCardEntity.getDays()>=360){
+                count = 3;
+            }
+            List times = jdbcTemplate.queryForList("select * from member_pause where card_no = ?  ",new Object[]{memberCardEntity.getCardNo()});
+            if(count>times.size()){
+                canPause = true;
+                cardNo = memberCardEntity.getCardNo();
+                break;
+            }
+        }
+        if(!canPause){
+            return ResponseUtil.success("无权限自助停课");
+        }
+
+        TrainingQuery trainingQuery = new TrainingQuery();
+        trainingQuery.setMemberId(memberEntity.getMemberId());
+        trainingQuery.setStartDate(ut.currentDate());
+        trainingQuery.setStatus(0);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100);
+        List<TrainingEntity> trainingList =  trainingDao.find(trainingQuery,pageRequest);
+        logger.info(" =================    list  trainingList = {}",trainingList.size());
+        for (TrainingEntity trainingEntity:trainingList){
+            if(trainingEntity.getLessonDate().equals(ut.currentDate())){
+                int time = ut.currentHour();
+                if(time<trainingEntity.getStartHour()){
+                    return ResponseUtil.exception("您已经预约今日课程，不能停课！");
+                }
+            }else{
+                return ResponseUtil.exception("您已经预约今日之后的课程，不能停课！请先取消约课!");
+            }
+        }
+
+        memberEntity.setMemberId(memberId);
+        memberEntity.setStatus(9);   //  暂停
+
+        MemberPauseEntity memberPauseEntity = new MemberPauseEntity();
+        memberPauseEntity.setMemberId(memberId);
+        memberPauseEntity.setCardNo(cardNo);
+        memberPauseEntity.setPauseDate(ut.currentTime());
+        memberPauseEntity.setPauseStaffId("");
+        int n = memberPauseDao.add(memberPauseEntity);
+        if(n==1){
+            n = memberDao.update(memberEntity);
+            return ResponseUtil.success("停课成功");
+        }
+        return ResponseUtil.exception("停课失败");
+    }
+
+    @Transactional
+    public ResponseEntity<String> restoreMemberBySelf(String memberId) {
+        MemberEntity memberEntity = memberDao.getById(memberId);
+        if(memberEntity==null){
+            return ResponseUtil.exception("用户无效");
+        }
+        MemberPauseQuery query = new MemberPauseQuery();
+        query.setMemberId(memberId);
+        query.setStatus(1);
+        PageRequest page = new PageRequest();
+        List<MemberPauseEntity> memberPauseEntities = memberPauseDao.find(query,page);
+        boolean canRestore = false;
+        for (MemberPauseEntity memberPauseEntity : memberPauseEntities){
+            if(StringUtils.isEmpty(memberPauseEntity.getCardNo())){
+                continue;
+            }
+            MemberCardEntity card = memberCardDao.getById(memberPauseEntity.getCardNo());
+            if(card==null){
+                continue;
+            }
+            if(!card.getType().equals(CardTypeEnum.PM.getKey())){
+                continue;
+            }
+            canRestore = true;
+            memberPauseEntity.setRestoreDate(ut.currentDate());
+            memberPauseEntity.setRestoreStaffId("");
+            memberPauseEntity.setStatus(0);
+            int n = memberPauseDao.update(memberPauseEntity);
+            int days = ut.passDayByDate(memberPauseEntity.getPauseDate(),ut.currentDate());
+            if(n>0){
+                canRestore = true;
+            }
+            if(n>0 && days>0){
+                MemberCardQuery memberCardQuery = new MemberCardQuery();
+                memberCardQuery.setMemberId(memberId);
+                PageRequest pageRequest = new PageRequest();
+                pageRequest.setPageSize(9999);
+                List<MemberCardEntity> cards = memberCardDao.find(memberCardQuery,pageRequest);
+                for (MemberCardEntity memberCardEntity :cards) {
+                    if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())
+                            ||memberCardEntity.getType().equals(CardTypeEnum.TT.getKey())
+                            ||memberCardEntity.getType().equals(CardTypeEnum.TY.getKey())){
+                        if(memberCardEntity.getCount()==0){
+                            continue;
+                        }
+                    }
+                    if(ut.passDayByDate(memberCardEntity.getEndDate(),memberPauseEntity.getPauseDate())<=0){
+                        String newEndDate = ut.currentDate(memberCardEntity.getEndDate(),days);
+                        logger.info("  restoreMember  newEndDate = {} , memberCardEntity = {} ", newEndDate,memberCardEntity);
+                        MemberCardEntity memberCardEntityUpdate = new MemberCardEntity();
+                        memberCardEntityUpdate.setEndDate(newEndDate);
+                        memberCardEntityUpdate.setCardNo(memberCardEntity.getCardNo());
+                        memberCardDao.update(memberCardEntityUpdate);
+                    }
+                }
+            }
+        }
+        if(canRestore){
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(memberId);
+            memberUpdate.setStatus(1);
+            int n = memberDao.update(memberUpdate);
+            if(n==1){
+                return ResponseUtil.success("复课成功");
+            }
+        }
+        return ResponseUtil.exception("复课失败");
+    }
+
+
     public ResponseEntity<String> changeRole(Staff staff) {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  restoreMember  staffRequest = {}", staffRequest);
@@ -1265,6 +1423,74 @@ public class MemberService {
 //        memberDao.logoff(memberEntity.getMemberId());
         return ResponseUtil.success("微信注销成功");
     }
+
+    public ResponseEntity<String> canPauseBySelf(String memberId) {
+        MemberEntity memberEntity = memberDao.getById(memberId);
+        if(memberEntity==null){
+            return ResponseUtil.exception("用户无效");
+        }
+        MemberCardQuery query = new MemberCardQuery();
+        query.setMemberId(memberId);
+        query.setStartDate(ut.currentDate());
+        query.setEndDate(ut.currentDate());
+        PageRequest page = new PageRequest();
+        page.setPageSize(1000);
+        List<MemberCardEntity> cardList = memberCardDao.find(query,page);
+        logger.info("  canPauseBySelf   cardList.size() = {}", cardList.size());
+        boolean canPause = false;
+        for (MemberCardEntity memberCardEntity : cardList){
+            if(!memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())){
+                continue;
+            }
+            int count = 0;
+            if(memberCardEntity.getDays()<90){
+                continue;
+            }else if(memberCardEntity.getDays()>=90&&memberCardEntity.getDays()<180){
+                count = 1;
+            }else if(memberCardEntity.getDays()>=180&&memberCardEntity.getDays()<360){
+                count = 2;
+            }else if(memberCardEntity.getDays()>=360){
+                count = 3;
+            }
+            List times = jdbcTemplate.queryForList("select * from member_pause where card_no = ?  ",new Object[]{memberCardEntity.getCardNo()});
+            if(count>times.size()){
+                canPause = true;
+                break;
+            }
+        }
+        if(canPause){
+            return ResponseUtil.success("可以自助停课");
+        }
+        return ResponseUtil.exception("无权限自助停课");
+
+    }
+
+    public ResponseEntity<String> canRestoreBySelf(String memberId) {
+        MemberEntity memberEntity = memberDao.getById(memberId);
+        if(memberEntity==null){
+            return ResponseUtil.exception("用户无效");
+        }
+        MemberPauseQuery query = new MemberPauseQuery();
+        query.setMemberId(memberId);
+        query.setStatus(1);
+        PageRequest page = new PageRequest();
+        List<MemberPauseEntity> memberPauseEntities = memberPauseDao.find(query,page);
+        boolean canRestore = false;
+        for (MemberPauseEntity memberPauseEntity : memberPauseEntities){
+            if(StringUtils.isNotEmpty(memberPauseEntity.getCardNo())){
+                MemberCardEntity memberCardEntity = memberCardDao.getById(memberPauseEntity.getCardNo());
+                if(memberCardEntity!=null && memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())){
+                    canRestore = true;
+                    break;
+                }
+            }
+        }
+        if(canRestore){
+            return ResponseUtil.success("可以自助复课");
+        }
+        return ResponseUtil.exception("无权限自助复课");
+    }
+
 
 }
 
