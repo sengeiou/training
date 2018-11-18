@@ -574,7 +574,6 @@ public class MemberService {
 
         MemberCardQuery query = new MemberCardQuery();
         query.setMemberId(memberId);
-        query.setStatus(0);
         query.setStartDate(ut.currentDate());
         query.setEndDate(ut.currentDate());
         PageRequest page = new PageRequest();
@@ -582,7 +581,6 @@ public class MemberService {
         List<MemberCardEntity> cardList = memberCardDao.find(query,page);
 
         logger.info("  getValidLessonType  cardList.size() = {} ",cardList.size());
-
 
         List<MemberCardEntity> validCardList = new ArrayList<>();
         for (MemberCardEntity memberCardEntity : cardList){

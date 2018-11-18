@@ -1,6 +1,7 @@
 package com.training.admin.task;
 
 import com.training.admin.service.CreateCardService;
+import com.training.admin.service.MemberTrainingTaskService;
 import com.training.admin.service.ProcessInstanceService;
 import com.training.common.ProcessCodeEnum;
 import com.training.util.ut;
@@ -18,11 +19,21 @@ public class MemberCardTask {
     @Autowired
     CreateCardService createCardService;
 
+    @Autowired
+    private MemberTrainingTaskService memberTrainingTaskService;
+
     @Scheduled(cron = "0 30 * * * *")
     public void createCard(){
         logger.info("start createCard scheduled!  time = {} ", ut.currentTime());
         createCardService.createCard();
         logger.info("end createCard scheduled!  time = {} ", ut.currentTime());
+    }
+
+    @Scheduled(cron = "0 15,45 * * * *")
+    public void updateMemberCardStatus(){
+        logger.info("start updateMemberCardStatus scheduled!  time = {} ", ut.currentTime());
+        memberTrainingTaskService.updateMemberCardStatus();
+        logger.info("end updateMemberCardStatus scheduled!  time = {} ", ut.currentTime());
     }
 
 }
