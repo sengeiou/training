@@ -1459,9 +1459,9 @@ public class MemberService {
             }
         }
         if(canPause){
-            return ResponseUtil.success("可以自助停课");
+            return ResponseUtil.success("1");
         }
-        return ResponseUtil.exception("无权限自助停课");
+        return ResponseUtil.success("0");
 
     }
 
@@ -1486,9 +1486,9 @@ public class MemberService {
             }
         }
         if(canRestore){
-            return ResponseUtil.success("可以自助复课");
+            return ResponseUtil.success("1");
         }
-        return ResponseUtil.exception("无权限自助复课");
+        return ResponseUtil.success("0");
     }
 
 
