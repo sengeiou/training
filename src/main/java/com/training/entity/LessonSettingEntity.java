@@ -40,6 +40,8 @@ public class LessonSettingEntity {
 
     private String feature;
 
+    private String image;
+
     private String remark;
 
     private Integer status;

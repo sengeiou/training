@@ -28,6 +28,7 @@ public interface LessonSettingRepository {
                 " <if test=\"lessonSetting.quotaMax != null\"> quota_max, </if>" +
                 " <if test=\"lessonSetting.weekRepeat != null\"> week_repeat, </if>" +
                 " <if test=\"lessonSetting.feature != null\"> feature, </if>" +
+                " <if test=\"lessonSetting.image != null\"> image, </if>" +
                 " <if test=\"lessonSetting.remark != null\"> remark, </if>" +
                 " <if test=\"lessonSetting.status != null\"> status, </if>" +
                 " created , " +
@@ -47,6 +48,7 @@ public interface LessonSettingRepository {
                 " <if test=\"lessonSetting.quotaMax != null\"> #{lessonSetting.quotaMax}, </if>" +
                 " <if test=\"lessonSetting.weekRepeat != null\"> #{lessonSetting.weekRepeat}, </if>" +
                 " <if test=\"lessonSetting.feature != null\"> #{lessonSetting.feature}, </if>" +
+                " <if test=\"lessonSetting.image != null\"> #{lessonSetting.image}, </if>" +
                 " <if test=\"lessonSetting.remark != null\"> #{lessonSetting.remark}, </if>" +
                 " <if test=\"lessonSetting.status != null\"> #{lessonSetting.status}, </if>" +
                 " now() , " +
@@ -55,7 +57,7 @@ public interface LessonSettingRepository {
             "</script>")
     int add(@Param("lessonSetting") LessonSettingEntity lessonSetting);
 
-    @Select("<script> SELECT pk_id,lesson_id,store_id,title,classroom,type,coach_id,start_date,end_date,start_hour,end_hour,quota_min,quota_max,week_repeat,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,lesson_id,store_id,title,classroom,type,coach_id,start_date,end_date,start_hour,end_hour,quota_min,quota_max,week_repeat,feature,image,remark,status,created,modified " +
             " FROM lesson_setting " +
             " WHERE 1 = 1 " +
             " <if test=\"query.lessonId != null\"> AND lesson_id = #{query.lessonId} </if>" +
@@ -99,7 +101,7 @@ public interface LessonSettingRepository {
             "</script>")
     Long count(@Param("query") LessonSettingQuery lessonSetting);
 
-    @Select("<script> SELECT pk_id,lesson_id,store_id,title,classroom,type,coach_id,start_date,end_date,start_hour,end_hour,quota_min,quota_max,week_repeat,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,lesson_id,store_id,title,classroom,type,coach_id,start_date,end_date,start_hour,end_hour,quota_min,quota_max,week_repeat,feature,image,remark,status,created,modified " +
             " FROM lesson_setting " +
             " WHERE lesson_id = #{id} " +
             "</script>")
