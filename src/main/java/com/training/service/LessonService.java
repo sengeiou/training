@@ -642,11 +642,11 @@ public class LessonService {
         return ResponseUtil.exception("约课失败!");
     }
 
-    private int queryOrderLessonCount(String memberId) {
+    private int queryOrderLessonCount(String cardNo) {
         int count = 0;
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setStartDate(ut.currentDate());
-        trainingQuery.setMemberId(memberId);
+        trainingQuery.setCardNo(cardNo);
         trainingQuery.setStatus(0);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(100);
@@ -1003,10 +1003,10 @@ public class LessonService {
 
         if(memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())) {
 
-//            int count = queryOrderLessonCount(lesson.getMemberId());
-//            if(count>=3){
-//                return ResponseUtil.exception("每个会员最多提前约三节课，你目前不能再约课了！");
-//            }
+            int count = queryOrderLessonCount(lesson.getCardNo());
+            if(count>=3){
+                return ResponseUtil.exception("您还有3节预约中的课程没有完成，不要太贪心，完成预约的课程才可以再预约哦");
+            }
 
             TrainingQuery trainingQuery = new TrainingQuery();
             trainingQuery.setLessonDate(lesson.getLessonDate());
