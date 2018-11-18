@@ -449,6 +449,7 @@ public class LessonService {
             int quota = (lessonSettingEntity.getQuotaMax()<=count)?0:(lessonSettingEntity.getQuotaMax()-count);
             lesson.setQuota(quota);
             lesson.setType(LessonTypeEnum.T.getKey());
+            lesson.setCoachImage(lessonSettingEntity.getImage());
             lessonList.add(lesson);
         }
        return lessonList;
@@ -621,11 +622,6 @@ public class LessonService {
 
         if(memberEntity.getStatus().equals(Integer.parseInt("9"))){
             return ResponseUtil.exception("您处于停课状态，不能约课");
-        }
-
-        int count = queryOrderLessonCount(lesson.getMemberId());
-        if(count>=3){
-            return ResponseUtil.exception("每个会员最多提前约三节课，你目前不能再约课了！");
         }
 
         String type = lesson.getType();
@@ -1006,6 +1002,12 @@ public class LessonService {
         }
 
         if(memberCardEntity.getType().equals(CardTypeEnum.PM.getKey())) {
+
+//            int count = queryOrderLessonCount(lesson.getMemberId());
+//            if(count>=3){
+//                return ResponseUtil.exception("每个会员最多提前约三节课，你目前不能再约课了！");
+//            }
+
             TrainingQuery trainingQuery = new TrainingQuery();
             trainingQuery.setLessonDate(lesson.getLessonDate());
             trainingQuery.setCardNo(lesson.getCardNo());
