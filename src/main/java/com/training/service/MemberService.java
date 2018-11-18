@@ -1282,17 +1282,20 @@ public class MemberService {
             }
         }
 
-        memberEntity.setMemberId(memberId);
-        memberEntity.setStatus(9);   //  暂停
+
+        MemberEntity memberUpdate = new MemberEntity();
+        memberUpdate.setMemberId(memberId);
+        memberUpdate.setStatus(9);   //  暂停
 
         MemberPauseEntity memberPauseEntity = new MemberPauseEntity();
         memberPauseEntity.setMemberId(memberId);
         memberPauseEntity.setCardNo(cardNo);
         memberPauseEntity.setPauseDate(ut.currentTime());
         memberPauseEntity.setPauseStaffId("");
+        memberPauseEntity.setStatus(1);
         int n = memberPauseDao.add(memberPauseEntity);
         if(n==1){
-            n = memberDao.update(memberEntity);
+            n = memberDao.update(memberUpdate);
             return ResponseUtil.success("停课成功");
         }
         return ResponseUtil.exception("停课失败");
