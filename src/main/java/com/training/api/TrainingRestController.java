@@ -7,6 +7,7 @@ import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.ExportUtil;
 import com.training.util.IDUtils;
 import com.training.util.RequestContextHelper;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +171,9 @@ public class TrainingRestController {
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
 
         try {
+            List<String[]> dataList = new ArrayList<>();
+            String sheetName = "课程";
+            ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,7 +5,9 @@ import com.training.domain.MemberCard;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.ExportUtil;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 import com.alibaba.fastjson.JSONObject;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,6 +176,9 @@ public class MemberCardRestController {
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
 
         try {
+            List<String[]> dataList = new ArrayList<>();
+            String sheetName = "课卡"+ ut.currentDate();
+            ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,7 +5,9 @@ import com.training.domain.Staff;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.ExportUtil;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +21,10 @@ import javax.servlet.http.*;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +177,9 @@ public class StaffRestController {
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
 
         try {
+            List<String[]> dataList = new ArrayList<>();
+            String sheetName = "员工"+ ut.currentDate();
+            ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
