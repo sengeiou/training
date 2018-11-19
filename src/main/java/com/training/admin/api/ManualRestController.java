@@ -390,18 +390,23 @@ public class ManualRestController {
      * sendTest
      */
     @GetMapping("dealJk")
-    public void dealJk(){
+    public void dealJkAndXk(){
         logger.info("start dealJk!  time = {} ", ut.currentTime());
         String month = "2018-07";
         kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealXk(month);
         month = "2018-08";
         kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealXk(month);
         month = "2018-09";
         kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealXk(month);
         month = "2018-10";
         kpiStaffDetailAdminService.dealJk(month);
-        month = "2018-11";
-        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealXk(month);
+//        month = "2018-11";
+//        kpiStaffDetailAdminService.dealJk(month);
+//        kpiStaffDetailAdminService.dealXk(month);
         logger.info("end dealJk!  time = {} ", ut.currentTime());
     }
 

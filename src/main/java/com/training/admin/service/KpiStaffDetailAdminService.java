@@ -1,11 +1,9 @@
 package com.training.admin.service;
 
 import com.training.common.CardTypeEnum;
-import com.training.dao.ContractDao;
-import com.training.dao.KpiStaffDetailDao;
-import com.training.dao.MemberDao;
-import com.training.dao.StaffDao;
+import com.training.dao.*;
 import com.training.entity.KpiStaffDetailEntity;
+import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
 import com.training.service.MemberCardService;
 import com.training.util.ut;
@@ -36,7 +34,7 @@ public class KpiStaffDetailAdminService {
     private StaffDao staffDao;
 
     @Autowired
-    private MemberCardService memberCardService;
+    private MemberCardDao memberCardDao;
 
     @Autowired
     private CalculateKpiService calculateKpiService;
@@ -63,6 +61,7 @@ public class KpiStaffDetailAdminService {
                 if(type.indexOf("续课")>=0){
                     logger.info(" getXks"+xks+"  contract = {} ",contract);
                     if(contract.get("card_no")!=null && contract.get("sale_staff_id")!=null && contract.get("member_id")!=null && contract.get("store_id")!=null){
+                        MemberEntity memberEntity = memberDao.getById(contract.get("member_id").toString());
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                         kpiStaffDetailEntity.setMonth(month);
@@ -76,6 +75,31 @@ public class KpiStaffDetailAdminService {
                         int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                         if(n>0){
                             xks++;
+                            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+                            if(memberCardEntity==null){
+                                continue;
+                            }
+                            String signDate = contract.get("sign_date").toString();
+                            String sql_card = "select * from member_card where member_id = ? and type = ? and end_date >= ? ";
+                            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),memberCardEntity.getType(),signDate});
+                            for (int j = 0; j < cards.size(); j++) {
+                                Map card = (Map)cards.get(j);
+                                try {
+                                    KpiStaffDetailEntity kpiStaffDetailEntityJk = new KpiStaffDetailEntity();
+                                    kpiStaffDetailEntityJk.setMonth(month);
+                                    kpiStaffDetailEntityJk.setCardNo(card.get("card_no").toString());
+                                    kpiStaffDetailEntityJk.setContractId("");
+                                    kpiStaffDetailEntityJk.setType("JK");
+                                    kpiStaffDetailEntityJk.setCardType(card.get("type").toString());
+                                    kpiStaffDetailEntityJk.setMemberId(memberEntity.getMemberId());
+                                    kpiStaffDetailEntityJk.setStoreId(memberEntity.getStoreId());
+                                    kpiStaffDetailEntityJk.setStaffId(memberEntity.getCoachStaffId());
+                                    kpiStaffDetailEntityJk.setRemark("预结课续课合同："+contractId);
+                                    kpiStaffDetailDao.add(kpiStaffDetailEntityJk);
+                                }catch (Exception e){
+
+                                }
+                            }
                         }
                     }
                 }
@@ -139,7 +163,7 @@ public class KpiStaffDetailAdminService {
         }
         int jks = 0;
         String sql = "select * from member_card where type in ('PT','PM') and start_date <= ?  and end_date >= ? and created <= ? ";
-        List cards = jdbcTemplate.queryForList(sql ,new Object[]{endDate,startDate,endDate+" 23:59:59"});
+        List cards = jdbcTemplate.queryForList(sql ,new Object[]{endDate,ut.currentDate(startDate,-35),endDate+" 23:59:59"});
         for (int i = 0; i < cards.size(); i++) {
             Map memberCard = (Map)cards.get(i);
             try {
@@ -149,6 +173,9 @@ public class KpiStaffDetailAdminService {
                 Integer count = Integer.parseInt(memberCard.get("count").toString());
                 String startDateCard = memberCard.get("start_date").toString();
                 String endDateCard = memberCard.get("end_date").toString();
+                MemberEntity memberEntity = memberDao.getById(memberId);
+                String staffId = memberEntity.getCoachStaffId();
+                String remark = "";
                 boolean isJk = false;
                 if(type.equals(CardTypeEnum.PM.getKey())){
                     if(ut.passDayByDate(endDateCard,endDate)>0){
@@ -156,16 +183,31 @@ public class KpiStaffDetailAdminService {
                     }
                 }
                 if(type.equals(CardTypeEnum.PT.getKey())){
+                    int passDays = ut.passDayByDate(endDateCard,endDate);
                     if(count>0){
-                        continue;
-                    }
-                    List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date > ? " ,new Object[]{cardNo,endDate});
-                    if(trainings.size()==0){
+                        if(passDays<=30){
+                            continue;
+                        }
                         isJk = true;
+                        remark = "死课";
+                    }else{
+                        List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? order by lesson_date desc " ,new Object[]{cardNo});
+                        if(trainings.size()==0){
+                            isJk = true;
+                        }else{
+                            Map training = (Map)trainings.get(0);
+                            String lessonDate = training.get("lesson_date").toString();
+                            if(ut.passDayByDate(endDate,lessonDate)>0){
+                                continue;
+                            }else{
+                                isJk = true;
+                                staffId = training.get("staff_id").toString();
+                                remark = "结课";
+                            }
+                        }
                     }
                 }
                 if(isJk){
-                    MemberEntity memberEntity = memberDao.getById(memberId);
                     KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                     kpiStaffDetailEntity.setMonth(month);
                     kpiStaffDetailEntity.setCardNo(cardNo);
@@ -174,7 +216,8 @@ public class KpiStaffDetailAdminService {
                     kpiStaffDetailEntity.setCardType(type);
                     kpiStaffDetailEntity.setMemberId(memberId);
                     kpiStaffDetailEntity.setStoreId(memberEntity.getStoreId());
-                    kpiStaffDetailEntity.setStaffId(memberEntity.getCoachStaffId());
+                    kpiStaffDetailEntity.setStaffId(staffId);
+                    kpiStaffDetailEntity.setRemark(remark);
                     int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                     if(n>0){
                         jks++;
