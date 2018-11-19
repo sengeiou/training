@@ -80,8 +80,8 @@ public class KpiStaffDetailAdminService {
                                 continue;
                             }
                             String signDate = contract.get("sign_date").toString();
-                            String sql_card = "select * from member_card where member_id = ? and type = ? and end_date >= ? ";
-                            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),memberCardEntity.getType(),signDate});
+                            String sql_card = "select * from member_card where member_id = ? and card_no <> ? and type = ? and end_date >= ? ";
+                            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),cardNo,memberCardEntity.getType(),signDate});
                             for (int j = 0; j < cards.size(); j++) {
                                 Map card = (Map)cards.get(j);
                                 try {
@@ -180,6 +180,7 @@ public class KpiStaffDetailAdminService {
                 if(type.equals(CardTypeEnum.PM.getKey())){
                     if(ut.passDayByDate(endDateCard,endDate)>0){
                         isJk = true;
+                        remark = "死课";
                     }
                 }
                 if(type.equals(CardTypeEnum.PT.getKey())){
@@ -194,6 +195,7 @@ public class KpiStaffDetailAdminService {
                         List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? order by lesson_date desc " ,new Object[]{cardNo});
                         if(trainings.size()==0){
                             isJk = true;
+                            remark = "结课";
                         }else{
                             Map training = (Map)trainings.get(0);
                             String lessonDate = training.get("lesson_date").toString();
