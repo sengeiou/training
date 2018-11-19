@@ -199,8 +199,11 @@ public interface MemberRepository {
     @Update("<script> UPDATE member SET status = 0  WHERE member_id = #{id}  </script>")
     int restore(@Param("id") String id);
 
-    @Update("<script> UPDATE member SET open_id = '' , nickname = '' , image = ''  WHERE member_id = #{id}  </script>")
+    @Update("<script> UPDATE member SET type = 'M' , open_id = '' , nickname = '' , image = ''  WHERE member_id = #{id}  </script>")
     int logoff(@Param("id") String memberId);
+
+    @Update("<script> UPDATE member SET type = 'M' , open_id = '' , nickname = '' , image = ''  WHERE member_id = #{id}  </script>")
+    int logoffByStaff(@Param("id") String memberId);
 
 }
 

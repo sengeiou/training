@@ -163,5 +163,8 @@ public interface StaffRepository {
             "</script>")
     List<StaffEntity> getManagerByStoreId(@Param("storeId") String storeId);
 
+    @Update("<script> UPDATE staff SET open_id = '' , modified = now() WHERE open_id = #{openId}  </script>")
+    int logoffByStaff(@Param("openId") String openId);
+
 }
 

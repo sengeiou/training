@@ -1412,7 +1412,6 @@ public class MemberService {
     public ResponseEntity<String> logoffByStaff() {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info("  logoffByStaff  memberRequest = {}",memberRequest);
-
         MemberEntity memberEntity = memberDao.getById(memberRequest.getMemberId());
         if(memberEntity==null){
             return ResponseUtil.exception("注销失败，用户非法");
@@ -1422,8 +1421,9 @@ public class MemberService {
             return ResponseUtil.exception("会员不能在此注销，请联系管理员");
         }
 
-//        memberDao.logoff(memberEntity.getMemberId());
-        return ResponseUtil.success("微信注销成功");
+        memberDao.logoffByStaff(memberEntity.getMemberId());
+        staffDao.logoffByStaff(memberEntity.getOpenId());
+        return ResponseUtil.success("教练微信注销成功");
     }
 
     public ResponseEntity<String> canPauseBySelf(String memberId) {

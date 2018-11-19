@@ -153,5 +153,9 @@ public class StaffDao {
         return staffEntity;
     }
 
+    public int logoffByStaff(String openId) {
+        int n = staffRepository.logoffByStaff(openId);
+        return n;
+    }
 }
 

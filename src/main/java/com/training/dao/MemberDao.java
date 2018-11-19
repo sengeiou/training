@@ -138,5 +138,11 @@ public class MemberDao {
         int n = memberRepository.logoff(memberId);
         return n;
     }
+
+    public int logoffByStaff(String memberId) {
+        int n = memberRepository.logoffByStaff(memberId);
+        return n;
+    }
+
 }
 
