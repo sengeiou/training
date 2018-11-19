@@ -68,7 +68,8 @@ public class SmsUtil {
         request.setOutId("huai23");
 
         //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = sendSms(request);
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));
         return sendSmsResponse;
     }
 
