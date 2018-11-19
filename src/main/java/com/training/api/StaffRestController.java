@@ -156,6 +156,13 @@ public class StaffRestController {
         logger.info(" exportStaff   query = {}",query);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(100000);
+        String name = request.getParameter("name");
+        logger.info(" StaffRestController  exportStaff  name = {} ,  query = {}",name,query);
+        if(StringUtils.isNotEmpty(name)){
+            query.setCustname(name);
+        }
+        Page<Staff> page = staffService.find(query,pageRequest);
+
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "姓名", "手机号","门店","角色","后台角色", "会员数","KPI模板","当月KPI"};
@@ -175,9 +182,20 @@ public class StaffRestController {
             }
         }
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
-
         try {
             List<String[]> dataList = new ArrayList<>();
+            for (Staff staff : page.getContent()){
+                String[] row = new String[8];
+                row[0] = staff.getCustname();
+                row[1] = staff.getPhone();
+                row[2] = staff.getStoreName();
+                row[3] = staff.getJob();
+                row[4] = staff.getRoleName();
+                row[5] = ""+staff.getMemberCount();
+                row[6] = staff.getTemplateName();
+                row[7] = staff.getKpi();
+                dataList.add(row);
+            }
             String sheetName = "员工"+ ut.currentDate();
             ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());

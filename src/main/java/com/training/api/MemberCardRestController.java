@@ -2,6 +2,7 @@ package com.training.api;
 
 import com.training.config.ConstData;
 import com.training.domain.MemberCard;
+import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -155,6 +156,7 @@ public class MemberCardRestController {
         logger.info(" exportCard   query = {}",query);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(100000);
+        Page<MemberCard> page = memberCardService.findPro(query,pageRequest);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "卡号", "会员姓名","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","剩余次数"};
@@ -177,6 +179,20 @@ public class MemberCardRestController {
 
         try {
             List<String[]> dataList = new ArrayList<>();
+            for (MemberCard memberCard : page.getContent()){
+                String[] row = new String[10];
+                row[0] = memberCard.getCardNo();
+                row[1] = memberCard.getMemberName();
+                row[2] = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
+                row[3] = ""+memberCard.getTotal();
+                row[4] = memberCard.getStartDate();
+                row[5] = memberCard.getEndDate();
+                row[6] = memberCard.getCoachName();
+                row[7] = memberCard.getSaleStaffName();
+                row[8] = memberCard.getStoreName();
+                row[9] = ""+memberCard.getCount();
+                dataList.add(row);
+            }
             String sheetName = "课卡"+ ut.currentDate();
             ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());

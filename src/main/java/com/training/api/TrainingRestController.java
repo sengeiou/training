@@ -3,6 +3,7 @@ package com.training.api;
 import com.training.config.ConstData;
 import com.training.domain.MarketReportData;
 import com.training.domain.Member;
+import com.training.domain.Staff;
 import com.training.domain.Training;
 import com.training.service.*;
 import com.training.entity.*;
@@ -150,6 +151,7 @@ public class TrainingRestController {
         logger.info(" exportTrainingByStaff   query = {}",query);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(100000);
+        Page<Training> page = trainingService.findByStaff(query,pageRequest);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "上课日期", "上课时间","学员名称","课程名称","课卡类型", "状态"};
@@ -172,6 +174,16 @@ public class TrainingRestController {
 
         try {
             List<String[]> dataList = new ArrayList<>();
+            for (Training training : page.getContent()){
+                String[] row = new String[6];
+                row[0] = training.getLessonDate();
+                row[1] = training.getStartHour() + " - " +training.getEndHour();
+                row[2] = training.getMember().getName();
+                row[3] = training.getTitle();
+                row[4] = CardTypeEnum.getEnumByKey(training.getCardType()).getDesc();
+                row[5] = TrainingShowTagEnum.getEnumByKey(training.getShowTag()).getDesc();
+                dataList.add(row);
+            }
             String sheetName = "课程";
             ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
             logger.info("filename = {}",targetFile.getAbsolutePath());

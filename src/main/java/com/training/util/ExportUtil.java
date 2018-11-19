@@ -75,9 +75,9 @@ public class ExportUtil {
                 String[] rowData = dataset.get(i);
                 for (short j = 0; j < rowData.length; j++)
                 {
-                    HSSFCell cell = row.createCell(j);
+                    HSSFCell cell = rowContact.createCell(j);
                     cell.setCellStyle(style2);
-                    HSSFRichTextString text = new HSSFRichTextString(rowData[i]);
+                    HSSFRichTextString text = new HSSFRichTextString(rowData[j]);
                     cell.setCellValue(text);
                 }
             }
