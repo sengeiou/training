@@ -180,6 +180,9 @@ public class MemberCardRestController {
         try {
             List<String[]> dataList = new ArrayList<>();
             for (MemberCard memberCard : page.getContent()){
+                if(memberCard==null){
+                    continue;
+                }
                 String[] row = new String[10];
                 row[0] = memberCard.getCardNo();
                 row[1] = memberCard.getMemberName();
