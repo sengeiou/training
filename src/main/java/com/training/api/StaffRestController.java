@@ -70,6 +70,19 @@ public class StaffRestController {
         return ResponseUtil.success(page);
     }
 
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "findForSelectList", method = RequestMethod.GET)
+    public ResponseEntity<String> findForSelectList(@ModelAttribute StaffQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" findForSelectList   query = {}",query);
+        Page<Staff> page = staffService.findForSelectList(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
 
     /**
      * 分页查询

@@ -1,5 +1,6 @@
 package com.training.service;
 
+import com.google.common.collect.Lists;
 import com.training.dao.*;
 import com.training.domain.Member;
 import com.training.domain.MemberCard;
@@ -19,7 +20,9 @@ import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * member_card 核心业务操作类
@@ -70,14 +73,49 @@ public class MemberCardService {
 
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
         RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+
+        if(StringUtils.isEmpty(query.getStoreId())){
+            if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                query.setStoreId(roleEntity.getStoreData());
+            }else{
+                if(staffDB.getUsername().equals("admin")){
+
+                }else {
+                    query.setStoreId("123456789");
+                }
+            }
+        }else{
+            if(staffDB.getUsername().equals("admin")){
+
+            }else {
+                if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+                    String[] storeIds = roleEntity.getStoreData().split(",");
+                    List ids = Arrays.asList(storeIds);
+
+                    if(ids.contains(query.getStoreId())){
+
+                    }else{
+                        query.setStoreId("123456789");
+                    }
+
+                }else {
+                    query.setStoreId("123456789");
+                }
+            }
+
+        }
+
         if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
             query.setStoreId(roleEntity.getStoreData());
         }else{
-            query.setStoreId("123456789");
+            if(staffDB.getUsername().equals("admin")){
+//            query.setStoreId(null);
+            }else {
+                query.setStoreId("123456789");
+            }
+
         }
-        if(staffDB.getUsername().equals("admin")){
-            query.setStoreId(null);
-        }
+
         logger.info("  findPro  MemberCardQuery = {} ", query);
         List<MemberCardEntity> memberCardList = memberCardDao.findPro(query,page);
         List<MemberCard> content = new ArrayList<>();
