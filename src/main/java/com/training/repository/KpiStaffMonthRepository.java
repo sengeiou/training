@@ -142,7 +142,7 @@ public interface KpiStaffMonthRepository {
             " FROM kpi_staff_month " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
+            " <if test=\"query.staffName != null\"> AND staff_name like CONCAT('%',#{query.staffName},'%') ) </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
@@ -187,7 +187,7 @@ public interface KpiStaffMonthRepository {
     @Select("<script> SELECT COUNT(1) FROM kpi_staff_month " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
+            " <if test=\"query.staffName != null\"> AND staff_name like CONCAT('%',#{query.staffName},'%') ) </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
