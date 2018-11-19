@@ -198,6 +198,9 @@ public class StaffRestController {
         try {
             List<String[]> dataList = new ArrayList<>();
             for (Staff staff : page.getContent()){
+                if(staff==null){
+                    continue;
+                }
                 String[] row = new String[8];
                 row[0] = staff.getCustname();
                 row[1] = staff.getPhone();

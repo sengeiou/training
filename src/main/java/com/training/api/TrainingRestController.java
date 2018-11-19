@@ -175,6 +175,9 @@ public class TrainingRestController {
         try {
             List<String[]> dataList = new ArrayList<>();
             for (Training training : page.getContent()){
+                if(training==null){
+                    continue;
+                }
                 String[] row = new String[6];
                 row[0] = training.getLessonDate();
                 row[1] = training.getStartHour() + " - " +training.getEndHour();
