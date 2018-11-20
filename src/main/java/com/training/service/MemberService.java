@@ -1139,6 +1139,14 @@ public class MemberService {
         int n = memberPauseDao.add(memberPauseEntity);
         if(n==1){
             n = memberDao.update(memberEntity);
+            try {
+                memberEntity = memberDao.getById(member.getMemberId());
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                smsUtil.sendPauseMemberNoticeToMember(memberEntity.getPhone());
+                smsUtil.sendPauseMemberNoticeToCoach(staffEntity.getPhone(),memberEntity.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return ResponseUtil.success("停课成功");
         }
         return ResponseUtil.exception("停课失败");
@@ -1155,7 +1163,6 @@ public class MemberService {
         if(member==null||StringUtils.isEmpty(member.getMemberId())){
             return ResponseUtil.exception("恢复参数异常");
         }
-
         MemberPauseQuery query = new MemberPauseQuery();
         query.setMemberId(member.getMemberId());
         query.setStatus(1);
@@ -1201,12 +1208,19 @@ public class MemberService {
         }else{
             return ResponseUtil.exception("复课异常，无停课日志");
         }
-
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setMemberId(member.getMemberId());
         memberEntity.setStatus(1);
         int n = memberDao.update(memberEntity);
         if(n==1){
+            try {
+                memberEntity = memberDao.getById(member.getMemberId());
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                smsUtil.sendRestoreMemberNoticeToMember(memberEntity.getPhone());
+                smsUtil.sendRestoreMemberNoticeToCoach(staffEntity.getPhone(),memberEntity.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return ResponseUtil.success("复课成功");
         }
         return ResponseUtil.exception("复课失败");
@@ -1295,6 +1309,13 @@ public class MemberService {
         if(n==1){
             n = memberDao.update(memberUpdate);
             jdbcTemplate.update(" update member_card set status = 9 where member_id = ? and status in ( 0 , 1 ) ",new Object[]{memberId});
+            try {
+                StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                smsUtil.sendPauseMemberNoticeToMember(memberEntity.getPhone());
+                smsUtil.sendPauseMemberNoticeToCoach(staffEntity.getPhone(),memberEntity.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return ResponseUtil.success("停课成功");
         }
         return ResponseUtil.exception("停课失败");
@@ -1364,6 +1385,13 @@ public class MemberService {
             int n = memberDao.update(memberUpdate);
             jdbcTemplate.update(" update member_card set status = 1 where member_id = ? and status = 9 ",new Object[]{memberId});
             if(n==1){
+                try {
+                    StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                    smsUtil.sendRestoreMemberNoticeToMember(memberEntity.getPhone());
+                    smsUtil.sendRestoreMemberNoticeToCoach(staffEntity.getPhone(),memberEntity.getName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return ResponseUtil.success("复课成功");
             }
         }
