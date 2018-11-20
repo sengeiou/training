@@ -550,6 +550,20 @@ public class MemberService {
                 memberEntity.setOpenId(openId);
                 int n = memberDao.bind(memberEntity);
             }
+        }else {
+            StaffEntity staffDB = staffDao.getByPhone(memberEntity.getPhone());
+            if(staffDB!=null&&StringUtils.isNotEmpty(staffDB.getOpenId())){
+                staffDB.setOpenId(openId);
+                int n = staffDao.bind(staffDB);
+                MemberEntity memberUpdate = new MemberEntity();
+                memberUpdate.setMemberId(memberEntity.getMemberId());
+                memberUpdate.setType("C");
+                memberUpdate.setName(staffDB.getCustname());
+                memberUpdate.setStoreId(staffDB.getStoreId());
+                memberDao.update(memberUpdate);
+                logger.info("  bind  staffDao.bind  n = {} ",n);
+                memberEntity = memberDao.getById(memberEntity.getMemberId());
+            }
         }
         Member memberResult = new Member();
         memberResult = new Member();
@@ -1446,7 +1460,7 @@ public class MemberService {
             return ResponseUtil.exception("注销失败，用户非法");
         }
 
-        if(!memberEntity.getType().equals("M")){
+        if(memberEntity.getType().equals("M")){
             return ResponseUtil.exception("会员不能在此注销，请联系管理员");
         }
 
