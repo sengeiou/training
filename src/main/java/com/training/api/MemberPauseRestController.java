@@ -49,6 +49,7 @@ public class MemberPauseRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MemberPauseQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" member_pauseRestController  find  query = {}",query);
         Page<MemberPauseEntity> page = memberPauseService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }

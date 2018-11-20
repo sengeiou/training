@@ -36,5 +36,13 @@ public class MemberPauseQuery {
 
     private String endDate;
 
+    private String storeId;
+
+    private String staffId;
+
+    private String name;
+
+    private String phone;
+
 }
 

@@ -52,6 +52,8 @@ public interface MemberPauseRepository {
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
+            " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
+            " <if test=\"query.phone != null\"> AND member_id in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<MemberPauseEntity> find(@Param("query") MemberPauseQuery memberPause , @Param("page") PageRequest page);
@@ -68,6 +70,8 @@ public interface MemberPauseRepository {
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
+            " <if test=\"query.name != null\"> AND member_id in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
+            " <if test=\"query.phone != null\"> AND member_id in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
             "</script>")
     Long count(@Param("query") MemberPauseQuery memberPause);
 

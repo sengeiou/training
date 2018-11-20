@@ -139,7 +139,7 @@ public class MemberService {
      * Created by huai23 on 2018-05-26 13:33:17.
      */ 
     public Page<Member> find(MemberQuery query , PageRequest page){
-        logger.info("  find  MemberQuery = {}",query);
+        logger.info("  find  MemberQuery111 = {} , page = {} ",query,page);
 
         Staff staffRequest = RequestContextHelper.getStaff();
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
@@ -177,7 +177,7 @@ public class MemberService {
             }
         }
 
-        logger.info("  find  MemberQuery = {}",query);
+        logger.info("  find  MemberQuery222 = {} , page = {} ",query,page);
         List<MemberEntity> memberList = memberDao.find(query,page);
         List<Member> data = new ArrayList<>();
         for (MemberEntity memberEntity : memberList){
@@ -194,6 +194,7 @@ public class MemberService {
             data.add(member);
         }
         Long count = memberDao.count(query);
+        logger.info("  find  MemberQuery222  count = {} , data.size() = {} ",count,data.size());
         Page<Member> returnPage = new Page<>();
         returnPage.setContent(data);
         returnPage.setPage(page.getPage());
