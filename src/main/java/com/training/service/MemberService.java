@@ -553,6 +553,7 @@ public class MemberService {
         }else {
             StaffEntity staffDB = staffDao.getByPhone(memberEntity.getPhone());
             if(staffDB!=null&&StringUtils.isNotEmpty(staffDB.getOpenId())){
+                logger.info("  bindIsCoach 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
                 staffDB.setOpenId(openId);
                 int n = staffDao.bind(staffDB);
                 MemberEntity memberUpdate = new MemberEntity();
