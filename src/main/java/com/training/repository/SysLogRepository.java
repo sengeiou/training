@@ -54,6 +54,7 @@ public interface SysLogRepository {
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             " <if test=\"query.name != null\"> AND id1 in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
             " <if test=\"query.phone != null\"> AND id1 in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id2 in ( select staff_id from staff where store_id = #{query.storeId}  ) </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> find(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
@@ -72,6 +73,7 @@ public interface SysLogRepository {
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
             " <if test=\"query.name != null\"> AND id1 in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
             " <if test=\"query.phone != null\"> AND id1 in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id2 in ( select staff_id from staff where store_id = #{query.storeId}  ) </if>" +
             "</script>")
     Long count(@Param("query") SysLogQuery sysLog);
 
