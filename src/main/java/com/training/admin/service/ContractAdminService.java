@@ -71,10 +71,16 @@ public class ContractAdminService {
             if(coach.indexOf("(")>0){
                 coach = coach.substring(0,coach.indexOf("("));
             }
-
             if(contract.get("member_id")==null || StringUtils.isEmpty(contract.get("member_id").toString())
                     || contract.get("store_id")==null || StringUtils.isEmpty(contract.get("store_id").toString())){
                 MemberEntity memberEntity = memberDao.getByPhone(phone);
+                if(StringUtils.isEmpty(memberEntity.getStoreId()) && StringUtils.isNotEmpty(memberEntity.getCoachStaffId())){
+                    StaffEntity coachStaff = staffDao.getById(memberEntity.getCoachStaffId());
+                    if(coachStaff!=null){
+                        jdbcTemplate.update(" update member set store_id = ? where member_id = ? ",new Object[]{coachStaff.getStoreId(),memberEntity.getMemberId()});
+                        memberEntity.setStoreId(coachStaff.getStoreId());
+                    }
+                }
                 if(memberEntity!=null){
                     jdbcTemplate.update(" update contract set member_id = ? , store_id = ? where pk_id = ? ",new Object[]{memberEntity.getMemberId(),memberEntity.getStoreId(),pk_id});
                     contract.put("member_id",memberEntity.getMemberId());
