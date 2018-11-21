@@ -410,4 +410,16 @@ public class ManualRestController {
         logger.info("end dealJk!  time = {} ", ut.currentTime());
     }
 
+    /**
+     * sendTest
+     */
+    @GetMapping("updateKpiAndStar")
+    public Object updateKpiAndStar(){
+        logger.info("start updateKpiAndStar!  time = {} ", ut.currentTime());
+        String msg = kpiStaffDetailAdminService.updateKpiAndStar();
+        logger.info("end updateKpiAndStar!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
+
 }

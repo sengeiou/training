@@ -5,7 +5,9 @@ import com.training.dao.*;
 import com.training.entity.KpiStaffDetailEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
+import com.training.entity.StaffEntity;
 import com.training.service.MemberCardService;
+import com.training.util.ExcelUtil;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -234,5 +238,94 @@ public class KpiStaffDetailAdminService {
         return jks;
     }
 
+
+    public String updateKpiAndStar() {
+        List<List<String>> data =ExcelUtil.readExcel(new File("c://kpi-4.xls"));
+        List error = new ArrayList();
+        String sql = "update kpi_staff_month set param1 = ? , kpi_score = ? where staff_id = ? and month = ? ";
+        int i = 0;
+        for (List<String> row:data){
+            if(i==0){
+                i++;
+                continue;
+            }
+//            logger.info(" row = {} ",row);
+            String phone = row.get(2);
+
+            String star6 = row.get(5);
+            String kpi6 = row.get(6);
+
+            String star7 = row.get(7);
+            String kpi7 = row.get(8);
+
+            String star8 = row.get(9);
+            String kpi8 = row.get(10);
+
+            String star9 = row.get(11);
+            String kpi9 = row.get(12);
+
+            String star10 = row.get(13);
+            String kpi10 = row.get(14);
+
+            StaffEntity staffEntity = staffDao.getByPhone(phone);
+            if(staffEntity==null){
+                error.add(phone);
+            }
+            logger.info(" phone = {} , staffEntity = {} ",phone,staffEntity);
+            logger.info(" month - 201806 : star = {} , kpi = {} ",star6,kpi6);
+            try{
+                Integer star = Integer.parseInt(star6);
+                Double kpi = Double.parseDouble(kpi6);
+                jdbcTemplate.update(sql,new Object[]{star6,kpi6,staffEntity.getStaffId(),"201806"});
+                jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{star6,staffEntity.getStaffId()});
+
+            }catch (Exception e){
+
+            }
+            logger.info(" month - 201807 : star = {} , kpi = {} ",star7,kpi7);
+            try{
+                Integer star = Integer.parseInt(star7);
+                Double kpi = Double.parseDouble(kpi7);
+                jdbcTemplate.update(sql,new Object[]{star7,kpi7,staffEntity.getStaffId(),"201807"});
+                jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{star7,staffEntity.getStaffId()});
+
+            }catch (Exception e){
+
+            }
+            logger.info(" month - 201808 : star = {} , kpi = {} ",star8,kpi8);
+            try{
+                Integer star = Integer.parseInt(star8);
+                Double kpi = Double.parseDouble(kpi8);
+                jdbcTemplate.update(sql,new Object[]{star8,kpi8,staffEntity.getStaffId(),"201808"});
+                jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{star8,staffEntity.getStaffId()});
+
+            }catch (Exception e){
+
+            }
+            logger.info(" month - 201809 : star = {} , kpi = {} ",star9,kpi9);
+            try{
+                Integer star = Integer.parseInt(star9);
+                Double kpi = Double.parseDouble(kpi9);
+                jdbcTemplate.update(sql,new Object[]{star9,kpi9,staffEntity.getStaffId(),"201809"});
+                jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{star9,staffEntity.getStaffId()});
+            }catch (Exception e){
+
+            }
+            logger.info(" month - 201810 : star = {} , kpi = {} ",star10,kpi10);
+            try{
+                Integer star = Integer.parseInt(star10);
+                Double kpi = Double.parseDouble(kpi10);
+                jdbcTemplate.update(sql,new Object[]{star10,kpi10,staffEntity.getStaffId(),"201810"});
+                jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{star10,staffEntity.getStaffId()});
+
+            }catch (Exception e){
+
+            }
+            i++;
+        }
+        logger.info(" data = {} ",data.size());
+        logger.info(" error = {} ",error.size());
+        return "SUCCESS";
+    }
 
 }
