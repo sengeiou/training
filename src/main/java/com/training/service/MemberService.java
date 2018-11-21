@@ -140,7 +140,7 @@ public class MemberService {
      */ 
     public Page<Member> find(MemberQuery query , PageRequest page){
         logger.info("  find  MemberQuery111 = {} , page = {} ",query,page);
-
+        query.setType("M");
         Staff staffRequest = RequestContextHelper.getStaff();
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
         RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
@@ -212,6 +212,7 @@ public class MemberService {
      */
     public Page<Member> memberMedalList(MemberQuery query , PageRequest page){
         logger.info("  memberMedalList  MemberQuery = {}",query);
+        query.setType("M");
 
         Staff staffRequest = RequestContextHelper.getStaff();
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
