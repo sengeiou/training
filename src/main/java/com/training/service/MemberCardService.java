@@ -186,7 +186,6 @@ public class MemberCardService {
             memberCard.setCount(count);
             memberCard.setDays(total);
         }
-
         memberCard.setCardType(cardType);
         memberCard.setCanDelay(0);
         memberCard.setDelayFee("0");
@@ -210,6 +209,7 @@ public class MemberCardService {
         }else{
 
         }
+        memberCard.setShowStatus(CardStatusEnum.getEnumByKey(memberCardEntity.getStatus()).getDesc());
         return memberCard;
     }
 
