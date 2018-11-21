@@ -65,15 +65,17 @@ public class MemberPauseService {
             String memberId = memberPauseEntity.getMemberId();
             String pauseStaffId = memberPauseEntity.getPauseStaffId();
             String restoreStaffId = memberPauseEntity.getRestoreStaffId();
-
             MemberEntity memberEntity = memberDao.getById(memberId);
             memberPauseEntity.setName(memberEntity.getName());
             memberPauseEntity.setPhone(memberEntity.getPhone());
-
             StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
-            memberPauseEntity.setStoreId(storeEntity.getStoreId());
-            memberPauseEntity.setStoreName(storeEntity.getName());
-
+            if(storeEntity!=null){
+                memberPauseEntity.setStoreId(storeEntity.getStoreId());
+                memberPauseEntity.setStoreName(storeEntity.getName());
+            }else{
+                memberPauseEntity.setStoreId("");
+                memberPauseEntity.setStoreName("");
+            }
             if(StringUtils.isNotEmpty(pauseStaffId)){
                 StaffEntity pauseStaffEntity = staffDao.getById(pauseStaffId);
                 memberPauseEntity.setPauseStaffName(pauseStaffEntity.getCustname());
