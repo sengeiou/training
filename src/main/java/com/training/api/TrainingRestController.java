@@ -149,9 +149,12 @@ public class TrainingRestController {
     @RequestMapping(value = "exportTrainingByStaff")
     public ResponseEntity<String> exportTrainingByStaff(@ModelAttribute TrainingQuery query , HttpServletRequest request, HttpServletResponse response) {
         logger.info(" exportTrainingByStaff   query = {}",query);
+        query.setStaffId(query.getCoachId());
+        query.setCoachId(null);
         PageRequest pageRequest = new PageRequest();
         pageRequest.setPageSize(100000);
         Page<Training> page = trainingService.findByStaff(query,pageRequest);
+        logger.info(" exportTrainingByStaff.findByStaff getContent().size() = {} ",page.getContent().size());
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
         String[] headers = { "上课日期", "上课时间","学员名称","会员手机号","课程名称","课卡类型","教练姓名","教练手机号", "状态"};
