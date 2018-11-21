@@ -1,6 +1,7 @@
 package com.training.domain;
 
 import com.training.common.TrainingShowTagEnum;
+import com.training.entity.StaffEntity;
 import com.training.util.ut;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
@@ -61,6 +62,8 @@ public class Training {
     private Date modified;
 
     private Member member;
+
+    private StaffEntity staff;
 
     private String qrCode;
 

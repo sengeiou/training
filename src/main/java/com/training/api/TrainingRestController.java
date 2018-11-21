@@ -154,7 +154,7 @@ public class TrainingRestController {
         Page<Training> page = trainingService.findByStaff(query,pageRequest);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
-        String[] headers = { "上课日期", "上课时间","学员名称","课程名称","课卡类型", "状态"};
+        String[] headers = { "上课日期", "上课时间","学员名称","会员手机号","课程名称","课卡类型","教练姓名","教练手机号", "状态"};
         String fileName = "training_by_staff-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
@@ -178,13 +178,16 @@ public class TrainingRestController {
                 if(training==null){
                     continue;
                 }
-                String[] row = new String[6];
+                String[] row = new String[9];
                 row[0] = training.getLessonDate();
                 row[1] = training.getStartHour() + " - " +training.getEndHour();
                 row[2] = training.getMember().getName();
-                row[3] = training.getTitle();
-                row[4] = CardTypeEnum.getEnumByKey(training.getCardType()).getDesc();
-                row[5] = TrainingShowTagEnum.getEnumByKey(training.getShowTag()).getDesc();
+                row[3] = training.getMember().getPhone();
+                row[4] = training.getTitle();
+                row[5] = CardTypeEnum.getEnumByKey(training.getCardType()).getDesc();
+                row[6] = training.getCoachName();
+                row[7] = training.getStaff().getPhone();
+                row[8] = TrainingShowTagEnum.getEnumByKey(training.getShowTag()).getDesc();
                 dataList.add(row);
             }
             String sheetName = "课程";

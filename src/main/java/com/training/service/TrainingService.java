@@ -189,8 +189,10 @@ public class TrainingService {
         }
         StaffEntity staffEntity = staffDao.getById(trainingEntity.getStaffId());
         if(staffEntity!=null){
+            training.setStaff(staffEntity);
             training.setCoachName(staffEntity.getCustname());
         }else{
+            training.setStaff(new StaffEntity());
             training.setCoachName("未知");
         }
         training.setMember(member);
