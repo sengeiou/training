@@ -1000,7 +1000,7 @@ public class MemberService {
         }
         MemberCardQuery query = new MemberCardQuery();
         query.setMemberId(lesson.getMemberId());
-        query.setStatus(1);
+//        query.setStatus(1);
         query.setStartDate(ut.currentDate());
         query.setEndDate(ut.currentDate());
         PageRequest page = new PageRequest();
