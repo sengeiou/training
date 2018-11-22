@@ -211,7 +211,7 @@ public class CreateCardService {
             memberCardUpdate.setCardNo(cardNo);
             memberCardUpdate.setCount(0);
             memberCardUpdate.setRemark(remark);
-            memberCardUpdate.setStatus(-1);
+            memberCardUpdate.setStatus(2);
             int n = memberCardDao.update(memberCardUpdate);
             if(n==1){
                 logger.info(" ==== dealTK  success : contractEntity = {} ", contractEntity);

@@ -411,7 +411,7 @@ public class MemberTrainingTaskService {
 
     public Object updateMemberCardStatus() {
         logger.info(" updateMemberCardStatus  执行开始  ");
-        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member_card where status in (0,1) ");
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member_card where status in (0,1,-1) ");
         List<Map<String,Object>> data2 =  jdbcTemplate.queryForList(" SELECT * from member_card where status in (2) and count > 0 ",new Object[]{});
         data.addAll(data2);
         int total = 0;

@@ -145,6 +145,8 @@ public class MemberCardService {
             MemberCard memberCard = transfer(memberCardEntity);
             content.add(memberCard);
         }
+        logger.info(" member_cardRestControllerfind  content = {}",content.size());
+
         Long count = memberCardDao.count(query);
         Page<MemberCard> returnPage = new Page<>();
         returnPage.setContent(content);
