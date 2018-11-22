@@ -138,6 +138,19 @@ public class StaffService {
      */
     public Page<Staff> findForSelectList(StaffQuery query , PageRequest page){
         query = new StaffQuery();
+        Staff staffRequest = RequestContextHelper.getStaff();
+        StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
+        RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
+
+        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
+            query.setStoreId(roleEntity.getStoreData());
+        }else{
+            query.setStoreId("123456789");
+        }
+        if(staffDB.getUsername().equals("admin")){
+            query.setStoreId(null);
+        }
+
         List<StaffEntity> staffList = staffDao.find(query,page);
         List<Staff> staffs = new ArrayList();
         for (StaffEntity staffEntity : staffList) {
