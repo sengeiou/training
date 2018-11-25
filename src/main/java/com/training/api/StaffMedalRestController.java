@@ -105,7 +105,7 @@ public class StaffMedalRestController {
      * 根据ID删除
      * Created by huai23 on 2018-07-22 23:28:30.
      */ 
-    @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
+    @RequestMapping (value = "delete", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@RequestBody StaffMedalEntity staffMedal,HttpServletRequest request, HttpServletResponse response){
         logger.info("  delete  staffMedal = {}",staffMedal);
         return staffMedalService.delete(staffMedal.getStaffId(),staffMedal.getMedalId());

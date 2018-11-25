@@ -70,5 +70,9 @@ public class MemberQuery {
 
     private Integer isStoreQuery;
 
+    private Integer hasTeamBuy;
+
+    private Integer hasWx;
+
 }
 

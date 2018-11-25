@@ -164,5 +164,29 @@ public class MemberMedalService {
     }
 
 
+    public List<MemberMedal> showLayerList(String memberId) {
+        List<MemberMedalEntity> memberMedalList = memberMedalDao.showLayerList(memberId);
+        List<MemberMedal> memberMedals = new ArrayList();
+        for (MemberMedalEntity memberMedalEntity:memberMedalList){
+            MemberMedal memberMedal = new MemberMedal();
+            BeanUtils.copyProperties(memberMedalEntity,memberMedal);
+            MedalEntity medalEntity = medalDao.getById(memberMedalEntity.getMedalId());
+            memberMedal.setMedalName(medalEntity.getName());
+            memberMedal.setLevel(medalEntity.getLevel());
+            memberMedals.add(memberMedal);
+        }
+        return memberMedals;
+
+
+    }
+
+    public  ResponseEntity<String> updateShowLayerStatus(MemberMedalEntity memberMedal){
+        int n = memberMedalDao.update(memberMedal);
+        if(n==1){
+            return ResponseUtil.success("修改成功");
+        }
+        return ResponseUtil.exception("修改失败");
+    }
+
 }
 

@@ -61,6 +61,7 @@ public class StaffMedalService {
      * Created by huai23 on 2018-07-22 23:28:30.
      */ 
     public Page<StaffMedalEntity> find(StaffMedalQuery query , PageRequest page){
+        query.setStatus(0);
         List<StaffMedalEntity> staffMedalList = staffMedalDao.find(query,page);
         Long count = staffMedalDao.count(query);
         Page<StaffMedalEntity> returnPage = new Page<>();
@@ -100,6 +101,9 @@ public class StaffMedalService {
         List<StaffMedalEntity> staffMedalEntityList = staffMedalDao.getByStaffId(id);
         List<StaffMedal> staffMedals = new ArrayList();
         for (StaffMedalEntity staffMedalEntity:staffMedalEntityList){
+            if(staffMedalEntity.getStatus()<0){
+                continue;
+            }
             StaffMedal staffMedal = new StaffMedal();
             BeanUtils.copyProperties(staffMedalEntity,staffMedal);
             MedalEntity medalEntity = medalDao.getById(staffMedalEntity.getMedalId());

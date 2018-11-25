@@ -88,5 +88,20 @@ public class MemberMedalDao {
         return n;
     }
 
+    public List<MemberMedalEntity> showLayerList(String memberId) {
+        List<MemberMedalEntity> memberMedalEntityList = memberMedalRepository.showLayerList(memberId);
+        return memberMedalEntityList;
+    }
+
+    /**
+     * 根据实体更新
+     * @param memberMedal
+     * Created by huai23 on 2018-07-24 22:31:46.
+     */
+    public int updateShowLayerStatus(MemberMedalEntity memberMedal){
+        int n = memberMedalRepository.updateShowLayerStatus(memberMedal);
+        return n;
+    }
+
 }
 

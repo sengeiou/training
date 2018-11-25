@@ -58,6 +58,10 @@ public class MemberEntity {
 
     private Integer status;
 
+    private Integer hasTeamBuy;
+
+    private Integer hasWx;
+
     private String creater;
 
     private Date created;

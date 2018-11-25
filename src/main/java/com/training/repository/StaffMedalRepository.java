@@ -88,7 +88,12 @@ public interface StaffMedalRepository {
             "</script>")
     int update(@Param("staffMedal") StaffMedalEntity staffMedal);
 
-    @Update("<script> DELETE  FROM staff_medal " +
+//    @Update("<script> DELETE  FROM staff_medal " +
+//            " WHERE staff_id = #{staffId} and medal_id = #{medalId} " +
+//            "</script>")
+//    int delete(@Param("staffId") String staffId,@Param("medalId") String medalId);
+
+    @Update("<script> UPDATE staff_medal SET  status = -1 ，modified = now()  " +
             " WHERE staff_id = #{staffId} and medal_id = #{medalId} " +
             "</script>")
     int delete(@Param("staffId") String staffId,@Param("medalId") String medalId);

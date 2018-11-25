@@ -93,6 +93,17 @@ public interface MemberMedalRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,member_id,medal_id,content,award_date,feature,remark,status,created,modified " +
+            " FROM member_medal " +
+            " WHERE member_id = #{memberId} and status = 0 order by created desc limit 0,1 " +
+            "</script>")
+    List<MemberMedalEntity> showLayerList(String memberId);
+
+
+    @Update("<script> UPDATE member_medal SET status = 1 , modified = now() " +
+            " WHERE member_id = #{memberMedal.memberId}  and medal_id = #{medalId} " +
+            "</script>")
+    int updateShowLayerStatus(@Param("memberMedal") MemberMedalEntity memberMedal);
 
 }
 

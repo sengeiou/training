@@ -112,6 +112,27 @@ public class MemberMedalRestController {
         return memberMedalService.delete(id);
     }
 
+    /**
+     * 根据ID查询实体
+     * Created by huai23 on 2018-07-24 22:31:46.
+     */
+    @RequestMapping (value = "showLayerList", method = RequestMethod.GET)
+    public ResponseEntity<String> showLayerList(@ModelAttribute MemberMedalQuery query,HttpServletRequest request, HttpServletResponse response){
+        List<MemberMedal> memberMedals = memberMedalService.showLayerList(query.getMemberId());
+        return ResponseUtil.success(memberMedals);
+    }
+
+    /**
+     * 根据实体更新
+     * @param memberMedal
+     * Created by huai23 on 2018-07-24 22:31:46.
+     */
+    @RequestMapping (value = "update", method = RequestMethod.POST)
+    public ResponseEntity<String> updateShowLayerStatus(@RequestBody MemberMedalEntity memberMedal,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  update  memberMedal = {}",memberMedal);
+        return memberMedalService.update(memberMedal);
+    }
+
 
 }
 

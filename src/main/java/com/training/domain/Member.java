@@ -80,6 +80,10 @@ public class Member {
 
     private Integer starLevel;
 
+    private Integer hasTeamBuy;
+
+    private Integer hasWx;
+
     private List<MemberMedal> memberMedalList;
 
     private String showStatus;

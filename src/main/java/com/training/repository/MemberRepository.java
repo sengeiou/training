@@ -37,6 +37,8 @@ public interface MemberRepository {
                 " <if test=\"member.salesman != null\"> salesman, </if>" +
                 " <if test=\"member.remark != null\"> remark, </if>" +
                 " <if test=\"member.status != null\"> status, </if>" +
+                " <if test=\"member.hasTeamBuy != null\"> has_team_buy, </if>" +
+                " <if test=\"member.hasWx != null\"> has_wx, </if>" +
                 " <if test=\"member.creater != null\"> creater, </if>" +
                 " created , " +
                 " modified " +
@@ -64,6 +66,8 @@ public interface MemberRepository {
                 " <if test=\"member.salesman != null\"> #{member.salesman}, </if>" +
                 " <if test=\"member.remark != null\"> #{member.remark}, </if>" +
                 " <if test=\"member.status != null\"> #{member.status}, </if>" +
+                " <if test=\"member.hasTeamBuy != null\"> #{member.hasTeamBuy}, </if>" +
+                " <if test=\"member.hasWx != null\"> #{member.hasWx}, </if>" +
                 " <if test=\"member.creater != null\"> #{member.creater}, </if>" +
                 " now() , " +
                 " now() " +
@@ -71,7 +75,8 @@ public interface MemberRepository {
             "</script>")
     int add(@Param("member") MemberEntity member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no,training_hours,open_id,union_id,feature,origin,salesman,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no,training_hours," +
+            " open_id,union_id,feature,origin,salesman,remark,status,has_team_buy,has_wx,creater,created,modified " +
             " FROM member " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
@@ -98,6 +103,8 @@ public interface MemberRepository {
             " <if test=\"query.salesman != null\"> AND salesman like CONCAT('%',#{query.salesman},'%')  </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.hasTeamBuy != null\"> AND status = #{query.hasTeamBuy} </if>" +
+            " <if test=\"query.hasWx != null\"> AND status = #{query.hasWx} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
@@ -131,25 +138,30 @@ public interface MemberRepository {
             " <if test=\"query.salesman != null\"> AND salesman like CONCAT('%',#{query.salesman},'%')  </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.hasTeamBuy != null\"> AND status = #{query.hasTeamBuy} </if>" +
+            " <if test=\"query.hasWx != null\"> AND status = #{query.hasWx} </if>" +
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
             "</script>")
     Long count(@Param("query") MemberQuery member);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no,training_hours,open_id,union_id,feature,origin,salesman,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id," +
+            " card_no,training_hours,open_id,union_id,feature,origin,salesman,remark,status,has_team_buy,has_wx,creater,created,modified " +
             " FROM member " +
             " WHERE member_id = #{id} " +
             "</script>")
     MemberEntity getById(@Param("id") String id);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no," +
+            "training_hours,open_id,union_id,feature,origin,remark,status,has_team_buy,has_wx,creater,created,modified " +
             " FROM member " +
             " WHERE open_id = #{openId} " +
             "</script>")
     MemberEntity getByOpenId(@Param("openId") String openId);
 
-    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no,training_hours,open_id,union_id,feature,origin,remark,status,creater,created,modified " +
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no," +
+            " training_hours,open_id,union_id,feature,origin,remark,status,has_team_buy,has_wx,creater,created,modified " +
             " FROM member " +
             " WHERE phone = #{phone} limit 0 , 1  " +
             "</script>")
@@ -179,7 +191,9 @@ public interface MemberRepository {
                 " <if test=\"member.salesman != null\"> salesman = #{member.salesman} , </if>" +
                 " <if test=\"member.remark != null\"> remark = #{member.remark} , </if>" +
                 " <if test=\"member.status != null\"> status = #{member.status} , </if>" +
-                " <if test=\"member.creater != null\"> creater = #{member.creater} , </if>" +
+                " <if test=\"member.hasTeamBuy != null\"> has_team_buy = #{member.hasTeamBuy} , </if>" +
+                " <if test=\"member.hasWx != null\"> has_wx = #{member.hasWx} , </if>" +
+            " <if test=\"member.creater != null\"> creater = #{member.creater} , </if>" +
                 " modified = now() " +
             " WHERE member_id = #{member.memberId} " +
             "</script>")
