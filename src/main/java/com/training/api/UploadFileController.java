@@ -106,7 +106,7 @@ public class UploadFileController {
 
     @RequestMapping(value = "teamLessonImage")
     public ResponseEntity<String> uploadTeamLessonImage(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model) {
-        logger.info(" staffImage  start File.separator = {}",File.separator);
+        logger.info(" uploadTeamLessonImage  start File.separator = {}",File.separator);
         String path = request.getSession().getServletContext().getRealPath("/upload/team");
         File filePath = new File(path);
         if(!filePath.exists()){
@@ -142,6 +142,47 @@ public class UploadFileController {
         JSONObject jo = new JSONObject();
         jo.put("msg", "上传成功");
         jo.put("url", request.getContextPath()+"/upload/team/"+fileName);
+        return ResponseUtil.success(jo);
+    }
+
+    @RequestMapping(value = "rotationChart")
+    public ResponseEntity<String> uploadRotationChart(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model) {
+        logger.info(" uploadRotationChart  start File.separator = {}",File.separator);
+        String path = request.getSession().getServletContext().getRealPath("/upload/rotation");
+        File filePath = new File(path);
+        if(!filePath.exists()){
+            filePath.mkdir();
+        }
+        String fileName = file.getOriginalFilename();
+        logger.info(" fileName = {} ",fileName);
+        logger.info(" path = {} ",path);
+        fileName = IDUtils.getId()+"_"+fileName;
+
+        File dic = new File(path);
+        if(!dic.exists()){
+            dic.mkdirs();
+        }
+        File targetFile = new File(path+"/"+fileName);
+        File pathf = new File(path);
+        if(!pathf.exists()){
+            pathf.mkdir();
+        }
+        if(!targetFile.exists()){
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            file.transferTo(targetFile);
+            logger.info(" targetFile.getPath() = {} ",targetFile.getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("msg", "上传成功");
+        jo.put("url", request.getContextPath()+"/upload/rotation/"+fileName);
         return ResponseUtil.success(jo);
     }
 
