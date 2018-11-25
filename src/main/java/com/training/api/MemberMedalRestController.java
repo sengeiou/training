@@ -127,7 +127,7 @@ public class MemberMedalRestController {
      * @param memberMedal
      * Created by huai23 on 2018-07-24 22:31:46.
      */
-    @RequestMapping (value = "update", method = RequestMethod.POST)
+    @RequestMapping (value = "updateShowLayerStatus", method = RequestMethod.POST)
     public ResponseEntity<String> updateShowLayerStatus(@RequestBody MemberMedalEntity memberMedal,HttpServletRequest request, HttpServletResponse response){
         logger.info("  update  memberMedal = {}",memberMedal);
         return memberMedalService.update(memberMedal);
