@@ -32,5 +32,9 @@ public class MemberLogEntity {
 
     private String staffName;
 
+    private Integer hasTeamBuy;
+
+    private Integer hasWx;
+
 }
 

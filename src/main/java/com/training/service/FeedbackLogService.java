@@ -48,11 +48,6 @@ public class FeedbackLogService {
         feedbackLog.setStaffId(staff.getStaffId());
         int n = feedbackLogDao.add(feedbackLog);
         if(n==1){
-            MemberEntity memberUpdate = new MemberEntity();
-            memberUpdate.setMemberId(feedbackDB.getMemberId());
-            memberUpdate.setHasTeamBuy(feedbackLog.getHasTeamBuy());
-            memberUpdate.setHasWx(feedbackLog.getHasWx());
-            memberDao.update(memberUpdate);
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");

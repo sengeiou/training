@@ -31,6 +31,9 @@ public class MemberLogService {
     @Autowired
     private StaffDao staffDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
     /**
      * 新增实体
      * @param memberLog
@@ -42,6 +45,11 @@ public class MemberLogService {
         memberLog.setStaffId(staff.getStaffId());
         int n = memberLogDao.add(memberLog);
         if(n==1){
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(memberLog.getMemberId());
+            memberUpdate.setHasTeamBuy(memberLog.getHasTeamBuy());
+            memberUpdate.setHasWx(memberLog.getHasWx());
+            memberDao.update(memberUpdate);
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");
