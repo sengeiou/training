@@ -50,7 +50,7 @@ public interface RotationChartRepository {
             " <if test=\"query.index != null\"> AND index = #{query.index} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by index LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<RotationChartEntity> find(@Param("query") RotationChartQuery rotationChart , @Param("page") PageRequest page);
 
