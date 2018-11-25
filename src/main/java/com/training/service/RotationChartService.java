@@ -1,9 +1,12 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSON;
 import com.training.dao.*;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,7 +35,9 @@ public class RotationChartService {
      * Created by huai23 on 2018-11-25 10:40:37.
      */ 
     public ResponseEntity<String> add(RotationChartEntity rotationChart){
-        User user = RequestContextHelper.getUser();
+        Staff staff = RequestContextHelper.getStaff();
+        rotationChart.setChartId(IDUtils.getId());
+        rotationChart.setRemark(JSON.toJSONString(staff));
         int n = rotationChartDao.add(rotationChart);
         if(n==1){
             return ResponseUtil.success("添加成功");
