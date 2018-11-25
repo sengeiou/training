@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Member;
 import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -31,6 +32,9 @@ public class FeedbackLogService {
     @Autowired
     private FeedbackDao feedbackDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
     /**
      * 新增实体
      * @param feedbackLog
@@ -44,6 +48,11 @@ public class FeedbackLogService {
         feedbackLog.setStaffId(staff.getStaffId());
         int n = feedbackLogDao.add(feedbackLog);
         if(n==1){
+            MemberEntity memberUpdate = new MemberEntity();
+            memberUpdate.setMemberId(feedbackDB.getMemberId());
+            memberUpdate.setHasTeamBuy(feedbackLog.getHasTeamBuy());
+            memberUpdate.setHasWx(feedbackLog.getHasWx());
+            memberDao.update(memberUpdate);
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");

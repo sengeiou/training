@@ -32,6 +32,9 @@ public class FeedbackLogEntity {
 
     private Date modified;
 
+    private Integer hasTeamBuy;
+
+    private Integer hasWx;
 
 }
 
