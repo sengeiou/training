@@ -1,0 +1,37 @@
+package com.training.entity;
+
+import lombok.Data;
+import java.util.Date;
+
+/**
+ * rotation_chart 实体类
+ * Created by huai23 on 2018-11-25 10:40:37.
+ */ 
+@Data
+public class RotationChartEntity {
+
+    private Long pkId;
+
+    private String chartId;
+
+    private String title;
+
+    private String image;
+
+    private String url;
+
+    private String content;
+
+    private Integer index;
+
+    private String remark;
+
+    private Integer status;
+
+    private Date created;
+
+    private Date modified;
+
+
+}
+
