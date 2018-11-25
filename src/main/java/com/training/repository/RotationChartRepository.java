@@ -47,10 +47,10 @@ public interface RotationChartRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.url != null\"> AND url = #{query.url} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
-            " <if test=\"query.sort != null\"> AND index = #{query.sort} </if>" +
+            " <if test=\"query.sort != null\"> AND sort = #{query.sort} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
-            " order by index LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by sort LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<RotationChartEntity> find(@Param("query") RotationChartQuery rotationChart , @Param("page") PageRequest page);
 
@@ -61,7 +61,7 @@ public interface RotationChartRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.url != null\"> AND url = #{query.url} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
-            " <if test=\"query.sort != null\"> AND index = #{query.sort} </if>" +
+            " <if test=\"query.sort != null\"> AND sort = #{query.sort} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             "</script>")
