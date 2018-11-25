@@ -197,5 +197,31 @@ public class SysLogService {
         return returnPage;
     }
 
+    public Page<SysLogEntity> findPayLog(SysLogQuery query, PageRequest pageRequest) {
+        query.setType("PAY");
+        List<SysLogEntity> sysLogList = sysLogDao.find(query,pageRequest);
+        for (SysLogEntity sysLogEntity:sysLogList){
+            String memberId = sysLogEntity.getId1();
+            sysLogEntity.setDate(ut.df_day.format(sysLogEntity.getCreated()));
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            sysLogEntity.setMemberId(memberId);
+            sysLogEntity.setName(memberEntity.getName());
+            sysLogEntity.setPhone(memberEntity.getPhone());
+            StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
+            sysLogEntity.setStoreId(storeEntity.getStoreId());
+            sysLogEntity.setStoreName(storeEntity.getName());
+            sysLogEntity.setContent(null);
+            sysLogEntity.setLogText(null);
+        }
+        Long count = sysLogDao.count(query);
+        Page<SysLogEntity> returnPage = new Page<>();
+        returnPage.setContent(sysLogList);
+        returnPage.setPage(pageRequest.getPage());
+        returnPage.setSize(pageRequest.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
+
 }
 

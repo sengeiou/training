@@ -19,7 +19,7 @@ public interface RotationChartRepository {
                 " <if test=\"rotationChart.image != null\"> image, </if>" +
                 " <if test=\"rotationChart.url != null\"> url, </if>" +
                 " <if test=\"rotationChart.content != null\"> content, </if>" +
-                " <if test=\"rotationChart.index != null\"> index, </if>" +
+                " <if test=\"rotationChart.sort != null\"> sort, </if>" +
                 " <if test=\"rotationChart.remark != null\"> remark, </if>" +
                 " <if test=\"rotationChart.status != null\"> status, </if>" +
                 " created , " +
@@ -30,7 +30,7 @@ public interface RotationChartRepository {
                 " <if test=\"rotationChart.image != null\"> #{rotationChart.image}, </if>" +
                 " <if test=\"rotationChart.url != null\"> #{rotationChart.url}, </if>" +
                 " <if test=\"rotationChart.content != null\"> #{rotationChart.content}, </if>" +
-                " <if test=\"rotationChart.index != null\"> #{rotationChart.index}, </if>" +
+                " <if test=\"rotationChart.sort != null\"> #{rotationChart.sort}, </if>" +
                 " <if test=\"rotationChart.remark != null\"> #{rotationChart.remark}, </if>" +
                 " <if test=\"rotationChart.status != null\"> #{rotationChart.status}, </if>" +
                 " now() , " +
@@ -39,7 +39,7 @@ public interface RotationChartRepository {
             "</script>")
     int add(@Param("rotationChart") RotationChartEntity rotationChart);
 
-    @Select("<script> SELECT pk_id,chart_id,title,image,url,content,index,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,chart_id,title,image,url,content,sort,remark,status,created,modified " +
             " FROM rotation_chart " +
             " WHERE 1 = 1 " +
             " <if test=\"query.chartId != null\"> AND chart_id = #{query.chartId} </if>" +
@@ -47,7 +47,7 @@ public interface RotationChartRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.url != null\"> AND url = #{query.url} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
-            " <if test=\"query.index != null\"> AND index = #{query.index} </if>" +
+            " <if test=\"query.sort != null\"> AND index = #{query.sort} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " order by index LIMIT #{page.offset} , #{page.pageSize} " +
@@ -61,13 +61,13 @@ public interface RotationChartRepository {
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.url != null\"> AND url = #{query.url} </if>" +
             " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
-            " <if test=\"query.index != null\"> AND index = #{query.index} </if>" +
+            " <if test=\"query.sort != null\"> AND index = #{query.sort} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             "</script>")
     Long count(@Param("query") RotationChartQuery rotationChart);
 
-    @Select("<script> SELECT pk_id,chart_id,title,image,url,content,index,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,chart_id,title,image,url,content,sort,remark,status,created,modified " +
             " FROM rotation_chart " +
             " WHERE chart_id = #{id} " +
             "</script>")
@@ -79,7 +79,7 @@ public interface RotationChartRepository {
                 " <if test=\"rotationChart.image != null\"> image = #{rotationChart.image} , </if>" +
                 " <if test=\"rotationChart.url != null\"> url = #{rotationChart.url} , </if>" +
                 " <if test=\"rotationChart.content != null\"> content = #{rotationChart.content} , </if>" +
-                " <if test=\"rotationChart.index != null\"> index = #{rotationChart.index} , </if>" +
+                " <if test=\"rotationChart.sort != null\"> index = #{rotationChart.sort} , </if>" +
                 " <if test=\"rotationChart.remark != null\"> remark = #{rotationChart.remark} , </if>" +
                 " <if test=\"rotationChart.status != null\"> status = #{rotationChart.status} , </if>" +
                 " modified = now() " +

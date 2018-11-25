@@ -126,5 +126,18 @@ public class SysLogRestController {
         return ResponseUtil.success(page);
     }
 
+    /**
+     * 分页查询微信支付流水日志
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-03 15:57:51.
+     */
+    @RequestMapping (value = "findPayLog", method = RequestMethod.GET)
+    public ResponseEntity<String> findPayLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        Page<SysLogEntity> page = sysLogService.findPayLog(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
+
 }
 

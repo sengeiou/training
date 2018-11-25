@@ -5,6 +5,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.training.common.SysLogEnum;
 import com.training.dao.SysLogDao;
 import com.training.entity.MemberCardEntity;
+import com.training.entity.MemberEntity;
 import com.training.entity.SysLogEntity;
 import com.training.service.MemberCardService;
 import com.training.service.MemberService;
@@ -80,12 +81,21 @@ public class WechatController {
             logger.info("----openid---  {}" ,data.get("openid"));
             logger.info("----attach---  {}" ,data.get("attach"));
             String openId = data.get("openid");
+            String transactionId = data.get("transaction_id");
+            MemberEntity memberEntity = memberService.getByOpenId(openId);
             String logId = data.get("out_trade_no");
             String resultStr = "success";
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
             sysLogEntity.setType(SysLogEnum.PAY.getKey());
             sysLogEntity.setLevel(1);
+            if(memberEntity!=null){
+                sysLogEntity.setId1(memberEntity.getMemberId());
+            }else{
+
+            }
+            sysLogEntity.setId2(transactionId);
+
             try{
                 SysLogEntity sysLogDB = sysLogDao.getById(logId);
                 if(sysLogDB!=null && sysLogDB.getType().equals(SysLogEnum.YQ.getKey())){

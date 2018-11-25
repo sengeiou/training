@@ -22,7 +22,7 @@ public class RotationChartQuery {
 
     private String content;
 
-    private Integer index;
+    private Integer sort;
 
     private String remark;
 
