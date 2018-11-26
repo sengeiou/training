@@ -611,8 +611,25 @@ public class LessonService {
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" order  lesson = {}",lesson);
+        boolean isFromAdmin = true;
         if(StringUtils.isEmpty(lesson.getMemberId())){
+            isFromAdmin = false;
             lesson.setMemberId(memberRequest.getMemberId());
+        }
+
+        if(isFromAdmin){
+            logger.info(" ********    order  isFromAdmin ");
+            String month = ut.currentFullMonth();
+            String lastDay = month+"-05";
+            String lessonDate = lesson.getLessonDate();
+            if(ut.passDayByDate(lastDay,ut.currentDate())>0){
+                String this_first_day = month+"-01";
+                lessonDate = lessonDate.substring(0,7)+"-01";
+                logger.info(" ********    order  lessonDate = {} , this_first_day = {} ",lessonDate,this_first_day);
+                if(ut.passDayByDate(lessonDate,this_first_day)>0){
+                    return ResponseUtil.exception("每月5日之后不能预约上个月的课程");
+                }
+            }
         }
 
         MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
