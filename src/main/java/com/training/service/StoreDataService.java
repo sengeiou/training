@@ -3,11 +3,13 @@ package com.training.service;
 import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
+import com.training.common.OriginEnum;
 import com.training.dao.*;
 import com.training.domain.*;
 import com.training.entity.*;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
@@ -695,6 +697,8 @@ public class StoreDataService {
         if(storeEntity==null){
             return dataList;
         }
+        Map<String,MarketReportData> dataMap = createMarketReportMap(storeEntity);
+
         String startDate = ut.firstDayOfMonth();
         String endDate = ut.lastDayOfMonth();
         if(StringUtils.isNotEmpty(query.getStartDate())){
@@ -705,7 +709,7 @@ public class StoreDataService {
         }
         String sql = " select member_id,phone,store_id,coach_staff_id, origin from member where store_id = ? and created >= ? and created <= ? and origin <> '' ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
-        Map<String,MarketReportData> dataMap = new HashMap();
+
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map) data.get(i);
             String memberId = item.get("member_id").toString();
@@ -750,6 +754,22 @@ public class StoreDataService {
             dataList.add(marketReportData);
         }
         return dataList;
+    }
+
+    private Map<String,MarketReportData> createMarketReportMap(StoreEntity storeEntity) {
+        Map<String,MarketReportData> dataMap = new HashedMap();
+        for(OriginEnum originEnum:OriginEnum.values()){
+            MarketReportData marketReportData = new MarketReportData();
+            marketReportData.setStoreId(storeEntity.getStoreId());
+            marketReportData.setStoreName(storeEntity.getName());
+            marketReportData.setOrigin(originEnum.getDesc());
+            marketReportData.setNewCount(0);
+            marketReportData.setArriveCount(0);
+            marketReportData.setOrderCount(0);
+            marketReportData.setMoney("0");
+            dataMap.put(originEnum.getDesc(),marketReportData);
+        }
+        return dataMap;
     }
 
     private List getContract(String memberId, String phone, String startDate, String endDate) {
