@@ -88,6 +88,7 @@ public class RotationChartRestController {
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody RotationChartEntity rotationChart,HttpServletRequest request, HttpServletResponse response){
         logger.info("  update  rotationChart = {}",rotationChart);
+        rotationChart.setChartId(rotationChart.getRotationId());
         return rotationChartService.update(rotationChart);
     }
 

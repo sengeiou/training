@@ -14,6 +14,8 @@ public class RotationChartEntity {
 
     private String chartId;
 
+    private String rotationId;
+
     private String title;
 
     private String image;
