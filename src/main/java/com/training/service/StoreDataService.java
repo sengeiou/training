@@ -691,71 +691,6 @@ public class StoreDataService {
         return storeData;
     }
 
-    public List<MarketReportData> queryMarketingReport(StoreDataQuery query) {
-        StoreEntity storeEntity = storeDao.getById(query.getStoreId());
-        List<MarketReportData> dataList= new ArrayList();
-        if(storeEntity==null){
-            return dataList;
-        }
-        Map<String,MarketReportData> dataMap = createMarketReportMap(storeEntity);
-
-        String startDate = ut.firstDayOfMonth();
-        String endDate = ut.lastDayOfMonth();
-        if(StringUtils.isNotEmpty(query.getStartDate())){
-            startDate = query.getStartDate();
-        }
-        if(StringUtils.isNotEmpty(query.getEndDate())){
-            endDate = query.getEndDate();
-        }
-        String sql = " select member_id,phone,store_id,coach_staff_id, origin from member where store_id = ? and created >= ? and created <= ? and origin <> '' ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
-
-        for (int i = 0; i < data.size(); i++) {
-            Map item = (Map) data.get(i);
-            String memberId = item.get("member_id").toString();
-            String phone = item.get("phone").toString();
-            String origin = item.get("origin").toString().trim();
-
-            MarketReportData marketReportData = null;
-            if(dataMap.containsKey(origin)){
-                marketReportData = dataMap.get(origin);
-            }else{
-                marketReportData = new MarketReportData();
-                marketReportData.setStoreId(storeEntity.getStoreId());
-                marketReportData.setStoreName(storeEntity.getName());
-                marketReportData.setOrigin(origin);
-                marketReportData.setNewCount(0);
-                marketReportData.setArriveCount(0);
-                marketReportData.setOrderCount(0);
-                marketReportData.setMoney("0");
-                dataMap.put(origin,marketReportData);
-            }
-            marketReportData.setNewCount(marketReportData.getNewCount()+1);
-            if(hasTYCard(memberId,startDate,endDate)){
-                marketReportData.setArriveCount(marketReportData.getArriveCount()+1);
-            }
-            List<ContractEntity> contracts = getContract(memberId,phone,startDate,endDate);
-            if(CollectionUtils.isNotEmpty(contracts)){
-                marketReportData.setOrderCount(marketReportData.getOrderCount()+1);
-                for (ContractEntity contractEntity:contracts){
-                    if(StringUtils.isNotEmpty(contractEntity.getMoney())){
-                        try {
-                            double money = Double.parseDouble(marketReportData.getMoney())+Double.parseDouble(contractEntity.getMoney());
-                            marketReportData.setMoney(ut.getDoubleString(money));
-                        }catch (Exception e){
-
-                        }
-                    }
-                }
-            }
-        }
-        for ( MarketReportData marketReportData : dataMap.values()){
-            logger.info(" marketReportData = {} ",marketReportData);
-            dataList.add(marketReportData);
-        }
-        return dataList;
-    }
-
     private Map<String,MarketReportData> createMarketReportMap(StoreEntity storeEntity) {
         Map<String,MarketReportData> dataMap = new HashedMap();
         for(OriginEnum originEnum:OriginEnum.values()){
@@ -770,6 +705,116 @@ public class StoreDataService {
             dataMap.put(originEnum.getDesc(),marketReportData);
         }
         return dataMap;
+    }
+
+    public List<MarketReportData> queryMarketingReport(StoreDataQuery query) {
+        StoreEntity storeEntity = storeDao.getById(query.getStoreId());
+        List<MarketReportData> dataList= new ArrayList();
+        if(storeEntity==null){
+            return dataList;
+        }
+        Map<String,MarketReportData> dataMap = createMarketReportMap(storeEntity);
+        String startDate = ut.firstDayOfMonth();
+        String endDate = ut.lastDayOfMonth();
+        if(StringUtils.isNotEmpty(query.getStartDate())){
+            startDate = query.getStartDate();
+        }
+        if(StringUtils.isNotEmpty(query.getEndDate())){
+            endDate = query.getEndDate();
+        }
+        //统计新增意向人数
+        queryNewMember(storeEntity,startDate,endDate,dataMap);
+        //统计到店人数
+        queryComingMember(storeEntity,startDate,endDate,dataMap);
+        //统计成交人数和金额
+        queryContractMember(storeEntity,startDate,endDate,dataMap);
+        for ( MarketReportData marketReportData : dataMap.values()){
+//            logger.info(" marketReportData = {} ",marketReportData);
+            dataList.add(marketReportData);
+        }
+        logger.info(" dataList = {} ",dataList.size());
+        return dataList;
+    }
+
+    /**
+     *  统计新增意向人数
+     */
+    private void queryNewMember(StoreEntity storeEntity, String startDate, String endDate, Map<String, MarketReportData> dataMap) {
+        String sql = " select member_id,phone,store_id,coach_staff_id, origin from member where store_id = ? and created >= ? and created <= ? and origin <> '' ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map) data.get(i);
+            String origin = item.get("origin").toString().trim();
+            if(StringUtils.isEmpty(origin)){
+                origin = OriginEnum.OTHER.getDesc();
+            }
+            MarketReportData marketReportData = null;
+            if(dataMap.containsKey(origin)){
+                marketReportData = dataMap.get(origin);
+            }else{
+                logger.info(" *************   origin = {} ",origin);
+                marketReportData = new MarketReportData();
+                marketReportData.setStoreId(storeEntity.getStoreId());
+                marketReportData.setStoreName(storeEntity.getName());
+                marketReportData.setOrigin(origin);
+                marketReportData.setNewCount(0);
+                marketReportData.setArriveCount(0);
+                marketReportData.setOrderCount(0);
+                marketReportData.setMoney("0");
+                dataMap.put(origin,marketReportData);
+            }
+            marketReportData.setNewCount(marketReportData.getNewCount()+1);
+        }
+    }
+
+    /**
+     *  统计到店人数,即发体验卡的人数
+     */
+    private void queryComingMember(StoreEntity storeEntity, String startDate, String endDate, Map<String, MarketReportData> dataMap) {
+        String sql = " select a.member_id,a.`name`,a.phone,a.store_id,a.coach_staff_id, a.origin,b.card_no,b.type,b.created from member a , member_card b " +
+                " where a.store_id = ? and a.origin <> ''  and a.member_id = b.member_id and b.type = 'TY' " +
+                " and b.created >= ? and b.created <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map) data.get(i);
+            String origin = item.get("origin").toString().trim();
+            if(StringUtils.isEmpty(origin)){
+                origin = OriginEnum.OTHER.getDesc();
+            }
+            MarketReportData marketReportData = null;
+            if(!dataMap.containsKey(origin)){
+                continue;
+            }
+            marketReportData = dataMap.get(origin);
+            marketReportData.setArriveCount(marketReportData.getArriveCount()+1);
+        }
+    }
+
+    /**
+     *  统计成交人数和金额
+     *  新会员和转介绍都算成交
+     */
+    private void queryContractMember(StoreEntity storeEntity, String startDate, String endDate, Map<String, MarketReportData> dataMap) {
+        String sql = " select a.member_id,a.`name`,a.phone,a.store_id,a.coach_staff_id, a.origin,b.sign_date,b.money,b.type,b.created from member a , contract b " +
+                "where a.store_id = ? and a.origin <> '' and a.member_id = b.member_id and b.type in ('新会员','转介绍') " +
+                "and b.sign_date >= ? and b.sign_date <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate,endDate});
+        for (int i = 0; i < data.size(); i++) {
+            Map item = (Map) data.get(i);
+            String origin = item.get("origin").toString().trim();
+            if(StringUtils.isEmpty(origin)){
+                origin = OriginEnum.OTHER.getDesc();
+            }
+            MarketReportData marketReportData = null;
+            if(!dataMap.containsKey(origin)){
+                continue;
+            }
+            marketReportData = dataMap.get(origin);
+            double money = Double.parseDouble(item.get("money").toString());
+            double total = Double.parseDouble(marketReportData.getMoney());
+            marketReportData.setOrderCount(marketReportData.getOrderCount()+1);
+            marketReportData.setMoney(ut.getDoubleString(total+money));
+        }
     }
 
     private List getContract(String memberId, String phone, String startDate, String endDate) {
@@ -790,6 +835,21 @@ public class StoreDataService {
         List cards = jdbcTemplate.queryForList(sql,new Object[]{memberId,startDate+" 00:00:00",endDate+" 23:59:59"});
         return cards.size()>0;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public List<FinanceTimesCardReportData> queryFinanceTimesCardReport(StoreDataQuery query) {
         List<FinanceTimesCardReportData> dataList= new ArrayList();

@@ -23,9 +23,7 @@ public enum OriginEnum {
     EXCEL(11,"EXCEL导入"),
     CONTRACT(12,"合同生成"),
     AUTO(13,"自动生成"),
-    OTHER(14,"其他"),
-
-    EMPTY(-1,"");
+    OTHER(14,"其他");
 
     private Integer key;
     private String desc;
