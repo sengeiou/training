@@ -43,6 +43,8 @@ public interface MemberPauseRepository {
             " FROM member_pause " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id from member where type = 'M' AND store_id = #{query.storeId}  ) </if>" +
+
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.pauseDate != null\"> AND pause_date = #{query.pauseDate} </if>" +
             " <if test=\"query.pauseStaffId != null\"> AND pause_staff_id = #{query.pauseStaffId} </if>" +
@@ -61,6 +63,8 @@ public interface MemberPauseRepository {
     @Select("<script> SELECT COUNT(1) FROM member_pause " +
             " WHERE 1 = 1 " +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id from member where type = 'M' AND store_id = #{query.storeId}  ) </if>" +
+
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
             " <if test=\"query.pauseDate != null\"> AND pause_date = #{query.pauseDate} </if>" +
             " <if test=\"query.pauseStaffId != null\"> AND pause_staff_id = #{query.pauseStaffId} </if>" +

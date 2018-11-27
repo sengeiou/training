@@ -44,12 +44,33 @@ public class SysLogDao {
     }
 
     /**
+     * 分页查询
+     * @param query
+     * @param page
+     * Created by huai23 on 2018-06-03 15:57:51.
+     */
+    public List<SysLogEntity> findDelayLog(SysLogQuery query , PageRequest page){
+        List<SysLogEntity> sysLogList = sysLogRepository.findDelayLog(query,page);
+        return sysLogList;
+    }
+
+    /**
      * 查询总数
      * @param query
      * Created by huai23 on 2018-06-03 15:57:51.
      */ 
     public Long count(SysLogQuery query){
         Long n = sysLogRepository.count(query);
+        return n;
+    }
+
+    /**
+     * 查询总数
+     * @param query
+     * Created by huai23 on 2018-06-03 15:57:51.
+     */
+    public Long countDelayLog(SysLogQuery query){
+        Long n = sysLogRepository.countDelayLog(query);
         return n;
     }
 

@@ -122,7 +122,7 @@ public class SysLogService {
         query.setType("YQ");
         query.setId2("pay");
         query.setRemark("success");
-        List<SysLogEntity> sysLogList = sysLogDao.find(query,page);
+        List<SysLogEntity> sysLogList = sysLogDao.findDelayLog(query,page);
         for (SysLogEntity sysLogEntity:sysLogList){
             sysLogEntity.setCardNo(sysLogEntity.getId1());
             JSONObject data = JSON.parseObject(sysLogEntity.getLogText());
@@ -147,7 +147,7 @@ public class SysLogService {
             sysLogEntity.setContent(null);
             sysLogEntity.setLogText(null);
         }
-        Long count = sysLogDao.count(query);
+        Long count = sysLogDao.countDelayLog(query);
         Page<SysLogEntity> returnPage = new Page<>();
         returnPage.setContent(sysLogList);
         returnPage.setPage(page.getPage());
@@ -173,18 +173,19 @@ public class SysLogService {
             sysLogEntity.setPhone(memberEntity.getPhone());
 
             StaffEntity staffEntity1 = staffDao.getById(staffId);
+            if(staffEntity1!=null){
+                sysLogEntity.setStaffName(staffEntity1.getCustname());
+                StoreEntity storeEntity1 = storeDao.getById(staffEntity1.getStoreId());
+                sysLogEntity.setStoreId(storeEntity1.getStoreId());
+                sysLogEntity.setStoreName(storeEntity1.getName());
+            }
             StaffEntity staffEntity2 = staffDao.getById(staffId2);
-            StoreEntity storeEntity1 = storeDao.getById(staffEntity1.getStoreId());
-            StoreEntity storeEntity2 = storeDao.getById(staffEntity2.getStoreId());
-
-            sysLogEntity.setStoreId(storeEntity1.getStoreId());
-            sysLogEntity.setStoreName(storeEntity1.getName());
-            sysLogEntity.setStoreId2(storeEntity2.getStoreId());
-            sysLogEntity.setStoreName2(storeEntity2.getName());
-
-            sysLogEntity.setStaffName(staffEntity1.getCustname());
-            sysLogEntity.setStaffName2(staffEntity2.getCustname());
-
+            if(staffEntity2!=null){
+                sysLogEntity.setStaffName2(staffEntity2.getCustname());
+                StoreEntity storeEntity2 = storeDao.getById(staffEntity2.getStoreId());
+                sysLogEntity.setStoreId2(storeEntity2.getStoreId());
+                sysLogEntity.setStoreName2(storeEntity2.getName());
+            }
             sysLogEntity.setContent(null);
             sysLogEntity.setLogText(null);
         }

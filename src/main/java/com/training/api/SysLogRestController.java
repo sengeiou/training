@@ -110,6 +110,7 @@ public class SysLogRestController {
      */
     @RequestMapping (value = "findDelayLog", method = RequestMethod.GET)
     public ResponseEntity<String> findDelayLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  findDelayLog  SysLogQuery = {}",query);
         Page<SysLogEntity> page = sysLogService.findDelayLog(query,pageRequest);
         return ResponseUtil.success(page);
     }

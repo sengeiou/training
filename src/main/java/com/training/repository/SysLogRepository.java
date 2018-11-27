@@ -113,5 +113,45 @@ public interface SysLogRepository {
     int delete(@Param("id") String id);
 
 
+    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,store_id,member_id,staff_id,oper_staff_id,created,modified " +
+            " FROM sys_log " +
+            " WHERE 1 = 1 " +
+            " <if test=\"query.logId != null\"> AND LOG_ID = #{query.logId} </if>" +
+            " <if test=\"query.type != null\"> AND TYPE = #{query.type} </if>" +
+            " <if test=\"query.level != null\"> AND LEVEL = #{query.level} </if>" +
+            " <if test=\"query.id1 != null\"> AND id1 = #{query.id1} </if>" +
+            " <if test=\"query.id2 != null\"> AND id2 = #{query.id2} </if>" +
+            " <if test=\"query.logText != null\"> AND log_text = #{query.logText} </if>" +
+            " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
+            " <if test=\"query.name != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') and a.member_id = b.member_id  ) </if>" +
+            " <if test=\"query.phone != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') and a.member_id = b.member_id  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
+            " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
+            " LIMIT #{page.offset} , #{page.pageSize} " +
+            "</script>")
+    List<SysLogEntity> findDelayLog(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
+
+    @Select("<script> SELECT COUNT(1) FROM sys_log " +
+            " WHERE 1 = 1 " +
+            " <if test=\"query.logId != null\"> AND LOG_ID = #{query.logId} </if>" +
+            " <if test=\"query.type != null\"> AND TYPE = #{query.type} </if>" +
+            " <if test=\"query.level != null\"> AND LEVEL = #{query.level} </if>" +
+            " <if test=\"query.id1 != null\"> AND id1 = #{query.id1} </if>" +
+            " <if test=\"query.id2 != null\"> AND id2 = #{query.id2} </if>" +
+            " <if test=\"query.logText != null\"> AND log_text = #{query.logText} </if>" +
+            " <if test=\"query.content != null\"> AND content = #{query.content} </if>" +
+            " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
+            " <if test=\"query.name != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') and a.member_id = b.member_id  ) </if>" +
+            " <if test=\"query.phone != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') and a.member_id = b.member_id  ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
+            " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
+            "</script>")
+    Long countDelayLog(@Param("query") SysLogQuery sysLog);
+
 }
 
