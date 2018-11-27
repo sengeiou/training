@@ -60,5 +60,7 @@ public class SysLogEntity {
 
     private String storeName2;
 
+    private String operStaffId;
+
 }
 

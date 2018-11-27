@@ -864,8 +864,16 @@ public class MemberService {
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  changeCoach  staffRequest = {}", staffRequest);
         logger.info("  changeCoach  member = {}", member);
-
+        StaffEntity operStaff = staffDao.getById(staffRequest.getStaffId());
         MemberEntity memberEntity = memberDao.getById(member.getMemberId());
+        StaffEntity staffEntity = staffDao.getById(member.getStaffId());
+        logger.info("  changeCoach  staffEntity = {}", staffEntity);
+
+        if(StringUtils.isNotEmpty(memberEntity.getCoachStaffId())){
+            if(memberEntity.getCoachStaffId().equals(member.getStaffId())){
+                return ResponseUtil.exception("当前教练就是【"+staffEntity.getCustname()+"】,无需更换。请选择其他教练！");
+            }
+        }
 
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setStartDate(ut.currentDate());
@@ -904,24 +912,23 @@ public class MemberService {
         }
         logger.info("  changeCoach  hasRealCard = {}",hasRealCard);
 
-        if(hasRealCard){
+        if(hasRealCard && ( "教练".equals(operStaff.getJob()) ||  "店长".equals(operStaff.getJob()))){
             SysLogQuery query = new SysLogQuery();
             query.setStartDate(ut.firstDayOfMonth());
             query.setEndDate(ut.lastDayOfMonth());
             query.setType(SysLogEnum.CC.getKey());
             query.setId1(member.getMemberId());
-
+            query.setOperStaffId(staffRequest.getStaffId());
             logger.info(" query = {} ",query);
             List<SysLogEntity> sysLogEntities = sysLogDao.find(query,new PageRequest());
             logger.info(" sysLogEntities.size() = {} ",sysLogEntities.size());
             if(sysLogEntities.size()>0){
                 SysLogEntity sysLogEntity = sysLogEntities.get(0);
-//                return ResponseUtil.exception("更换教练失败,本月已经于"+ut.df_time.format(sysLogEntity.getCreated())+"更换过教练");
+                return ResponseUtil.exception("更换教练失败,本月已经于"+ut.df_time.format(sysLogEntity.getCreated())+"更换过一次教练。每个月只能更换一次。");
             }
         }
 
-        StaffEntity staffEntity = staffDao.getById(member.getStaffId());
-        logger.info("  changeCoach  staffEntity = {}", staffEntity);
+
         MemberEntity memberUpdate = new MemberEntity();
         memberUpdate.setMemberId(member.getMemberId());
         memberUpdate.setStoreId(staffEntity.getStoreId());
@@ -933,11 +940,15 @@ public class MemberService {
             sysLogEntity.setLogId(IDUtils.getId());
             sysLogEntity.setType(SysLogEnum.CC.getKey());
             sysLogEntity.setLevel(2);
-            sysLogEntity.setId1(member.getMemberId());
+            sysLogEntity.setId1(memberEntity.getMemberId());
+            sysLogEntity.setStoreId(memberEntity.getStoreId());
+            sysLogEntity.setMemberId(member.getMemberId());
+            sysLogEntity.setStaffId(memberEntity.getCoachStaffId());
             sysLogEntity.setId2(memberEntity.getCoachStaffId());
             sysLogEntity.setLogText(memberEntity.getCoachStaffId()+","+staffEntity.getStaffId());
             sysLogEntity.setContent("");
             sysLogEntity.setCreated(new Date());
+            sysLogEntity.setOperStaffId(staffRequest.getStaffId());
             sysLogService.add(sysLogEntity);
 
             if(StringUtils.isEmpty(memberEntity.getCoachStaffId()) || (StringUtils.isNotEmpty(memberEntity.getStoreId())&&!memberEntity.getStoreId().equals(staffEntity.getStoreId())) ){

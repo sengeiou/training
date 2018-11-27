@@ -83,6 +83,15 @@ public class ContractDao {
         return n;
     }
 
+    /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-06-06 21:52:04.
+     */
+    public List<ContractEntity> getByContractId(String id){
+        List<ContractEntity> contractList = contractRepository.getByContractId(id);
+        return contractList;
+    }
 
 }
 

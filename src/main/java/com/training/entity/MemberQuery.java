@@ -74,5 +74,9 @@ public class MemberQuery {
 
     private Integer hasWx;
 
+    private Integer isBindWx;
+
+    private Integer hasTY;
+
 }
 

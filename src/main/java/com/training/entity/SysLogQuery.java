@@ -48,6 +48,7 @@ public class SysLogQuery {
 
     private String phone;
 
+    private String operStaffId;
 
 }
 

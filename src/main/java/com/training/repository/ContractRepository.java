@@ -154,6 +154,12 @@ public interface ContractRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,process_instance_id,contract_id,contract_name,member_name,gender,phone,card_type,type,money,total,pay_type,start_date,end_date,salesman,coach,feature,remark,sign_date,image," +
+            " form,status,created,modified ,image as reason " +
+            " FROM contract " +
+            " WHERE contract_id = #{contractId} " +
+            "</script>")
+    List<ContractEntity> getByContractId(@Param("contractId") String contractId);
 
 }
 

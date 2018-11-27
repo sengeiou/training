@@ -105,6 +105,11 @@ public interface MemberRepository {
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.hasTeamBuy != null\"> AND status = #{query.hasTeamBuy} </if>" +
             " <if test=\"query.hasWx != null\"> AND status = #{query.hasWx} </if>" +
+            " <if test=\"query.isBindWx != null  and query.isBindWx == '0'.toString() \"> AND open_id = '' </if>" +
+            " <if test=\"query.isBindWx != null  and query.isBindWx == '1'.toString() \"> AND open_id &gt; '' </if>" +
+            " <if test=\"query.hasTY != null  and query.hasTY == '0'.toString() \"> AND member_id not in ( select member_id from member_card where type = 'TY'  ) </if>" +
+            " <if test=\"query.hasTY != null  and query.hasTY == '1'.toString() \"> AND member_id in ( select member_id from member_card where type = 'TY'  ) </if>" +
+
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
@@ -140,6 +145,11 @@ public interface MemberRepository {
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " <if test=\"query.hasTeamBuy != null\"> AND status = #{query.hasTeamBuy} </if>" +
             " <if test=\"query.hasWx != null\"> AND status = #{query.hasWx} </if>" +
+            " <if test=\"query.isBindWx != null  and query.isBindWx == '0'.toString() \"> AND open_id = '' </if>" +
+            " <if test=\"query.isBindWx != null  and query.isBindWx == '1'.toString() \"> AND open_id &gt; '' </if>" +
+            " <if test=\"query.hasTY != null  and query.hasTY == '0'.toString() \"> AND member_id not in ( select member_id from member_card where type = 'TY'  ) </if>" +
+            " <if test=\"query.hasTY != null  and query.hasTY == '1'.toString() \"> AND member_id in ( select member_id from member_card where type = 'TY'  ) </if>" +
+
             " <if test=\"query.creater != null\"> AND creater = #{query.creater} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +

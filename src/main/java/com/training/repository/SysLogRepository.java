@@ -22,6 +22,11 @@ public interface SysLogRepository {
                 " <if test=\"sysLog.logText != null\"> log_text, </if>" +
                 " <if test=\"sysLog.content != null\"> content, </if>" +
                 " <if test=\"sysLog.remark != null\"> REMARK, </if>" +
+                " <if test=\"sysLog.storeId != null\"> store_id, </if>" +
+                " <if test=\"sysLog.memberId != null\"> member_id, </if>" +
+                " <if test=\"sysLog.staffId != null\"> staff_id, </if>" +
+                " <if test=\"sysLog.cardNo != null\"> card_no, </if>" +
+                " <if test=\"sysLog.operStaffId != null\"> oper_staff_id, </if>" +
                 " created , " +
                 " modified " +
             " ) VALUES ( " +
@@ -33,13 +38,18 @@ public interface SysLogRepository {
                 " <if test=\"sysLog.logText != null\"> #{sysLog.logText}, </if>" +
                 " <if test=\"sysLog.content != null\"> #{sysLog.content}, </if>" +
                 " <if test=\"sysLog.remark != null\"> #{sysLog.remark}, </if>" +
+                " <if test=\"sysLog.storeId != null\"> #{sysLog.storeId}, </if>" +
+                " <if test=\"sysLog.memberId != null\"> #{sysLog.memberId}, </if>" +
+                " <if test=\"sysLog.staffId != null\"> #{sysLog.staffId}, </if>" +
+                " <if test=\"sysLog.cardNo != null\"> #{sysLog.cardNo}, </if>" +
+                " <if test=\"sysLog.operStaffId != null\"> #{sysLog.operStaffId}, </if>" +
                 " now() , " +
                 " now() " +
             " ) " +
             "</script>")
     int add(@Param("sysLog") SysLogEntity sysLog);
 
-    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,store_id,member_id,staff_id,oper_staff_id,created,modified " +
             " FROM sys_log " +
             " WHERE 1 = 1 " +
             " <if test=\"query.logId != null\"> AND LOG_ID = #{query.logId} </if>" +
@@ -55,6 +65,7 @@ public interface SysLogRepository {
             " <if test=\"query.name != null\"> AND id1 in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
             " <if test=\"query.phone != null\"> AND id1 in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
             " <if test=\"query.storeId != null\"> AND id2 in ( select staff_id from staff where store_id = #{query.storeId}  ) </if>" +
+            " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> find(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
@@ -74,10 +85,11 @@ public interface SysLogRepository {
             " <if test=\"query.name != null\"> AND id1 in ( select member_id from member where type = 'M' AND name like CONCAT('%',#{query.name},'%')  ) </if>" +
             " <if test=\"query.phone != null\"> AND id1 in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
             " <if test=\"query.storeId != null\"> AND id2 in ( select staff_id from staff where store_id = #{query.storeId}  ) </if>" +
+            " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
             "</script>")
     Long count(@Param("query") SysLogQuery sysLog);
 
-    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,LOG_ID,TYPE,LEVEL,id1,id2,log_text,content,REMARK,store_id,member_id,staff_id,oper_staff_id,created,modified " +
             " FROM sys_log " +
             " WHERE LOG_ID = #{id} " +
             "</script>")

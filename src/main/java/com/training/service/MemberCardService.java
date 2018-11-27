@@ -48,6 +48,9 @@ public class MemberCardService {
     @Autowired
     private RoleDao roleDao;
 
+    @Autowired
+    private ContractDao contractDao;
+
     /**
      * 新增实体
      * @param memberCard
@@ -210,6 +213,16 @@ public class MemberCardService {
             }
         }else{
 
+        }
+        if(StringUtils.isNotEmpty(memberCardEntity.getContractId())){
+            List<ContractEntity> contractEntitieList = contractDao.getByContractId(memberCardEntity.getContractId());
+            if(contractEntitieList.size()>0){
+                memberCard.setCoachName(contractEntitieList.get(0).getCoach());
+                memberCard.setSaleStaffName(contractEntitieList.get(0).getSalesman());
+            }else{
+                memberCard.setCoachName(" ");
+                memberCard.setSaleStaffName(" ");
+            }
         }
         memberCard.setShowStatus(CardStatusEnum.getEnumByKey(memberCardEntity.getStatus()).getDesc());
         return memberCard;
