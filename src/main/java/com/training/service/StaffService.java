@@ -251,10 +251,8 @@ public class StaffService {
         }else {
             staff.setTemplateName("-");
         }
-        String month = ut.currentKpiMonth();
-        int count = calculateKpiService.queryValidMemberCount(staff.getStaffId(), month);
+        int count = calculateKpiService.queryTotalMemberCountByDay(staff.getStaffId(), ut.currentDate(-1));
         staff.setMemberCount(count);
-
         staff.setKpi("0");
         KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.getByIdAndMonth(staffEntity.getStaffId(),ut.currentKpiMonth());
         if(kpiStaffMonth!=null){

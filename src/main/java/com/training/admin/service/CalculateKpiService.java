@@ -511,27 +511,69 @@ public class CalculateKpiService {
      *  有效会员数 ： 非停 非结
      */
     public int queryValidMemberCount(String staffId, String month) {
+        logger.info(" queryValidMemberCount  staffId = {} , month = {} ",staffId,month);
         String y = month.substring(0,4);
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
-
         if(ut.passDayByDate(ut.currentDate(),endDate)>0){
             endDate = ut.currentDate();
         }
-
         String tableName = "member_his_"+m;
         int count = 0;
         String sql = " select * from "+tableName+" where coach_staff_id = ? and status in (1) and created <= ? ";
+        logger.info(" sql = {} ",sql);
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
 
             count++;
         }
-        logger.info(" queryValidMemberCount  data.size() = {} , count = {} ",data.size(),count);
+        logger.info(" queryValidMemberCount tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
         return count;
     }
+
+
+    /**
+     *  有效会员数 ： 非停 非结
+     */
+    public int queryValidMemberCountByDay(String staffId, String day) {
+        logger.info(" queryValidMemberCountByDay  staffId = {} , day = {} ",staffId,day);
+        String y = day.substring(0,4);
+        String m = day.substring(5,7);
+        String tableName = "member_his_"+m;
+        int count = 0;
+        String sql = " select * from "+tableName+" where coach_staff_id = ? and status in (1) and backup_date = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,day});
+        for (int i = 0; i < data.size(); i++) {
+            Map member = (Map)data.get(i);
+
+            count++;
+        }
+        logger.info(" queryValidMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+        return count;
+    }
+
+    /**
+     *  有效会员数 ： 非停 非结
+     */
+    public int queryTotalMemberCountByDay(String staffId, String day) {
+        logger.info(" queryTotalMemberCountByDay  staffId = {} , day = {} ",staffId,day);
+        String y = day.substring(0,4);
+        String m = day.substring(5,7);
+        String tableName = "member_his_"+m;
+        int count = 0;
+        String sql = " select * from "+tableName+" where coach_staff_id = ? and backup_date = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,day});
+        for (int i = 0; i < data.size(); i++) {
+            Map member = (Map)data.get(i);
+
+            count++;
+        }
+        logger.info(" queryTotalMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+        return count;
+    }
+
 
     private int queryOpenDays(String storeId,String month) {
         String y = month.substring(0,4);
