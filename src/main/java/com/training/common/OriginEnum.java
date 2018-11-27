@@ -12,8 +12,6 @@ public enum OriginEnum {
     DZDP(0,"大众点评"),
     MT(1,"美团"),
     WX(2,"微信"),
-    WXPYQ(3,"微信朋友圈"),
-    PEOPLE(4,"大众"),
     COACH(5,"教练推广"),
     COMING(6,"上门来访"),
     ZJS(7,"转介绍"),
@@ -22,8 +20,9 @@ public enum OriginEnum {
     ALISPORT(10,"阿里体育"),
     EXCEL(11,"EXCEL导入"),
     CONTRACT(12,"合同生成"),
-    AUTO(13,"自动生成"),
-    OTHER(14,"其他");
+    COOPERATE(13,"异业合作"),
+    AUTO(14,"自动生成"),
+    OTHER(15,"其他");
 
     private Integer key;
     private String desc;
