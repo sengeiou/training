@@ -48,6 +48,8 @@ public class MedalService {
      */ 
     public Page<MedalEntity> find(MedalQuery query , PageRequest page){
         List<MedalEntity> medalList = medalDao.find(query,page);
+        logger.info(" MedalService  find  medalList = {}",medalList.size());
+
         Long count = medalDao.count(query);
         Page<MedalEntity> returnPage = new Page<>();
         returnPage.setContent(medalList);

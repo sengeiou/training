@@ -49,6 +49,7 @@ public class MedalRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MedalQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" medalRestController  find  MedalQuery = {}",query);
         Page<MedalEntity> page = medalService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
