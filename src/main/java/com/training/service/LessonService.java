@@ -1263,15 +1263,21 @@ public class LessonService {
 
 
     public ResponseEntity<String> scheduleCoach(LessonQuery query) {
+        logger.info(" scheduleCoach  query1 = {} ",query);
+
         Member coachRequest = RequestContextHelper.getMember();
+        MemberEntity coach = memberDao.getById(coachRequest.getMemberId());
+        StaffEntity staffEntity = staffDao.getByOpenId(coach.getOpenId());
         List<Lesson> lessonList = new ArrayList();
 
         TrainingQuery trainingQuery = new TrainingQuery();
         trainingQuery.setLessonDate(query.getLessonDate());
-        trainingQuery.setCoachId(coachRequest.getMemberId());
+//        trainingQuery.setCoachId(coachRequest.getMemberId());
+        trainingQuery.setStaffId(staffEntity.getStaffId());
         trainingQuery.setStatus(0);
         PageRequest page = new PageRequest();
         page.setPageSize(100);
+        logger.info(" scheduleCoach  trainingQuery = {} ",trainingQuery);
         List<TrainingEntity> trainingEntityList = trainingDao.find(trainingQuery,page);
         logger.info(" scheduleCoach  trainingEntityList.size() = {} ",trainingEntityList.size());
 //        for (TrainingEntity trainingEntity:trainingEntityList){
@@ -1347,6 +1353,8 @@ public class LessonService {
         for (Lesson lesson:lessonList){
 //            logger.info(" lesson = {} ",lesson);
         }
+        logger.info(" scheduleCoach  lessonList.size() = {} ",lessonList.size());
+
         JSONObject jo = new JSONObject();
         jo.put("lessonList", lessonList);
         return ResponseUtil.success("查询教练课程表成功",lessonList);
