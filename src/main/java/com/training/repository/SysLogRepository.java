@@ -66,7 +66,7 @@ public interface SysLogRepository {
             " <if test=\"query.phone != null\"> AND id1 in ( select member_id from member where type = 'M' AND phone like CONCAT('%',#{query.phone},'%')  ) </if>" +
             " <if test=\"query.storeId != null\"> AND id2 in ( select staff_id from staff where store_id = #{query.storeId}  ) </if>" +
             " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
-            " order by pk_id LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> find(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
 
@@ -130,7 +130,7 @@ public interface SysLogRepository {
             " <if test=\"query.phone != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') and a.member_id = b.member_id  ) </if>" +
             " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
             " <if test=\"query.operStaffId != null\"> AND oper_staff_id = #{query.operStaffId} </if>" +
-            " order by pk_id LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> findDelayLog(@Param("query") SysLogQuery sysLog , @Param("page") PageRequest page);
 
