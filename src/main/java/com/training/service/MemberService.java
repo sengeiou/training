@@ -532,7 +532,8 @@ public class MemberService {
                 memberEntity.setType("M");
                 StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
                 if( staffDB!=null && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
-                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())){
+                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())
+                            ||"系统测试".equals(staffDB.getJob()) ||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())){
                         logger.info("  bindIsCoach1 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
                         memberEntity.setType("C");
                         memberEntity.setName(staffDB.getCustname());
@@ -551,7 +552,8 @@ public class MemberService {
             }else{
                 StaffEntity staffDB = staffDao.getByPhone(memberEntity.getPhone());
                 if(staffDB!=null && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
-                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())) {
+                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())
+                            ||"系统测试".equals(staffDB.getJob())||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())) {
                         logger.info("  bindIsCoach2 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
                         staffDB.setOpenId(openId);
                         int n = staffDao.bind(staffDB);
@@ -564,6 +566,9 @@ public class MemberService {
                         memberDao.update(memberUpdate);
                         logger.info("  bind  staffDao.bind  n = {} ",n);
                         memberEntity = memberDao.getById(memberEntity.getMemberId());
+                    }else{
+                        memberEntity.setOpenId(openId);
+                        int n = memberDao.bind(memberEntity);
                     }
                 }else{
                     memberEntity.setOpenId(openId);
@@ -573,7 +578,8 @@ public class MemberService {
         }else {
             StaffEntity staffDB = staffDao.getByPhone(memberEntity.getPhone());
             if(staffDB!=null && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
-                if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())) {
+                if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())
+                        ||"系统测试".equals(staffDB.getJob())||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())) {
                     logger.info("  bindIsCoach3 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
                     staffDB.setOpenId(openId);
                     int n = staffDao.bind(staffDB);
