@@ -117,5 +117,18 @@ public class MemberCouponRestController {
         return memberCouponService.useCoupon(memberCoupon);
     }
 
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    @RequestMapping (value = "queryUseLog", method = RequestMethod.GET)
+    public ResponseEntity<String> queryUseLog(@ModelAttribute MemberCouponQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryUseLog  MemberCouponQuery = {}",query);
+        Page<MemberCoupon> page = memberCouponService.queryUseLog(query,pageRequest);
+        return ResponseUtil.success(page);
+    }
+
 }
 

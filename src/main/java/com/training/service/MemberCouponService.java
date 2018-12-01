@@ -267,5 +267,26 @@ public class MemberCouponService {
         return ResponseUtil.success(memberCouponList);
     }
 
+    public Page<MemberCoupon> queryUseLog(MemberCouponQuery query, PageRequest page) {
+        logger.info(" MemberCouponService memberCouponQuery  = {}  ",query);
+        query.setStartDate(null);
+        query.setEndDate(null);
+        query.setStatus(1);
+        List<MemberCouponEntity> memberCouponList = memberCouponDao.find(query,page);
+        List<MemberCoupon> memberCoupons = new ArrayList<>();
+        for (MemberCouponEntity memberCouponEntity : memberCouponList){
+            MemberCoupon memberCoupon = transferCoupon(memberCouponEntity);
+            logger.info(" memberCoupon  = {}  ",memberCoupon);
+            memberCoupons.add(memberCoupon);
+        }
+        Long count = memberCouponDao.count(query);
+        Page<MemberCoupon> returnPage = new Page<>();
+        returnPage.setContent(memberCoupons);
+        returnPage.setPage(page.getPage());
+        returnPage.setSize(page.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
+    }
+
 }
 
