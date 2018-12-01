@@ -157,5 +157,16 @@ public class StaffDao {
         int n = staffRepository.logoffByStaff(openId);
         return n;
     }
+
+    public int leave(String staffId) {
+        int n = staffRepository.leave(staffId);
+        return n;
+    }
+
+    public int entry(String staffId) {
+        int n = staffRepository.entry(staffId);
+        return n;
+    }
+
 }
 

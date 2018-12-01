@@ -166,5 +166,11 @@ public interface StaffRepository {
     @Update("<script> UPDATE staff SET open_id = '' , modified = now() WHERE open_id = #{openId}  </script>")
     int logoffByStaff(@Param("openId") String openId);
 
+    @Update("<script> UPDATE staff SET status = -1 , modified = now() WHERE staff_id = #{staffId}  </script>")
+    int leave(@Param("staffId") String staffId);
+
+    @Update("<script> UPDATE staff SET status = 0 , modified = now() WHERE staff_id = #{staffId}  </script>")
+    int entry(@Param("staffId") String staffId);
+
 }
 

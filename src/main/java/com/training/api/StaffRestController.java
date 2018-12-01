@@ -227,5 +227,28 @@ public class StaffRestController {
         return ResponseUtil.success("导出员工信息成功！",result);
     }
 
+
+    /**
+     * 离职
+     * @param id
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "leave/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> leave(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  leave  id = {}",id);
+        return staffService.leave(id);
+    }
+
+    /**
+     * 复职
+     * @param id
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
+    @RequestMapping (value = "entry/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> entry(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  entry  id = {}",id);
+        return staffService.entry(id);
+    }
+
 }
 

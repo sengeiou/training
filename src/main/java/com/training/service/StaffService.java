@@ -387,5 +387,22 @@ public class StaffService {
         }
         return ResponseUtil.exception("密码重置失败");
     }
+
+    public ResponseEntity<String> leave(String id) {
+        int n = staffDao.leave(id);
+        if(n==1){
+            return ResponseUtil.success("离职成功");
+        }
+        return ResponseUtil.exception("离职成功失败");
+    }
+
+    public ResponseEntity<String> entry(String id) {
+        int n = staffDao.entry(id);
+        if(n==1){
+            return ResponseUtil.success("复职成功");
+        }
+        return ResponseUtil.exception("复职失败");
+    }
+
 }
 
