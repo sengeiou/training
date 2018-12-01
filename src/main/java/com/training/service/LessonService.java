@@ -1344,7 +1344,7 @@ public class LessonService {
                         query1.setLessonDate(query.getLessonDate());
                         query1.setType(LessonTypeEnum.T.getKey());
                         query1.setStatus(0);
-                        List<TrainingEntity> list = trainingDao.find(trainingQuery,page);
+                        List<TrainingEntity> list = trainingDao.find(query1,page);
                         lesson.setQuota(list.size());
                     }
                     lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
