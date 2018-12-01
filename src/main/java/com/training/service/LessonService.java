@@ -1332,9 +1332,24 @@ public class LessonService {
             for (TrainingEntity trainingEntity:trainingEntityList){
 //                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
 //                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
+                lesson.setType(trainingEntity.getType());
+                lesson.setLessonName(LessonTypeEnum.getEnumByKey(trainingEntity.getType())==null?"":LessonTypeEnum.getEnumByKey(trainingEntity.getType()).getDesc());
                 if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
                     lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
                 }
+
+                if(trainingEntity.getType().equals(LessonTypeEnum.T.getKey())){
+                    LessonSettingEntity lessonSettingEntity = lessonSettingDao.getById(trainingEntity.getLessonId());
+                    lesson.setMaxCount(lessonSettingEntity.getQuotaMax());
+                    TrainingQuery query1 = new TrainingQuery();
+                    query1.setLessonId(lessonSettingEntity.getLessonId());
+                    query1.setLessonDate(query.getLessonDate());
+                    query1.setType(LessonTypeEnum.T.getKey());
+                    query1.setStatus(0);
+                    List<TrainingEntity> list = trainingDao.find(trainingQuery,page);
+                    lesson.setQuota(list.size());
+                }
+
             }
             lesson.setStatus(0);  // 0 - 正常 ，   -1 - 不可约
             for (CoachRestEntity coachRestEntity:filterCoachRestEntityList){
@@ -1346,7 +1361,6 @@ public class LessonService {
                     break;
                 }
             }
-            lesson.setType(LessonTypeEnum.P.getKey());
             lessonList.add(lesson);
         }
 

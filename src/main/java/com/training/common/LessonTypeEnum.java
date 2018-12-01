@@ -11,7 +11,10 @@ public enum LessonTypeEnum {
 
     P("P","私教课"),
     T("T","团体课"),
-    S("S","特色课")
+    S("S","特色课"),
+    ST1("ST1","格斗健身"),
+    ST2("ST2","极速塑形"),
+    ST3("ST3","孕产课程"),
     ;
 
     private String key;

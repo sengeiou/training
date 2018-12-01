@@ -11,6 +11,8 @@ public class Lesson {
 
     private String lessonId;
 
+    private String lessonName;
+
     private String storeId;
 
     private String storeName;
