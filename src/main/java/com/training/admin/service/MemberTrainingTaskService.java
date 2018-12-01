@@ -64,13 +64,13 @@ public class MemberTrainingTaskService {
         for (int i = 0; i < data.size(); i++) {
             Map member = data.get(i);
             String memberId = member.get("member_id").toString();
-            String sql = " select training_id from training where member_id = ? and `status` = 0 and lesson_date <=  ? ";
+            String sql = " select training_id from training where member_id = ? and `status` = 0 and card_type = 'PT' and lesson_date <=  ? and show_tag = 1 ";
             List trainingList =  jdbcTemplate.queryForList(sql,new Object[]{memberId,ut.currentDate(-1)});
-            if(CollectionUtils.isNotEmpty(trainingList)){
+//            if(CollectionUtils.isNotEmpty(trainingList)){
                 System.out.println(" name = "+member.get("name")+"   hours = "+trainingList.size());
                 jdbcTemplate.update(" update member set training_hours = ? where member_id = ? ",new Object[]{trainingList.size(),memberId});
                 total++;
-            }
+//            }
         }
         logger.info("total = "+total);
         return "updateTrainingHour执行成功";
