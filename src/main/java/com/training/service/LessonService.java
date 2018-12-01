@@ -1332,22 +1332,22 @@ public class LessonService {
             for (TrainingEntity trainingEntity:trainingEntityList){
 //                logger.info(" ***********  getLessonDate = {} ,  getMemberId = {} ,  trainingEntity = {} ",trainingEntity.getLessonDate() , query.getMemberId() , trainingEntity.getMemberId());
 //                logger.info(" ***********  trainingEntity.getStartHour() = {} ,  lesson.getStartHour() = {} ",trainingEntity.getStartHour() , lesson.getStartHour());
-                lesson.setType(trainingEntity.getType());
                 lesson.setLessonName(LessonTypeEnum.getEnumByKey(trainingEntity.getType())==null?"":LessonTypeEnum.getEnumByKey(trainingEntity.getType()).getDesc());
-                if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
-                    lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
-                }
 
-                if(trainingEntity.getType().equals(LessonTypeEnum.T.getKey())){
-                    LessonSettingEntity lessonSettingEntity = lessonSettingDao.getById(trainingEntity.getLessonId());
-                    lesson.setMaxCount(lessonSettingEntity.getQuotaMax());
-                    TrainingQuery query1 = new TrainingQuery();
-                    query1.setLessonId(lessonSettingEntity.getLessonId());
-                    query1.setLessonDate(query.getLessonDate());
-                    query1.setType(LessonTypeEnum.T.getKey());
-                    query1.setStatus(0);
-                    List<TrainingEntity> list = trainingDao.find(trainingQuery,page);
-                    lesson.setQuota(list.size());
+                if(trainingEntity.getStartHour().equals(lesson.getStartHour())){
+                    lesson.setType(trainingEntity.getType());
+                    if(trainingEntity.getType().equals(LessonTypeEnum.T.getKey())){
+                        LessonSettingEntity lessonSettingEntity = lessonSettingDao.getById(trainingEntity.getLessonId());
+                        lesson.setMaxCount(lessonSettingEntity.getQuotaMax());
+                        TrainingQuery query1 = new TrainingQuery();
+                        query1.setLessonId(lessonSettingEntity.getLessonId());
+                        query1.setLessonDate(query.getLessonDate());
+                        query1.setType(LessonTypeEnum.T.getKey());
+                        query1.setStatus(0);
+                        List<TrainingEntity> list = trainingDao.find(trainingQuery,page);
+                        lesson.setQuota(list.size());
+                    }
+                    lesson.getTrainingList().add(trainingService.transferTraining(trainingEntity));
                 }
 
             }
