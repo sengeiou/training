@@ -1,10 +1,7 @@
 package com.training.api;
 
 import com.training.config.ConstData;
-import com.training.domain.MarketReportData;
-import com.training.domain.Member;
-import com.training.domain.Staff;
-import com.training.domain.Training;
+import com.training.domain.*;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -207,6 +204,22 @@ public class TrainingRestController {
         result.put("url",url);
         return ResponseUtil.success("导出课程成功！",result);
     }
+
+
+    /**
+     * 分页查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "querySignLog", method = RequestMethod.GET)
+    public ResponseEntity<String> querySignLog(@ModelAttribute TrainingQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" TrainingRestController.querySignLog pageRequest = {} ",pageRequest);
+        Page<SignLog> page = trainingService.querySignLog(query,pageRequest);
+        logger.info(" TrainingRestController.querySignLog getContent().size() = {} ",page.getContent().size());
+        return ResponseUtil.success(page);
+    }
+
 
 }
 

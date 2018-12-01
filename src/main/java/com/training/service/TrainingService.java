@@ -2,6 +2,7 @@ package com.training.service;
 
 import com.training.dao.*;
 import com.training.domain.Member;
+import com.training.domain.SignLog;
 import com.training.domain.Training;
 import com.training.entity.*;
 import com.training.domain.User;
@@ -253,6 +254,35 @@ public class TrainingService {
         String text = "https://trainingbj.huai23.com/sign_in?id="+trainingEntity.getTrainingId()+"_"+System.currentTimeMillis();
         String qrcode = QrCodeUtils.getBase64Str(text);
         return ResponseUtil.success("获取成功",qrcode);
+    }
+
+    public Page<SignLog> querySignLog(TrainingQuery query, PageRequest pageRequest) {
+        TrainingEntity trainingEntity = trainingDao.getById(query.getTrainingId());
+        query = new TrainingQuery();
+        query.setLessonDate(trainingEntity.getLessonDate());
+        query.setStartHour(trainingEntity.getStartHour());
+        query.setStaffId(trainingEntity.getStaffId());
+        query.setLessonId(trainingEntity.getLessonId());
+        pageRequest.setPageSize(100);
+        List<TrainingEntity> trainingEntities = trainingDao.find(query,pageRequest);
+        List<SignLog> data = new ArrayList<>();
+        for(TrainingEntity trainingEntity1 : trainingEntities){
+            if(StringUtils.isEmpty(trainingEntity1.getSignTime())){
+                continue;
+            }
+            SignLog signLog = new SignLog();
+            MemberEntity memberEntity = memberService.getById(trainingEntity1.getMemberId());
+            signLog.setMemberName(memberEntity.getName());
+            signLog.setSignTime(trainingEntity1.getSignTime());
+            signLog.setStatus("签到成功");
+            data.add(signLog);
+        }
+        Page<SignLog> returnPage = new Page<>();
+        returnPage.setContent(data);
+        returnPage.setPage(pageRequest.getPage());
+        returnPage.setSize(pageRequest.getPageSize());
+        returnPage.setTotalElements(data.size());
+        return returnPage;
     }
 
 }
