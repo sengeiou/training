@@ -99,7 +99,7 @@ public interface MemberMedalRepository {
 
 
     @Update("<script> UPDATE member_medal SET status = 1 , modified = now() " +
-            " WHERE member_id = #{memberMedal.memberId}  and medal_id = #{medalId} " +
+            " WHERE member_id = #{memberMedal.memberId}  and medal_id = #{memberMedal.medalId} " +
             "</script>")
     int updateShowLayerStatus(@Param("memberMedal") MemberMedalEntity memberMedal);
 
