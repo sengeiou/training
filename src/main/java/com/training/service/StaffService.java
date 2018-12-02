@@ -50,6 +50,9 @@ public class StaffService {
     private RoleDao roleDao;
 
     @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
     private KpiTemplateDao kpiTemplateDao;
 
     @Autowired
@@ -389,11 +392,19 @@ public class StaffService {
     }
 
     public ResponseEntity<String> leave(String id) {
+        StaffEntity staffEntity = staffDao.getById(id);
         int n = staffDao.leave(id);
         if(n==1){
+            if(StringUtils.isNotEmpty(staffEntity.getOpenId())){
+                MemberEntity memberEntity = memberDao.getByOpenId(staffEntity.getOpenId());
+                if(memberEntity!=null){
+                    memberDao.logoffByStaff(memberEntity.getMemberId());
+                    staffDao.logoffByStaff(memberEntity.getOpenId());
+                }
+            }
             return ResponseUtil.success("离职成功");
         }
-        return ResponseUtil.exception("离职成功失败");
+        return ResponseUtil.exception("离职失败");
     }
 
     public ResponseEntity<String> entry(String id) {
