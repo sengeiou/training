@@ -214,18 +214,27 @@ public class SysLogService {
             double money = Double.parseDouble(data.getString("total_fee"));
             double taxFee = money*rate/100;
             MemberEntity memberEntity = memberDao.getById(memberId);
+            if(memberEntity!=null){
+                wechatPayLog.setMemberId(memberId);
+                wechatPayLog.setName(memberEntity.getName());
+                wechatPayLog.setPhone(memberEntity.getPhone());
+                StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
+                wechatPayLog.setStoreId(storeEntity.getStoreId());
+                wechatPayLog.setStoreName(storeEntity.getName());
+            }else{
+                wechatPayLog.setMemberId("");
+                wechatPayLog.setName("");
+                wechatPayLog.setPhone("");
+                wechatPayLog.setStoreId("");
+                wechatPayLog.setStoreName("");
+            }
             wechatPayLog.setTransactionId(transactionId);
-            wechatPayLog.setMemberId(memberId);
-            wechatPayLog.setName(memberEntity.getName());
-            wechatPayLog.setPhone(memberEntity.getPhone());
             wechatPayLog.setTaxRate("0.6%");
             wechatPayLog.setPayFee(ut.getDoubleString(money));
             wechatPayLog.setTaxFee(ut.getDoubleString(taxFee));
             wechatPayLog.setMoney(ut.getDoubleString(money-taxFee));
             wechatPayLog.setPayTime(ut.df_day.format(sysLogEntity.getCreated()));
-            StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
-            wechatPayLog.setStoreId(storeEntity.getStoreId());
-            wechatPayLog.setStoreName(storeEntity.getName());
+
             logList.add(wechatPayLog);
         }
         Long count = sysLogDao.countPayLog(query);
