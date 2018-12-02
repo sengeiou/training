@@ -56,6 +56,8 @@ public interface KpiStaffDetailRepository {
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<KpiStaffDetailEntity> find(@Param("query") KpiStaffDetailQuery kpiStaffDetail , @Param("page") PageRequest page);
@@ -72,6 +74,8 @@ public interface KpiStaffDetailRepository {
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+            " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
+            " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate}  </if>" +
             "</script>")
     Long count(@Param("query") KpiStaffDetailQuery kpiStaffDetail);
 

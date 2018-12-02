@@ -36,6 +36,9 @@ public class KpiStaffDetailQuery {
 
     private Date modified;
 
+    private String startDate;
+
+    private String endDate;
 
 }
 

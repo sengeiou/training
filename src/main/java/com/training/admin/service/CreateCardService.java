@@ -194,8 +194,6 @@ public class CreateCardService {
             contractDao.update(contractUpdate);
             return;
         }
-
-        String remark = "退课，日期："+ut.currentTime()+"(合同号："+contractEntity.getContractId()+")";
         MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
         if(memberCardEntity==null){
             logger.error(" dealTK memberCardEntity is null : contractMap = {} ", contractMap);
@@ -205,7 +203,7 @@ public class CreateCardService {
             contractDao.update(contractUpdate);
             return;
         }
-
+        String remark = "退课，日期："+ut.currentTime()+"(合同号："+contractEntity.getContractId()+"),剩余次数："+memberCardEntity.getCount();
         if(memberCardEntity.getMemberId().equals(member.getMemberId())){
             MemberCardEntity memberCardUpdate = new MemberCardEntity();
             memberCardUpdate.setCardNo(cardNo);
@@ -216,6 +214,7 @@ public class CreateCardService {
             if(n==1){
                 logger.info(" ==== dealTK  success : contractEntity = {} ", contractEntity);
                 contractEntity.setStatus(1);
+                contractEntity.setGender(memberCardEntity.getCount().toString());
                 updateContractStatus(contractEntity);
             }else {
                 logger.error(" ****  dealTK failed : contractEntity = {} ", contractEntity);
@@ -273,6 +272,7 @@ public class CreateCardService {
             int n = memberCardDao.update(memberCardUpdate);
             if(n==1){
                 logger.info(" ==== dealZK  success : contractEntity = {} ", contractEntity);
+                contractEntity.setTotal(memberCardEntity.getCount().toString());
                 contractEntity.setStatus(1);
                 updateContractStatus(contractEntity);
             }else {
@@ -439,6 +439,12 @@ public class CreateCardService {
 
     private void updateContractStatus(ContractEntity contractEntity) {
         ContractEntity contractUpdate = new ContractEntity();
+        if(StringUtils.isNotEmpty(contractEntity.getTotal())){
+            contractUpdate.setTotal(contractEntity.getTotal());
+        }
+        if(StringUtils.isNotEmpty(contractEntity.getGender())){
+            contractUpdate.setGender(contractEntity.getGender());
+        }
         contractUpdate.setProcessInstanceId(contractEntity.getProcessInstanceId());
         contractUpdate.setStatus(contractEntity.getStatus());
         contractDao.update(contractUpdate);

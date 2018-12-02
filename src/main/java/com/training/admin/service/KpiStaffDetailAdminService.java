@@ -1,5 +1,6 @@
 package com.training.admin.service;
 
+import com.alibaba.fastjson.JSON;
 import com.training.common.CardTypeEnum;
 import com.training.dao.*;
 import com.training.entity.KpiStaffDetailEntity;
@@ -181,9 +182,11 @@ public class KpiStaffDetailAdminService {
                 String staffId = memberEntity.getCoachStaffId();
                 String remark = "";
                 boolean isJk = false;
+                boolean isSk = false;
                 if(type.equals(CardTypeEnum.PM.getKey())){
                     if(ut.passDayByDate(endDateCard,endDate)>0){
                         isJk = true;
+                        isSk = true;
                         remark = "死课";
                     }
                 }
@@ -194,6 +197,7 @@ public class KpiStaffDetailAdminService {
                             continue;
                         }
                         isJk = true;
+                        isSk = true;
                         remark = "死课";
                     }else{
                         List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? order by lesson_date desc " ,new Object[]{cardNo});
@@ -229,6 +233,20 @@ public class KpiStaffDetailAdminService {
                         jks++;
                     }
                 }
+                if(isSk){
+                    KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
+                    kpiStaffDetailEntity.setMonth(month);
+                    kpiStaffDetailEntity.setCardNo(cardNo);
+                    kpiStaffDetailEntity.setContractId("");
+                    kpiStaffDetailEntity.setType("SK");
+                    kpiStaffDetailEntity.setCardType(type);
+                    kpiStaffDetailEntity.setMemberId(memberId);
+                    kpiStaffDetailEntity.setStoreId(memberEntity.getStoreId());
+                    kpiStaffDetailEntity.setStaffId(staffId);
+                    kpiStaffDetailEntity.setRemark(JSON.toJSONString(memberCard));
+                    int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+                }
+
             }catch (Exception e){
                 logger.error("  dealJkERROR : memberCard = {} ",memberCard);
             }
