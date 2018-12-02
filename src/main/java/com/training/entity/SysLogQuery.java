@@ -50,5 +50,7 @@ public class SysLogQuery {
 
     private String operStaffId;
 
+    private String transactionId;
+
 }
 

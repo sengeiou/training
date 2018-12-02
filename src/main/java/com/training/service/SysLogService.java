@@ -3,6 +3,7 @@ package com.training.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
+import com.training.domain.WechatPayLog;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -198,25 +200,37 @@ public class SysLogService {
         return returnPage;
     }
 
-    public Page<SysLogEntity> findPayLog(SysLogQuery query, PageRequest pageRequest) {
+    public Page<WechatPayLog> findPayLog(SysLogQuery query, PageRequest pageRequest) {
         query.setType("PAY");
-        List<SysLogEntity> sysLogList = sysLogDao.find(query,pageRequest);
+        List<SysLogEntity> sysLogList = sysLogDao.findPayLog(query,pageRequest);
+        List<WechatPayLog> logList = new ArrayList<>();
         for (SysLogEntity sysLogEntity:sysLogList){
+            WechatPayLog wechatPayLog = new WechatPayLog();
             String memberId = sysLogEntity.getId1();
-            sysLogEntity.setDate(ut.df_day.format(sysLogEntity.getCreated()));
+            String transactionId = sysLogEntity.getId2();
+            String text = sysLogEntity.getLogText();
+            double rate = 0.006;
+            JSONObject data = JSON.parseObject(text);
+            double money = Double.parseDouble(data.getString("total_fee"));
+            double taxFee = money*rate/100;
             MemberEntity memberEntity = memberDao.getById(memberId);
-            sysLogEntity.setMemberId(memberId);
-            sysLogEntity.setName(memberEntity.getName());
-            sysLogEntity.setPhone(memberEntity.getPhone());
+            wechatPayLog.setTransactionId(transactionId);
+            wechatPayLog.setMemberId(memberId);
+            wechatPayLog.setName(memberEntity.getName());
+            wechatPayLog.setPhone(memberEntity.getPhone());
+            wechatPayLog.setTaxRate("0.6%");
+            wechatPayLog.setPayFee(ut.getDoubleString(money));
+            wechatPayLog.setTaxFee(ut.getDoubleString(taxFee));
+            wechatPayLog.setMoney(ut.getDoubleString(money-taxFee));
+            wechatPayLog.setPayTime(ut.df_day.format(sysLogEntity.getCreated()));
             StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
-            sysLogEntity.setStoreId(storeEntity.getStoreId());
-            sysLogEntity.setStoreName(storeEntity.getName());
-            sysLogEntity.setContent(null);
-            sysLogEntity.setLogText(null);
+            wechatPayLog.setStoreId(storeEntity.getStoreId());
+            wechatPayLog.setStoreName(storeEntity.getName());
+            logList.add(wechatPayLog);
         }
-        Long count = sysLogDao.count(query);
-        Page<SysLogEntity> returnPage = new Page<>();
-        returnPage.setContent(sysLogList);
+        Long count = sysLogDao.countPayLog(query);
+        Page<WechatPayLog> returnPage = new Page<>();
+        returnPage.setContent(logList);
         returnPage.setPage(pageRequest.getPage());
         returnPage.setSize(pageRequest.getPageSize());
         returnPage.setTotalElements(count);

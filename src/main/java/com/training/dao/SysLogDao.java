@@ -105,5 +105,14 @@ public class SysLogDao {
     }
 
 
+    public List<SysLogEntity> findPayLog(SysLogQuery query, PageRequest page) {
+        List<SysLogEntity> sysLogList = sysLogRepository.findPayLog(query,page);
+        return sysLogList;
+    }
+
+    public Long countPayLog(SysLogQuery query) {
+        Long n = sysLogRepository.countPayLog(query);
+        return n;
+    }
 }
 

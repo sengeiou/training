@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.WechatPayLog;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -135,10 +136,9 @@ public class SysLogRestController {
      */
     @RequestMapping (value = "findPayLog", method = RequestMethod.GET)
     public ResponseEntity<String> findPayLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<SysLogEntity> page = sysLogService.findPayLog(query,pageRequest);
+        Page<WechatPayLog> page = sysLogService.findPayLog(query,pageRequest);
         return ResponseUtil.success(page);
     }
-
 
 }
 
