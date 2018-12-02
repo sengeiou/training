@@ -130,7 +130,7 @@ public class MemberMedalRestController {
     @RequestMapping (value = "updateShowLayerStatus", method = RequestMethod.POST)
     public ResponseEntity<String> updateShowLayerStatus(@RequestBody MemberMedalEntity memberMedal,HttpServletRequest request, HttpServletResponse response){
         logger.info("  updateShowLayerStatus  memberMedal = {}",memberMedal);
-        return memberMedalService.update(memberMedal);
+        return memberMedalService.updateShowLayerStatus(memberMedal);
     }
 
 

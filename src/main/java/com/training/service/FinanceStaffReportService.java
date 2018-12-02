@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * finance_staff_report 核心业务操作类
- * Created by huai23 on 2018-12-02 20:58:24.
+ * Created by huai23 on 2018-12-02 22:02:12.
  */ 
 @Service
 public class FinanceStaffReportService {
@@ -29,7 +29,7 @@ public class FinanceStaffReportService {
     /**
      * 新增实体
      * @param financeStaffReport
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public ResponseEntity<String> add(FinanceStaffReportEntity financeStaffReport){
         User user = RequestContextHelper.getUser();
@@ -44,7 +44,7 @@ public class FinanceStaffReportService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public Page<FinanceStaffReportEntity> find(FinanceStaffReportQuery query , PageRequest page){
         List<FinanceStaffReportEntity> financeStaffReportList = financeStaffReportDao.find(query,page);
@@ -60,7 +60,7 @@ public class FinanceStaffReportService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public Long count(FinanceStaffReportQuery query){
         Long count = financeStaffReportDao.count(query);
@@ -70,7 +70,7 @@ public class FinanceStaffReportService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public FinanceStaffReportEntity getById(String id){
         FinanceStaffReportEntity financeStaffReportDB = financeStaffReportDao.getById(id);
@@ -80,7 +80,7 @@ public class FinanceStaffReportService {
     /**
      * 根据实体更新
      * @param financeStaffReport
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public  ResponseEntity<String> update(FinanceStaffReportEntity financeStaffReport){
         int n = financeStaffReportDao.update(financeStaffReport);
@@ -93,7 +93,7 @@ public class FinanceStaffReportService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = financeStaffReportDao.delete(id);

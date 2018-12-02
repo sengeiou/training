@@ -73,6 +73,9 @@ public class ManualRestController {
     private KpiStaffDetailAdminService kpiStaffDetailAdminService;
 
     @Autowired
+    private ReportService reportService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -421,5 +424,43 @@ public class ManualRestController {
         return msg;
     }
 
+    /**
+     * sendTest
+     */
+    @GetMapping("calculateStoreFinanceOnceReport")
+    public Object calculateStoreFinanceOnceReport(){
+        logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
+        String storeId = "31978073";
+        String today = "2018-11-30";
+        String msg = reportService.calculateStoreFinanceOnceReport(storeId,today);
+        logger.info("end calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
+    /**
+     * sendTest
+     */
+    @GetMapping("calculateStoreFinanceMonthReport")
+    public Object calculateStoreFinanceMonthReport(){
+        logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
+        String storeId = "31978073";
+        String today = ut.currentDate();
+        String msg = reportService.calculateStoreFinanceMonthReport(storeId,today);
+        logger.info("end calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
+    /**
+     * sendTest
+     */
+    @GetMapping("calculateStaffFinanceReport")
+    public Object calculateStaffFinanceReport(){
+        logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
+        String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
+        String today = ut.currentDate();
+        String msg = reportService.calculateStaffFinanceReport(staffId,today);
+        logger.info("end calculateStaffFinanceReport!  time = {} ", ut.currentTime());
+        return msg;
+    }
 
 }

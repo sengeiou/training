@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * finance_staff_report 查询类
- * Created by huai23 on 2018-12-02 20:58:24.
+ * Created by huai23 on 2018-12-02 22:02:12.
  */ 
 @Data
 public class FinanceStaffReportQuery {
@@ -17,6 +17,8 @@ public class FinanceStaffReportQuery {
     private String staffName;
 
     private String storeId;
+
+    private String storeName;
 
     private String templateId;
 
@@ -34,7 +36,7 @@ public class FinanceStaffReportQuery {
 
     private String kpiScore;
 
-    private String star;
+    private Integer star;
 
     private String saleMoney;
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * finance_staff_report 数据库操作类
- * Created by huai23 on 2018-12-02 20:58:24.
+ * Created by huai23 on 2018-12-02 22:02:12.
  */ 
 @Mapper
 public interface FinanceStaffReportRepository {
@@ -17,6 +17,7 @@ public interface FinanceStaffReportRepository {
                 " <if test=\"financeStaffReport.staffId != null\"> staff_id, </if>" +
                 " <if test=\"financeStaffReport.staffName != null\"> staff_name, </if>" +
                 " <if test=\"financeStaffReport.storeId != null\"> store_id, </if>" +
+                " <if test=\"financeStaffReport.storeName != null\"> store_name, </if>" +
                 " <if test=\"financeStaffReport.templateId != null\"> template_id, </if>" +
                 " <if test=\"financeStaffReport.templateName != null\"> template_name, </if>" +
                 " <if test=\"financeStaffReport.type != null\"> type, </if>" +
@@ -51,6 +52,7 @@ public interface FinanceStaffReportRepository {
                 " <if test=\"financeStaffReport.staffId != null\"> #{financeStaffReport.staffId}, </if>" +
                 " <if test=\"financeStaffReport.staffName != null\"> #{financeStaffReport.staffName}, </if>" +
                 " <if test=\"financeStaffReport.storeId != null\"> #{financeStaffReport.storeId}, </if>" +
+                " <if test=\"financeStaffReport.storeName != null\"> #{financeStaffReport.storeName}, </if>" +
                 " <if test=\"financeStaffReport.templateId != null\"> #{financeStaffReport.templateId}, </if>" +
                 " <if test=\"financeStaffReport.templateName != null\"> #{financeStaffReport.templateName}, </if>" +
                 " <if test=\"financeStaffReport.type != null\"> #{financeStaffReport.type}, </if>" +
@@ -85,12 +87,13 @@ public interface FinanceStaffReportRepository {
             "</script>")
     int add(@Param("financeStaffReport") FinanceStaffReportEntity financeStaffReport);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,template_name,type,year,month,report_date,job,kpi_score,star,sale_money,xk_money,times_card_lesson_count,month_card_single_lesson_count,month_card_multi_lesson_count,ty_card_multi_lesson_count,special_lesson_count,team_lesson_count,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,store_name,template_id,template_name,type,year,month,report_date,job,kpi_score,star,sale_money,xk_money,times_card_lesson_count,month_card_single_lesson_count,month_card_multi_lesson_count,ty_card_multi_lesson_count,special_lesson_count,team_lesson_count,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
             " FROM finance_staff_report " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
             " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeName != null\"> AND store_name = #{query.storeName} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.templateName != null\"> AND template_name = #{query.templateName} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
@@ -128,6 +131,7 @@ public interface FinanceStaffReportRepository {
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
             " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeName != null\"> AND store_name = #{query.storeName} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
             " <if test=\"query.templateName != null\"> AND template_name = #{query.templateName} </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
@@ -159,7 +163,7 @@ public interface FinanceStaffReportRepository {
             "</script>")
     Long count(@Param("query") FinanceStaffReportQuery financeStaffReport);
 
-    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,template_id,template_name,type,year,month,report_date,job,kpi_score,star,sale_money,xk_money,times_card_lesson_count,month_card_single_lesson_count,month_card_multi_lesson_count,ty_card_multi_lesson_count,special_lesson_count,team_lesson_count,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,staff_id,staff_name,store_id,store_name,template_id,template_name,type,year,month,report_date,job,kpi_score,star,sale_money,xk_money,times_card_lesson_count,month_card_single_lesson_count,month_card_multi_lesson_count,ty_card_multi_lesson_count,special_lesson_count,team_lesson_count,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
             " FROM finance_staff_report " +
             " WHERE staff_id = #{id} " +
             "</script>")
@@ -169,6 +173,7 @@ public interface FinanceStaffReportRepository {
                 " <if test=\"financeStaffReport.staffId != null\"> staff_id = #{financeStaffReport.staffId} , </if>" +
                 " <if test=\"financeStaffReport.staffName != null\"> staff_name = #{financeStaffReport.staffName} , </if>" +
                 " <if test=\"financeStaffReport.storeId != null\"> store_id = #{financeStaffReport.storeId} , </if>" +
+                " <if test=\"financeStaffReport.storeName != null\"> store_name = #{financeStaffReport.storeName} , </if>" +
                 " <if test=\"financeStaffReport.templateId != null\"> template_id = #{financeStaffReport.templateId} , </if>" +
                 " <if test=\"financeStaffReport.templateName != null\"> template_name = #{financeStaffReport.templateName} , </if>" +
                 " <if test=\"financeStaffReport.type != null\"> type = #{financeStaffReport.type} , </if>" +

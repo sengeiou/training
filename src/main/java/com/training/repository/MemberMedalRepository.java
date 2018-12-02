@@ -76,15 +76,13 @@ public interface MemberMedalRepository {
     List<MemberMedalEntity> getByMemberId(@Param("memberId") String memberId);
 
     @Update("<script> UPDATE member_medal SET " +
-                " <if test=\"memberMedal.memberId != null\"> member_id = #{memberMedal.memberId} , </if>" +
-                " <if test=\"memberMedal.medalId != null\"> medal_id = #{memberMedal.medalId} , </if>" +
                 " <if test=\"memberMedal.content != null\"> content = #{memberMedal.content} , </if>" +
                 " <if test=\"memberMedal.awardDate != null\"> award_date = #{memberMedal.awardDate} , </if>" +
                 " <if test=\"memberMedal.feature != null\"> feature = #{memberMedal.feature} , </if>" +
                 " <if test=\"memberMedal.remark != null\"> remark = #{memberMedal.remark} , </if>" +
                 " <if test=\"memberMedal.status != null\"> status = #{memberMedal.status} , </if>" +
                 " modified = now() " +
-            " WHERE member_id = #{memberMedal.memberId} " +
+            " WHERE member_id = #{memberMedal.memberId} and medal_id = #{medalId} " +
             "</script>")
     int update(@Param("memberMedal") MemberMedalEntity memberMedal);
 

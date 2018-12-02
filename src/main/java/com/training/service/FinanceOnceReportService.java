@@ -32,7 +32,6 @@ public class FinanceOnceReportService {
      * Created by huai23 on 2018-12-02 20:58:14.
      */ 
     public ResponseEntity<String> add(FinanceOnceReportEntity financeOnceReport){
-        User user = RequestContextHelper.getUser();
         int n = financeOnceReportDao.add(financeOnceReport);
         if(n==1){
             return ResponseUtil.success("添加成功");

@@ -181,7 +181,7 @@ public class MemberMedalService {
     }
 
     public  ResponseEntity<String> updateShowLayerStatus(MemberMedalEntity memberMedal){
-        int n = memberMedalDao.update(memberMedal);
+        int n = memberMedalDao.updateShowLayerStatus(memberMedal);
         if(n==1){
             return ResponseUtil.success("修改成功");
         }

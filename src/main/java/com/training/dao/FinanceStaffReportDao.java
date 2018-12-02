@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * finance_staff_report 数据库操作类
- * Created by huai23 on 2018-12-02 20:58:24.
+ * Created by huai23 on 2018-12-02 22:02:12.
  */ 
 @Service
 public class FinanceStaffReportDao {
@@ -25,7 +25,7 @@ public class FinanceStaffReportDao {
     /**
      * 新增实体
      * @param financeStaffReport
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public int add(FinanceStaffReportEntity financeStaffReport){
         int n = financeStaffReportRepository.add(financeStaffReport);
@@ -36,7 +36,7 @@ public class FinanceStaffReportDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public List<FinanceStaffReportEntity> find(FinanceStaffReportQuery query , PageRequest page){
         List<FinanceStaffReportEntity> financeStaffReportList = financeStaffReportRepository.find(query,page);
@@ -46,7 +46,7 @@ public class FinanceStaffReportDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public Long count(FinanceStaffReportQuery query){
         Long n = financeStaffReportRepository.count(query);
@@ -56,7 +56,7 @@ public class FinanceStaffReportDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public FinanceStaffReportEntity getById(String id){
         FinanceStaffReportEntity financeStaffReportDB = financeStaffReportRepository.getById(id);
@@ -66,7 +66,7 @@ public class FinanceStaffReportDao {
     /**
      * 根据实体更新
      * @param financeStaffReport
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public int update(FinanceStaffReportEntity financeStaffReport){
         int n = financeStaffReportRepository.update(financeStaffReport);
@@ -76,7 +76,7 @@ public class FinanceStaffReportDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2018-12-02 20:58:24.
+     * Created by huai23 on 2018-12-02 22:02:12.
      */ 
     public int delete(String id){
         int n = financeStaffReportRepository.delete(id);
