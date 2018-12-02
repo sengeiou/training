@@ -169,7 +169,7 @@ public interface SysLogRepository {
             " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
-    List<SysLogEntity> findPayLog(@Param("query") SysLogQuery query, PageRequest page);
+    List<SysLogEntity> findPayLog(@Param("query") SysLogQuery query, @Param("page") PageRequest page);
 
     @Select("<script> SELECT COUNT(1) FROM sys_log " +
             " WHERE 1 = 1 " +
