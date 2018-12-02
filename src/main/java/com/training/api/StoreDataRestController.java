@@ -146,13 +146,13 @@ public class StoreDataRestController {
      * Created by huai23 on 2018-05-26 13:43:38.
      */
     @RequestMapping (value = "queryFinanceTimesCardReport", method = RequestMethod.GET)
-    public ResponseEntity<String> queryFinanceTimesCardReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  queryFinanceTimesCardReport  query = {}",query);
-        List<FinanceTimesCardReportData> dataList = storeDataService.queryFinanceTimesCardReport(query);
+    public ResponseEntity<String> queryFinanceTimesCardReport(@ModelAttribute StoreDataQuery query, @ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceTimesCardReport  query = {} request = {} ",query,request);
+        Page<FinanceTimesCardReportData> dataList = storeDataService.queryFinanceTimesCardReport(query,pageRequest);
         JSONObject jo = new JSONObject();
-        jo.put("data", dataList);
-        logger.info("  queryFinanceTimesCardReport  dataList = {}",dataList);
-        return ResponseUtil.success(jo);
+        jo.put("data", dataList.getContent());
+        logger.info("  queryFinanceTimesCardReport  dataList = {}",dataList.getContent().size());
+        return ResponseUtil.success(dataList);
     }
 
     /**
@@ -161,13 +161,13 @@ public class StoreDataRestController {
      * Created by huai23 on 2018-05-26 13:43:38.
      */
     @RequestMapping (value = "queryFinanceMonthCardReport", method = RequestMethod.GET)
-    public ResponseEntity<String> queryFinanceMonthCardReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  queryFinanceMonthCardReport  query = {}",query);
-        List<FinanceMonthCardReportData> dataList = storeDataService.queryFinanceMonthCardReport(query);
+    public ResponseEntity<String> queryFinanceMonthCardReport(@ModelAttribute StoreDataQuery query, @ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceMonthCardReport  query = {} request = {} ",query,request);
+        Page<FinanceMonthCardReportData> dataList = storeDataService.queryFinanceMonthCardReport(query,pageRequest);
         JSONObject jo = new JSONObject();
-        jo.put("data", dataList);
-        logger.info("  queryFinanceMonthCardReport  dataList = {}",dataList);
-        return ResponseUtil.success(jo);
+        jo.put("data", dataList.getContent());
+        logger.info("  queryFinanceMonthCardReport  dataList = {}",dataList.getContent().size());
+        return ResponseUtil.success(dataList);
     }
 
     /**
@@ -176,13 +176,13 @@ public class StoreDataRestController {
      * Created by huai23 on 2018-05-26 13:43:38.
      */
     @RequestMapping (value = "queryFinanceStaffReport", method = RequestMethod.GET)
-    public ResponseEntity<String> queryFinanceStaffReport(@ModelAttribute StoreDataQuery query, HttpServletRequest request, HttpServletResponse response){
-        logger.info("  queryFinanceStaffReport  query = {}",query);
-        List<FinanceStaffReportData> dataList = storeDataService.queryFinanceStaffReport(query);
+    public ResponseEntity<String> queryFinanceStaffReport(@ModelAttribute StoreDataQuery query, @ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  queryFinanceStaffReport  query = {} request = {} ",query,request);
+        Page<FinanceStaffReportData> dataList = storeDataService.queryFinanceStaffReport(query,pageRequest);
         JSONObject jo = new JSONObject();
         jo.put("data", dataList);
         logger.info("  queryFinanceStaffReport  dataList = {}",dataList);
-        return ResponseUtil.success(jo);
+        return ResponseUtil.success(dataList);
     }
 
 

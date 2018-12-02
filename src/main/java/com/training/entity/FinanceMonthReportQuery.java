@@ -34,7 +34,7 @@ public class FinanceMonthReportQuery {
 
     private String usedDaysCount;
 
-    private String outDaysOney;
+    private String outDaysMoney;
 
     private String inDaysMoney;
 

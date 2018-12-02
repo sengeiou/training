@@ -4,6 +4,8 @@ import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
 import com.training.common.OriginEnum;
+import com.training.common.Page;
+import com.training.common.PageRequest;
 import com.training.dao.*;
 import com.training.domain.*;
 import com.training.entity.*;
@@ -14,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -72,6 +75,15 @@ public class StoreDataService {
 
     @Autowired
     private KpiStaffMonthDao kpiStaffMonthDao;
+
+    @Autowired
+    private FinanceMonthReportDao financeMonthReportDao;
+
+    @Autowired
+    private FinanceOnceReportDao financeOnceReportDao;
+
+    @Autowired
+    private FinanceStaffReportDao financeStaffReportDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -837,41 +849,70 @@ public class StoreDataService {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public List<FinanceTimesCardReportData> queryFinanceTimesCardReport(StoreDataQuery query) {
+    public Page<FinanceTimesCardReportData> queryFinanceTimesCardReport(StoreDataQuery query, PageRequest pageRequest) {
         List<FinanceTimesCardReportData> dataList= new ArrayList();
+        FinanceOnceReportQuery financeOnceReportQuery = new FinanceOnceReportQuery();
+        financeOnceReportQuery.setStoreId(query.getStoreId());
+        if(StringUtils.isEmpty(query.getMonth())){
+            financeOnceReportQuery.setMonth(ut.currentFullMonth());
+        }else {
+            financeOnceReportQuery.setMonth(query.getMonth().substring(0,4)+"-"+query.getMonth().substring(4,6));
+        }
+        financeOnceReportQuery.setStatus(1);
 
-        dataList.add(randomFinanceTimesCardReportData());
-
-        return dataList;
+        logger.info(" queryFinanceTimesCardReport financeOnceReportQuery = {} ",financeOnceReportQuery);
+        List<FinanceOnceReportEntity> financeOnceReportList = financeOnceReportDao.find(financeOnceReportQuery,pageRequest);
+        for (FinanceOnceReportEntity financeOnceReportEntity:financeOnceReportList){
+            FinanceTimesCardReportData financeTimesCardReportData = new FinanceTimesCardReportData();
+            BeanUtils.copyProperties(financeOnceReportEntity,financeTimesCardReportData);
+            dataList.add(financeTimesCardReportData);
+        }
+        Long count = financeOnceReportDao.count(financeOnceReportQuery);
+        Page<FinanceTimesCardReportData> returnPage = new Page<>();
+        returnPage.setContent(dataList);
+        returnPage.setPage(pageRequest.getPage());
+        returnPage.setSize(pageRequest.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
     }
 
-    public List<FinanceMonthCardReportData> queryFinanceMonthCardReport(StoreDataQuery query) {
+    public Page<FinanceMonthCardReportData> queryFinanceMonthCardReport(StoreDataQuery query,PageRequest pageRequest) {
         List<FinanceMonthCardReportData> dataList= new ArrayList();
+        FinanceMonthReportQuery financeMonthReportQuery = new FinanceMonthReportQuery();
+        financeMonthReportQuery.setStoreId(query.getStoreId());
+        if(StringUtils.isEmpty(query.getMonth())){
+            financeMonthReportQuery.setMonth(ut.currentFullMonth());
+        }else {
+            financeMonthReportQuery.setMonth(query.getMonth().substring(0,4)+"-"+query.getMonth().substring(4,6));
+        }
+        financeMonthReportQuery.setStatus(1);
 
-        dataList.add(randomFinanceMonthCardReportData());
-
-        return dataList;
+        logger.info(" queryFinanceMonthCardReport financeMonthReportQuery = {} ",financeMonthReportQuery);
+        List<FinanceMonthReportEntity> financeMonthReportEntities = financeMonthReportDao.find(financeMonthReportQuery,pageRequest);
+        for (FinanceMonthReportEntity financeMonthReportEntity:financeMonthReportEntities){
+            FinanceMonthCardReportData financeMonthCardReportData = new FinanceMonthCardReportData();
+            BeanUtils.copyProperties(financeMonthReportEntity,financeMonthCardReportData);
+            dataList.add(financeMonthCardReportData);
+        }
+        Long count = financeMonthReportDao.count(financeMonthReportQuery);
+        Page<FinanceMonthCardReportData> returnPage = new Page<>();
+        returnPage.setContent(dataList);
+        returnPage.setPage(pageRequest.getPage());
+        returnPage.setSize(pageRequest.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
     }
 
-    public List<FinanceStaffReportData> queryFinanceStaffReport(StoreDataQuery query) {
+    public Page<FinanceStaffReportData> queryFinanceStaffReport(StoreDataQuery query,PageRequest pageRequest) {
         List<FinanceStaffReportData> dataList= new ArrayList();
         dataList.add(randomFinanceStaffReportData());
-
-        return dataList;
+        Long count = 0L;
+        Page<FinanceStaffReportData> returnPage = new Page<>();
+        returnPage.setContent(dataList);
+        returnPage.setPage(pageRequest.getPage());
+        returnPage.setSize(pageRequest.getPageSize());
+        returnPage.setTotalElements(count);
+        return returnPage;
     }
 
     private FinanceTimesCardReportData randomFinanceTimesCardReportData() {

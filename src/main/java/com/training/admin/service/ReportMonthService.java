@@ -334,7 +334,7 @@ public class ReportMonthService {
             jdbcTemplate.update(" update finance_month_report set status = 0 where store_id = ? and month = ?",new Object[]{storeId,month});
             financeMonthReportService.add(financeMonthReportEntity);
         }catch (Exception e){
-
+            e.printStackTrace();
         }
         return "";
     }

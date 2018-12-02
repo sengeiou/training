@@ -25,7 +25,7 @@ public interface FinanceMonthReportRepository {
                 " <if test=\"financeMonthReport.waitingDaysCount != null\"> waiting_days_count, </if>" +
                 " <if test=\"financeMonthReport.usedDaysMoney != null\"> used_days_money, </if>" +
                 " <if test=\"financeMonthReport.usedDaysCount != null\"> used_days_count, </if>" +
-                " <if test=\"financeMonthReport.outDaysOney != null\"> out_days_oney, </if>" +
+                " <if test=\"financeMonthReport.outDaysMoney != null\"> out_days_money, </if>" +
                 " <if test=\"financeMonthReport.inDaysMoney != null\"> in_days_money, </if>" +
                 " <if test=\"financeMonthReport.backDaysMoney != null\"> back_days_money, </if>" +
                 " <if test=\"financeMonthReport.param1 != null\"> param1, </if>" +
@@ -53,7 +53,7 @@ public interface FinanceMonthReportRepository {
                 " <if test=\"financeMonthReport.waitingDaysCount != null\"> #{financeMonthReport.waitingDaysCount}, </if>" +
                 " <if test=\"financeMonthReport.usedDaysMoney != null\"> #{financeMonthReport.usedDaysMoney}, </if>" +
                 " <if test=\"financeMonthReport.usedDaysCount != null\"> #{financeMonthReport.usedDaysCount}, </if>" +
-                " <if test=\"financeMonthReport.outDaysOney != null\"> #{financeMonthReport.outDaysOney}, </if>" +
+                " <if test=\"financeMonthReport.outDaysMoney != null\"> #{financeMonthReport.outDaysMoney}, </if>" +
                 " <if test=\"financeMonthReport.inDaysMoney != null\"> #{financeMonthReport.inDaysMoney}, </if>" +
                 " <if test=\"financeMonthReport.backDaysMoney != null\"> #{financeMonthReport.backDaysMoney}, </if>" +
                 " <if test=\"financeMonthReport.param1 != null\"> #{financeMonthReport.param1}, </if>" +
@@ -73,7 +73,7 @@ public interface FinanceMonthReportRepository {
             "</script>")
     int add(@Param("financeMonthReport") FinanceMonthReportEntity financeMonthReport);
 
-    @Select("<script> SELECT pk_id,store_id,store_name,year,month,report_date,sale_money,sale_days_count,waiting_days_money,waiting_days_count,used_days_money,used_days_count,out_days_oney,in_days_money,back_days_money,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,store_id,store_name,year,month,report_date,sale_money,sale_days_count,waiting_days_money,waiting_days_count,used_days_money,used_days_count,out_days_money,in_days_money,back_days_money,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
             " FROM finance_month_report " +
             " WHERE 1 = 1 " +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
@@ -87,7 +87,7 @@ public interface FinanceMonthReportRepository {
             " <if test=\"query.waitingDaysCount != null\"> AND waiting_days_count = #{query.waitingDaysCount} </if>" +
             " <if test=\"query.usedDaysMoney != null\"> AND used_days_money = #{query.usedDaysMoney} </if>" +
             " <if test=\"query.usedDaysCount != null\"> AND used_days_count = #{query.usedDaysCount} </if>" +
-            " <if test=\"query.outDaysOney != null\"> AND out_days_oney = #{query.outDaysOney} </if>" +
+            " <if test=\"query.outDaysMoney != null\"> AND out_days_money = #{query.outDaysMoney} </if>" +
             " <if test=\"query.inDaysMoney != null\"> AND in_days_money = #{query.inDaysMoney} </if>" +
             " <if test=\"query.backDaysMoney != null\"> AND back_days_money = #{query.backDaysMoney} </if>" +
             " <if test=\"query.param1 != null\"> AND param1 = #{query.param1} </if>" +
@@ -118,7 +118,7 @@ public interface FinanceMonthReportRepository {
             " <if test=\"query.waitingDaysCount != null\"> AND waiting_days_count = #{query.waitingDaysCount} </if>" +
             " <if test=\"query.usedDaysMoney != null\"> AND used_days_money = #{query.usedDaysMoney} </if>" +
             " <if test=\"query.usedDaysCount != null\"> AND used_days_count = #{query.usedDaysCount} </if>" +
-            " <if test=\"query.outDaysOney != null\"> AND out_days_oney = #{query.outDaysOney} </if>" +
+            " <if test=\"query.outDaysMoney != null\"> AND out_days_money = #{query.outDaysMoney} </if>" +
             " <if test=\"query.inDaysMoney != null\"> AND in_days_money = #{query.inDaysMoney} </if>" +
             " <if test=\"query.backDaysMoney != null\"> AND back_days_money = #{query.backDaysMoney} </if>" +
             " <if test=\"query.param1 != null\"> AND param1 = #{query.param1} </if>" +
@@ -135,7 +135,7 @@ public interface FinanceMonthReportRepository {
             "</script>")
     Long count(@Param("query") FinanceMonthReportQuery financeMonthReport);
 
-    @Select("<script> SELECT pk_id,store_id,store_name,year,month,report_date,sale_money,sale_days_count,waiting_days_money,waiting_days_count,used_days_money,used_days_count,out_days_oney,in_days_money,back_days_money,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,store_id,store_name,year,month,report_date,sale_money,sale_days_count,waiting_days_money,waiting_days_count,used_days_money,used_days_count,out_days_money,in_days_money,back_days_money,param1,param2,param3,param4,param5,param6,param7,param8,report_data,remark,status,created,modified " +
             " FROM finance_month_report " +
             " WHERE store_id = #{id} " +
             "</script>")
@@ -153,7 +153,7 @@ public interface FinanceMonthReportRepository {
                 " <if test=\"financeMonthReport.waitingDaysCount != null\"> waiting_days_count = #{financeMonthReport.waitingDaysCount} , </if>" +
                 " <if test=\"financeMonthReport.usedDaysMoney != null\"> used_days_money = #{financeMonthReport.usedDaysMoney} , </if>" +
                 " <if test=\"financeMonthReport.usedDaysCount != null\"> used_days_count = #{financeMonthReport.usedDaysCount} , </if>" +
-                " <if test=\"financeMonthReport.outDaysOney != null\"> out_days_oney = #{financeMonthReport.outDaysOney} , </if>" +
+                " <if test=\"financeMonthReport.outDaysMoney != null\"> out_days_money = #{financeMonthReport.outDaysMoney} , </if>" +
                 " <if test=\"financeMonthReport.inDaysMoney != null\"> in_days_money = #{financeMonthReport.inDaysMoney} , </if>" +
                 " <if test=\"financeMonthReport.backDaysMoney != null\"> back_days_money = #{financeMonthReport.backDaysMoney} , </if>" +
                 " <if test=\"financeMonthReport.param1 != null\"> param1 = #{financeMonthReport.param1} , </if>" +

@@ -438,7 +438,14 @@ public class ManualRestController {
         logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
         String today = "2018-11-30";
-        String msg = reportOnceService.calculateStoreFinanceOnceReport(storeId,today);
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
+        String msg = "";
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            storeId = store.get("store_id").toString();
+            msg = reportOnceService.calculateStoreFinanceOnceReport(storeId,today);
+        }
+
         logger.info("end calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
         return msg;
     }
@@ -450,8 +457,15 @@ public class ManualRestController {
     public Object calculateStoreFinanceMonthReport(){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = ut.currentDate();
-        String msg = reportMonthService.calculateStoreFinanceMonthReport(storeId,today);
+        String today = "2018-11-30";
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
+        String msg = "";
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            storeId = store.get("store_id").toString();
+            msg = reportMonthService.calculateStoreFinanceMonthReport(storeId,today);
+        }
+
         logger.info("end calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         return msg;
     }
