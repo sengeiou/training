@@ -905,8 +905,28 @@ public class StoreDataService {
 
     public Page<FinanceStaffReportData> queryFinanceStaffReport(StoreDataQuery query,PageRequest pageRequest) {
         List<FinanceStaffReportData> dataList= new ArrayList();
-        dataList.add(randomFinanceStaffReportData());
-        Long count = 0L;
+        FinanceStaffReportQuery financeStaffReportQuery = new FinanceStaffReportQuery();
+        financeStaffReportQuery.setStaffId(query.getStaffId());
+        financeStaffReportQuery.setTemplateId(query.getTemplateId());
+        financeStaffReportQuery.setStaffName(query.getName());
+        financeStaffReportQuery.setPhone(query.getPhone());
+        financeStaffReportQuery.setStoreId(query.getStoreId());
+        financeStaffReportQuery.setJob(query.getJob());
+        if(StringUtils.isEmpty(query.getMonth())){
+            financeStaffReportQuery.setMonth(ut.currentFullMonth());
+        }else {
+            financeStaffReportQuery.setMonth(query.getMonth().substring(0,4)+"-"+query.getMonth().substring(4,6));
+        }
+        financeStaffReportQuery.setStatus(1);
+
+        logger.info(" queryFinanceStaffReport financeStaffReportQuery = {} ",financeStaffReportQuery);
+        List<FinanceStaffReportEntity> financeStaffReportEntityList = financeStaffReportDao.find(financeStaffReportQuery,pageRequest);
+        for (FinanceStaffReportEntity financeStaffReportEntity:financeStaffReportEntityList){
+            FinanceStaffReportData financeStaffReportData = new FinanceStaffReportData();
+            BeanUtils.copyProperties(financeStaffReportEntity,financeStaffReportData);
+            dataList.add(financeStaffReportData);
+        }
+        Long count = financeStaffReportDao.count(financeStaffReportQuery);
         Page<FinanceStaffReportData> returnPage = new Page<>();
         returnPage.setContent(dataList);
         returnPage.setPage(pageRequest.getPage());

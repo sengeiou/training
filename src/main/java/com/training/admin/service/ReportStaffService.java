@@ -107,6 +107,7 @@ public class ReportStaffService {
         financeStaffReportEntity.setStar(staffEntity.getStar());
         financeStaffReportEntity.setYear(year);
         financeStaffReportEntity.setMonth(month);
+        financeStaffReportEntity.setJob(staffEntity.getJob());
         financeStaffReportEntity.setReportDate(today);
         financeStaffReportEntity.setStatus(1);
 
@@ -144,7 +145,7 @@ public class ReportStaffService {
         String sql = "select lesson_id, count(1) total  from training " +
                 " where card_type in ('TT','TM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
                 " group by lesson_id  ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateTeamLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setTeamLessonCount(""+data.size());
     }
@@ -158,7 +159,7 @@ public class ReportStaffService {
         String startDate = month+"-01";
         String endDate = month+"-31";
         String sql = "select * from training where card_type in ('ST1','ST2','ST3','ST4') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateSpecialLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setSpecialLessonCount(""+data.size());
     }
@@ -172,7 +173,7 @@ public class ReportStaffService {
         String startDate = month+"-01";
         String endDate = month+"-31";
         String sql = "select * from training where card_type in ('TY') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateTyCardMultiLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setTyCardMultiLessonCount(""+data.size());
     }
@@ -188,7 +189,7 @@ public class ReportStaffService {
         String sql = " select lesson_id, count(1) total from training " +
                 " where card_type in ('PM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
                 " group by lesson_id having total > 1 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateMonthCardMultiLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setMonthCardMultiLessonCount(""+data.size());
     }
@@ -204,7 +205,7 @@ public class ReportStaffService {
         String sql = " select lesson_id, count(1) total from training " +
                 " where card_type in ('PM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
                 " group by lesson_id having total = 1 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateMonthCardSingleLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setMonthCardSingleLessonCount(""+data.size());
     }
@@ -218,7 +219,7 @@ public class ReportStaffService {
         String startDate = month+"-01";
         String endDate = month+"-31";
         String sql = "select * from training where card_type in ('PT') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
         logger.info(" calculateOnceLessonCount  count  = {} ",data.size());
         financeStaffReportEntity.setTimesCardLessonCount(""+data.size());
     }
@@ -232,7 +233,8 @@ public class ReportStaffService {
         String startDate = month+"-01";
         String endDate = month+"-31";
         String sql = "select * from contract where card_type in ('PT','PM','TT','TM','ST1','ST2','ST3','ST4') and sale_staff_id = ? and sign_date >= ? and sign_date <= ? ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStaffId(),startDate,endDate});
+        logger.info(" calculateSaleMoney data = {}  ",data.size());
         double money_total = 0;
         double money_xk = 0;
         for (int i = 0; i < data.size(); i++) {
@@ -245,7 +247,7 @@ public class ReportStaffService {
                 money_total = money_total + money;
             }
         }
-        logger.info(" calculateSaleMoney  money_total  = {} , money_xk = {}  ",money_total,money_xk);
+        logger.info(" calculateSaleMoney  name = {} , month = {} , money_total  = {} , money_xk = {}  ",financeStaffReportEntity.getStaffName(),month,money_total,money_xk);
         financeStaffReportEntity.setSaleMoney(ut.getDoubleString(money_total));
         financeStaffReportEntity.setXkMoney(ut.getDoubleString(money_xk));
     }

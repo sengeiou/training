@@ -80,6 +80,7 @@ public class FinanceStaffReportQuery {
 
     private Date modified;
 
+    private String phone;
 
 }
 

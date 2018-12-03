@@ -91,7 +91,8 @@ public interface FinanceStaffReportRepository {
             " FROM finance_staff_report " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
+            " <if test=\"query.staffName != null\"> AND staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.staffName},'%') ) </if>" +
+            " <if test=\"query.phone != null\"> AND staff_id in ( select staff_id from staff where phone like CONCAT('%',#{query.phone},'%') ) </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.storeName != null\"> AND store_name = #{query.storeName} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
@@ -119,7 +120,6 @@ public interface FinanceStaffReportRepository {
             " <if test=\"query.param6 != null\"> AND param6 = #{query.param6} </if>" +
             " <if test=\"query.param7 != null\"> AND param7 = #{query.param7} </if>" +
             " <if test=\"query.param8 != null\"> AND param8 = #{query.param8} </if>" +
-            " <if test=\"query.reportData != null\"> AND report_data = #{query.reportData} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
@@ -129,7 +129,8 @@ public interface FinanceStaffReportRepository {
     @Select("<script> SELECT COUNT(1) FROM finance_staff_report " +
             " WHERE 1 = 1 " +
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
-            " <if test=\"query.staffName != null\"> AND staff_name = #{query.staffName} </if>" +
+            " <if test=\"query.staffName != null\"> AND staff_id in ( select staff_id from staff where custname like CONCAT('%',#{query.staffName},'%') ) </if>" +
+            " <if test=\"query.phone != null\"> AND staff_id in ( select staff_id from staff where phone like CONCAT('%',#{query.phone},'%') ) </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.storeName != null\"> AND store_name = #{query.storeName} </if>" +
             " <if test=\"query.templateId != null\"> AND template_id = #{query.templateId} </if>" +
@@ -157,7 +158,6 @@ public interface FinanceStaffReportRepository {
             " <if test=\"query.param6 != null\"> AND param6 = #{query.param6} </if>" +
             " <if test=\"query.param7 != null\"> AND param7 = #{query.param7} </if>" +
             " <if test=\"query.param8 != null\"> AND param8 = #{query.param8} </if>" +
-            " <if test=\"query.reportData != null\"> AND report_data = #{query.reportData} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             "</script>")
