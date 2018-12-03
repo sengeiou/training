@@ -109,28 +109,21 @@ public class ReportStaffService {
         financeStaffReportEntity.setMonth(month);
         financeStaffReportEntity.setReportDate(today);
         financeStaffReportEntity.setStatus(1);
-        // 1. 计算销售额
 
-
-        // 2. 计算续课额
-
-
-        // 3. 次卡私教课
-
-
-        // 4. 月卡1v1私教课
-
-
-        // 5. 月卡1v2私教课
-
-
-        // 6. 体验课
-
-        // 7. 特色课
-
-        // 8. 团体课
-
-
+        // 1. 计算销售额和续课额
+        calculateSaleMoney(financeStaffReportEntity,month);
+        // 2. 次卡私教课
+        calculateOnceLessonCount(financeStaffReportEntity,month);
+        // 3. 月卡1v1私教课
+        calculateMonthCardSingleLessonCount(financeStaffReportEntity,month);
+        // 4. 月卡1v2私教课
+        calculateMonthCardMultiLessonCount(financeStaffReportEntity,month);
+        // 5. 体验课
+        calculateTyCardMultiLessonCount(financeStaffReportEntity,month);
+        // 6. 特色课
+        calculateSpecialLessonCount(financeStaffReportEntity,month);
+        // 7. 团体课
+        calculateTeamLessonCount(financeStaffReportEntity,month);
         try {
             jdbcTemplate.update(" update finance_staff_report set status = 0 where staff_id = ? and month = ?",new Object[]{staffId,month});
             financeStaffReportService.add(financeStaffReportEntity);
@@ -139,6 +132,125 @@ public class ReportStaffService {
         }
         return "";
     }
+
+    /**
+     * 7. 团体课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateTeamLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = "select lesson_id, count(1) total  from training " +
+                " where card_type in ('TT','TM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
+                " group by lesson_id  ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateTeamLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setTeamLessonCount(""+data.size());
+    }
+
+    /**
+     * 6. 计算特色课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateSpecialLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = "select * from training where card_type in ('ST1','ST2','ST3','ST4') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateSpecialLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setSpecialLessonCount(""+data.size());
+    }
+
+    /**
+     * 5. 计算体验课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateTyCardMultiLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = "select * from training where card_type in ('TY') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateTyCardMultiLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setTyCardMultiLessonCount(""+data.size());
+    }
+
+    /**
+     * 4. 月卡1v2私教课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateMonthCardMultiLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = " select lesson_id, count(1) total from training " +
+                " where card_type in ('PM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
+                " group by lesson_id having total > 1 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateMonthCardMultiLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setMonthCardMultiLessonCount(""+data.size());
+    }
+
+    /**
+     * 3. 月卡1v1私教课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateMonthCardSingleLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = " select lesson_id, count(1) total from training " +
+                " where card_type in ('PM') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 " +
+                " group by lesson_id having total = 1 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateMonthCardSingleLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setMonthCardSingleLessonCount(""+data.size());
+    }
+
+    /**
+     * 2. 计算次卡私教课
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateOnceLessonCount(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = "select * from training where card_type in ('PT') and staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        logger.info(" calculateOnceLessonCount  count  = {} ",data.size());
+        financeStaffReportEntity.setTimesCardLessonCount(""+data.size());
+    }
+
+    /**
+     * 1. 计算销售额和续课额
+     * @param financeStaffReportEntity
+     * @param month
+     */
+    private void calculateSaleMoney(FinanceStaffReportEntity financeStaffReportEntity, String month) {
+        String startDate = month+"-01";
+        String endDate = month+"-31";
+        String sql = "select * from contract where card_type in ('PT','PM','TT','TM','ST1','ST2','ST3','ST4') and sale_staff_id = ? and sign_date >= ? and sign_date <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{financeStaffReportEntity.getStoreId(),startDate,endDate});
+        double money_total = 0;
+        double money_xk = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map contract = (Map)data.get(i);
+            String type = contract.get("type").toString();
+            double money = Double.parseDouble(contract.get("money").toString());
+            if(type.indexOf("续课")>=0){
+                money_xk = money_xk + money;
+            }else{
+                money_total = money_total + money;
+            }
+        }
+        logger.info(" calculateSaleMoney  money_total  = {} , money_xk = {}  ",money_total,money_xk);
+        financeStaffReportEntity.setSaleMoney(ut.getDoubleString(money_total));
+        financeStaffReportEntity.setXkMoney(ut.getDoubleString(money_xk));
+    }
+
+
 
 }
 

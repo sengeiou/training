@@ -311,7 +311,7 @@ public class LessonService {
             for(LessonSettingEntity lessonSettingEntity: lessonSettingList){
                 int index = ut.indexOfWeek(query.getLessonDate());
                 String[] days = lessonSettingEntity.getWeekRepeat().split(",");
-                logger.info(" ***********   lessonSettingEntity   query.getLessonDate() = {},  index = {} ,  lesson.getStartHour() = {} ",query.getLessonDate(),index , JSON.toJSONString(days));
+//                logger.info(" ***********   lessonSettingEntity   query.getLessonDate() = {},  index = {} ,  lesson.getStartHour() = {} ",query.getLessonDate(),index , JSON.toJSONString(days));
                 if(days.length>=index){
                     if(days[index-1].equals("0")){
                         continue;

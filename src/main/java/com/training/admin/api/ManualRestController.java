@@ -478,7 +478,15 @@ public class ManualRestController {
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
         String today = ut.currentDate();
-        String msg = reportStaffService.calculateStaffFinanceReport(staffId,today);
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff  ");
+        String msg = "";
+        for (int i = 0; i < staffs.size(); i++){
+            logger.info(" calculateStaffFinanceReport!  index = {} ", i);
+            Map staff = staffs.get(i);
+            staffId = staff.get("staff_id").toString();
+            msg = reportStaffService.calculateStaffFinanceReport(staffId,today);
+        }
+
         logger.info("end calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         return msg;
     }
