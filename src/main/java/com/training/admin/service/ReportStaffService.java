@@ -111,6 +111,20 @@ public class ReportStaffService {
         financeStaffReportEntity.setReportDate(today);
         financeStaffReportEntity.setStatus(1);
 
+        KpiTemplateEntity kpiTemplateEntity = kpiTemplateService.getById(staffEntity.getTemplateId());
+        if(kpiTemplateEntity!=null){
+            financeStaffReportEntity.setTemplateName(kpiTemplateEntity.getTitle());
+        }else {
+            financeStaffReportEntity.setTemplateName("暂无模板");
+        }
+
+        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month.replace("-",""));
+        if(kpiStaffMonthEntity!=null){
+            financeStaffReportEntity.setKpiScore(kpiStaffMonthEntity.getKpiScore());
+        }else {
+            financeStaffReportEntity.setKpiScore("-");
+        }
+
         // 1. 计算销售额和续课额
         calculateSaleMoney(financeStaffReportEntity,month);
         // 2. 次卡私教课

@@ -99,6 +99,9 @@ public class KpiTemplateService {
      */ 
     public KpiTemplateEntity getById(String id){
         KpiTemplateEntity kpiTemplateDB = kpiTemplateDao.getById(id);
+        if(kpiTemplateDB==null){
+            return null;
+        }
         KpiTemplateQuotaQuery kpiTemplateQuotaQuery = new KpiTemplateQuotaQuery();
         kpiTemplateQuotaQuery.setTemplateId(kpiTemplateDB.getTemplateId());
         PageRequest pageRequest = new PageRequest();
