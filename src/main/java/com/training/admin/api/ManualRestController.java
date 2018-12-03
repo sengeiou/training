@@ -416,6 +416,9 @@ public class ManualRestController {
         month = "2018-11";
         kpiStaffDetailAdminService.dealJk(month);
         kpiStaffDetailAdminService.dealXk(month);
+        month = "2018-12";
+        kpiStaffDetailAdminService.dealJk(month);
+        kpiStaffDetailAdminService.dealXk(month);
         logger.info("end dealJk!  time = {} ", ut.currentTime());
     }
 
