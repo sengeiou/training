@@ -144,5 +144,9 @@ public class MemberDao {
         return n;
     }
 
+    public List<MemberEntity> getMemberByStaffId(String staffId) {
+        List<MemberEntity> memberList = memberRepository.getMemberByStaffId(staffId);
+        return memberList;
+    }
 }
 

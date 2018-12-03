@@ -393,6 +393,10 @@ public class StaffService {
 
     public ResponseEntity<String> leave(String id) {
         StaffEntity staffEntity = staffDao.getById(id);
+        List<MemberEntity> memberEntityList = memberDao.getMemberByStaffId(id);
+        if(memberEntityList.size()>0){
+            return ResponseUtil.exception("教练名下还有"+memberEntityList.size()+"个会员，不能进行离职操作");
+        }
         int n = staffDao.leave(id);
         if(n==1){
             if(StringUtils.isNotEmpty(staffEntity.getOpenId())){

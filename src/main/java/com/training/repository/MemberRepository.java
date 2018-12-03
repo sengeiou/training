@@ -229,5 +229,12 @@ public interface MemberRepository {
     @Update("<script> UPDATE member SET type = 'M' , open_id = '' , nickname = '' , image = ''  WHERE member_id = #{id}  </script>")
     int logoffByStaff(@Param("id") String memberId);
 
+    @Select("<script> SELECT pk_id,member_id,store_id,type,name,email,phone,nickname,image,age,gender,height,id_card,address,coach_staff_id,card_no," +
+            " training_hours,open_id,union_id,feature,origin,remark,status,has_team_buy,has_wx,creater,created,modified " +
+            " FROM member " +
+            " WHERE coach_staff_id = #{staffId}  " +
+            "</script>")
+    List<MemberEntity> getMemberByStaffId(@Param("staffId") String staffId);
+
 }
 
