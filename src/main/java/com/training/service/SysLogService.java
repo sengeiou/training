@@ -211,8 +211,8 @@ public class SysLogService {
             String text = sysLogEntity.getLogText();
             double rate = 0.006;
             JSONObject data = JSON.parseObject(text);
-            double money = Double.parseDouble(data.getString("total_fee"));
-            double taxFee = money*rate/100;
+            double money = Double.parseDouble(data.getString("total_fee"))/100;
+            double taxFee = money*rate;
             MemberEntity memberEntity = memberDao.getById(memberId);
             if(memberEntity!=null){
                 wechatPayLog.setMemberId(memberId);
