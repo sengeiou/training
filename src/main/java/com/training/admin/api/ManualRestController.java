@@ -85,6 +85,9 @@ public class ManualRestController {
     private BackupService backupService;
 
     @Autowired
+    private CoachStaffStarService coachStaffStarService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -504,6 +507,19 @@ public class ManualRestController {
         }
 
         logger.info("end calculateStaffFinanceReport!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
+    /**
+     * sendTest
+     */
+    @GetMapping("updateStaffStar")
+    public Object updateStaffStar(){
+        logger.info("start updateStaffStar!  time = {} ", ut.currentTime());
+        String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
+        String month = "2018-11";
+        String msg = coachStaffStarService.calculateStaffStar(staffId,month);
+        logger.info("end updateStaffStar!  time = {} ", ut.currentTime());
         return msg;
     }
 
