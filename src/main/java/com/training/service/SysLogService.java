@@ -8,6 +8,7 @@ import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -201,7 +202,15 @@ public class SysLogService {
     }
 
     public Page<WechatPayLog> findPayLog(SysLogQuery query, PageRequest pageRequest) {
+        if(StringUtils.isEmpty(query.getName())){
+            query.setName(null);
+        }
+        if(StringUtils.isEmpty(query.getPhone())){
+            query.setPhone(null);
+        }
         query.setType("PAY");
+        logger.info("  findPayLog  query2 = {}",query);
+
         List<SysLogEntity> sysLogList = sysLogDao.findPayLog(query,pageRequest);
         List<WechatPayLog> logList = new ArrayList<>();
         for (SysLogEntity sysLogEntity:sysLogList){

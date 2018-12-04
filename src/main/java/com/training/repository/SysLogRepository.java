@@ -164,9 +164,9 @@ public interface SysLogRepository {
             " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
-            " <if test=\"query.name != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') and a.member_id = b.member_id  ) </if>" +
-            " <if test=\"query.phone != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') and a.member_id = b.member_id  ) </if>" +
-            " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
+            " <if test=\"query.name != null\"> AND id1 in ( select a.member_id from member a where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') ) </if>" +
+            " <if test=\"query.phone != null\"> AND id1 in ( select a.member_id  from member a where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id1 in ( select a.member_id  from member a where a.type = 'M' AND a.store_id = #{query.storeId} ) </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<SysLogEntity> findPayLog(@Param("query") SysLogQuery query, @Param("page") PageRequest page);
@@ -181,9 +181,9 @@ public interface SysLogRepository {
             " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
             " <if test=\"query.startDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &gt;= #{query.startDate}  </if>" +
             " <if test=\"query.endDate != null\"> AND DATE_FORMAT(created,'%Y-%m-%d')  &lt;= #{query.endDate} </if>" +
-            " <if test=\"query.name != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') and a.member_id = b.member_id  ) </if>" +
-            " <if test=\"query.phone != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') and a.member_id = b.member_id  ) </if>" +
-            " <if test=\"query.storeId != null\"> AND id1 in ( select b.card_no from member a, member_card b  where a.type = 'M' AND a.store_id = #{query.storeId} and a.member_id = b.member_id   ) </if>" +
+            " <if test=\"query.name != null\"> AND id1 in ( select a.member_id from member a where a.type = 'M' AND a.name like CONCAT('%',#{query.name},'%') ) </if>" +
+            " <if test=\"query.phone != null\"> AND id1 in ( select a.member_id  from member a where a.type = 'M' AND a.phone like CONCAT('%',#{query.phone},'%') ) </if>" +
+            " <if test=\"query.storeId != null\"> AND id1 in ( select a.member_id  from member a where a.type = 'M' AND a.store_id = #{query.storeId} ) </if>" +
             "</script>")
     Long countPayLog(@Param("query") SysLogQuery query);
 

@@ -136,6 +136,7 @@ public class SysLogRestController {
      */
     @RequestMapping (value = "findPayLog", method = RequestMethod.GET)
     public ResponseEntity<String> findPayLog(@ModelAttribute SysLogQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  findPayLog  SysLogQuery = {}",query);
         Page<WechatPayLog> page = sysLogService.findPayLog(query,pageRequest);
         return ResponseUtil.success(page);
     }
