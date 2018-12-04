@@ -305,8 +305,9 @@ public class ReportOnceService {
         KpiStaffDetailQuery query = new KpiStaffDetailQuery();
         query.setStoreId(financeOnceReportEntity.getStoreId());
         query.setType("SK");
-        query.setStartDate(startDate);
-        query.setEndDate(endDate);
+        query.setMonth(month);
+//        query.setStartDate(startDate);
+//        query.setEndDate(endDate);
         PageRequest page = new PageRequest();
         page.setPageSize(10000);
         List<KpiStaffDetailEntity> kpiStaffDetailList = kpiStaffDetailDao.find(query,page);
