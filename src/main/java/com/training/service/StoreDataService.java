@@ -86,6 +86,12 @@ public class StoreDataService {
     private FinanceStaffReportDao financeStaffReportDao;
 
     @Autowired
+    private MemberCardDao memberCardDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
 
@@ -104,16 +110,6 @@ public class StoreDataService {
 
         logger.info(" StoreDataService   querySaleMoney  startDate = {} ",startDate);
         logger.info(" StoreDataService   querySaleMoney  endDate = {} ",endDate);
-
-        Set<String> staffNameSet = new HashSet<>();
-        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
-        for (int i = 0; i < staffs.size(); i++){
-            Map staff = staffs.get(i);
-            String custname = staff.get("custname").toString();
-            staffNameSet.add(custname);
-        }
-
-        logger.info(" StoreDataService   querySaleMoney  staffs = {} ",staffs.size());
 
         int sjkxq_count = 0;
         int sjkxq_lesson=0;
@@ -135,26 +131,14 @@ public class StoreDataService {
         int tsk_lesson=0;
         double tsk_money = 0;
 
-        String sql = " SELECT * from contract where sign_date >= ? and sign_date <= ? ";
-        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        String sql = " SELECT * from contract where store_id = ? and sign_date >= ? and sign_date <= ? ";
+        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql,new Object[]{query.getStoreId(),startDate,endDate});
         logger.info(" StoreDataService   querySaleMoney  contracts = {} ",contracts.size());
 
         int count = 0;
 
         for (int i = 0; i < contracts.size(); i++){
             Map contract = contracts.get(i);
-            String coach = contract.get("coach").toString();
-            if(coach.indexOf("(")>0){
-                int index = coach.indexOf("(");
-                coach = coach.substring(0,index);
-            }
-            if(coach.indexOf("（")>0){
-                int index = coach.indexOf("（");
-                coach = coach.substring(0,index);
-            }
-            if(!staffNameSet.contains(coach)){
-                continue;
-            }
             count++;
             String card_type = contract.get("card_type").toString();
             int total = 0;
@@ -169,7 +153,6 @@ public class StoreDataService {
             }catch (Exception e){
 
             }
-
 
             if("PT".equals(card_type)||"PM".equals(card_type)){
                 String type = contract.get("type").toString();
@@ -259,110 +242,42 @@ public class StoreDataService {
         logger.info(" StoreDataService   queryIncome  startDate = {} ",startDate);
         logger.info(" StoreDataService   queryIncome  endDate = {} ",endDate);
 
-        Set<String> staffIdSet = new HashSet<>();
-        Set<String> staffNameSet = new HashSet<>();
-
-        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
-        logger.info(" StoreDataService   queryIncome  staffs = {} ",staffs.size());
-
-        for (int i = 0; i < staffs.size(); i++){
-            Map staff = staffs.get(i);
-            String staff_id = staff.get("staff_id").toString();
-            staffIdSet.add(staff_id);
-            String custname = staff.get("custname").toString();
-            staffNameSet.add(custname);
-        }
-        String sql = " SELECT * from member where created <= ? ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
-        logger.info(" StoreDataService   queryIncome  members = {} ",members.size());
-
-        int count = 0;
         int count_hk = 0;
         int count_sk = 0;
         double money_hk = 0;
         double money_sk = 0;
 
-        for (int i = 0; i < members.size(); i++) {
-            Map member = members.get(i);
-            String coach_staff_id = member.get("coach_staff_id").toString();
-            if (!staffIdSet.contains(coach_staff_id)) {
-                continue;
+        String sql_training = "select * from training where store_id = ? and card_type in ('PT') and status = 0 and  lesson_date >= ? and lesson_date <= ?  ";
+        List trainings = jdbcTemplate.queryForList(sql_training,new Object[]{query.getStoreId(),startDate,endDate});
+        logger.info(" StoreDataService   queryIncome  trainings = {} ",trainings.size());
+        for (int i = 0; i < trainings.size(); i++) {
+            Map training = (Map) trainings.get(i);
+            String cardNo = training.get("card_no").toString();
+            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            int total = memberCardEntity.getTotal();
+            double money = Double.parseDouble(memberCardEntity.getMoney());
+            if(total>0){
+                double price = money/total;
+                money_hk = money_hk + price;
             }
-            count++;
-//            String origin = "";
-//            if(null!=member.get("origin")){
-//                origin = member.get("origin").toString();
-//            }
-//            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
-//                continue;
-//            }
-
-            String sql_training = "select * from training where member_id = ? and card_type in ('PT') and status = 0 and  lesson_date >= ? and lesson_date <= ?  ";
-            List trainings = jdbcTemplate.queryForList(sql_training,new Object[]{member.get("member_id").toString(),startDate,endDate});
-
-            logger.info(" StoreDataService   queryIncome  trainings = {} ",trainings.size());
-
-            for (int j = 0; j < trainings.size(); j++) {
-                Map training = (Map)trainings.get(j);
-                String card_no = training.get("card_no").toString();
-                String staff_id = training.get("staff_id").toString();
-                if(!staffIdSet.contains(staff_id)){
-                    logger.info(" **************  error:   training = {} ",training);
-                    continue;
-                }
-                List cards = jdbcTemplate.queryForList("select * from member_card where card_no = ? ",new Object[]{card_no});
-                if(cards.size()>0){
-                    Map card = (Map)cards.get(0);
-                    int total = 0;
-                    double money = 0;
-                    try{
-                        total = Integer.parseInt(card.get("total").toString());
-                    }catch (Exception e){
-
-                    }
-                    try{
-                        money = Double.parseDouble(card.get("money").toString());
-                    }catch (Exception e){
-
-                    }
-                    if(total>0){
-                        money_hk = money_hk+money/total;
-                    }
-                }
-                count_hk++;
-            }
-
-            String sql_card = "select * from member_card where member_id = ? and type in ('PT') and count > 0 and end_date >= ? and end_date < ?  ";
-
-            if(ut.passDay(ut.currentDate(),endDate)>0){
-                endDate = ut.currentDate();
-            }
-            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate(endDate,-60),ut.currentDate(endDate,-30)});
-            logger.info(" StoreDataService   queryIncome  cards = {} ",cards.size());
-            for (int j = 0; j < cards.size(); j++) {
-                Map card = (Map)cards.get(j);
-                int total = 0;
-                int left_count = 0;
-                double money = 0;
-                try{
-                    total = Integer.parseInt(card.get("total").toString());
-                    left_count = Integer.parseInt(card.get("count").toString());
-                }catch (Exception e){
-
-                }
-                try{
-                    money = Double.parseDouble(card.get("money").toString());
-                }catch (Exception e){
-
-                }
-                if(total>0){
-                    money_sk = money_sk+money*left_count/total;
-                }
-
-                count_sk = count_sk + left_count;
-            }
+            count_hk++;
         }
-        logger.info(" StoreDataService   queryIncome  count = {} ",count);
+
+        String sql_dead = "select * from kpi_staff_detail where store_id = ? and type = 'SK' and card_type in ('PT') and  month = ?  ";
+        List deadCards = jdbcTemplate.queryForList(sql_dead,new Object[]{query.getStoreId(),query.getMonth()});
+        for (int i = 0; i < deadCards.size(); i++) {
+            Map card = (Map) deadCards.get(i);
+            String cardNo = card.get("card_no").toString();
+            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            int count = memberCardEntity.getCount();
+            int total = memberCardEntity.getTotal();
+            double money = Double.parseDouble(memberCardEntity.getMoney());
+            if(total>0){
+                double price = money/total;
+                money_sk = money_sk + count*price;
+            }
+            count_sk = count_sk + count;
+        }
 
         List<StoreData> storeDataList= new ArrayList();
 
@@ -380,8 +295,8 @@ public class StoreDataService {
 
         StoreData yqsr = new StoreData();
         yqsr.setLabel("延期收入");
-        yqsr.setValue("0");
-        yqsr.setLesson("0");
+        yqsr.setValue("-");
+        yqsr.setLesson("-");
         storeDataList.add(yqsr);
 
         return storeDataList;
@@ -401,67 +316,53 @@ public class StoreDataService {
         logger.info(" StoreDataService   queryChangeRate  startDate = {} ",startDate);
         logger.info(" StoreDataService   queryChangeRate  endDate = {} ",endDate);
 
+        String sql = " SELECT * from member where created >= ? and created <= ?  ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate+" 00:00:00",endDate+" 23:59:59"});
+        logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
+
         Set<String> staffIdSet = new HashSet<>();
-        Set<String> staffNameSet = new HashSet<>();
-
-
-        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname from staff where store_id = ? ",new Object[]{query.getStoreId()});
+        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname,job from staff where store_id = ? ",new Object[]{query.getStoreId()});
         for (int i = 0; i < staffs.size(); i++){
             Map staff = staffs.get(i);
             String staff_id = staff.get("staff_id").toString();
             staffIdSet.add(staff_id);
-            String custname = staff.get("custname").toString();
-            staffNameSet.add(custname);
         }
-        String sql = " SELECT * from member where created <= ?  ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
-        logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
 
         int count = 0;
-        int count_dd = 0;
-
         for (int i = 0; i < members.size(); i++) {
             Map member = members.get(i);
             String coach_staff_id = member.get("coach_staff_id").toString();
             if (!staffIdSet.contains(coach_staff_id)) {
                 continue;
             }
-            count++;
             String origin = "";
             if(null!=member.get("origin")){
                 origin = member.get("origin").toString();
             }
-            if(origin.indexOf("EXCEL")>=0||origin.indexOf("合同")>=0||origin.indexOf("自动生成")>=0){
+            if(origin.indexOf("EXCEL")>=0){
                 continue;
             }
-
-            String sql_card = "select * from member_card where member_id = ? and type = 'TY' and created >= ? and created <= ?  ";
-            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),startDate,endDate});
-            if(cards.size()>0){
-                count_dd++;
-            }
-
+            count++;
         }
 
+        int count_dd = 0;
+        String sql_card = "select * from member_card where type = 'TY' and created >= ? and created <= ?  ";
+        List cards = jdbcTemplate.queryForList(sql_card,new Object[]{startDate+" 00:00:00",endDate+" 23:59:59"});
+        for (int i = 0; i <cards.size() ; i++) {
+            Map card = (Map) cards.get(i);
+            String memberId = card.get("member_id").toString();
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            if(staffIdSet.contains(memberEntity.getCoachStaffId())){
+                count_dd++;
+            }
+        }
 
         int cjs = 0;
-        String sql_cj = " SELECT * from contract where sign_date >= ? and sign_date <= ? ";
-        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql_cj,new Object[]{startDate,endDate});
+        String sql_cj = " SELECT * from contract where store_id = ? and sign_date >= ? and sign_date <= ? ";
+        List<Map<String,Object>> contracts =  jdbcTemplate.queryForList(sql_cj,new Object[]{query.getStoreId(),startDate,endDate});
         logger.info(" StoreDataService   queryChangeRate  contracts = {} ",contracts.size());
         for (int i = 0; i < contracts.size(); i++) {
             Map contract = contracts.get(i);
-            String coach = contract.get("coach").toString();
-            if (coach.indexOf("(") > 0) {
-                int index = coach.indexOf("(");
-                coach = coach.substring(0, index);
-            }
-            if (coach.indexOf("（") > 0) {
-                int index = coach.indexOf("（");
-                coach = coach.substring(0, index);
-            }
-            if (!staffNameSet.contains(coach)) {
-                continue;
-            }
             String type = contract.get("type").toString();
             if("新会员".equals(type)){
                 cjs++;
@@ -479,7 +380,7 @@ public class StoreDataService {
         ddrs.setValue(""+count_dd);
         storeDataList.add(ddrs);
 
-        int rate_dd = 0;
+        int rate_dd = 100;
         if(count>0){
             rate_dd = count_dd*100/count;
         }
@@ -494,7 +395,7 @@ public class StoreDataService {
         cjrs.setValue(""+cjs);
         storeDataList.add(cjrs);
 
-        int rate_cj = 0;
+        int rate_cj = 100;
         if(count_dd>0){
             rate_cj = cjs*100/count_dd;
         }
@@ -518,6 +419,7 @@ public class StoreDataService {
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
         String endDate = y+"-"+m+"-31";
+        String tableName = "member_his_"+m;
 
         logger.info(" StoreDataService   queryMemberData  startDate = {} ",startDate);
         logger.info(" StoreDataService   queryMemberData  endDate = {} ",endDate);
@@ -525,59 +427,37 @@ public class StoreDataService {
         Set<String> staffIdSet = new HashSet<>();
         Set<String> staffNameSet = new HashSet<>();
 
+        int count_yx = 0;
+        int count_tk = 0;
+
+        List data = jdbcTemplate.queryForList("select max(backup_date) backup_date from "+tableName);
+
+        if(data.size()>0){
+            Map item = (Map)data.get(0);
+            String backup_date = item.get("backup_date").toString();
+            List yx_members = jdbcTemplate.queryForList("select * from "+tableName+" where store_id = ? and backup_date = ? and status = 1  ",new Object[]{query.getStoreId(),backup_date});
+            List tk_members = jdbcTemplate.queryForList("select * from "+tableName+" where store_id = ? and backup_date = ? and status = 9  ",new Object[]{query.getStoreId(),backup_date});
+            count_yx = yx_members.size();
+            count_tk = tk_members.size();
+        }
+
         int jks = 0;
         int xks = 0;
-        int count_yx = 0;
-        String qdhydp = "0";
-        List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id,custname,job from staff where store_id = ? ",new Object[]{query.getStoreId()});
-        for (int i = 0; i < staffs.size(); i++){
-            Map staff = staffs.get(i);
-            String staff_id = staff.get("staff_id").toString();
-            staffIdSet.add(staff_id);
-            String custname = staff.get("custname").toString();
-            staffNameSet.add(custname);
-            if(staff.get("job")!=null && "店长".equals(staff.get("job").toString())){
-                KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staff_id,month);
-                logger.info(" StoreDataService   queryMemberData  kpiStaffMonthEntity = {} ",kpiStaffMonthEntity);
-                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdjks())){
-                    jks = Integer.parseInt(kpiStaffMonthEntity.getQdjks());
-                }
-                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdxks())){
-                    xks = Integer.parseInt(kpiStaffMonthEntity.getQdxks());
-                }
-                qdhydp = kpiStaffMonthEntity.getQdhyd();
-                if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdyxhys())){
-                    count_yx = Integer.parseInt(kpiStaffMonthEntity.getQdyxhys());
-                }
-            }
 
-        }
+        String sql_jk = "select * from kpi_staff_detail where store_id = ? and type = 'JK' and  month = ?  ";
+        List jkCards = jdbcTemplate.queryForList(sql_jk,new Object[]{query.getStoreId(),query.getMonth()});
+        jks = jkCards.size();
+
+        String sql_xk = "select * from kpi_staff_detail where store_id = ? and type = 'XK' and  month = ?  ";
+        List xkCards = jdbcTemplate.queryForList(sql_xk,new Object[]{query.getStoreId(),query.getMonth()});
+        xks = xkCards.size();
+
+        String qdhyd = "-";
+
         String sql = " SELECT * from member where created <= ? ";
         List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         logger.info(" StoreDataService   queryMemberData  members = {} ",members.size());
 
-        int count = 0;
-        int count_tk = 0;
-
-        for (int i = 0; i < members.size(); i++) {
-            Map member = members.get(i);
-            String coach_staff_id = member.get("coach_staff_id").toString();
-            if (!staffIdSet.contains(coach_staff_id)) {
-                continue;
-            }
-            count++;
-            if("9".equals(member.get("status").toString())){
-                count_tk++;
-            }
-//            String sql_card = "select * from member_card where member_id = ? and type <> 'TY' and end_date >= ?  ";
-//            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{member.get("member_id").toString(),ut.currentDate()});
-//            if(cards.size()>0){
-//                count_yx++;
-//                logger.info(" StoreDataService   member  name = {} ",member.get("name"));
-//            }
-        }
-
-        logger.info(" StoreDataService   queryMemberData  count = {} ",count);
         logger.info(" StoreDataService   queryMemberData  count_yx = {} ",count_yx);
         logger.info(" StoreDataService   queryMemberData  count_tk = {} ",count_tk);
 
@@ -593,7 +473,7 @@ public class StoreDataService {
 
         StoreData hyd = new StoreData();
         hyd.setLabel("会员活跃度");
-        hyd.setValue(""+qdhydp);
+        hyd.setValue(""+qdhyd);
         storeDataList.add(hyd);
 
         StoreData jkrs = new StoreData();
