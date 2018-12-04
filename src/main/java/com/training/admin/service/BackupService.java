@@ -66,5 +66,20 @@ public class BackupService {
         }
     }
 
+    public void backupMemberCard() {
+        String backupDate = ut.currentDate();
+        String tableName = "member_card_his_"+ut.currentMonth();
+        System.out.println(" backupMemberCard  tableName = "+tableName);
+        String sql = " INSERT into "+tableName+"  select null, '"+backupDate+"',a.card_no,a.member_id,a.coach_id,a.store_id,a.type,a.money,a.count ,a.total,a.days," +
+                " a.start_date,a.end_date,a.delay,a.feature,a.remark,a.audit_id,a.contract_id,a.coach_staff_id,a.sale_staff_id,a.status,a.creater,a.created,now() from member_card a ";
+        try{
+            int n = jdbcTemplate.update(sql);
+            System.out.println(" backupMemberCard  n = "+n);
+        }catch (Exception e){
+            System.out.println(" backupMemberCard  ERROR : "+e.getMessage());
+//            logger.error(" backupMemberCard  ERROR : {}" , e.getMessage(),e);
+        }
+    }
+
 }
 

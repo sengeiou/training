@@ -1,6 +1,7 @@
 package com.training.admin.task;
 
 import com.training.admin.service.BackupService;
+import com.training.admin.service.KpiStaffDetailAdminService;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,28 +15,45 @@ public class BackupTask {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    BackupService BbackupService;
+    BackupService backupService;
 
-    /**
-     * 更新学员的训练时长
-     */
-    @Scheduled(cron = "0 45 23 * * *")
-//    @Scheduled(cron = "0 * * * * *")
-    public void backupMember(){
-        logger.info("start backupMember!  time = {} ", ut.currentTime());
-        BbackupService.backupMember();
-        logger.info("end backupMember!  time = {} ", ut.currentTime());
-    }
+    @Autowired
+    private KpiStaffDetailAdminService kpiStaffDetailAdminService;
 
-    /**
-     * 更新学员状态
-     */
     @Scheduled(cron = "0 50 23 * * *")
-//    @Scheduled(cron = "0 * * * * *")
-    public void backupStaff(){
-        logger.info("start backupStaff!  time = {} ", ut.currentTime());
-        BbackupService.backupStaff();
-        logger.info("end backupStaff!  time = {} ", ut.currentTime());
+    public void backupMemberAndStaff(){
+        String month = ut.currentFullMonth();
+        try {
+            logger.info("start backupMember!  month = {} , time = {} ",month, ut.currentTime());
+            backupService.backupMember();
+            logger.info("end backupMember!  time = {} ", ut.currentTime());
+        }catch (Exception e){
+
+        }
+        try {
+            logger.info("start backupMemberCard!  time = {} ", ut.currentTime());
+            backupService.backupMemberCard();
+            logger.info("end backupMemberCard!  time = {} ", ut.currentTime());
+        }catch (Exception e){
+
+        }
+        try {
+            kpiStaffDetailAdminService.dealJk(month);
+        }catch (Exception e){
+
+        }
+        try {
+            kpiStaffDetailAdminService.dealXk(month);
+        }catch (Exception e){
+
+        }
+        try {
+            logger.info("start backupStaff!  time = {} ", ut.currentTime());
+            backupService.backupStaff();
+            logger.info("end backupStaff!  time = {} ", ut.currentTime());
+        }catch (Exception e){
+
+        }
     }
 
 }

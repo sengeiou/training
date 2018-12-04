@@ -82,6 +82,9 @@ public class ManualRestController {
     private ReportStaffService reportStaffService;
 
     @Autowired
+    private BackupService backupService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -248,6 +251,13 @@ public class ManualRestController {
             System.out.println(" backupMember  ERROR : "+e.getMessage());
 //            logger.error(" backupMember  ERROR : {}" , e.getMessage(),e);
         }
+        return "backupMembers end ";
+    }
+
+    @GetMapping("backupMemberCard")
+    public Object backupMemberCard(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" backupMembers  start ");
+        backupService.backupMemberCard();
         return "backupMembers end ";
     }
 
