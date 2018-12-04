@@ -32,7 +32,7 @@ public class CoachKpiUpdateService {
     private MemberCardService memberCardService;
 
     @Autowired
-    private CalculateKpiService calculateKpiService;
+    private CoachStaffKpiService coachStaffKpiService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -44,13 +44,13 @@ public class CoachKpiUpdateService {
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
-            calculateKpiService.calculateStaffKpi(staffId,month);
+            coachStaffKpiService.calculateStaffKpi(staffId,month);
         }
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         for (int i = 0; i < stores.size(); i++){
             Map store = stores.get(i);
             String store_id = store.get("store_id").toString();
-            calculateKpiService.calculateStoreKpi(store_id,month);
+            coachStaffKpiService.calculateStoreKpi(store_id,month);
         }
         logger.info(" =======   CoachKpiUpdateService  execute end  ");
     }
