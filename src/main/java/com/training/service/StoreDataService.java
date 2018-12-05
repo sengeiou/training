@@ -316,8 +316,8 @@ public class StoreDataService {
         logger.info(" StoreDataService   queryChangeRate  startDate = {} ",startDate);
         logger.info(" StoreDataService   queryChangeRate  endDate = {} ",endDate);
 
-        String sql = " SELECT * from member where created >= ? and created <= ?  ";
-        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{startDate+" 00:00:00",endDate+" 23:59:59"});
+        String sql = " SELECT * from member where store_id = ? and created >= ? and created <= ?  ";
+        List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{query.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
         logger.info(" StoreDataService   queryChangeRate  members = {} ",members.size());
 
         Set<String> staffIdSet = new HashSet<>();
@@ -331,19 +331,25 @@ public class StoreDataService {
         int count = 0;
         for (int i = 0; i < members.size(); i++) {
             Map member = members.get(i);
-            String coach_staff_id = member.get("coach_staff_id").toString();
-            if (!staffIdSet.contains(coach_staff_id)) {
-                continue;
-            }
-            String origin = "";
-            if(null!=member.get("origin")){
-                origin = member.get("origin").toString();
-            }
-            if(origin.indexOf("EXCEL")>=0){
-                continue;
-            }
+//            String coach_staff_id = member.get("coach_staff_id").toString();
+//            if (!staffIdSet.contains(coach_staff_id)) {
+//                continue;
+//            }
+//            String origin = "";
+//            if(null!=member.get("origin")){
+//                origin = member.get("origin").toString();
+//            }
+//            if(origin.indexOf("EXCEL")>=0){
+//                continue;
+//            }
             count++;
         }
+
+        int count_lj = 0;
+        String sql_lj = " SELECT * from member where store_id = ? and status = 0 and created <= ?  ";
+        List<Map<String,Object>> lj_members =  jdbcTemplate.queryForList(sql_lj,new Object[]{query.getStoreId(),endDate+" 23:59:59"});
+        logger.info(" StoreDataService   queryChangeRate  lj_members = {} ",lj_members.size());
+        count_lj = lj_members.size();
 
         int count_dd = 0;
         String sql_card = "select * from member_card where type = 'TY' and created >= ? and created <= ?  ";
@@ -374,6 +380,11 @@ public class StoreDataService {
         xzyxhys.setLabel("新增意向会员数");
         xzyxhys.setValue(""+count);
         storeDataList.add(xzyxhys);
+
+        StoreData ljyxhys = new StoreData();
+        ljyxhys.setLabel("累计意向会员数");
+        ljyxhys.setValue(""+count_lj);
+        storeDataList.add(ljyxhys);
 
         StoreData ddrs = new StoreData();
         ddrs.setLabel("到店人数");
@@ -462,27 +473,27 @@ public class StoreDataService {
         logger.info(" StoreDataService   queryMemberData  count_tk = {} ",count_tk);
 
         StoreData yxhy = new StoreData();
-        yxhy.setLabel("有效会员");
+        yxhy.setLabel("期末有效会员");
         yxhy.setValue(""+count_yx);
         storeDataList.add(yxhy);
 
         StoreData tkrs = new StoreData();
-        tkrs.setLabel("停课会员");
+        tkrs.setLabel("期末停课会员");
         tkrs.setValue(""+count_tk);
         storeDataList.add(tkrs);
 
         StoreData hyd = new StoreData();
-        hyd.setLabel("会员活跃度");
+        hyd.setLabel("本月会员活跃度");
         hyd.setValue(""+qdhyd);
         storeDataList.add(hyd);
 
         StoreData jkrs = new StoreData();
-        jkrs.setLabel("结课人数");
+        jkrs.setLabel("本月结课人数");
         jkrs.setValue(""+jks);
         storeDataList.add(jkrs);
 
         StoreData xkrs = new StoreData();
-        xkrs.setLabel("续课人数");
+        xkrs.setLabel("本月续课人数");
         xkrs.setValue(""+xks);
         storeDataList.add(xkrs);
 
