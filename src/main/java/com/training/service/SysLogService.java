@@ -189,6 +189,18 @@ public class SysLogService {
                 sysLogEntity.setStoreId2(storeEntity2.getStoreId());
                 sysLogEntity.setStoreName2(storeEntity2.getName());
             }
+
+            if(StringUtils.isNotEmpty(sysLogEntity.getOperStaffId())){
+                StaffEntity operStaffEntity = staffDao.getById(sysLogEntity.getOperStaffId());
+                if(operStaffEntity!=null){
+                    sysLogEntity.setOperStaffName(operStaffEntity.getCustname());
+                }else {
+                    sysLogEntity.setOperStaffName("-");
+                }
+            }else{
+                sysLogEntity.setOperStaffName("-");
+            }
+
             sysLogEntity.setContent(null);
             sysLogEntity.setLogText(null);
         }
