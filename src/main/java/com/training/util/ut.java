@@ -889,6 +889,16 @@ public class ut {
 		}
 	}
 
+	public static String changeLessonHour(Integer startTime) {
+		int hour = startTime/100;
+		int minute = startTime%100;
+//		System.out.println(" hour = "+hour);
+//		System.out.println(" minute = "+minute);
+		if(minute<10){
+			return hour+":0"+minute;
+		}
+		return hour+":"+minute;
+	}
 
 	public static void main(String[] args) {
 //		System.out.println(passMonth("2017-11","2016-11"));
@@ -902,9 +912,13 @@ public class ut {
 
 //		System.out.println(passDay("2016-10-02","2017-12-07"));
 
-		String month = "201809";
-		month = month.substring(0,4)+"-"+month.substring(4,6);
-		System.out.println(month);
+//		String month = "201809";
+//		month = month.substring(0,4)+"-"+month.substring(4,6);
+//		System.out.println(month);
+
+		System.out.println(changeLessonHour(800));
 
 	}
+
+
 }

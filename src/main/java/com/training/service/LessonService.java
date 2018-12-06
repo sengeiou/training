@@ -862,7 +862,8 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"特色课");
+                String hour = ut.changeLessonHour(trainingEntity.getStartHour());
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"特色课");
             }catch (Exception e){
 
             }
@@ -961,7 +962,8 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"团体课");
+                String hour = ut.changeLessonHour(trainingEntity.getStartHour());
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"团体课");
             }catch (Exception e){
 
             }
@@ -1176,7 +1178,8 @@ public class LessonService {
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),"私教课");
+                String hour = ut.changeLessonHour(trainingEntity.getStartHour());
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"私教课");
             }catch (Exception e){
 
             }
@@ -1249,8 +1252,8 @@ public class LessonService {
                 try{
                     logger.info(" staff = {} , ",staffEntity);
                     logger.info(" trainingEntity = {} , ",trainingEntity);
-
-                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+trainingEntity.getStartHour().toString().replaceAll("00",":00"),trainingEntity.getTitle());
+                    String hour = ut.changeLessonHour(trainingEntity.getStartHour());
+                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,trainingEntity.getTitle());
                 }catch (Exception e){
 
                     e.printStackTrace();
