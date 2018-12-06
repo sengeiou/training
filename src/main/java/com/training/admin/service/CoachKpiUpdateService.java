@@ -40,7 +40,7 @@ public class CoachKpiUpdateService {
     public void execute() {
         logger.info(" =======   CoachKpiUpdateService  execute start  ");
         String month = ut.currentFullMonth().replace("-","");
-        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') ");
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') and status >= 0 ");
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
