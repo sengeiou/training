@@ -271,6 +271,12 @@ public class MemberCouponService {
         logger.info(" MemberCouponService memberCouponQuery  = {}  ",query);
         query.setStartDate(null);
         query.setEndDate(null);
+        if(StringUtils.isNotEmpty(query.getUseStartDate())){
+            query.setUseStartDate(query.getUseStartDate()+" 00:00:00");
+        }
+        if(StringUtils.isNotEmpty(query.getUseEndDate())){
+            query.setUseEndDate(query.getUseEndDate()+" 23:59:59");
+        }
         query.setStatus(1);
         List<MemberCouponEntity> memberCouponList = memberCouponDao.find(query,page);
         List<MemberCoupon> memberCoupons = new ArrayList<>();
