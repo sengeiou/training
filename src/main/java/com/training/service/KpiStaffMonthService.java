@@ -251,7 +251,6 @@ public class KpiStaffMonthService {
                 kpiScore = kpiScore + calculateQuota(kpiTemplateQuota,kpiStaffMonth);
                 kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
             }
-
         }else{
             kpiStaffMonth.setTemplateName("-");
         }
@@ -652,34 +651,6 @@ public class KpiStaffMonthService {
                 }
             }
 
-        }else if(KpiQuotaEnum.k11.getKey().equals(kpiTemplateQuota.getQuotaId())){
-            kpiTemplateQuota.setFinishRate("0");
-            kpiTemplateQuota.setKpiScore("0");
-            kpiTemplateQuota.setScore("0");
-//            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdhydp())){
-//                int qdhydp = Integer.parseInt(kpiStaffMonth.getQdhydp());
-//                kpiTemplateQuota.setFinishRate(qdhydp+"%");
-//                List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
-//                for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
-//                    int min = 0;
-//                    int max = 999999;
-//                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMax())){
-//                        max = Integer.parseInt(kpiQuotaStandard.getMax());
-//                    }
-//                    if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
-//                        min = Integer.parseInt(kpiQuotaStandard.getMin());
-//                    }
-//                    if(qdhydp>=min&&qdhydp<max){
-//                        int value = Integer.parseInt(kpiQuotaStandard.getScore());
-//                        logger.info(" value = {} ",value);
-//                        kpiTemplateQuota.setScore(""+value);
-//                        double score = (double)value*kpiTemplateQuota.getWeight()/100;
-//                        kpiScore = score;
-//                        kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
-//                        break;
-//                    }
-//                }
-//            }
         }else if(KpiQuotaEnum.k12.getKey().equals(kpiTemplateQuota.getQuotaId())){
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
