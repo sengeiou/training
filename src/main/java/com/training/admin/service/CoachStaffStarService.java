@@ -62,7 +62,12 @@ public class CoachStaffStarService {
 
     public String calculateStaffStar(String staffId, String month) {
         StaffEntity staffEntity = staffDao.getById(staffId);
-        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
+        if(!staffEntity.getJob().equals("教练")){
+            return "非教练员工没有星级";
+        }
+        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month.replace("-",""));
+
+
 
 
         return "";
