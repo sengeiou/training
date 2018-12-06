@@ -172,7 +172,6 @@ public class ManualRestController {
         return "calculateOneKpi执行成功";
     }
 
-
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateKpi  execute start  ");
@@ -193,15 +192,6 @@ public class ManualRestController {
         return "calculateKpi执行成功";
     }
 
-    @GetMapping("trainingExcel")
-    public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" trainingExcel   ");
-        String startDate = "2018-10-01";
-        String endDate = "2018-10-31";
-        manualService.trainingExcel(startDate,endDate);
-        return "trainingExcel执行成功";
-    }
-
     @GetMapping("createStoreOpen")
     public Object createStoreOpen(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" createStoreOpen   ");
@@ -213,31 +203,6 @@ public class ManualRestController {
             manualService.createStoreOpen(storeId,year);
         }
         return "createStoreOpen 执行成功";
-    }
-
-    @GetMapping("exportAllMembers")
-    public Object exportAllMembers(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" exportAllMembers   ");
-        manualService.exportAllMembers();
-        return "exportAllMembers";
-    }
-
-    @GetMapping("exportDeadLessonMoney")
-    public Object exportDeadLessonMoney(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" exportDeadLessonMoney  start ");
-        String startDate = "2018-10-01";
-        String endDate = "2018-10-31";
-        manualService.exportDeadLessonMoney(startDate,endDate);
-        return "exportDeadLessonMoney end ";
-    }
-
-
-    @GetMapping("exportStaffMember")
-    public Object exportStaffMember(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" exportStaffMember  start ");
-        String date = "2018-10-31";
-        manualService.exportStaffMember(date);
-        return "exportStaffMember end ";
     }
 
     @GetMapping("backupMembers")
@@ -263,17 +228,6 @@ public class ManualRestController {
         backupService.backupMemberCard();
         return "backupMembers end ";
     }
-
-
-    @GetMapping("monthCardExcel")
-    public Object monthCardExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        logger.info(" monthCardExcel   ");
-        String startDate = "2018-10-01";
-        String endDate = "2018-10-31";
-        manualService.monthCardExcel(startDate,endDate);
-        return "monthCardExcel执行成功";
-    }
-
 
     @GetMapping("updateShowTag")
     public Object updateShowTag(HttpServletRequest request, HttpServletResponse response) throws Exception {

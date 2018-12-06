@@ -2,6 +2,7 @@ package com.training.admin.service;
 
 import com.alibaba.fastjson.JSON;
 import com.training.common.CardTypeEnum;
+import com.training.common.MemberStatusEnum;
 import com.training.dao.*;
 import com.training.entity.KpiStaffDetailEntity;
 import com.training.entity.MemberCardEntity;
@@ -179,6 +180,13 @@ public class KpiStaffDetailAdminService {
                 String startDateCard = memberCard.get("start_date").toString();
                 String endDateCard = memberCard.get("end_date").toString();
                 MemberEntity memberEntity = memberDao.getById(memberId);
+                if(memberEntity==null){
+                    continue;
+                }
+                // 停课会员不计算结课和死课
+                if(memberEntity.getStatus().equals(MemberStatusEnum.PAUSE.getKey())){
+                    continue;
+                }
                 String staffId = memberEntity.getCoachStaffId();
                 String remark = "";
                 boolean isJk = false;
