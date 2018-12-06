@@ -563,7 +563,7 @@ public class CalculateKpiService {
         String m = day.substring(5,7);
         String tableName = "member_his_"+m;
         int count = 0;
-        String sql = " select * from "+tableName+" where coach_staff_id = ? and backup_date = ? ";
+        String sql = " select * from "+tableName+" where coach_staff_id = ? and backup_date = ? and status = 1 ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,day});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
