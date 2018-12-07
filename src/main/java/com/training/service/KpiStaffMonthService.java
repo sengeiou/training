@@ -334,12 +334,8 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("0");
             kpiTemplateQuota.setScore("0");
 
-            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
-            System.out.println(month);
-            String month1 = ut.currentFullMonth(month,-1).replace("-","");
-            String month2= ut.currentFullMonth(month,-2).replace("-","");
-            System.out.println(month1);
-            System.out.println(month2);
+            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
+            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
 
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStaffId(),month1);
             KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStaffId(),month2);
@@ -400,12 +396,8 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("0");
             kpiTemplateQuota.setScore("0");
 
-            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
-            System.out.println(month);
-            String month1 = ut.currentFullMonth(month,-1).replace("-","");
-            String month2= ut.currentFullMonth(month,-2).replace("-","");
-            System.out.println(month1);
-            System.out.println(month2);
+            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
+            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
 
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStaffId(),month1);
             KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStaffId(),month2);
@@ -524,12 +516,8 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
 
-            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
-            System.out.println(month);
-            String month1 = ut.currentFullMonth(month,-1).replace("-","");
-            String month2= ut.currentFullMonth(month,-2).replace("-","");
-            System.out.println(month1);
-            System.out.println(month2);
+            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
+            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
 
             KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
@@ -593,12 +581,8 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
 
-            String month = kpiStaffMonth.getMonth().substring(0,4)+"-"+kpiStaffMonth.getMonth().substring(4,6);
-            System.out.println(month);
-            String month1 = ut.currentFullMonth(month,-1).replace("-","");
-            String month2= ut.currentFullMonth(month,-2).replace("-","");
-            System.out.println(month1);
-            System.out.println(month2);
+            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
+            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
 
             KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
             KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);

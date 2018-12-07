@@ -900,6 +900,12 @@ public class ut {
 		return hour+":"+minute;
 	}
 
+	public static String getKpiMonth(String month, int i) {
+		month = month.substring(0,4)+"-"+month.substring(4,6);
+		String month1 = ut.currentFullMonth(month,i).replace("-","");
+		return month1;
+	}
+
 	public static void main(String[] args) {
 //		System.out.println(passMonth("2017-11","2016-11"));
 //		System.out.println(currentMonth("2017-11",-1));
@@ -916,9 +922,10 @@ public class ut {
 //		month = month.substring(0,4)+"-"+month.substring(4,6);
 //		System.out.println(month);
 
-		System.out.println(changeLessonHour(800));
+		System.out.println(getKpiMonth("201811",-12));
 
 	}
+
 
 
 }

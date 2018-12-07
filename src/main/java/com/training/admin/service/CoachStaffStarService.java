@@ -3,6 +3,7 @@ package com.training.admin.service;
 import com.training.dao.*;
 import com.training.entity.*;
 import com.training.service.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class CoachStaffStarService {
     }
 
     private int calculateStar1(StaffEntity staffEntity, String month) {
-
+        String month1 = ut.getKpiMonth(month,-1);
 
         return 0;
     }
