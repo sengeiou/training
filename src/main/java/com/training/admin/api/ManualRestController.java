@@ -355,57 +355,22 @@ public class ManualRestController {
         logger.info("end sendTest!  time = {} ", ut.currentTime());
     }
 
-
-    /**
-     * sendTest
-     */
-    @GetMapping("dealXk")
-    public void dealXk(){
-        logger.info("start dealXk!  time = {} ", ut.currentTime());
-        contractAdminService.updateContractInfo();
-        String month = "2018-07";
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-08";
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-09";
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-10";
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-11";
-        kpiStaffDetailAdminService.dealXk(month);
-        logger.info("end dealXk!  time = {} ", ut.currentTime());
-    }
-
-    /**
-     * sendTest
-     */
-    @GetMapping("dealJk")
+    @GetMapping("dealJkAndXk")
     public void dealJkAndXk(){
-        logger.info("start dealJk!  time = {} ", ut.currentTime());
-        String month = "2018-07";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-08";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-09";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-10";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-11";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        month = "2018-12";
-        kpiStaffDetailAdminService.dealJk(month);
-        kpiStaffDetailAdminService.dealXk(month);
-        logger.info("end dealJk!  time = {} ", ut.currentTime());
+        logger.info("start dealJkAndXk!  time = {} ", ut.currentTime());
+        String start = "2018-06-01";
+        String end = "2018-06-30";
+        end = "2018-12-07";
+        int days = ut.passDayByDate(start,end)+1;
+        for (int i = 0; i < days; i++) {
+            String day = ut.currentDate(start,i);
+            logger.info(" dealJkAndXk !  day = {} ",day);
+            kpiStaffDetailAdminService.dealJk(day);
+            kpiStaffDetailAdminService.dealXk(day);
+        }
+        logger.info("end dealJkAndXk!  time = {} ", ut.currentTime());
     }
 
-    /**
-     * sendTest
-     */
     @GetMapping("updateKpiAndStar")
     public Object updateKpiAndStar(){
         logger.info("start updateKpiAndStar!  time = {} ", ut.currentTime());
@@ -414,9 +379,6 @@ public class ManualRestController {
         return msg;
     }
 
-    /**
-     * sendTest
-     */
     @GetMapping("calculateStoreFinanceOnceReport")
     public Object calculateStoreFinanceOnceReport(){
         logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
@@ -435,9 +397,6 @@ public class ManualRestController {
         return msg;
     }
 
-    /**
-     * sendTest
-     */
     @GetMapping("calculateStoreFinanceMonthReport")
     public Object calculateStoreFinanceMonthReport(){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
@@ -456,9 +415,6 @@ public class ManualRestController {
         return msg;
     }
 
-    /**
-     * sendTest
-     */
     @GetMapping("calculateStaffFinanceReport")
     public Object calculateStaffFinanceReport(){
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
@@ -478,9 +434,6 @@ public class ManualRestController {
         return msg;
     }
 
-    /**
-     * sendTest
-     */
     @GetMapping("updateStaffStar")
     public Object updateStaffStar(){
         logger.info("start updateStaffStar!  time = {} ", ut.currentTime());

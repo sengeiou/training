@@ -22,6 +22,8 @@ public class KpiStaffDetailEntity {
 
     private String month;
 
+    private String day;
+
     private String staffId;
 
     private String storeId;

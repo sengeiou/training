@@ -26,6 +26,8 @@ public interface MemberCardRepository {
                 " <if test=\"memberCard.days != null\"> days, </if>" +
                 " <if test=\"memberCard.startDate != null\"> start_date, </if>" +
                 " <if test=\"memberCard.endDate != null\"> end_date, </if>" +
+                " <if test=\"memberCard.originalStartDate != null\"> original_start_date, </if>" +
+                " <if test=\"memberCard.originalEndDate != null\"> original_end_date, </if>" +
                 " <if test=\"memberCard.delay != null\"> delay, </if>" +
                 " <if test=\"memberCard.feature != null\"> feature, </if>" +
                 " <if test=\"memberCard.remark != null\"> remark, </if>" +
@@ -48,6 +50,8 @@ public interface MemberCardRepository {
                 " <if test=\"memberCard.days != null\"> #{memberCard.days}, </if>" +
                 " <if test=\"memberCard.startDate != null\"> #{memberCard.startDate}, </if>" +
                 " <if test=\"memberCard.endDate != null\"> #{memberCard.endDate}, </if>" +
+                " <if test=\"memberCard.originalStartDate != null\"> #{memberCard.originalStartDate}, </if>" +
+                " <if test=\"memberCard.originalEndDate != null\"> #{memberCard.originalEndDate}, </if>" +
                 " <if test=\"memberCard.delay != null\"> #{memberCard.delay}, </if>" +
                 " <if test=\"memberCard.feature != null\"> #{memberCard.feature}, </if>" +
                 " <if test=\"memberCard.remark != null\"> #{memberCard.remark}, </if>" +
@@ -61,7 +65,8 @@ public interface MemberCardRepository {
             "</script>")
     int add(@Param("memberCard") MemberCardEntity memberCard);
 
-    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,original_start_date,original_end_date," +
+            " delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
@@ -111,7 +116,8 @@ public interface MemberCardRepository {
             "</script>")
     Long count(@Param("query") MemberCardQuery memberCard);
 
-    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,original_start_date,original_end_date," +
+            " delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE card_no = #{id} " +
             "</script>")
@@ -154,7 +160,8 @@ public interface MemberCardRepository {
             "</script>")
     int delay(@Param("memberCard") MemberCardEntity memberCard);
 
-    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,original_start_date,original_end_date," +
+            " delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE 1 = 1 " +
             " <if test=\"query.cardNo != null\"> AND card_no = #{query.cardNo} </if>" +
@@ -219,7 +226,8 @@ public interface MemberCardRepository {
             "</script>")
     int advanceCard(@Param("memberCard") MemberCardEntity memberCard);
 
-    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
+    @Select("<script> SELECT card_no,card_id,member_id,coach_id,store_id,type,money,count,total,days,start_date,end_date,original_start_date,original_end_date," +
+            " delay,feature,remark,audit_id,contract_id,status,creater,created,modified " +
             " FROM member_card " +
             " WHERE contract_id = #{contractId} " +
             "</script>")

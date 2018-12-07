@@ -36,6 +36,10 @@ public class MemberCardQuery {
 
     private String endDate;
 
+    private String originalStartDate;
+
+    private String originalEndDate;
+
     private Integer delay;
 
     private String feature;

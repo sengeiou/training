@@ -23,6 +23,7 @@ public class BackupTask {
     @Scheduled(cron = "0 50 23 * * *")
     public void backupMemberAndStaff(){
         String month = ut.currentFullMonth();
+        String day = ut.currentDate();
         try {
             logger.info("start backupMember!  month = {} , time = {} ",month, ut.currentTime());
             backupService.backupMember();
@@ -38,12 +39,12 @@ public class BackupTask {
 
         }
         try {
-            kpiStaffDetailAdminService.dealJk(month);
+            kpiStaffDetailAdminService.dealJk(day);
         }catch (Exception e){
 
         }
         try {
-            kpiStaffDetailAdminService.dealXk(month);
+            kpiStaffDetailAdminService.dealXk(day);
         }catch (Exception e){
 
         }

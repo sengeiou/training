@@ -295,8 +295,8 @@ public class StoreDataService {
 
         StoreData yqsr = new StoreData();
         yqsr.setLabel("延期收入");
-        yqsr.setValue("-");
-        yqsr.setLesson("-");
+        yqsr.setValue("0");
+        yqsr.setLesson("0");
         storeDataList.add(yqsr);
 
         return storeDataList;
@@ -376,15 +376,12 @@ public class StoreDataService {
         }
         List<StoreData> storeDataList= new ArrayList();
 
+
+
         StoreData xzyxhys = new StoreData();
         xzyxhys.setLabel("新增意向会员数");
         xzyxhys.setValue(""+count);
         storeDataList.add(xzyxhys);
-
-        StoreData ljyxhys = new StoreData();
-        ljyxhys.setLabel("累计意向会员数");
-        ljyxhys.setValue(""+count_lj);
-        storeDataList.add(ljyxhys);
 
         StoreData ddrs = new StoreData();
         ddrs.setLabel("到店人数");
@@ -415,6 +412,11 @@ public class StoreDataService {
         cjl.setLabel("成交率");
         cjl.setValue(rate_cj+"%");
         storeDataList.add(cjl);
+
+        StoreData ljyxhys = new StoreData();
+        ljyxhys.setLabel("累计意向会员数");
+        ljyxhys.setValue(""+count_lj);
+        storeDataList.add(ljyxhys);
 
         return storeDataList;
     }

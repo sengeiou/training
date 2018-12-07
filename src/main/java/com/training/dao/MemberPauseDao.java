@@ -3,6 +3,7 @@ package com.training.dao;
 import com.training.repository.*;
 import com.training.entity.*;
 import com.training.common.PageRequest;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,10 @@ public class MemberPauseDao {
      * Created by huai23 on 2018-06-27 20:52:15.
      */ 
     public int add(MemberPauseEntity memberPause){
+        String pauseDate = memberPause.getPauseDate();
+        if(StringUtils.isNotEmpty(pauseDate) && pauseDate.length()>10){
+            memberPause.setPauseDate(pauseDate.substring(0,10));
+        }
         int n = memberPauseRepository.add(memberPause);
         return n;
     }

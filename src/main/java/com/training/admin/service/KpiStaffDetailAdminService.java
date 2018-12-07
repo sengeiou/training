@@ -8,7 +8,6 @@ import com.training.entity.KpiStaffDetailEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
 import com.training.entity.StaffEntity;
-import com.training.service.MemberCardService;
 import com.training.util.ExcelUtil;
 import com.training.util.ut;
 import org.slf4j.Logger;
@@ -48,17 +47,22 @@ public class KpiStaffDetailAdminService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public int dealXk(String month) {
-        logger.info(" =======   KpiStaffDetailService  dealXk  month = {} ",month);
+    public int dealXk(String day) {
+        logger.info(" =======   KpiStaffDetailService  dealXk  day = {} ",day);
+        String month = day.substring(0,7);
+        if(ut.currentDate().indexOf(month)==0){
+            if(ut.passDayByDate(ut.currentDate(),day)>0){
+                day = ut.currentDate();
+            }
+        }
+
         String sql = "select * from contract where card_type in ('PT','PM') and sign_date >= ? and sign_date <= ? ";
         int xks = 0;
         int xqs = 0;
         int zjs = 0;
 
-        String startDate = month+"-01";
-        String endDate = month+"-31";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
-        logger.info(" dealXk   startDate = {} , endDate = {} , data.size = {} ",startDate,endDate,data.size());
+        List data = jdbcTemplate.queryForList(sql,new Object[]{day,day});
+        logger.info(" dealXk   startDate = {} , endDate = {} , data.size = {} ",day,day,data.size());
         for (int i = 0; i < data.size(); i++) {
             Map contract = (Map)data.get(i);
             try {
@@ -71,6 +75,7 @@ public class KpiStaffDetailAdminService {
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                         kpiStaffDetailEntity.setMonth(month);
+                        kpiStaffDetailEntity.setDay(day);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("XK");
@@ -93,6 +98,7 @@ public class KpiStaffDetailAdminService {
                                 try {
                                     KpiStaffDetailEntity kpiStaffDetailEntityJk = new KpiStaffDetailEntity();
                                     kpiStaffDetailEntityJk.setMonth(month);
+                                    kpiStaffDetailEntityJk.setDay(day);
                                     kpiStaffDetailEntityJk.setCardNo(card.get("card_no").toString());
                                     kpiStaffDetailEntityJk.setContractId("");
                                     kpiStaffDetailEntityJk.setType("JK");
@@ -116,6 +122,7 @@ public class KpiStaffDetailAdminService {
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                         kpiStaffDetailEntity.setMonth(month);
+                        kpiStaffDetailEntity.setDay(day);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("XQ");
@@ -136,6 +143,7 @@ public class KpiStaffDetailAdminService {
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                         kpiStaffDetailEntity.setMonth(month);
+                        kpiStaffDetailEntity.setDay(day);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("ZJS");
@@ -149,27 +157,25 @@ public class KpiStaffDetailAdminService {
                         }
                     }
                 }
-
             }catch (Exception e){
                 logger.error("  dealXkERROR : message = {} , contract = {} ",e.getMessage(),contract,e);
             }
         }
-        logger.info(" getXks = {} ,xqs = {} , zjs = {} , month = {} , data.size = {} ",xks,xqs,zjs,month,data.size());
+        logger.info(" getXks = {} ,xqs = {} , zjs = {} , day = {} , data.size = {} ",xks,xqs,zjs,day,data.size());
         return xks;
     }
 
-    public int dealJk(String month) {
-        logger.info(" =======   KpiStaffDetailService  dealJk  month = {} ",month);
-        String startDate = month+"-01";
-        String endDate = month+"-31";
+    public int dealJk(String day) {
+        logger.info(" =======   KpiStaffDetailService  dealJk  day = {} ",day);
+        String month = day.substring(0,7);
         if(ut.currentDate().indexOf(month)==0){
-            if(ut.passDayByDate(ut.currentDate(),endDate)>0){
-                endDate = ut.currentDate();
+            if(ut.passDayByDate(ut.currentDate(),day)>0){
+                day = ut.currentDate();
             }
         }
         int jks = 0;
         String sql = "select * from member_card where type in ('PT','PM') and start_date <= ?  and end_date >= ? and created <= ? ";
-        List cards = jdbcTemplate.queryForList(sql ,new Object[]{endDate,ut.currentDate(startDate,-35),endDate+" 23:59:59"});
+        List cards = jdbcTemplate.queryForList(sql ,new Object[]{day,ut.currentDate(day,-35),day+" 23:59:59"});
         for (int i = 0; i < cards.size(); i++) {
             Map memberCard = (Map)cards.get(i);
             try {
@@ -184,7 +190,8 @@ public class KpiStaffDetailAdminService {
                     continue;
                 }
                 // 停课会员不计算结课和死课
-                if(memberEntity.getStatus().equals(MemberStatusEnum.PAUSE.getKey())){
+                if( isPauseMember(memberId,day)){
+                    logger.error("  isPauseMember   memberId = {} , day = {} ",memberId,day);
                     continue;
                 }
                 String staffId = memberEntity.getCoachStaffId();
@@ -192,14 +199,14 @@ public class KpiStaffDetailAdminService {
                 boolean isJk = false;
                 boolean isSk = false;
                 if(type.equals(CardTypeEnum.PM.getKey())){
-                    if(ut.passDayByDate(endDateCard,endDate)>0){
+                    if(ut.passDayByDate(endDateCard,day)>0){
                         isJk = true;
                         isSk = true;
                         remark = "死课";
                     }
                 }
                 if(type.equals(CardTypeEnum.PT.getKey())){
-                    int passDays = ut.passDayByDate(endDateCard,endDate);
+                    int passDays = ut.passDayByDate(endDateCard,day);
                     if(count>0){
                         if(passDays<=30){
                             continue;
@@ -215,7 +222,7 @@ public class KpiStaffDetailAdminService {
                         }else{
                             Map training = (Map)trainings.get(0);
                             String lessonDate = training.get("lesson_date").toString();
-                            if(ut.passDayByDate(endDate,lessonDate)>0){
+                            if(ut.passDayByDate(day,lessonDate)>0){
                                 continue;
                             }else{
                                 isJk = true;
@@ -228,6 +235,7 @@ public class KpiStaffDetailAdminService {
                 if(isJk){
                     KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                     kpiStaffDetailEntity.setMonth(month);
+                    kpiStaffDetailEntity.setDay(day);
                     kpiStaffDetailEntity.setCardNo(cardNo);
                     kpiStaffDetailEntity.setContractId("");
                     kpiStaffDetailEntity.setType("JK");
@@ -244,6 +252,7 @@ public class KpiStaffDetailAdminService {
                 if(isSk){
                     KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                     kpiStaffDetailEntity.setMonth(month);
+                    kpiStaffDetailEntity.setDay(day);
                     kpiStaffDetailEntity.setCardNo(cardNo);
                     kpiStaffDetailEntity.setContractId("");
                     kpiStaffDetailEntity.setType("SK");
@@ -259,11 +268,38 @@ public class KpiStaffDetailAdminService {
                 logger.error("  dealJkERROR : memberCard = {} ",memberCard);
             }
         }
-        logger.info(" =======   KpiStaffDetailService  dealJk  startDate = {} , endDate = {} ",startDate,endDate);
+        logger.info(" =======   KpiStaffDetailService  dealJk  day = {} ",day);
         logger.info(" dealJk  ,jks = {} , month = {} , cards.size = {} ",jks,month,cards.size());
         return jks;
     }
 
+    private boolean isPauseMember(String memberId, String day) {
+        String m = day.substring(5,7);
+        String tableName = "member_his_"+m;
+        String sql = " select * from "+tableName+" where member_id = ? and backup_date = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{memberId,day});
+        if(data.size()>0){
+            Map member = (Map)data.get(0);
+            String status = member.get("status").toString();
+            if(status.equals(MemberStatusEnum.PAUSE.getKey().toString())){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            String sql_pause = " select * from  member_pause where member_id = ? and status = 0 and pause_date < ? and restore_date > ? ";
+            List data_pause = jdbcTemplate.queryForList(sql_pause,new Object[]{memberId,day,day});
+            if(data_pause.size()>0){
+                return true;
+            }
+            sql_pause = " select * from  member_pause where member_id = ? and status = 1 and pause_date < ? ";
+            data_pause = jdbcTemplate.queryForList(sql_pause,new Object[]{memberId,day});
+            if(data_pause.size()>0){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public String updateKpiAndStar() {
         List<List<String>> data =ExcelUtil.readExcel(new File("c://kpi-4.xls"));
