@@ -553,9 +553,40 @@ public class ExportFileService {
         titleRow.add("结束日期");
         titleRow.add("剩余节数");
         titleRow.add("剩余金额");
+        titleRow.add("备注");
         excelData.add(titleRow);
+        String sql = " SELECT * from kpi_staff_detail where day >= ? and day <= ? and type in ('JK')  ";
+        List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        for (int i = 0; i < detailList.size(); i++) {
+            Map detail = detailList.get(i);
+            String cardNo = detail.get("card_no").toString();
+            String memberId = detail.get("member_id").toString();
+            String storeId = detail.get("store_id").toString();
+            String storeName = "";
+            if(StringUtils.isNotEmpty(storeId)){
+                StoreEntity storeEntity = storeDao.getById(storeId);
+                if(storeEntity!=null){
+                    storeName = storeEntity.getName();
+                }
+            }
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            List<String> row = new ArrayList();
+            row.add(storeName);
+            row.add(memberEntity.getName());
+            row.add(memberEntity.getPhone());
+            row.add(cardNo);
+            row.add(memberCardEntity.getTotal().toString());
+            row.add(memberCardEntity.getMoney());
+            row.add(memberCardEntity.getStartDate());
+            row.add(memberCardEntity.getEndDate());
+            row.add(memberCardEntity.getCount().toString());
+            row.add("1");
+            row.add(detail.get("remark").toString());
+            excelData.add(row);
+        }
         logger.info(" contractSale     excelData = {} ",excelData.size());
-        ExcelUtil.writeExcel(excelData,"C://product/deadCard_"+endDate.replaceAll("-","")+".xls");
+        ExcelUtil.writeExcel(excelData,"C://product/结课死课报表_"+endDate.replaceAll("-","")+".xls");
     }
 
 }
