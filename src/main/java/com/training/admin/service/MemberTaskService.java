@@ -7,6 +7,7 @@ import com.training.dao.*;
 import com.training.entity.*;
 import com.training.service.MemberCardService;
 import com.training.service.MemberCouponService;
+import com.training.service.MemberService;
 import com.training.service.SmsLogService;
 import com.training.util.IDUtils;
 import com.training.util.SmsUtil;
@@ -16,6 +17,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,9 @@ public class MemberTaskService {
 
     @Autowired
     private ContractDao contractDao;
+
+    @Autowired
+    private MemberService memberService;
 
     @Autowired
     private MemberDao memberDao;
@@ -70,6 +76,25 @@ public class MemberTaskService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public String restorePauseMembers(String day) {
+        String end_day = ut.currentDate(day,-15);
+        String sql = " select * from member_pause where status = 1 and  card_no > 0 and pause_date <= ? ";
+        List<Map<String,Object>> data =  jdbcTemplate.queryForList(sql,new Object[]{ end_day });
+        logger.info(" restorePauseMembers  end_day = {} , data = {} ",end_day,data.size());
+        int success = 0;
+        for (int i = 0; i < data.size(); i++) {
+            Map member = data.get(i);
+            String memberId = member.get("member_id").toString();
+            String cardNo = member.get("card_no").toString();
+            ResponseEntity<String> responseEntity = memberService.restoreMemberBySelf(memberId);
+            if(responseEntity.getStatusCode().equals(HttpStatus.OK)){
+                success++;
+            }
+        }
+        return "success:"+success;
+    }
+
 
     public void sendTrainingNotice() {
         logger.info(" MemberTaskService sendTrainingNotice   start  ");

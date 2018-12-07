@@ -1405,6 +1405,9 @@ public class MemberService {
             memberPauseEntity.setStatus(0);
             int n = memberPauseDao.update(memberPauseEntity);
             int days = ut.passDayByDate(memberPauseEntity.getPauseDate(),ut.currentDate());
+            if(days>15){
+                days=15;
+            }
             if(n>0){
                 canRestore = true;
             }

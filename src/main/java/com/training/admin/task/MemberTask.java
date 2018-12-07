@@ -80,5 +80,15 @@ public class MemberTask {
         logger.info("end sendCardEndNotice!  time = {} ", ut.currentTime());
     }
 
+    /**
+     * 自动停课月卡会员自动复课
+     */
+    @Scheduled(cron = "0 15 2 * * *")
+    public void restorePauseMembers(){
+        logger.info("start restorePauseMembers!  time = {} ", ut.currentTime());
+        memberTaskService.restorePauseMembers(ut.currentDate());
+        logger.info("end restorePauseMembers!  time = {} ", ut.currentTime());
+    }
+
 
 }

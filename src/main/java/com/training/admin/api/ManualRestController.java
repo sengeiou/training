@@ -444,4 +444,14 @@ public class ManualRestController {
         return msg;
     }
 
+
+    @GetMapping("restorePauseMembers")
+    public Object restorePauseMembers(){
+        logger.info("start restorePauseMembers!  time = {} ", ut.currentTime());
+        String day = ut.currentDate();
+        String msg = memberTaskService.restorePauseMembers(day);
+        logger.info("end restorePauseMembers!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
 }
