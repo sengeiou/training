@@ -65,14 +65,41 @@ public class CoachStaffStarService {
         if(!staffEntity.getJob().equals("教练")){
             return "非教练员工没有星级";
         }
+        logger.info(" calculateStaffStar   staffName = {} , month = {} , star = {}   ",staffEntity.getCustname(),month,staffEntity.getStar());
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month.replace("-",""));
-
-
-
-
-
-
+        int n = 0;
+        if(staffEntity.getStar()<2){
+            n = calculateStar1(staffEntity,month);
+        }else if(staffEntity.getStar()==2){
+            n = calculateStar2(staffEntity,month);
+        }if(staffEntity.getStar()==3){
+            n = calculateStar3(staffEntity,month);
+        }if(staffEntity.getStar()==4){
+            n = calculateStar4(staffEntity,month);
+        }
+        logger.info(" calculateStaffStar   staffName = {} , month = {} , star = {} , n =  ",staffEntity.getCustname(),month,staffEntity.getStar(),n);
         return "";
+    }
+
+    private int calculateStar1(StaffEntity staffEntity, String month) {
+
+
+        return 0;
+    }
+
+    private int calculateStar2(StaffEntity staffEntity, String month) {
+
+        return 0;
+    }
+
+    private int calculateStar3(StaffEntity staffEntity, String month) {
+
+        return 0;
+    }
+
+    private int calculateStar4(StaffEntity staffEntity, String month) {
+
+        return 0;
     }
 
 }

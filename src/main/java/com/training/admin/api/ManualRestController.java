@@ -175,7 +175,7 @@ public class ManualRestController {
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateKpi  execute start  ");
-        String month = "201810";
+        String month = "201811";
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') ");
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
@@ -190,6 +190,20 @@ public class ManualRestController {
         }
         logger.info(" =======   calculateKpi  execute end  ");
         return "calculateKpi执行成功";
+    }
+
+    @GetMapping("star")
+    public Object calculateStar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" =======   calculateStar  execute start  ");
+        String month = "201812";
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练') ");
+        for (int i = 0; i < coachs.size(); i++){
+            Map staff = coachs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            coachStaffStarService.calculateStaffStar(staffId,month);
+        }
+        logger.info(" =======   calculateStar  execute end  ");
+        return "calculateStar执行成功";
     }
 
     @GetMapping("createStoreOpen")

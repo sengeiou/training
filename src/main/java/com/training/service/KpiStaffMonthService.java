@@ -652,11 +652,13 @@ public class KpiStaffMonthService {
             }
 
         }else if(KpiQuotaEnum.k12.getKey().equals(kpiTemplateQuota.getQuotaId())){
+            String storeId = kpiStaffMonth.getStoreId();
+            KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,kpiStaffMonth.getMonth());
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getTczhl())){
-                int tczhl = Integer.parseInt(kpiStaffMonth.getTczhl());
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getTczhl())){
+                int tczhl = Integer.parseInt(kpiStaffMonthEntity.getTczhl());
                 kpiTemplateQuota.setFinishRate(tczhl+"%");
                 List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
                 for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
@@ -680,11 +682,13 @@ public class KpiStaffMonthService {
                 }
             }
         }else if(KpiQuotaEnum.k13.getKey().equals(kpiTemplateQuota.getQuotaId())){
+            String storeId = kpiStaffMonth.getStoreId();
+            KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,kpiStaffMonth.getMonth());
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getQdhyd())){
-                double qdhyd = Double.parseDouble(kpiStaffMonth.getQdhyd());
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getQdhyd())){
+                double qdhyd = Double.parseDouble(kpiStaffMonthEntity.getQdhyd());
                 kpiTemplateQuota.setFinishRate(qdhyd+"%");
                 List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
                 for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
