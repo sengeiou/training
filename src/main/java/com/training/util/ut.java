@@ -922,7 +922,9 @@ public class ut {
 //		month = month.substring(0,4)+"-"+month.substring(4,6);
 //		System.out.println(month);
 
-		System.out.println(getKpiMonth("201811",-12));
+//		System.out.println(getKpiMonth("201811",-12));
+
+		System.out.println(passDayByDate("2018-11-22","2018-11-30"));
 
 	}
 

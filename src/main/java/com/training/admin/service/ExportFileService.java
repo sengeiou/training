@@ -166,7 +166,9 @@ public class ExportFileService {
 
 
     public void monthCardExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
+        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? " +
+//                " and card_no = 10916 " +
+                " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
         titleRow.add("门店");
@@ -180,6 +182,7 @@ public class ExportFileService {
         titleRow.add("合同金额");
         titleRow.add("购买课程节数/天数");
         titleRow.add("耗课天数");
+        titleRow.add("停课天数");
         titleRow.add("耗课总金额");
 
         System.out.println(data.size());
@@ -214,18 +217,21 @@ public class ExportFileService {
 
                 int monthDays = ut.passDayByDate(startDate,endDate)+1;
                 double money = 0;
-
                 int monthDays2 = ut.passDayByDate(startDate,end_date)+1;
                 if(monthDays>monthDays2){
                     monthDays = monthDays2;
                 }
 
+                int pauseDays = getPauseDaysByMonth(memberId,startDate,endDate);
+
                 memberCardEntity.getMoney();
                 double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
-                int days = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
+                int days = memberCardEntity.getDays();
                 if(days>0){
                     price = Double.parseDouble(memberCardEntity.getMoney())/days;
-                    money = price*monthDays;
+                    if(monthDays-pauseDays>0){
+                        money = price*(monthDays-pauseDays);
+                    }
                 }
                 memberCardEntity.setTotal(days);
                 row.add(storeEntity.getName());
@@ -238,8 +244,8 @@ public class ExportFileService {
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());
-
                 row.add(""+monthDays);
+                row.add(""+pauseDays);
                 row.add(ut.getDoubleString(money));
 
                 excelData.add(row);
@@ -248,6 +254,53 @@ public class ExportFileService {
             }
         }
         ExcelUtil.writeExcel(excelData,"C://product/monthCard"+System.currentTimeMillis()+".xls");
+    }
+
+    private int getPauseDaysByMonth(String memberId, String startDate, String endDate) {
+        String start = startDate;
+        String end = endDate;
+        int pauseDays = 0;
+        String sql = " select * from member_pause where member_id = ? and status = 0 and restore_date > ?";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, start});
+        for (int i = 0; i < data.size(); i++) {
+            Map pause = (Map)data.get(i);
+            String pause_date = pause.get("pause_date").toString();
+            if(pause_date.indexOf(":")>0){
+                pause_date = pause_date.substring(0,10);
+            }
+            String restore_date = pause.get("restore_date").toString();
+            if(ut.passDayByDate(startDate,pause_date)>0){
+                startDate = pause_date;
+            }
+            if(ut.passDayByDate(endDate,restore_date)<0){
+                endDate = restore_date;
+            }
+            int days = ut.passDayByDate(startDate,endDate);
+            pauseDays = pauseDays + days;
+        }
+
+        startDate = start;
+        endDate = end;
+
+        sql = " select * from member_pause where member_id = ? and status = 1 and pause_date < ?";
+        data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, end});
+        for (int i = 0; i < data.size(); i++) {
+            Map pause = (Map)data.get(i);
+            String pause_date = pause.get("pause_date").toString();
+            if(pause_date.indexOf(":")>0){
+                pause_date = pause_date.substring(0,10);
+            }
+            String restore_date = pause.get("restore_date").toString();
+            if(ut.passDayByDate(startDate,pause_date)>0){
+                startDate = pause_date;
+            }
+            if(ut.passDayByDate(endDate,restore_date)<0){
+                endDate = restore_date;
+            }
+            int days = ut.passDayByDate(startDate,endDate);
+            pauseDays = pauseDays + days;
+        }
+        return pauseDays;
     }
 
     public void exportAllMembers() {
