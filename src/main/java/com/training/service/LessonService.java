@@ -863,7 +863,7 @@ public class LessonService {
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
                 String hour = ut.changeLessonHour(trainingEntity.getStartHour());
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"特色课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+hour,"特色课");
             }catch (Exception e){
 
             }
@@ -963,7 +963,7 @@ public class LessonService {
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
                 String hour = ut.changeLessonHour(trainingEntity.getStartHour());
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"团体课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lesson.getLessonDate()+" "+hour,"团体课");
             }catch (Exception e){
 
             }
@@ -1179,7 +1179,7 @@ public class LessonService {
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
             try{
                 String hour = ut.changeLessonHour(trainingEntity.getStartHour());
-                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,"私教课");
+                smsUtil.sendLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",lessonDate+" "+hour,"私教课");
             }catch (Exception e){
 
             }
@@ -1253,7 +1253,7 @@ public class LessonService {
                     logger.info(" staff = {} , ",staffEntity);
                     logger.info(" trainingEntity = {} , ",trainingEntity);
                     String hour = ut.changeLessonHour(trainingEntity.getStartHour());
-                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",hour,trainingEntity.getTitle());
+                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",trainingEntity.getLessonDate()+" "+hour,trainingEntity.getTitle());
                 }catch (Exception e){
 
                     e.printStackTrace();
