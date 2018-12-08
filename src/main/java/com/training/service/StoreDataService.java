@@ -495,6 +495,11 @@ public class StoreDataService {
         xks = xkCards.size();
 
         String qdhyd = "-";
+        List dataHyd = jdbcTemplate.queryForList("select qdhyd from kpi_staff_month where staff_id = ? and month = ? ",new Object[]{query.getStoreId(),query.getMonth().replace("-","")});
+        if(dataHyd.size()>0){
+            Map item = (Map)dataHyd.get(0);
+            qdhyd = item.get("qdhyd").toString();
+        }
 
         String sql = " SELECT * from member where created <= ? ";
         List<Map<String,Object>> members =  jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
