@@ -66,6 +66,16 @@ public class TrainingDao {
     }
 
     /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    public List<TrainingEntity> getByLessonId(String id){
+        List<TrainingEntity> trainingEntities = trainingRepository.getByLessonId(id);
+        return trainingEntities;
+    }
+
+    /**
      * 根据实体更新
      * @param training
      * Created by huai23 on 2018-05-26 17:09:14.
@@ -73,6 +83,17 @@ public class TrainingDao {
     public int update(TrainingEntity training){
         logger.info("  updateTraining  memberId = {} , lessonDate = {} ,trainingData = {}",training.getMemberId(),training.getLessonDate(),training.getTrainingData());
         int n = trainingRepository.update(training);
+        return n;
+    }
+
+    /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    public int saveTrainingData(TrainingEntity training){
+        logger.info("  updateTraining  memberId = {} , lessonDate = {} ,trainingData = {}",training.getMemberId(),training.getLessonDate(),training.getTrainingData());
+        int n = trainingRepository.saveTrainingData(training);
         return n;
     }
 

@@ -104,6 +104,17 @@ public class TrainingRestController {
     }
 
     /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    @RequestMapping (value = "saveTrainingData", method = RequestMethod.POST)
+    public ResponseEntity<String> saveTrainingData(@RequestBody TrainingEntity training,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  saveTrainingData  training = {}",training);
+        return trainingService.saveTrainingData(training);
+    }
+
+    /**
      * 根据ID删除
      * @param id
      * Created by huai23 on 2018-05-26 17:09:14.

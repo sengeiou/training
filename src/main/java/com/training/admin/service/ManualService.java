@@ -116,6 +116,7 @@ public class ManualService {
 
     public void updateCoachStaff() {
         logger.info(" updateCoachStaff  ");
+        jdbcTemplate.update(" update staff set star = 1 where star = 0 ");
         List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store  ");
         for (int i = 0; i < deptList.size(); i++) {
             try {

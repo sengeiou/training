@@ -129,6 +129,13 @@ public interface TrainingRepository {
             "</script>")
     TrainingEntity getById(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data," +
+            " sign_time,feature,remark,status,show_tag,created,modified " +
+            " FROM training " +
+            " WHERE lesson_id = #{lessonId} and status = 1 " +
+            "</script>")
+    List<TrainingEntity> getByLessonId(@Param("lessonId") String lessonId);
+
     @Update("<script> UPDATE training SET " +
                 " <if test=\"training.trainingId != null\"> training_id = #{training.trainingId} , </if>" +
                 " <if test=\"training.lessonId != null\"> lesson_id = #{training.lessonId} , </if>" +
@@ -151,6 +158,10 @@ public interface TrainingRepository {
                 " WHERE training_id = #{training.trainingId} " +
             "</script>")
     int update(@Param("training") TrainingEntity training);
+
+    @Update("<script> UPDATE training SET training_data = #{training.trainingData} , modified = now() WHERE training_id = #{training.trainingId} " +
+            "</script>")
+    int saveTrainingData(@Param("training") TrainingEntity training);
 
     @Update("<script> DELETE  FROM training " +
             " WHERE training_id = #{id} " +

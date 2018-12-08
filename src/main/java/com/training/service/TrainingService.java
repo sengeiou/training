@@ -110,9 +110,44 @@ public class TrainingService {
      * Created by huai23 on 2018-05-26 17:09:14.
      */ 
     public  ResponseEntity<String> update(TrainingEntity training){
+        if(StringUtils.isNotEmpty(training.getTrainingData())){
+            training.setTrainingData(EmojiUtils.filterEmoji(training.getTrainingData(),"[emoji]"));
+        }
         int n = trainingDao.update(training);
         if(n==1){
             return ResponseUtil.success("修改成功");
+        }
+        return ResponseUtil.exception("修改失败");
+    }
+
+    /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    public  ResponseEntity<String> saveTrainingData(TrainingEntity training){
+        if(StringUtils.isNotEmpty(training.getTrainingData())){
+            training.setTrainingData(EmojiUtils.filterEmoji(training.getTrainingData(),"[emoji]"));
+        }
+        String trainingId = training.getTrainingId();
+        TrainingEntity trainingEntity = trainingDao.getById(trainingId);
+        if(trainingEntity==null){
+            return ResponseUtil.exception("修改异常，ID无效");
+        }
+        if(trainingEntity.getCardType().equals(CardTypeEnum.PM.getKey())){
+            List<TrainingEntity> data = trainingDao.getByLessonId(trainingEntity.getLessonId());
+            for (TrainingEntity item:data){
+                TrainingEntity trainingUpdate = new TrainingEntity();
+                trainingUpdate.setTrainingId(item.getTrainingId());
+                trainingUpdate.setTrainingData(training.getTrainingData());
+                int n = trainingDao.saveTrainingData(trainingUpdate);
+            }
+            return ResponseUtil.success("修改成功");
+        }else{
+            int n = trainingDao.saveTrainingData(training);
+            if(n==1){
+                return ResponseUtil.success("修改成功");
+            }
         }
         return ResponseUtil.exception("修改失败");
     }
