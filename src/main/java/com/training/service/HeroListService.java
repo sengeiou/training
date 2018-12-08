@@ -100,7 +100,7 @@ public class HeroListService {
 
     public List<Staff> activeRateList() {
         List<Staff> staffList = new ArrayList<>();
-        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by hyd desc limit 0,20 ",new Object[]{ut.currentFullMonth().replace("-","")});
+        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by hyd+0 desc limit 0,20 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
@@ -114,7 +114,7 @@ public class HeroListService {
 
     public List<Staff> introduceList() {
         List<Staff> staffList = new ArrayList<>();
-        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by zjs desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
+        List data = jdbcTemplate.queryForList(" select * from kpi_staff_month where month = ? order by zjs+0 desc limit 0,10 ",new Object[]{ut.currentFullMonth().replace("-","")});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             Staff staff = staffService.getById(item.get("staff_id").toString());
