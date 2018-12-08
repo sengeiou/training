@@ -33,9 +33,10 @@ public class MemberTask {
     /**
      * 更新学员状态
      */
-    @Scheduled(cron = "0 10 2 * * *")
+    @Scheduled(cron = "0 10 2,13 * * *")
     public void updateMemberStatus(){
         logger.info("start updateMemberStatus!  time = {} ", ut.currentTime());
+        memberTrainingTaskService.updateMemberInfo();
         memberTrainingTaskService.updateMemberStatus();
         logger.info("end updateMemberStatus!  time = {} ", ut.currentTime());
     }
