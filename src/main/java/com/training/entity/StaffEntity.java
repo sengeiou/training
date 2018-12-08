@@ -52,6 +52,7 @@ public class StaffEntity {
 
     private Date modified;
 
+    private String remark;
 
 }
 

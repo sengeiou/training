@@ -547,6 +547,7 @@ public class ExportFileService {
         titleRow.add("姓名");
         titleRow.add("电话");
         titleRow.add("卡号");
+        titleRow.add("类型");
         titleRow.add("购课节数");
         titleRow.add("购课金额");
         titleRow.add("开始日期");
@@ -576,12 +577,19 @@ public class ExportFileService {
             row.add(memberEntity.getName());
             row.add(memberEntity.getPhone());
             row.add(cardNo);
+            row.add(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
             row.add(memberCardEntity.getTotal().toString());
             row.add(memberCardEntity.getMoney());
             row.add(memberCardEntity.getStartDate());
             row.add(memberCardEntity.getEndDate());
             row.add(memberCardEntity.getCount().toString());
-            row.add("1");
+            if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
+                double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
+                double money = price*memberCardEntity.getCount();
+                row.add(ut.getDoubleString(money));
+            }else{
+                row.add("-");
+            }
             row.add(detail.get("remark").toString());
             excelData.add(row);
         }
