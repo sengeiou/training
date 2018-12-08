@@ -83,7 +83,7 @@ public class MemberTask {
     /**
      * 自动停课月卡会员自动复课
      */
-    @Scheduled(cron = "0 30 8 * * *")
+    @Scheduled(cron = "0 30 7 * * *")
     public void restorePauseMembers(){
         logger.info("start restorePauseMembers!  time = {} ", ut.currentTime());
         memberTaskService.restorePauseMembers(ut.currentDate());
