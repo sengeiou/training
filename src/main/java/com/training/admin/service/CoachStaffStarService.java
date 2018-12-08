@@ -106,12 +106,12 @@ public class CoachStaffStarService {
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
         double score_1 = Double.parseDouble(kpiStaffMonthEntity1.getKpiScore());
         if( score>= 90 &&score_1>= 90){
-            msg = "上个月（"+ut.getKpiMonth(month,-1)+"）star=1星，上个月（"+ut.getKpiMonth(month,-1)+"）kpi("+score_1+")>=90,本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=90，星级+1";
+            msg = "上个月（"+ut.getKpiMonth(month,-1)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）kpi("+score_1+")>=90,本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=90，星级+1";
             logger.info(msg);
             staffEntity.setRemark(msg);
             return 1;
         }
-        msg = "上个月（"+ut.getKpiMonth(month,-1)+"）star=1星，上个月（"+ut.getKpiMonth(month,-1)+"）kpi("+score_1+"),本月（"+month+"）kpi("+ut.getDoubleString(score)+")，没有达到全部>=90，星级不变";
+        msg = "上个月（"+ut.getKpiMonth(month,-1)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）kpi("+score_1+"),本月（"+month+"）kpi("+ut.getDoubleString(score)+")，没有达到全部>=90，星级不变";
         logger.info(msg);
         staffEntity.setRemark(msg);
         return 0;
@@ -130,13 +130,13 @@ public class CoachStaffStarService {
         }
         if(star_2==1){
             if(score>=80){
-                msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star=1星，上个月（"+ut.getKpiMonth(month,-1)+"）star=2星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=80，星级保持不变";
+                msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）star=2星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=80，星级保持不变";
                 logger.info(msg);
                 staffEntity.setRemark(msg);
                 return 0;
             }
             if(score<80){
-                msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star=1星，上个月（"+ut.getKpiMonth(month,-1)+"）star=2星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")<80，星级-1";
+                msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）star=2星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")<80，星级-1";
                 logger.info(msg);
                 staffEntity.setRemark(msg);
                 return 0;
