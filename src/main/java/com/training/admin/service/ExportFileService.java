@@ -607,6 +607,8 @@ public class ExportFileService {
         titleRow.add("教练姓名");
         titleRow.add("KPI模板");
         titleRow.add("KPI得分");
+        titleRow.add("KPI额外加减分");
+        titleRow.add("KPI最终得分");
         titleRow.add("星级");
         titleRow.add("体能考核");
         titleRow.add("专业考核分数");
@@ -617,8 +619,7 @@ public class ExportFileService {
         titleRow.add("非营业天数");
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
-        titleRow.add("KPI额外加减分");
-        titleRow.add("备注");
+        titleRow.add("星级变动说明");
         excelData.add(titleRow);
 
         String sql = " SELECT * from kpi_staff_month where month = ? and staff_name <> '全店' order by store_id ";
@@ -644,11 +645,20 @@ public class ExportFileService {
                     storeName = storeEntity.getName();
                 }
             }
+            double score = 0;
+            if(detail.get("kpi_score")!=null&&StringUtils.isNotEmpty(detail.get("kpi_score").toString())){
+                score = Double.parseDouble(detail.get("kpi_score").toString());
+                if(detail.get("param5")!=null&&StringUtils.isNotEmpty(detail.get("param5").toString())){
+                    score = score + Double.parseDouble(detail.get("param5").toString());
+                }
+            }
             List<String> row = new ArrayList();
             row.add(storeName);
             row.add(staffName);
             row.add(templateName);
             row.add(detail.get("kpi_score").toString());
+            row.add(detail.get("param5").toString());
+            row.add(ut.getDoubleString(score));
             row.add(detail.get("param1").toString());
             row.add(detail.get("tnkh").toString());
             row.add(detail.get("zykh").toString());
@@ -659,8 +669,7 @@ public class ExportFileService {
             row.add(detail.get("param2").toString());
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
-            row.add(detail.get("param5").toString());
-            row.add(detail.get("remark").toString());
+            row.add(detail.get("param8").toString());
             excelData.add(row);
         }
         logger.info(" staffKpi     excelData = {} ",excelData.size());
