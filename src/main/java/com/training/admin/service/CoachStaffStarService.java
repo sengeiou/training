@@ -90,7 +90,7 @@ public class CoachStaffStarService {
         }
         int newStar = star + n;
         logger.info(" calculateStaffStar   staffName = {} , month = {} , star = {} , new Star = {} , n = {} ",staffEntity.getCustname(),month,star,newStar,n);
-        int i = jdbcTemplate.update(" update kpi_staff_month set param1 = ? remark = ? where staff_id = ?  and month = ? ",new Object[]{newStar,staffEntity.getRemark(),staffId,month});
+        int i = jdbcTemplate.update(" update kpi_staff_month set param1 = ? , remark = ? where staff_id = ?  and month = ? ",new Object[]{newStar,staffEntity.getRemark(),staffId,month});
         int j = jdbcTemplate.update(" update staff set star = ? where staff_id = ?  ",new Object[]{newStar,staffId});
         return "";
     }
