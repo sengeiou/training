@@ -101,12 +101,18 @@ public class CoachStaffStarService {
         String msg = "";
         String month1 = ut.getKpiMonth(month,-1);
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
-        KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month1);
-        if(kpiStaffMonthEntity==null || kpiStaffMonthEntity1==null || StringUtils.isEmpty(kpiStaffMonthEntity.getKpiScore()) || StringUtils.isEmpty(kpiStaffMonthEntity1.getKpiScore())){
+        KpiStaffMonthEntity kpiStaffMonthEntity_1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month1);
+        if(kpiStaffMonthEntity==null || kpiStaffMonthEntity_1==null || StringUtils.isEmpty(kpiStaffMonthEntity.getKpiScore()) || StringUtils.isEmpty(kpiStaffMonthEntity_1.getKpiScore())){
             return 0;
         }
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
-        double score_1 = Double.parseDouble(kpiStaffMonthEntity1.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam5())){
+            score = score + Double.parseDouble(kpiStaffMonthEntity.getParam5());
+        }
+        double score_1 = Double.parseDouble(kpiStaffMonthEntity_1.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity_1.getParam5())){
+            score_1 = score_1 + Double.parseDouble(kpiStaffMonthEntity_1.getParam5());
+        }
         if( score>= 90 &&score_1>= 90){
             msg = "上个月（"+ut.getKpiMonth(month,-1)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）kpi("+score_1+")>=90,本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=90，星级+1";
             logger.info(msg);
@@ -125,7 +131,13 @@ public class CoachStaffStarService {
         KpiStaffMonthEntity kpiStaffMonthEntity_1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-1));
         KpiStaffMonthEntity kpiStaffMonthEntity_2 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-2));
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam5())){
+            score = score + Double.parseDouble(kpiStaffMonthEntity.getParam5());
+        }
         double score_1 = Double.parseDouble(kpiStaffMonthEntity_1.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity_1.getParam5())){
+            score_1 = score_1 + Double.parseDouble(kpiStaffMonthEntity_1.getParam5());
+        }
         int star_2 = 1;
         if(kpiStaffMonthEntity_2!=null && StringUtils.isNotEmpty(kpiStaffMonthEntity_2.getParam1())){
             star_2 = Integer.parseInt(kpiStaffMonthEntity_2.getParam1());
@@ -212,8 +224,17 @@ public class CoachStaffStarService {
         KpiStaffMonthEntity kpiStaffMonthEntity_1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-1));
         KpiStaffMonthEntity kpiStaffMonthEntity_2 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-2));
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam5())){
+            score = score + Double.parseDouble(kpiStaffMonthEntity.getParam5());
+        }
         double score_1 = Double.parseDouble(kpiStaffMonthEntity_1.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity_1.getParam5())){
+            score_1 = score_1 + Double.parseDouble(kpiStaffMonthEntity_1.getParam5());
+        }
         double score_2 = Double.parseDouble(kpiStaffMonthEntity_2.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity_2.getParam5())){
+            score_2 = score_2 + Double.parseDouble(kpiStaffMonthEntity_2.getParam5());
+        }
         int star_2 = 2;
         if(kpiStaffMonthEntity_2!=null && StringUtils.isNotEmpty(kpiStaffMonthEntity_2.getParam1())){
             star_2 = Integer.parseInt(kpiStaffMonthEntity_2.getParam1());
@@ -340,6 +361,9 @@ public class CoachStaffStarService {
         String msg = "";
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam5())){
+            score = score + Double.parseDouble(kpiStaffMonthEntity.getParam5());
+        }
         if(score<85){
             msg = "本月（"+month+"）kpi("+ut.getDoubleString(score)+")<85，星级-1";
             logger.info(msg);
