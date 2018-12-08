@@ -101,4 +101,28 @@ public class ExportReportController {
         return "deadAndEndCard执行成功";
     }
 
+    /**
+     * 死课结课明细表
+     */
+    @GetMapping("staffKpi")
+    public Object staffKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" staffKpi   ");
+        String month = "201811";
+        exportFileService.staffKpi(month);
+        return "staffKpi";
+    }
+
+    /**
+     * 有效会员明细表
+     */
+    @GetMapping("staffMemberDetailByDay")
+    public Object staffMemberDetailByDay(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" staffMemberDetailByDay   ");
+        String startDate = "2018-11-01";
+        String endDate = "2018-11-30";
+        String month = "2018-11";
+        exportFileService.staffMemberDetailByDay(month);
+        return "staffMemberDetailByDay";
+    }
+
 }

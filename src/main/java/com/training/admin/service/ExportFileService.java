@@ -62,6 +62,9 @@ public class ExportFileService {
     private KpiStaffMonthDao kpiStaffMonthDao;
 
     @Autowired
+    private KpiTemplateDao kpiTemplateDao;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void trainingExcel(String startDate, String endDate) {
@@ -556,7 +559,7 @@ public class ExportFileService {
         titleRow.add("剩余金额");
         titleRow.add("备注");
         excelData.add(titleRow);
-        String sql = " SELECT * from kpi_staff_detail where day >= ? and day <= ? and type in ('JK')  ";
+        String sql = " SELECT * from kpi_staff_detail where day >= ? and day <= ? and type in ('JK') order by store_id ";
         List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
         for (int i = 0; i < detailList.size(); i++) {
             Map detail = detailList.get(i);
@@ -595,6 +598,110 @@ public class ExportFileService {
         }
         logger.info(" contractSale     excelData = {} ",excelData.size());
         ExcelUtil.writeExcel(excelData,"C://product/结课死课报表_"+endDate.replaceAll("-","")+".xls");
+    }
+
+    public void staffKpi(String month) {
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("教练姓名");
+        titleRow.add("KPI模板");
+        titleRow.add("KPI得分");
+        titleRow.add("星级");
+        titleRow.add("体能考核");
+        titleRow.add("专业考核分数");
+        titleRow.add("投诉数");
+        titleRow.add("转介绍数");
+        titleRow.add("会员点评得分");
+        titleRow.add("目标销售额");
+        titleRow.add("非营业天数");
+        titleRow.add("附加续课数");
+        titleRow.add("附加结课数");
+        titleRow.add("KPI额外加减分");
+        titleRow.add("备注");
+        excelData.add(titleRow);
+
+        String sql = " SELECT * from kpi_staff_month where month = ? and staff_name <> '全店' order by store_id ";
+        List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{month});
+        for (int i = 0; i < detailList.size(); i++) {
+            Map detail = detailList.get(i);
+            String staffName = detail.get("staff_name").toString();
+            String templateName = "";
+            String staffId = detail.get("staff_id").toString();
+            String storeId = detail.get("store_id").toString();
+
+            StaffEntity staffEntity = staffDao.getById(staffId);
+            KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
+            logger.info(" staffKpi template_id = {}  kpiTemplateEntity = {} ",staffEntity.getTemplateId(),kpiTemplateEntity);
+
+            if(kpiTemplateEntity!=null){
+                templateName = kpiTemplateEntity.getTitle();
+            }
+            String storeName = "";
+            if (StringUtils.isNotEmpty(storeId)) {
+                StoreEntity storeEntity = storeDao.getById(storeId);
+                if (storeEntity != null) {
+                    storeName = storeEntity.getName();
+                }
+            }
+            List<String> row = new ArrayList();
+            row.add(storeName);
+            row.add(staffName);
+            row.add(templateName);
+            row.add(detail.get("kpi_score").toString());
+            row.add(detail.get("param1").toString());
+            row.add(detail.get("tnkh").toString());
+            row.add(detail.get("zykh").toString());
+            row.add(detail.get("tss").toString());
+            row.add(detail.get("zjs").toString());
+            row.add(detail.get("hydp").toString());
+            row.add(detail.get("xsmb").toString());
+            row.add(detail.get("param2").toString());
+            row.add(detail.get("param3").toString());
+            row.add(detail.get("param4").toString());
+            row.add(detail.get("param5").toString());
+            row.add(detail.get("remark").toString());
+            excelData.add(row);
+        }
+        logger.info(" staffKpi     excelData = {} ",excelData.size());
+        ExcelUtil.writeExcel(excelData,"C://product/KPI统计明细_"+month+".xls");
+    }
+
+    public void staffMemberDetailByDay(String month) {
+        String y = month.substring(0,4);
+        String m = month.substring(5,7);
+        String tableName = "member_his_"+m;
+
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("教练姓名");
+        titleRow.add("会员姓名");
+        titleRow.add("会员电话");
+        titleRow.add("状态");
+        titleRow.add("日期");
+        excelData.add(titleRow);
+        String sql = " SELECT d.name store_name,b.custname,c.name member_name, c.phone , a.status , a.backup_date from "+tableName+" a, staff b , member c , store d " +
+                " where a.coach_staff_id > 0 and a.status = 1 " +
+                " and a.store_id = d.store_id and a.coach_staff_id = b.staff_id and a.member_id = c.member_id " +
+                " order by a.backup_date , a.coach_staff_id  ";
+        List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{});
+        logger.info(" staffMemberDetailByDay     detailList = {} ",detailList.size());
+
+        for (int i = 0; i < detailList.size(); i++) {
+            Map detail = detailList.get(i);
+            List<String> row = new ArrayList();
+            row.add(detail.get("store_name").toString());
+            row.add(detail.get("custname").toString());
+            row.add(detail.get("member_name").toString());
+            row.add(detail.get("phone").toString());
+            row.add("有效");
+            row.add(detail.get("backup_date").toString());
+            excelData.add(row);
+        }
+
+        logger.info(" staffMemberDetailByDay     excelData = {} ",excelData.size());
+        ExcelUtil.writeExcel(excelData,"C://product/有效会员明细表_"+month+".xls");
     }
 
 }
