@@ -91,6 +91,8 @@ public class WechatController {
             sysLogEntity.setLevel(1);
             if(memberEntity!=null){
                 sysLogEntity.setId1(memberEntity.getMemberId());
+                sysLogEntity.setStoreId(memberEntity.getStoreId());
+                sysLogEntity.setStaffId(memberEntity.getCoachStaffId());
             }else{
 
             }
@@ -106,6 +108,7 @@ public class WechatController {
                     sysLogEntity.setId1(memberCardEntity.getCardNo());
                     sysLogEntity.setId2("pay");
                     sysLogEntity.setLevel(2);
+                    sysLogEntity.setCardNo(memberCardEntity.getCardNo());
                 }
             }catch (Exception e){
                 resultStr = logId+" : "+e.getMessage();

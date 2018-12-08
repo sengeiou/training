@@ -1,5 +1,7 @@
 package com.training.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.training.admin.service.CalculateKpiService;
 import com.training.admin.service.ManualService;
 import com.training.admin.service.MemberTrainingTaskService;
@@ -90,6 +92,9 @@ public class StoreDataService {
 
     @Autowired
     private MemberDao memberDao;
+
+    @Autowired
+    private SysLogDao sysLogDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -293,10 +298,34 @@ public class StoreDataService {
         sksr.setLesson(""+count_sk);
         storeDataList.add(sksr);
 
+        SysLogQuery sysLogQuery = new SysLogQuery();
+        sysLogQuery.setType("YQ");
+        sysLogQuery.setId2("pay");
+        sysLogQuery.setRemark("success");
+        sysLogQuery.setStoreId(query.getStoreId());
+        sysLogQuery.setStartDate(startDate);
+        sysLogQuery.setEndDate(endDate);
+        PageRequest page = new PageRequest();
+        page.setPageSize(10000);
+        double yqFee = 0;
+        int yqLessonCount = 0;
+
+        List<SysLogEntity> sysLogList = sysLogDao.findDelayLog(sysLogQuery,page);
+        for (SysLogEntity sysLogEntity:sysLogList){
+            JSONObject data = JSON.parseObject(sysLogEntity.getLogText());
+            String logId = data.getString("out_trade_no");
+            String total_fee = data.getString("total_fee");
+            yqFee = yqFee + Double.parseDouble(total_fee)/100;
+            SysLogEntity sysLogDB = sysLogDao.getById(logId);
+            String str = sysLogDB.getLogText();
+            MemberCardEntity memberCardEntity = JSON.parseObject(str,MemberCardEntity.class);
+            yqLessonCount = yqLessonCount + memberCardEntity.getCount();
+        }
+
         StoreData yqsr = new StoreData();
         yqsr.setLabel("延期收入");
-        yqsr.setValue("0");
-        yqsr.setLesson("0");
+        yqsr.setValue(ut.getDoubleString(yqFee));
+        yqsr.setLesson(""+yqLessonCount);
         storeDataList.add(yqsr);
 
         return storeDataList;

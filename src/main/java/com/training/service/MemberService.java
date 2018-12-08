@@ -955,6 +955,7 @@ public class MemberService {
             sysLogEntity.setContent("");
             sysLogEntity.setCreated(new Date());
             sysLogEntity.setOperStaffId(staffRequest.getStaffId());
+            sysLogEntity.setStoreId(memberEntity.getStoreId());
             sysLogService.add(sysLogEntity);
 
             if(StringUtils.isEmpty(memberEntity.getCoachStaffId()) || (StringUtils.isNotEmpty(memberEntity.getStoreId())&&!memberEntity.getStoreId().equals(staffEntity.getStoreId())) ){

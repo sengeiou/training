@@ -174,17 +174,22 @@ public class WechatService {
         param.put("cardNo",cardNo);
         param.put("logId",logId);
         param.put("total_fee",""+total_fee);
-
+        MemberEntity memberEntity = memberService.getByOpenId(openId);
         SysLogEntity sysLogEntity = new SysLogEntity();
         sysLogEntity.setLogId(logId);
         sysLogEntity.setType(SysLogEnum.YQ.getKey());
         sysLogEntity.setId1(memberCardEntity.getCardNo());
         sysLogEntity.setId2("order");
-
+        sysLogEntity.setCardNo(memberCardEntity.getCardNo());
         sysLogEntity.setLevel(2);
         sysLogEntity.setLogText(JSON.toJSONString(memberCardEntity));
         sysLogEntity.setContent(JSON.toJSONString(memberCardEntity));
         sysLogEntity.setCreated(new Date());
+        sysLogEntity.setMemberId(memberCardEntity.getMemberId());
+        if(memberEntity!=null){
+            sysLogEntity.setStoreId(memberEntity.getStoreId());
+            sysLogEntity.setStaffId(memberEntity.getCoachStaffId());
+        }
         int n = sysLogDao.add(sysLogEntity);
         if(n==0){
             ResponseUtil.exception("生成延期订单异常");
