@@ -180,13 +180,23 @@ public class ManualRestController {
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
-            coachStaffKpiService.calculateStaffKpi(staffId,month);
+            try {
+                coachStaffKpiService.calculateStaffKpi(staffId,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  staffId:{} ",staffId);
+                e.printStackTrace();
+            }
         }
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         for (int i = 0; i < stores.size(); i++){
             Map store = stores.get(i);
             String store_id = store.get("store_id").toString();
-            coachStaffKpiService.calculateStoreKpi(store_id,month);
+            try {
+                coachStaffKpiService.calculateStoreKpi(store_id,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  store_id:{} ",store_id);
+                e.printStackTrace();
+            }
         }
         logger.info(" =======   calculateKpi  execute end  ");
         return "calculateKpi执行成功";
