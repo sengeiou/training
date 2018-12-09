@@ -434,9 +434,8 @@ public class CoachStaffKpiService {
         String m = month.substring(4,6);
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type = 'XK' ";
-        int xks = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
-        logger.info(" getXks = {} , name = {} , month = {} , data.size = {} ",xks,staffEntity.getCustname(),month,data.size());
+        logger.info(" getXks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
         return data.size();
     }
 
@@ -448,9 +447,8 @@ public class CoachStaffKpiService {
         String m = month.substring(4,6);
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type = 'JK' ";
-        int xks = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
-        logger.info(" getXks = {} , name = {} , month = {} , data.size = {} ",xks,staffEntity.getCustname(),month,data.size());
+        logger.info(" getXks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
         return data.size();
     }
 
