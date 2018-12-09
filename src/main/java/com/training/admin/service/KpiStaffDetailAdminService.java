@@ -1,6 +1,7 @@
 package com.training.admin.service;
 
 import com.alibaba.fastjson.JSON;
+import com.dingtalk.api.response.SmartworkBpmsProcessinstanceListResponse;
 import com.training.common.CardTypeEnum;
 import com.training.common.MemberStatusEnum;
 import com.training.dao.*;
@@ -10,6 +11,7 @@ import com.training.entity.MemberEntity;
 import com.training.entity.StaffEntity;
 import com.training.util.ExcelUtil;
 import com.training.util.ut;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -388,6 +391,57 @@ public class KpiStaffDetailAdminService {
         logger.info(" data = {} ",data.size());
         logger.info(" error = {} ",error.size());
         return "SUCCESS";
+    }
+
+    public int dealTk(String day) {
+        logger.info(" =======   KpiStaffDetailService  dealTk  day = {} ",day);
+        String month = day.substring(0,7);
+        if(ut.currentDate().indexOf(month)==0){
+            if(ut.passDayByDate(ut.currentDate(),day)>0){
+                day = ut.currentDate();
+            }
+        }
+        String sql = "select * from contract where card_type in ('TK') and DATE_FORMAT(created,'%Y-%m-%d') = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{day});
+        logger.info(" dealTk   startDate = {} , endDate = {} , data.size = {} ",day,day,data.size());
+        for (int i = 0; i < data.size(); i++) {
+            Map contract = (Map) data.get(i);
+            String phone = contract.get("phone").toString();
+            SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contract.get("form").toString(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
+            Map<String,String> contractMap = new HashMap();
+            List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+            for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+                System.out.println(form.getName()+" : "+form.getValue());
+                contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+            }
+            String cardNo = contractMap.get("课卡号");
+            if(StringUtils.isEmpty(cardNo)){
+                continue;
+            }
+            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            if(memberCardEntity==null){
+                continue;
+            }
+            String tableName = "member_his_"+month.substring(5,7);
+            List members = jdbcTemplate.queryForList(" select * from "+tableName+" where member_id = ? and backup_date = ? ",new Object[]{memberCardEntity.getMemberId(),day});
+            if(members.size()==0){
+                continue;
+            }
+            Map member = (Map)members.get(0);
+            KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
+            kpiStaffDetailEntity.setMonth(month);
+            kpiStaffDetailEntity.setDay(day);
+            kpiStaffDetailEntity.setCardNo(cardNo);
+            kpiStaffDetailEntity.setContractId("");
+            kpiStaffDetailEntity.setType("TK");
+            kpiStaffDetailEntity.setCardType(memberCardEntity.getType());
+            kpiStaffDetailEntity.setMemberId(memberCardEntity.getMemberId());
+            kpiStaffDetailEntity.setRemark(JSON.toJSONString(memberCardEntity));
+            kpiStaffDetailEntity.setStoreId(member.get("store_id").toString());
+            kpiStaffDetailEntity.setStaffId(member.get("coach_staff_id").toString());
+            int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+        }
+        return 0;
     }
 
 }

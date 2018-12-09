@@ -381,6 +381,21 @@ public class ManualRestController {
         logger.info("end dealJkAndXk!  time = {} ", ut.currentTime());
     }
 
+    @GetMapping("dealTk")
+    public void dealTk(){
+        logger.info("start dealTk!  time = {} ", ut.currentTime());
+        String start = "2018-10-02";
+        String end = "2018-06-30";
+        end = "2018-12-08";
+        int days = ut.passDayByDate(start,end)+1;
+        for (int i = 0; i < days; i++) {
+            String day = ut.currentDate(start,i);
+            logger.info(" dealTk !  day = {} ",day);
+            kpiStaffDetailAdminService.dealTk(day);
+        }
+        logger.info("end dealTk!  time = {} ", ut.currentTime());
+    }
+
     @GetMapping("updateKpiAndStar")
     public Object updateKpiAndStar(){
         logger.info("start updateKpiAndStar!  time = {} ", ut.currentTime());

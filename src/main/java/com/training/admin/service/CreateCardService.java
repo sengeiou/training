@@ -229,7 +229,7 @@ public class CreateCardService {
                 kpiStaffDetailEntity.setMonth(ut.currentFullMonth());
                 kpiStaffDetailEntity.setDay(ut.currentDate());
                 kpiStaffDetailEntity.setCardNo(cardNo);
-                kpiStaffDetailEntity.setContractId(contractEntity.getContractId());
+                kpiStaffDetailEntity.setContractId("");
                 kpiStaffDetailEntity.setType("TK");
                 kpiStaffDetailEntity.setCardType(memberCardEntity.getType());
                 kpiStaffDetailEntity.setMemberId(memberCardEntity.getMemberId());
