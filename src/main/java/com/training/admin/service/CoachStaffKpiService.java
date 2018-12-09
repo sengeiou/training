@@ -316,7 +316,7 @@ public class CoachStaffKpiService {
             }
 
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getParam4())){
-                qdxks = qdxks + (int)Double.parseDouble(subKpiStaffMonthEntity.getParam4());
+                qdjks = qdjks + (int)Double.parseDouble(subKpiStaffMonthEntity.getParam4());
             }
 
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getSjks())){
@@ -356,6 +356,10 @@ public class CoachStaffKpiService {
             qdjks = qdjks/staffCount;
         }
 
+        if(qdjks>0){
+            qdxkl = (int)(qdxks*100/qdjks);
+        }
+
         if(qdvalidMemberCount>0){
             qdhyd = (double)qdlessonCount*100/qdvalidMemberCount;
         }
@@ -373,8 +377,8 @@ public class CoachStaffKpiService {
         }
         kpiStaffMonthEntity.setQdzye(""+qdzye);
 
-        kpiStaffMonthEntity.setQdxks(""+qdxks);
-        kpiStaffMonthEntity.setQdjks(""+qdjks);
+        kpiStaffMonthEntity.setQdxks(ut.getDoubleString(qdxks));
+        kpiStaffMonthEntity.setQdjks(ut.getDoubleString(qdjks));
         kpiStaffMonthEntity.setQdyxhys(""+qdvalidMemberCount);
         kpiStaffMonthEntity.setQdsjks(""+qdlessonCount);
 
