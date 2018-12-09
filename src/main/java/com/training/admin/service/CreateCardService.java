@@ -19,13 +19,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CreateCardService {
@@ -49,6 +47,15 @@ public class CreateCardService {
 
     @Autowired
     private ContractManualDao contractManualDao;
+
+    @Autowired
+    private KpiStaffDetailDao kpiStaffDetailDao;
+
+    @Autowired
+    private SysLogDao sysLogDao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public void createCard() {
         ContractQuery query = new ContractQuery();
@@ -203,6 +210,7 @@ public class CreateCardService {
             contractDao.update(contractUpdate);
             return;
         }
+        MemberEntity memberEntity = memberDao.getById(memberCardEntity.getMemberId());
         String remark = "退课，日期："+ut.currentTime()+"(合同号："+contractEntity.getContractId()+"),剩余次数："+memberCardEntity.getCount();
         if(memberCardEntity.getMemberId().equals(member.getMemberId())){
             MemberCardEntity memberCardUpdate = new MemberCardEntity();
@@ -216,6 +224,22 @@ public class CreateCardService {
                 contractEntity.setStatus(1);
                 contractEntity.setGender(memberCardEntity.getCount().toString());
                 updateContractStatus(contractEntity);
+
+                KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
+                kpiStaffDetailEntity.setMonth(ut.currentFullMonth());
+                kpiStaffDetailEntity.setDay(ut.currentDate());
+                kpiStaffDetailEntity.setCardNo(cardNo);
+                kpiStaffDetailEntity.setContractId(contractEntity.getContractId());
+                kpiStaffDetailEntity.setType("TK");
+                kpiStaffDetailEntity.setCardType(memberCardEntity.getType());
+                kpiStaffDetailEntity.setMemberId(memberCardEntity.getMemberId());
+                kpiStaffDetailEntity.setRemark(JSON.toJSONString(memberCardEntity));
+                if(memberEntity!=null){
+                    kpiStaffDetailEntity.setStoreId(memberEntity.getStoreId());
+                    kpiStaffDetailEntity.setStaffId(memberEntity.getCoachStaffId());
+                }
+                n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+
             }else {
                 logger.error(" ****  dealTK failed : contractEntity = {} ", contractEntity);
                 ContractEntity contractUpdate = new ContractEntity();
@@ -275,6 +299,24 @@ public class CreateCardService {
                 contractEntity.setTotal(memberCardEntity.getCount().toString());
                 contractEntity.setStatus(1);
                 updateContractStatus(contractEntity);
+
+                SysLogEntity sysLogEntity = new SysLogEntity();
+                sysLogEntity.setLogId(IDUtils.getId());
+                sysLogEntity.setType(SysLogEnum.ZK.getKey());
+                sysLogEntity.setId1(memberFrom.getMemberId());
+                sysLogEntity.setId2(memberTo.getMemberId());
+                sysLogEntity.setCardNo(memberCardEntity.getCardNo());
+                sysLogEntity.setLevel(2);
+                sysLogEntity.setLogText(JSON.toJSONString(memberCardEntity));
+                sysLogEntity.setContent(JSON.toJSONString(memberCardEntity));
+                sysLogEntity.setCreated(new Date());
+                sysLogEntity.setMemberId(memberCardEntity.getMemberId());
+                if(memberFrom!=null){
+                    sysLogEntity.setStoreId(memberFrom.getStoreId());
+                    sysLogEntity.setStaffId(memberFrom.getCoachStaffId());
+                }
+                n = sysLogDao.add(sysLogEntity);
+
             }else {
                 logger.error(" ****  dealZK failed : contractEntity = {} ", contractEntity);
             }
