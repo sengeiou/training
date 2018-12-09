@@ -463,7 +463,7 @@ public class CoachStaffKpiService {
         if(ut.passDayByDate(ut.currentDate(),endDate)>0){
             endDate = ut.currentDate();
         }
-        String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 and type in ('PT') ";
+        String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 and card_type in ('PT') ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),startDate,endDate});
         logger.info(" queryLessonCount  count = {}  ",data.size());
         return data.size();
