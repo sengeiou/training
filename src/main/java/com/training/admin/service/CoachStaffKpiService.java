@@ -446,7 +446,7 @@ public class CoachStaffKpiService {
         String y = month.substring(0,4);
         String m = month.substring(4,6);
         month = y+"-"+m;
-        String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type in ('JK','TK') ";
+        String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type in ('JK') ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
         logger.info(" getJks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
         return data.size();
