@@ -230,10 +230,10 @@ public class CreateCardService {
                 kpiStaffDetailEntity.setDay(ut.currentDate());
                 kpiStaffDetailEntity.setCardNo(cardNo);
                 kpiStaffDetailEntity.setContractId("");
-                kpiStaffDetailEntity.setType("TK");
+                kpiStaffDetailEntity.setType("JK");
                 kpiStaffDetailEntity.setCardType(memberCardEntity.getType());
                 kpiStaffDetailEntity.setMemberId(memberCardEntity.getMemberId());
-                kpiStaffDetailEntity.setRemark(JSON.toJSONString(memberCardEntity));
+                kpiStaffDetailEntity.setRemark("退课"+JSON.toJSONString(memberCardEntity));
                 if(memberEntity!=null){
                     kpiStaffDetailEntity.setStoreId(memberEntity.getStoreId());
                     kpiStaffDetailEntity.setStaffId(memberEntity.getCoachStaffId());

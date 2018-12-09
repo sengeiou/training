@@ -422,6 +422,14 @@ public class KpiStaffDetailAdminService {
             if(memberCardEntity==null){
                 continue;
             }
+
+            List details = jdbcTemplate.queryForList(" select * from kpi_staff_detail where card_no = ? and type = 'JK' ",new Object[]{cardNo});
+            if(details.size()>0){
+                Map detail = (Map)details.get(0);
+                logger.error(" dealTk  repeat  details = {} ",details);
+                jdbcTemplate.update(" update kpi_staff_detail set type = 'JK_TK' where pk_id = ? ",new Object[]{detail.get("pk_id")});
+            }
+
             String tableName = "member_his_"+month.substring(5,7);
             List members = jdbcTemplate.queryForList(" select * from "+tableName+" where member_id = ? and backup_date = ? ",new Object[]{memberCardEntity.getMemberId(),day});
             if(members.size()==0){
@@ -433,10 +441,10 @@ public class KpiStaffDetailAdminService {
             kpiStaffDetailEntity.setDay(day);
             kpiStaffDetailEntity.setCardNo(cardNo);
             kpiStaffDetailEntity.setContractId("");
-            kpiStaffDetailEntity.setType("TK");
+            kpiStaffDetailEntity.setType("JK");
             kpiStaffDetailEntity.setCardType(memberCardEntity.getType());
             kpiStaffDetailEntity.setMemberId(memberCardEntity.getMemberId());
-            kpiStaffDetailEntity.setRemark(JSON.toJSONString(memberCardEntity));
+            kpiStaffDetailEntity.setRemark("退课"+JSON.toJSONString(memberCardEntity));
             kpiStaffDetailEntity.setStoreId(member.get("store_id").toString());
             kpiStaffDetailEntity.setStaffId(member.get("coach_staff_id").toString());
             int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
