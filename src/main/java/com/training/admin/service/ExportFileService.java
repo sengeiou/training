@@ -551,6 +551,7 @@ public class ExportFileService {
         titleRow.add("电话");
         titleRow.add("卡号");
         titleRow.add("类型");
+        titleRow.add("教练");
         titleRow.add("购课节数");
         titleRow.add("购课金额");
         titleRow.add("开始日期");
@@ -566,6 +567,8 @@ public class ExportFileService {
             String cardNo = detail.get("card_no").toString();
             String memberId = detail.get("member_id").toString();
             String storeId = detail.get("store_id").toString();
+            String staffId = detail.get("staff_id").toString();
+
             String storeName = "";
             if(StringUtils.isNotEmpty(storeId)){
                 StoreEntity storeEntity = storeDao.getById(storeId);
@@ -575,12 +578,14 @@ public class ExportFileService {
             }
             MemberEntity memberEntity = memberDao.getById(memberId);
             MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            StaffEntity staffEntity = staffDao.getById(staffId);
             List<String> row = new ArrayList();
             row.add(storeName);
             row.add(memberEntity.getName());
             row.add(memberEntity.getPhone());
             row.add(cardNo);
             row.add(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
+            row.add(staffEntity.getCustname());
             row.add(memberCardEntity.getTotal().toString());
             row.add(memberCardEntity.getMoney());
             row.add(memberCardEntity.getStartDate());

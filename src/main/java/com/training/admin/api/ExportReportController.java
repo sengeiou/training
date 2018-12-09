@@ -95,8 +95,8 @@ public class ExportReportController {
     @GetMapping("deadAndEndCard")
     public Object deadAndEndCard(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" deadAndEndCard   ");
-        String startDate = "2018-09-01";
-        String endDate = "2018-09-30";
+        String startDate = "2018-11-01";
+        String endDate = "2018-11-30";
         exportFileService.deadAndEndCard(startDate,endDate);
         return "deadAndEndCard执行成功";
     }
