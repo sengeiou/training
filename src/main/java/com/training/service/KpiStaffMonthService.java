@@ -345,31 +345,49 @@ public class KpiStaffMonthService {
 //            System.out.println(" jks-0 = "+kpiStaffMonth.getJks());
 //            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
 //            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
-            int xks = 0;
-            int jks = 0;
+            double xks = 0;
+            double jks = 0;
             if(kpiStaffMonth!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonth.getXks());
+                if(kpiStaffMonth.getParam3()!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getParam3())){
+                    xks = xks + Double.parseDouble(kpiStaffMonth.getParam3());
+                }
             }
             if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getXks());
+                if(kpiStaffMonthEntity1.getParam3()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getParam3())){
+                    xks = xks + Double.parseDouble(kpiStaffMonthEntity1.getParam3());
+                }
             }
             if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
                 xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getXks());
+                if(kpiStaffMonthEntity2.getParam3()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getParam3())){
+                    xks = xks + Double.parseDouble(kpiStaffMonthEntity2.getParam3());
+                }
             }
             if(kpiStaffMonth!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonth.getJks());
+                if(kpiStaffMonth.getParam4()!=null&&StringUtils.isNotEmpty(kpiStaffMonth.getParam4())){
+                    jks = jks + Double.parseDouble(kpiStaffMonth.getParam4());
+                }
             }
             if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getJks());
+                if(kpiStaffMonthEntity1.getParam4()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getParam4())){
+                    jks = jks + Double.parseDouble(kpiStaffMonthEntity1.getParam4());
+                }
             }
             if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
                 jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getJks());
+                if(kpiStaffMonthEntity2.getParam4()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getParam4())){
+                    jks = jks + Double.parseDouble(kpiStaffMonthEntity2.getParam4());
+                }
             }
-            int xkl = 100;
+            double xkl = 100;
             if(jks>0){
                 xkl = 100*xks/jks;
             }
-            kpiTemplateQuota.setFinishRate(""+xkl+"%");
+            kpiTemplateQuota.setFinishRate(""+(int)xkl+"%");
             List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
             for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
 //                    logger.info(" kpiQuotaStandard = {} ",kpiQuotaStandard);

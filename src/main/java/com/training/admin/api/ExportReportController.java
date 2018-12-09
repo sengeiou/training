@@ -83,8 +83,8 @@ public class ExportReportController {
     @GetMapping("contractSale")
     public Object contractSale(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" contractSale   ");
-        String startDate = "2018-11-01";
-        String endDate = "2018-11-30";
+        String startDate = "2018-09-01";
+        String endDate = "2018-09-30";
         exportFileService.contractSale(startDate,endDate);
         return "contractSale执行成功";
     }

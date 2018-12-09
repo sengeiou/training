@@ -55,9 +55,6 @@ public class ManualRestController {
     private ManualService manualService;
 
     @Autowired
-    private CalculateKpiService calculateKpiService;
-
-    @Autowired
     private MemberTrainingTaskService memberTrainingTaskService;
 
     @Autowired
@@ -86,6 +83,9 @@ public class ManualRestController {
 
     @Autowired
     private CoachStaffStarService coachStaffStarService;
+
+    @Autowired
+    private CoachStaffKpiService coachStaffKpiService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -166,9 +166,9 @@ public class ManualRestController {
     @GetMapping("kpione")
     public Object calculateOneKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateOneKpi   ");
-        String staffId = "15301384842221555143d88014ac5a5634d21fb41b64b";
-        String month = "201810";
-        calculateKpiService.calculateStaffKpi(staffId,month);
+        String staffId = "15324796409527304d2f3fbb940798d55e826b496ed41";
+        String month = "201811";
+        coachStaffKpiService.calculateStaffKpi(staffId,month);
         return "calculateOneKpi执行成功";
     }
 
@@ -180,13 +180,13 @@ public class ManualRestController {
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
-            calculateKpiService.calculateStaffKpi(staffId,month);
+            coachStaffKpiService.calculateStaffKpi(staffId,month);
         }
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         for (int i = 0; i < stores.size(); i++){
             Map store = stores.get(i);
             String store_id = store.get("store_id").toString();
-            calculateKpiService.calculateStoreKpi(store_id,month);
+            coachStaffKpiService.calculateStoreKpi(store_id,month);
         }
         logger.info(" =======   calculateKpi  execute end  ");
         return "calculateKpi执行成功";

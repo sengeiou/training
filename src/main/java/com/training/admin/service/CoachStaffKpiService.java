@@ -93,23 +93,24 @@ public class CoachStaffKpiService {
                 kpiTemplateQuotaEntityList = kpiTemplateEntity.getQuotaEntityList();
             }
         }
+
         int xks = getXks(staffEntity,month);
         int jks = getJks(staffEntity,month);
         int lessonCount = queryLessonCount(staffEntity,month);
         int validMemberCount = queryValidMemberCount(staffEntity,month);
 
-        int xkl = 100;
-        int exXks = 0;
-        int exJks = 0;
+
+        double exXks = 0;
+        double exJks = 0;
         if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam3())){
-            exXks = (int)Double.parseDouble(kpiStaffMonthEntity.getParam3());
+            exXks = Double.parseDouble(kpiStaffMonthEntity.getParam3());
         }
         if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam4())){
-            exJks = (int)Double.parseDouble(kpiStaffMonthEntity.getParam4());
+            exJks = Double.parseDouble(kpiStaffMonthEntity.getParam4());
         }
-        if((jks+exJks)>0){
-            xkl = 100*(xks+exXks)/(jks+exJks);
-        }
+
+        int xkl = getXkl(xks+exXks,jks+exJks,staffEntity,month);
+
         double hyd = 0;
         if(validMemberCount>0){
             String y = month.substring(0,4);
@@ -152,6 +153,44 @@ public class CoachStaffKpiService {
         }
         kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
+    }
+
+    private int getXkl(double xks, double jks, StaffEntity staffEntity, String month) {
+        String month1 = ut.getKpiMonth(month,-1);
+        String month2= ut.getKpiMonth(month,-2);
+        KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month1);
+        KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month2);
+
+        if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
+            xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getXks());
+            if(kpiStaffMonthEntity1.getParam3()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getParam3())){
+                xks = xks + Double.parseDouble(kpiStaffMonthEntity1.getParam3());
+            }
+        }
+        if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
+            xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getXks());
+            if(kpiStaffMonthEntity2.getParam3()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getParam3())){
+                xks = xks + Double.parseDouble(kpiStaffMonthEntity2.getParam3());
+            }
+        }
+
+        if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
+            jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getJks());
+            if(kpiStaffMonthEntity1.getParam4()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getParam4())){
+                jks = jks + Double.parseDouble(kpiStaffMonthEntity1.getParam4());
+            }
+        }
+        if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
+            jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getJks());
+            if(kpiStaffMonthEntity2.getParam4()!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getParam4())){
+                jks = jks + Double.parseDouble(kpiStaffMonthEntity2.getParam4());
+            }
+        }
+        double xkl = 100;
+        if(jks>0){
+            xkl = 100*xks/jks;
+        }
+        return (int)xkl;
     }
 
     private int getZye(StaffEntity staffEntity, String month) {
@@ -392,7 +431,7 @@ public class CoachStaffKpiService {
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type = 'XK' ";
         int xks = 0;
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
         logger.info(" getXks = {} , name = {} , month = {} , data.size = {} ",xks,staffEntity.getCustname(),month,data.size());
         return data.size();
     }
@@ -406,7 +445,7 @@ public class CoachStaffKpiService {
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type = 'JK' ";
         int xks = 0;
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
         logger.info(" getXks = {} , name = {} , month = {} , data.size = {} ",xks,staffEntity.getCustname(),month,data.size());
         return data.size();
     }
