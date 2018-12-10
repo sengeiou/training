@@ -124,39 +124,41 @@ public class KpiStaffMonthService {
         if(kpiStaffMonthEntity==null){
             return null;
         }
-        KpiStaffMonth kpiStaffMonth = new KpiStaffMonth();
-        BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
-        StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
-        if(staffEntity==null){
-            return null;
-        }
-        StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
-        if(storeEntity!=null){
-            kpiStaffMonth.setStoreName(storeEntity.getName());
-        }else{
-            kpiStaffMonth.setStoreName("-");
-        }
 
-        logger.info(" kpiStaffMonth.getStaffId() = {},staffEntity = {} ",kpiStaffMonth.getStaffId(),staffEntity);
 
-        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
-        if(kpiTemplateEntity!=null){
-            kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
-            kpiStaffMonth.setKpiTemplateQuotaList(new ArrayList<>());
-            KpiTemplateQuotaQuery query = new KpiTemplateQuotaQuery();
-            query.setTemplateId(staffEntity.getTemplateId());
-            PageRequest page = new PageRequest();
-            page.setPageSize(100);
-            List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(query,page);
-            int i = 0;
-            for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
-                KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
-                BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
-                kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
-            }
-        }else{
-            kpiStaffMonth.setTemplateName("-");
-        }
+        KpiStaffMonth kpiStaffMonth = calculateKpiStaffMonth(kpiStaffMonthEntity);
+//        BeanUtils.copyProperties(kpiStaffMonthEntity,kpiStaffMonth);
+//        StaffEntity staffEntity = staffDao.getById(kpiStaffMonth.getStaffId());
+//        if(staffEntity==null){
+//            return null;
+//        }
+//        StoreEntity storeEntity = storeDao.getById(kpiStaffMonthEntity.getStoreId());
+//        if(storeEntity!=null){
+//            kpiStaffMonth.setStoreName(storeEntity.getName());
+//        }else{
+//            kpiStaffMonth.setStoreName("-");
+//        }
+//
+//        logger.info(" kpiStaffMonth.getStaffId() = {},staffEntity = {} ",kpiStaffMonth.getStaffId(),staffEntity);
+//
+//        KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
+//        if(kpiTemplateEntity!=null){
+//            kpiStaffMonth.setTemplateName(kpiTemplateEntity.getTitle());
+//            kpiStaffMonth.setKpiTemplateQuotaList(new ArrayList<>());
+//            KpiTemplateQuotaQuery query = new KpiTemplateQuotaQuery();
+//            query.setTemplateId(staffEntity.getTemplateId());
+//            PageRequest page = new PageRequest();
+//            page.setPageSize(100);
+//            List<KpiTemplateQuotaEntity> kpiTemplateQuotaEntityList = kpiTemplateQuotaDao.find(query,page);
+//            int i = 0;
+//            for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
+//                KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
+//                BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
+//                kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
+//            }
+//        }else{
+//            kpiStaffMonth.setTemplateName("-");
+//        }
         logger.info(" convertKpiStaffMonth kpiScore : {}   ",kpiScore);
         kpiStaffMonth.setStar("0");
         if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam1())){
@@ -166,6 +168,7 @@ public class KpiStaffMonthService {
         kpiStaffMonth.setExtraXks(kpiStaffMonth.getParam3());
         kpiStaffMonth.setExtraJks(kpiStaffMonth.getParam4());
         kpiStaffMonth.setExtraScore(kpiStaffMonth.getParam5());
+
 
         return kpiStaffMonth;
     }
@@ -247,6 +250,11 @@ public class KpiStaffMonthService {
             int i = 0;
             for (KpiTemplateQuotaEntity kpiTemplateQuotaEntity : kpiTemplateQuotaEntityList){
                 KpiTemplateQuota kpiTemplateQuota = new KpiTemplateQuota();
+                String name = "指标"+kpiTemplateQuotaEntity.getQuotaId();
+                if(KpiQuotaEnum.getEnumByKey(kpiTemplateQuotaEntity.getQuotaId())!=null){
+                    name = KpiQuotaEnum.getEnumByKey(kpiTemplateQuotaEntity.getQuotaId()).getDesc();
+                }
+                kpiTemplateQuota.setName(name);
                 BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
                 kpiScore = kpiScore + calculateQuota(kpiTemplateQuota,kpiStaffMonth);
                 kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
