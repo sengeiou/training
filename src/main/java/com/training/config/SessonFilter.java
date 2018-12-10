@@ -51,7 +51,7 @@ public class SessonFilter implements Filter {
         String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code","/manual/","/exportReport",
                 "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken","/wechat/pay/callback",
                 "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",".txt","/dingding","/static/","/admin","/public/",
-                ".css",".jpg",".png",".jpeg",".gif"};
+                ".css",".jpg",".png",".jpeg",".gif","manualKpiReportPageForZJ.jsp"};
         // 是否过滤
         boolean doFilter = true;
         for (String s : notFilter)
