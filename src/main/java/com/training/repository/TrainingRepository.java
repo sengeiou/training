@@ -132,7 +132,7 @@ public interface TrainingRepository {
     @Select("<script> SELECT pk_id,training_id,lesson_id,title,store_id,type,member_id,coach_id,staff_id,card_no,card_type,lesson_date,start_hour,end_hour,training_data," +
             " sign_time,feature,remark,status,show_tag,created,modified " +
             " FROM training " +
-            " WHERE lesson_id = #{lessonId} and status = 1 " +
+            " WHERE lesson_id = #{lessonId} and status = 0 " +
             "</script>")
     List<TrainingEntity> getByLessonId(@Param("lessonId") String lessonId);
 
