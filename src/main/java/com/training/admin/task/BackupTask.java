@@ -39,6 +39,11 @@ public class BackupTask {
 
         }
         try {
+            kpiStaffDetailAdminService.dealTk(day);
+        }catch (Exception e){
+
+        }
+        try {
             kpiStaffDetailAdminService.dealJk(day);
         }catch (Exception e){
 
@@ -48,6 +53,7 @@ public class BackupTask {
         }catch (Exception e){
 
         }
+
         try {
             logger.info("start backupStaff!  time = {} ", ut.currentTime());
             backupService.backupStaff();
