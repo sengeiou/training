@@ -254,9 +254,9 @@ public class KpiStaffMonthService {
                 if(KpiQuotaEnum.getEnumByKey(kpiTemplateQuotaEntity.getQuotaId())!=null){
                     name = KpiQuotaEnum.getEnumByKey(kpiTemplateQuotaEntity.getQuotaId()).getDesc();
                 }
-                kpiTemplateQuota.setName(name);
                 BeanUtils.copyProperties(kpiTemplateQuotaEntity,kpiTemplateQuota);
                 kpiScore = kpiScore + calculateQuota(kpiTemplateQuota,kpiStaffMonth);
+                kpiTemplateQuota.setName(name);
                 kpiStaffMonth.getKpiTemplateQuotaList().add(kpiTemplateQuota);
             }
         }else{
