@@ -622,6 +622,9 @@ public class ExportFileService {
         titleRow.add("会员点评得分");
         titleRow.add("目标销售额");
         titleRow.add("非营业天数");
+        titleRow.add("私教课数");
+        titleRow.add("续课数");
+        titleRow.add("结课数");
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
         titleRow.add("星级变动说明");
@@ -672,6 +675,9 @@ public class ExportFileService {
             row.add(detail.get("hydp").toString());
             row.add(detail.get("xsmb").toString());
             row.add(detail.get("param2").toString());
+            row.add(detail.get("sjks").toString());
+            row.add(detail.get("xks").toString());
+            row.add(detail.get("jks").toString());
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
             row.add(detail.get("param8").toString());
