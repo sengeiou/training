@@ -94,8 +94,8 @@ public class KpiStaffDetailAdminService {
                                 continue;
                             }
                             String signDate = contract.get("sign_date").toString();
-                            String sql_card = "select * from member_card where member_id = ? and card_no <> ? and type = ? and end_date >= ? ";
-                            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),cardNo,memberCardEntity.getType(),signDate});
+                            String sql_card = "select * from member_card where member_id = ? and card_no <> ? and type = ? and end_date >= ? and created <= ? ";
+                            List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),cardNo,memberCardEntity.getType(),signDate,signDate+" 23:59:59"});
                             for (int j = 0; j < cards.size(); j++) {
                                 Map card = (Map)cards.get(j);
                                 try {
