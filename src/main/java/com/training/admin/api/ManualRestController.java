@@ -278,7 +278,7 @@ public class ManualRestController {
      * 出勤提醒
      */
     @GetMapping("sendTrainingNotice")
-    public void sendTrainingNotice(){
+    public void sendTrainingNotice(HttpServletRequest request, HttpServletResponse response){
         logger.info("start sendTrainingNotice!  time = {} ", ut.currentTime());
         memberTaskService.sendTrainingNotice();
         logger.info("end sendTrainingNotice!  time = {} ", ut.currentTime());
@@ -288,7 +288,7 @@ public class ManualRestController {
      * 卡到期提醒
      */
     @GetMapping("sendCardEndNotice")
-    public void sendCardEndNotice(){
+    public void sendCardEndNotice(HttpServletRequest request, HttpServletResponse response){
         logger.info("start sendCardEndNotice!  time = {} ", ut.currentTime());
         memberTaskService.sendCardEndNotice();
         logger.info("end sendCardEndNotice!  time = {} ", ut.currentTime());
@@ -298,7 +298,7 @@ public class ManualRestController {
      * 卡到期提醒
      */
     @GetMapping("deleteMonthMedal")
-    public void deleteMonthMedal(){
+    public void deleteMonthMedal(HttpServletRequest request, HttpServletResponse response){
         logger.info("start deleteMonthMedal!  time = {} ", ut.currentTime());
         List<Map<String,Object>> medals =  jdbcTemplate.queryForList(" SELECT * from member_medal where medal_id <> 'OX' ");
         int error = 0;
@@ -325,7 +325,7 @@ public class ManualRestController {
      * 卡到期提醒
      */
     @GetMapping("deleteMonthMedal2")
-    public void deleteMonthMedal2(){
+    public void deleteMonthMedal2(HttpServletRequest request, HttpServletResponse response){
         logger.info("start deleteMonthMedal2!  time = {} ", ut.currentTime());
         List<Map<String,Object>> coupons =  jdbcTemplate.queryForList(" SELECT * from member_coupon where origin like '%CQ%' or origin like '%SJ%' ");
         int error = 0;
@@ -359,14 +359,14 @@ public class ManualRestController {
      * sendTest
      */
     @GetMapping("sendTest")
-    public void sendTest(){
+    public void sendTest(HttpServletRequest request, HttpServletResponse response){
         logger.info("start sendTest!  time = {} ", ut.currentTime());
         logger.info(" smsUtil.sendTag = {}",smsUtil.sendTag);
         logger.info("end sendTest!  time = {} ", ut.currentTime());
     }
 
     @GetMapping("dealJkAndXk")
-    public void dealJkAndXk(){
+    public void dealJkAndXk(HttpServletRequest request, HttpServletResponse response){
         logger.info("start dealJkAndXk!  time = {} ", ut.currentTime());
         String start = "2018-12-07";
         String end = "2018-06-30";
@@ -383,7 +383,7 @@ public class ManualRestController {
     }
 
     @GetMapping("dealTk")
-    public void dealTk(){
+    public void dealTk(HttpServletRequest request, HttpServletResponse response){
         logger.info("start dealTk!  time = {} ", ut.currentTime());
         String start = "2018-10-02";
         String end = "2018-06-30";
@@ -398,7 +398,7 @@ public class ManualRestController {
     }
 
     @GetMapping("updateKpiAndStar")
-    public Object updateKpiAndStar(){
+    public Object updateKpiAndStar(HttpServletRequest request, HttpServletResponse response){
         logger.info("start updateKpiAndStar!  time = {} ", ut.currentTime());
         String msg = kpiStaffDetailAdminService.updateKpiAndStar();
         logger.info("end updateKpiAndStar!  time = {} ", ut.currentTime());
@@ -406,7 +406,7 @@ public class ManualRestController {
     }
 
     @GetMapping("calculateStoreFinanceOnceReport")
-    public Object calculateStoreFinanceOnceReport(){
+    public Object calculateStoreFinanceOnceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
         String today = "2018-11-30";
@@ -424,7 +424,7 @@ public class ManualRestController {
     }
 
     @GetMapping("calculateStoreFinanceMonthReport")
-    public Object calculateStoreFinanceMonthReport(){
+    public Object calculateStoreFinanceMonthReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
         String today = "2018-11-30";
@@ -442,7 +442,7 @@ public class ManualRestController {
     }
 
     @GetMapping("calculateStaffFinanceReport")
-    public Object calculateStaffFinanceReport(){
+    public Object calculateStaffFinanceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
         String today = "2018-11-30";
@@ -461,7 +461,7 @@ public class ManualRestController {
     }
 
     @GetMapping("updateStaffStar")
-    public Object updateStaffStar(){
+    public Object updateStaffStar(HttpServletRequest request, HttpServletResponse response){
         logger.info("start updateStaffStar!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
         String month = "2018-11";
@@ -472,7 +472,7 @@ public class ManualRestController {
 
 
     @GetMapping("restorePauseMembers")
-    public Object restorePauseMembers(){
+    public Object restorePauseMembers(HttpServletRequest request, HttpServletResponse response){
         logger.info("start restorePauseMembers!  time = {} ", ut.currentTime());
         String day = ut.currentDate();
         String msg = memberTaskService.restorePauseMembers(day);
