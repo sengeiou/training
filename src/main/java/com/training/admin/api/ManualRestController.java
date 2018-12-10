@@ -375,6 +375,7 @@ public class ManualRestController {
         for (int i = 0; i < days; i++) {
             String day = ut.currentDate(start,i);
             logger.info(" dealJkAndXk !  day = {} ",day);
+            kpiStaffDetailAdminService.dealTk(day);
             kpiStaffDetailAdminService.dealJk(day);
             kpiStaffDetailAdminService.dealXk(day);
         }
