@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.CorsFilter;
 @ImportResource("classpath:META-INF/spring/spring-config.xml")
 @EnableCaching
 @EnableScheduling
+@ServletComponentScan
 public class ManApplication extends SpringBootServletInitializer {
 
     @Override
@@ -40,6 +42,15 @@ public class ManApplication extends SpringBootServletInitializer {
         bean.setOrder(0);
         return bean;
     }
+
+//    @Bean
+//    public ServletRegistrationBean getServletRegistrationBean() {  //一定要返回ServletRegistrationBean
+//        ServletRegistrationBean bean = new ServletRegistrationBean(new ContextUtil());     //放入自己的Servlet对象实例
+//        bean.addUrlMappings("/ContextUtilServlet");  //访问路径值
+//        bean.setLoadOnStartup(1);
+//        return bean;
+//    }
+
 
 //    @Bean
 //    public CharacterEncodingFilter characterEncodingFilter() {

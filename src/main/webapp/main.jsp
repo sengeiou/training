@@ -2,9 +2,9 @@
 <%@ page language="java" import="com.training.config.ContextUtil"%>
 <%@ page language="java" import="org.springframework.jdbc.core.JdbcTemplate"%>
 <%
-System.out.println(" ****************     index.jsp   ");
+System.out.println(" ****************     main.jsp   ");
 JdbcTemplate jdbcTemplate = (JdbcTemplate)ContextUtil.getBean("jdbcTemplate");
 
 
 %>
-index.jsp
+main.jsp
