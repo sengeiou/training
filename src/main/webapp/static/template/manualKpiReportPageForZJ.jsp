@@ -11,4 +11,4 @@
 //      }
 
 %>
-<a href="/main.jsp">main</a>
+<a href="/static/template/main.jsp">main</a>

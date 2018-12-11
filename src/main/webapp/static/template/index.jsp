@@ -8,3 +8,4 @@ JdbcTemplate jdbcTemplate = (JdbcTemplate)ContextUtil.getBean("jdbcTemplate");
 
 %>
 index.jsp
+<a href="/static/template/main.jsp">main</a>
