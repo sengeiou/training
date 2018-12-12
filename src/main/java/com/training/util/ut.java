@@ -1,5 +1,8 @@
 package com.training.util;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -904,6 +907,16 @@ public class ut {
 		month = month.substring(0,4)+"-"+month.substring(4,6);
 		String month1 = ut.currentFullMonth(month,i).replace("-","");
 		return month1;
+	}
+
+	public static String getString(Map member, String key) {
+		if(MapUtils.isEmpty(member)|| StringUtils.isEmpty(key)){
+			return "";
+		}
+		if(member.containsKey(key)){
+			return member.get(key).toString();
+		}
+		return "";
 	}
 
 	public static void main(String[] args) {

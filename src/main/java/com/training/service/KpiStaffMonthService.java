@@ -530,45 +530,7 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-
-            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
-            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
-
-            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
-            KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
-            KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
-
-//            System.out.println(" xks-0 = "+kpiStaffMonthEntity0.getXks());
-//            System.out.println(" xks-1 = "+kpiStaffMonthEntity1.getXks());
-//            System.out.println(" xks-2 = "+kpiStaffMonthEntity2.getXks());
-//            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
-//            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
-//            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
-            int xks = 0;
-            int jks = 0;
-            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getXks())){
-                xks = xks + Integer.parseInt(kpiStaffMonthEntity0.getXks());
-            }
-            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getXks())){
-                xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getXks());
-            }
-            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getXks())){
-                xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getXks());
-            }
-            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getJks())){
-                jks = jks + Integer.parseInt(kpiStaffMonthEntity0.getJks());
-            }
-            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getJks())){
-                jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getJks());
-            }
-            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getJks())){
-                jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getJks());
-            }
-            int qdxkl = 100;
-            if(jks>0){
-                qdxkl = 100*xks/jks;
-            }
-
+            int qdxkl = calculateQdxkl(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
             kpiTemplateQuota.setFinishRate(qdxkl+"%");
             List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
             for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){
@@ -716,6 +678,47 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
         }
         return kpiScore;
+    }
+
+    public int calculateQdxkl(String storeId,String month) {
+        String month1 = ut.getKpiMonth(month,-1);
+        String month2= ut.getKpiMonth(month,-2);
+
+        KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(storeId,month);
+        KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(storeId,month1);
+        KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(storeId,month2);
+
+//            System.out.println(" xks-0 = "+kpiStaffMonthEntity0.getXks());
+//            System.out.println(" xks-1 = "+kpiStaffMonthEntity1.getXks());
+//            System.out.println(" xks-2 = "+kpiStaffMonthEntity2.getXks());
+//            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
+//            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
+//            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
+        int xks = 0;
+        int jks = 0;
+        if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdxks())){
+            xks = xks + Integer.parseInt(kpiStaffMonthEntity0.getQdxks());
+        }
+        if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdxks())){
+            xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getQdxks());
+        }
+        if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdxks())){
+            xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getQdxks());
+        }
+        if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdjks())){
+            jks = jks + Integer.parseInt(kpiStaffMonthEntity0.getQdjks());
+        }
+        if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdjks())){
+            jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getQdjks());
+        }
+        if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdjks())){
+            jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getQdjks());
+        }
+        int qdxkl = 100;
+        if(jks>0){
+            qdxkl = 100*xks/jks;
+        }
+        return qdxkl;
     }
 
     /**

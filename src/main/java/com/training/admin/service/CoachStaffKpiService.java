@@ -291,7 +291,6 @@ public class CoachStaffKpiService {
         int qdlessonCount = 0;
         int qdvalidMemberCount = 0;
 
-        int qdxkl = 100;
         double qdzjs = 0;
         int qdhydp = 0;
         double qdhyd = 0;
@@ -356,13 +355,9 @@ public class CoachStaffKpiService {
         if(staffCount>0){
             qdhydp = qdhydp/staffCount;
             qdzjs = qdzjs/staffCount;
-            qdxks = qdxks/staffCount;
-            qdjks = qdjks/staffCount;
         }
 
-        if(qdjks>0){
-            qdxkl = (int)(qdxks*100/qdjks);
-        }
+        int qdxkl = kpiStaffMonthService.calculateQdxkl(storeId,month);
 
         if(qdvalidMemberCount>0){
             qdhyd = (double)qdlessonCount*100/qdvalidMemberCount;

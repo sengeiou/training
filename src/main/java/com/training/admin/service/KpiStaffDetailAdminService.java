@@ -70,11 +70,17 @@ public class KpiStaffDetailAdminService {
             Map contract = (Map)data.get(i);
             try {
                 String contractId = contract.get("contract_id").toString();
+                String memberId = ut.getString(contract,"member_id");
+
                 String type = contract.get("type").toString();
                 if(type.indexOf("续课")>=0){
                     logger.info(" getXks"+xks+"  contract = {} ",contract);
-                    if(contract.get("card_no")!=null && contract.get("sale_staff_id")!=null && contract.get("member_id")!=null && contract.get("store_id")!=null){
-                        MemberEntity memberEntity = memberDao.getById(contract.get("member_id").toString());
+                    if(contract.get("card_no")!=null && contract.get("sale_staff_id")!=null && contract.get("member_id")!=null){
+                        String storeId = ut.getString(contract,"store_id");
+                        MemberEntity memberEntity = getMemberByDay(memberId,day);
+                        if(StringUtils.isEmpty(storeId) && StringUtils.isNotEmpty(memberEntity.getStoreId())){
+                            storeId = memberEntity.getStoreId();
+                        }
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
                         kpiStaffDetailEntity.setMonth(month);
@@ -84,7 +90,7 @@ public class KpiStaffDetailAdminService {
                         kpiStaffDetailEntity.setType("XK");
                         kpiStaffDetailEntity.setCardType(contract.get("card_type").toString());
                         kpiStaffDetailEntity.setMemberId(contract.get("member_id").toString());
-                        kpiStaffDetailEntity.setStoreId(contract.get("store_id").toString());
+                        kpiStaffDetailEntity.setStoreId(storeId);
                         kpiStaffDetailEntity.setStaffId(contract.get("sale_staff_id").toString());
                         int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                         if(n>0){
@@ -107,7 +113,7 @@ public class KpiStaffDetailAdminService {
                                     kpiStaffDetailEntityJk.setType("JK");
                                     kpiStaffDetailEntityJk.setCardType(card.get("type").toString());
                                     kpiStaffDetailEntityJk.setMemberId(memberEntity.getMemberId());
-                                    kpiStaffDetailEntityJk.setStoreId(memberEntity.getStoreId());
+                                    kpiStaffDetailEntityJk.setStoreId(storeId);
                                     kpiStaffDetailEntityJk.setStaffId(memberEntity.getCoachStaffId());
                                     kpiStaffDetailEntityJk.setRemark("预结课续课合同："+contractId);
                                     kpiStaffDetailDao.add(kpiStaffDetailEntityJk);
@@ -168,6 +174,50 @@ public class KpiStaffDetailAdminService {
         return xks;
     }
 
+    private MemberEntity getMemberByDay(String memberId, String day) {
+        MemberEntity memberEntity = memberDao.getById(memberId);
+        String storeIdNow = memberEntity.getStoreId();
+        String m = day.substring(5,7);
+        String tableName = "member_his_"+m;
+        String sql = " select * from "+tableName+" where member_id = ? and backup_date = ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{memberId,day});
+        if(data.size()>0){
+            Map member = (Map)data.get(0);
+            String coachStaffId = ut.getString(member,"coach_staff_id");
+            String sroreId = ut.getString(member,"store_id");
+            String phone = ut.getString(member,"phone");
+            String status = ut.getString(member,"status");
+            String openId = ut.getString(member,"open_id");
+            memberEntity.setPhone(phone);
+            memberEntity.setStoreId(sroreId);
+            memberEntity.setStatus(Integer.parseInt(status));
+            memberEntity.setOpenId(openId);
+            memberEntity.setCoachStaffId(coachStaffId);
+        }
+        if(StringUtils.isEmpty(memberEntity.getStoreId())){
+            sql = " select store_id from training where member_id = ? and lesson_date >= ? ";
+            List trainings = jdbcTemplate.queryForList(sql,new Object[]{memberId,day});
+            if(data.size()>0){
+                Map training = (Map)trainings.get(0);
+                String storeId = ut.getString(training,"store_id");
+                memberEntity.setStoreId(storeId);
+            }
+        }
+        if(StringUtils.isEmpty(memberEntity.getStoreId())){
+            sql = " select store_id from training where member_id = ? and lesson_date < ? ";
+            List trainings = jdbcTemplate.queryForList(sql,new Object[]{memberId,day});
+            if(data.size()>0){
+                Map training = (Map)trainings.get(0);
+                String storeId = ut.getString(training,"store_id");
+                memberEntity.setStoreId(storeId);
+            }
+        }
+        if(StringUtils.isEmpty(memberEntity.getStoreId())){
+            memberEntity.setStoreId(storeIdNow);
+        }
+        return memberEntity;
+    }
+
     public int dealJk(String day) {
         logger.info(" =======   KpiStaffDetailService  dealJk  day = {} ",day);
         String month = day.substring(0,7);
@@ -188,7 +238,7 @@ public class KpiStaffDetailAdminService {
                 Integer count = Integer.parseInt(memberCard.get("count").toString());
                 String startDateCard = memberCard.get("start_date").toString();
                 String endDateCard = memberCard.get("end_date").toString();
-                MemberEntity memberEntity = memberDao.getById(memberId);
+                MemberEntity memberEntity = getMemberByDay(memberId,day);
                 if(memberEntity==null){
                     continue;
                 }
