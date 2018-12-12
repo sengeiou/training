@@ -153,7 +153,7 @@ public class CoachStaffStarService {
                 msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+staffEntity.getStar()+"星，上个月（"+ut.getKpiMonth(month,-1)+"）star=2星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")<80，星级-1";
                 logger.info(msg);
                 staffEntity.setRemark(msg);
-                return 0;
+                return -1;
             }
         }
         if(star_2==2){
@@ -279,7 +279,7 @@ public class CoachStaffStarService {
                         return 0;
                     }
                     if(count<12){
-                        msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+star_2+"星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=90，月末有效会员数("+count+")<12,星级不变";
+                        msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+star_2+"星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=90，月末有效会员数("+count+")<12,星级-1";
                         logger.info(msg);
                         staffEntity.setRemark(msg);
                         return -1;
@@ -344,14 +344,14 @@ public class CoachStaffStarService {
                     msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+star_2+"星，上个月（"+ut.getKpiMonth(month,-1)+"）star=4星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")>=80，，月末有效会员数("+count+")<12,星级-1";
                     logger.info(msg);
                     staffEntity.setRemark(msg);
-                    return 0;
+                    return -1;
                 }
             }
             if(score<80){
                 msg = "上上个月（"+ut.getKpiMonth(month,-2)+"）star="+star_2+"星，上个月（"+ut.getKpiMonth(month,-1)+"）star=4星，本月（"+month+"）kpi("+ut.getDoubleString(score)+")<80，星级-1";
                 logger.info(msg);
                 staffEntity.setRemark(msg);
-                return 0;
+                return -1;
             }
         }
         return 0;
