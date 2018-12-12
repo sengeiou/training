@@ -765,18 +765,17 @@ public class ExportFileService {
         titleRow.add("投诉数");
         titleRow.add("转介绍数");
         titleRow.add("会员点评得分");
-        titleRow.add("目标销售额");
-        titleRow.add("个人销售额");
-        titleRow.add("全店销售额");
-        titleRow.add("全店销售完成率");
         titleRow.add("非营业天数");
         titleRow.add("私教课数");
         titleRow.add("续课数");
         titleRow.add("结课数");
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
-        titleRow.add("星级变动说明");
 
+        titleRow.add("目标销售额");
+        titleRow.add("个人销售额");
+        titleRow.add("全店销售额");
+        titleRow.add("全店销售完成率");
         titleRow.add("全店季度转介绍数");
         titleRow.add("全店成交数");
         titleRow.add("全店体测数");
@@ -835,17 +834,17 @@ public class ExportFileService {
             row.add(detail.get("tss").toString());
             row.add(detail.get("zjs").toString());
             row.add(detail.get("hydp").toString());
-            row.add(detail.get("xsmb").toString());
-            row.add(detail.get("zye").toString());
-            row.add(detail.get("qdzye").toString());
-            row.add(detail.get("xswcl").toString());
             row.add(detail.get("param2").toString());
             row.add(detail.get("sjks").toString());
             row.add(detail.get("xks").toString());
             row.add(detail.get("jks").toString());
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
-            row.add(detail.get("param8").toString());
+
+            row.add(detail.get("xsmb").toString());
+            row.add(detail.get("zye").toString());
+            row.add(detail.get("qdzye").toString());
+            row.add(detail.get("xswcl").toString());
 
             row.add(detail.get("qdzjs").toString());
             row.add(detail.get("qdcjs").toString());
