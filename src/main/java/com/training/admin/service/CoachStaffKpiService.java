@@ -429,7 +429,7 @@ public class CoachStaffKpiService {
     private List queryStoreStaffList(String storeId,String month) {
         String today = ut.currentDate();
         List<String> staffIdList = new ArrayList<>();
-        if(ut.passDayByDate(ut.firstDayOfMonth(),today)>=0 && ut.passDayByDate(ut.lastDayOfMonth(),today)<=0){
+        if(today.indexOf(month)>=0){
             String sql = "select staff_id from staff where store_id = ? and job in ('教练','店长') and status >= 0 ";
             List staffList = jdbcTemplate.queryForList(sql,new Object[]{storeId});
             for (int i = 0; i < staffList.size(); i++) {
