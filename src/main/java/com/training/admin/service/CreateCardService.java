@@ -354,6 +354,7 @@ public class CreateCardService {
             StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
             MemberEntity memberUpdate = new MemberEntity();
             memberUpdate.setMemberId(memberDB.getMemberId());
+            memberUpdate.setStoreId(staffEntity.getStoreId());
             memberUpdate.setCoachStaffId(staffEntity.getStaffId());
             int n = memberDao.update(memberUpdate);
         }
