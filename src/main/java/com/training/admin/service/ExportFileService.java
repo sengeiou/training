@@ -776,6 +776,16 @@ public class ExportFileService {
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
         titleRow.add("星级变动说明");
+
+        titleRow.add("全店季度转介绍数");
+        titleRow.add("全店成交数");
+        titleRow.add("全店体测数");
+        titleRow.add("全店体测成交率");
+        titleRow.add("全店私教课数");
+        titleRow.add("全店有效会员数");
+        titleRow.add("全店活跃度");
+
+
         excelData.add(titleRow);
 
         String sql = " SELECT * from kpi_staff_month where month = ? and staff_name <> '全店' order by store_id ";
@@ -836,6 +846,15 @@ public class ExportFileService {
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
             row.add(detail.get("param8").toString());
+
+            row.add(detail.get("qdzjs").toString());
+            row.add(detail.get("qdcjs").toString());
+            row.add(detail.get("qdtcs").toString());
+            row.add(detail.get("tczhl").toString());
+            row.add(detail.get("qdsjks").toString());
+            row.add(detail.get("qdyxhys").toString());
+            row.add(detail.get("qdhyd").toString());
+
             excelData.add(row);
         }
         logger.info(" staffKpi     excelData = {} ",excelData.size());
