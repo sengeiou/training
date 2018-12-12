@@ -628,6 +628,17 @@ public class ExportFileService {
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
         titleRow.add("星级变动说明");
+        titleRow.add("全店续课数");
+        titleRow.add("全店结课数");
+        titleRow.add("全店续课率");
+        titleRow.add("全店转介绍");
+        titleRow.add("全店私教课数");
+        titleRow.add("全店有效会员数");
+        titleRow.add("全店活跃度");
+        titleRow.add("全店钉钉成交数");
+        titleRow.add("全店体侧数");
+        titleRow.add("全店体侧转化率");
+
         excelData.add(titleRow);
 
         String sql = " SELECT * from kpi_staff_month where month = ? and staff_name <> '全店' order by store_id ";
@@ -640,6 +651,9 @@ public class ExportFileService {
             String storeId = detail.get("store_id").toString();
 
             StaffEntity staffEntity = staffDao.getById(staffId);
+            if(staffEntity.getJob().equals("店长")){
+                continue;
+            }
             KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
             logger.info(" staffKpi template_id = {}  kpiTemplateEntity = {} ",staffEntity.getTemplateId(),kpiTemplateEntity);
 
@@ -681,10 +695,22 @@ public class ExportFileService {
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
             row.add(detail.get("param8").toString());
+
+            row.add(detail.get("qdxks").toString());
+            row.add(detail.get("qdjks").toString());
+            row.add(detail.get("qdxkl").toString());
+            row.add(detail.get("qdzjs").toString());
+            row.add(detail.get("qdsjks").toString());
+            row.add(detail.get("qdyxhys").toString());
+            row.add(detail.get("qdhyd").toString());
+            row.add(detail.get("qdcjs").toString());
+            row.add(detail.get("qdtcs").toString());
+            row.add(detail.get("tczhl").toString());
+
             excelData.add(row);
         }
         logger.info(" staffKpi     excelData = {} ",excelData.size());
-        ExcelUtil.writeExcel(excelData,"C://product/KPI统计明细_"+month+".xls");
+        ExcelUtil.writeExcel(excelData,"C://product/教练KPI统计明细_"+month+".xls");
     }
 
     public void staffMemberDetailByDay(String month) {
@@ -724,5 +750,96 @@ public class ExportFileService {
         ExcelUtil.writeExcel(excelData,"C://product/有效会员明细表_"+month+".xls");
     }
 
+    public void managerKpi(String month) {
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("教练姓名");
+        titleRow.add("KPI模板");
+        titleRow.add("KPI得分");
+        titleRow.add("KPI额外加减分");
+        titleRow.add("KPI最终得分");
+        titleRow.add("星级");
+        titleRow.add("体能考核");
+        titleRow.add("专业考核分数");
+        titleRow.add("投诉数");
+        titleRow.add("转介绍数");
+        titleRow.add("会员点评得分");
+        titleRow.add("目标销售额");
+        titleRow.add("个人销售额");
+        titleRow.add("全店销售额");
+        titleRow.add("全店销售完成率");
+        titleRow.add("非营业天数");
+        titleRow.add("私教课数");
+        titleRow.add("续课数");
+        titleRow.add("结课数");
+        titleRow.add("附加续课数");
+        titleRow.add("附加结课数");
+        titleRow.add("星级变动说明");
+        excelData.add(titleRow);
+
+        String sql = " SELECT * from kpi_staff_month where month = ? and staff_name <> '全店' order by store_id ";
+        List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{month});
+        for (int i = 0; i < detailList.size(); i++) {
+            Map detail = detailList.get(i);
+            String staffName = detail.get("staff_name").toString();
+            String templateName = "";
+            String staffId = detail.get("staff_id").toString();
+            String storeId = detail.get("store_id").toString();
+
+            StaffEntity staffEntity = staffDao.getById(staffId);
+            if(!staffEntity.getJob().equals("店长")){
+                continue;
+            }
+
+            KpiTemplateEntity kpiTemplateEntity = kpiTemplateDao.getById(staffEntity.getTemplateId());
+            logger.info(" staffKpi template_id = {}  kpiTemplateEntity = {} ",staffEntity.getTemplateId(),kpiTemplateEntity);
+
+            if(kpiTemplateEntity!=null){
+                templateName = kpiTemplateEntity.getTitle();
+            }
+            String storeName = "";
+            if (StringUtils.isNotEmpty(storeId)) {
+                StoreEntity storeEntity = storeDao.getById(storeId);
+                if (storeEntity != null) {
+                    storeName = storeEntity.getName();
+                }
+            }
+            double score = 0;
+            if(detail.get("kpi_score")!=null&&StringUtils.isNotEmpty(detail.get("kpi_score").toString())){
+                score = Double.parseDouble(detail.get("kpi_score").toString());
+                if(detail.get("param5")!=null&&StringUtils.isNotEmpty(detail.get("param5").toString())){
+                    score = score + Double.parseDouble(detail.get("param5").toString());
+                }
+            }
+            List<String> row = new ArrayList();
+            row.add(storeName);
+            row.add(staffName);
+            row.add(templateName);
+            row.add(detail.get("kpi_score").toString());
+            row.add(detail.get("param5").toString());
+            row.add(ut.getDoubleString(score));
+            row.add(detail.get("param1").toString());
+            row.add(detail.get("tnkh").toString());
+            row.add(detail.get("zykh").toString());
+            row.add(detail.get("tss").toString());
+            row.add(detail.get("zjs").toString());
+            row.add(detail.get("hydp").toString());
+            row.add(detail.get("xsmb").toString());
+            row.add(detail.get("zye").toString());
+            row.add(detail.get("qdzye").toString());
+            row.add(detail.get("xswcl").toString());
+            row.add(detail.get("param2").toString());
+            row.add(detail.get("sjks").toString());
+            row.add(detail.get("xks").toString());
+            row.add(detail.get("jks").toString());
+            row.add(detail.get("param3").toString());
+            row.add(detail.get("param4").toString());
+            row.add(detail.get("param8").toString());
+            excelData.add(row);
+        }
+        logger.info(" staffKpi     excelData = {} ",excelData.size());
+        ExcelUtil.writeExcel(excelData,"C://product/店长KPI统计明细_"+month+".xls");
+    }
 }
 

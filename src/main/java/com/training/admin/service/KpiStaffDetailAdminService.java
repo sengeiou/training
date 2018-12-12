@@ -204,8 +204,8 @@ public class KpiStaffDetailAdminService {
                 if(type.equals(CardTypeEnum.PM.getKey())){
                     if(ut.passDayByDate(endDateCard,day)>0){
                         isJk = true;
-                        isSk = true;
-                        remark = "死课";
+                        isSk = false;
+                        remark = "结课";
                     }
                 }
                 if(type.equals(CardTypeEnum.PT.getKey())){

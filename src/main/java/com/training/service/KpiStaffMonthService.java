@@ -500,21 +500,10 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
-
-            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
-            int qdzye = 0;
-            if(kpiStaffMonthEntity0!=null && StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdzye())){
-                qdzye = Integer.parseInt(kpiStaffMonthEntity0.getQdzye());
-            }
-
             int xswcl = 100;
-            if(StringUtils.isNotEmpty(kpiStaffMonth.getXsmb())){
-                int xsmb = Integer.parseInt(kpiStaffMonth.getXsmb());
-                if(xsmb>0){
-                    xswcl = qdzye*100/xsmb;
-                }
+            if(StringUtils.isNotEmpty(kpiStaffMonth.getXswcl())){
+                xswcl = Integer.parseInt(kpiStaffMonth.getXswcl());
             }
-
             kpiTemplateQuota.setFinishRate(xswcl+"%");
             List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
             for (KpiQuotaStandard kpiQuotaStandard:kpiQuotaStandardList){

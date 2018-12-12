@@ -400,6 +400,35 @@ public class CoachStaffKpiService {
 
         kpiStaffMonthEntity.setKpiData("");
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
+
+        List<StaffEntity> managers = staffDao.getManagerByStoreId(storeId);
+        for (StaffEntity staffEntity : managers){
+            KpiStaffMonthEntity item = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+            int xswcl_manager = 100;
+            if(StringUtils.isNotEmpty(item.getXsmb())){
+                int xsmb = Integer.parseInt(item.getXsmb());
+                if(xsmb>0){
+                    xswcl_manager = qdzye*100/xsmb;
+                }
+            }
+            KpiStaffMonthEntity update = new KpiStaffMonthEntity();
+            update.setStaffId(staffEntity.getStaffId());
+            update.setMonth(month);
+            update.setQdzye(""+qdzye);
+            update.setXswcl(""+xswcl_manager);
+            update.setQdxks(ut.getDoubleString(qdxks));
+            update.setQdjks(ut.getDoubleString(qdjks));
+            update.setQdyxhys(""+qdvalidMemberCount);
+            update.setQdsjks(""+qdlessonCount);
+            update.setQdxkl(""+qdxkl);
+            update.setQdhyd(""+ut.getDoubleString(qdhyd));
+            update.setQdhydp(""+qdhydp);
+            update.setQdzjs(ut.getDoubleString(qdzjs));
+            update.setQdcjs(""+qdcjs);
+            update.setQdtcs(""+qdtcs);
+            update.setTczhl(""+tczhl);
+            kpiStaffMonthDao.update(update);
+        }
     }
 
     private List queryStoreStaffList(String storeId,String month) {
