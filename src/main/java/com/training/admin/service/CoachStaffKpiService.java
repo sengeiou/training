@@ -357,7 +357,6 @@ public class CoachStaffKpiService {
             qdzjs = qdzjs/staffCount;
         }
 
-        int qdxkl = kpiStaffMonthService.calculateQdxkl(storeId,month);
 
         if(qdvalidMemberCount>0){
             qdhyd = (double)qdlessonCount*100/qdvalidMemberCount;
@@ -374,6 +373,9 @@ public class CoachStaffKpiService {
         if(qdtcs>0){
             tczhl = qdcjs*100/qdtcs;
         }
+
+        int qdxkl = 0;
+
         kpiStaffMonthEntity.setQdzye(""+qdzye);
 
         kpiStaffMonthEntity.setQdxks(ut.getDoubleString(qdxks));
@@ -385,6 +387,7 @@ public class CoachStaffKpiService {
         kpiStaffMonthEntity.setQdxkl(""+qdxkl);
         kpiStaffMonthEntity.setQdhyd(""+ut.getDoubleString(qdhyd));
         kpiStaffMonthEntity.setQdhydp(""+qdhydp);
+        kpiStaffMonthEntity.setZjs(ut.getDoubleString(qdzjs));
         kpiStaffMonthEntity.setQdzjs(ut.getDoubleString(qdzjs));
         kpiStaffMonthEntity.setQdcjs(""+qdcjs);
         kpiStaffMonthEntity.setQdtcs(""+qdtcs);
@@ -395,6 +398,9 @@ public class CoachStaffKpiService {
 
         kpiStaffMonthEntity.setKpiData("");
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
+
+        qdxkl = kpiStaffMonthService.calculateQdxkl(storeId,month);
+        qdzjs = kpiStaffMonthService.calculateQdzjs(storeId,month);
 
         List<StaffEntity> managers = staffDao.getManagerByStoreId(storeId);
         for (StaffEntity staffEntity : managers){

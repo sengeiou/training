@@ -558,37 +558,7 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
 
-            String month1 = ut.getKpiMonth(kpiStaffMonth.getMonth(),-1);
-            String month2= ut.getKpiMonth(kpiStaffMonth.getMonth(),-2);
-
-            KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
-            KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month1);
-            KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(kpiStaffMonth.getStoreId(),month2);
-
-//            System.out.println(" zjs-0 = "+kpiStaffMonthEntity0.getZjs());
-//            System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
-//            System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
-            double zjs0 = 0;
-            double zjs1 = 0;
-            double zjs2 = 0;
-            if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdzjs())){
-                zjs0 = Double.parseDouble(kpiStaffMonthEntity0.getQdzjs());
-            }
-            if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdzjs())){
-                zjs1 = Double.parseDouble(kpiStaffMonthEntity1.getQdzjs());
-            }
-            if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdzjs())){
-                zjs2 = Double.parseDouble(kpiStaffMonthEntity2.getQdzjs());
-            }
-
-            System.out.println(" zjs-0 = "+zjs0);
-            System.out.println(" zjs-1 = "+zjs1);
-            System.out.println(" zjs-2 = "+zjs2);
-
-            double qdzjs = (zjs0 + zjs1 + zjs2)/3;
-
-            System.out.println(" qdzjs = "+qdzjs);
-
+            double qdzjs = calculateQdzjs(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
 
             kpiTemplateQuota.setFinishRate(ut.getDoubleString(qdzjs));
             List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
@@ -721,6 +691,39 @@ public class KpiStaffMonthService {
         return qdxkl;
     }
 
+    public double calculateQdzjs(String storeId, String month) {
+        String month1 = ut.getKpiMonth(month,-1);
+        String month2= ut.getKpiMonth(month,-2);
+
+        KpiStaffMonthEntity kpiStaffMonthEntity0 = kpiStaffMonthDao.getByIdAndMonth(storeId,month);
+        KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(storeId,month1);
+        KpiStaffMonthEntity kpiStaffMonthEntity2 = kpiStaffMonthDao.getByIdAndMonth(storeId,month2);
+
+//            System.out.println(" zjs-0 = "+kpiStaffMonthEntity0.getZjs());
+//            System.out.println(" zjs-1 = "+kpiStaffMonthEntity1.getZjs());
+//            System.out.println(" zjs-2 = "+kpiStaffMonthEntity2.getZjs());
+        double zjs0 = 0;
+        double zjs1 = 0;
+        double zjs2 = 0;
+        if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdzjs())){
+            zjs0 = Double.parseDouble(kpiStaffMonthEntity0.getQdzjs());
+        }
+        if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdzjs())){
+            zjs1 = Double.parseDouble(kpiStaffMonthEntity1.getQdzjs());
+        }
+        if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdzjs())){
+            zjs2 = Double.parseDouble(kpiStaffMonthEntity2.getQdzjs());
+        }
+
+        System.out.println(" zjs-0 = "+zjs0);
+        System.out.println(" zjs-1 = "+zjs1);
+        System.out.println(" zjs-2 = "+zjs2);
+
+        double qdzjs = (zjs0 + zjs1 + zjs2);
+        return qdzjs;
+    }
+
+
     /**
      * 查询总数
      * @param query
@@ -795,7 +798,6 @@ public class KpiStaffMonthService {
         }
         return ResponseUtil.exception("删除失败");
     }
-
 
 }
 
