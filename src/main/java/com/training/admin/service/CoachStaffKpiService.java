@@ -207,7 +207,7 @@ public class CoachStaffKpiService {
         String endDate = y+"-"+m+"-31";
         String sql = "select * from contract where sale_staff_id = ? and type in ('新会员','续课','转介绍') and sign_date >= ? and sign_date <= ? ";
         int yye = 0;
-        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),startDate,endDate});
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             String money = item.get("money").toString();
