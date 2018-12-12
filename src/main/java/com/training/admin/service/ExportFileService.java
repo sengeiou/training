@@ -628,16 +628,6 @@ public class ExportFileService {
         titleRow.add("附加续课数");
         titleRow.add("附加结课数");
         titleRow.add("星级变动说明");
-        titleRow.add("全店续课数");
-        titleRow.add("全店结课数");
-        titleRow.add("全店续课率");
-        titleRow.add("全店转介绍");
-        titleRow.add("全店私教课数");
-        titleRow.add("全店有效会员数");
-        titleRow.add("全店活跃度");
-        titleRow.add("全店钉钉成交数");
-        titleRow.add("全店体侧数");
-        titleRow.add("全店体侧转化率");
 
         excelData.add(titleRow);
 
@@ -695,17 +685,6 @@ public class ExportFileService {
             row.add(detail.get("param3").toString());
             row.add(detail.get("param4").toString());
             row.add(detail.get("param8").toString());
-
-            row.add(detail.get("qdxks").toString());
-            row.add(detail.get("qdjks").toString());
-            row.add(detail.get("qdxkl").toString());
-            row.add(detail.get("qdzjs").toString());
-            row.add(detail.get("qdsjks").toString());
-            row.add(detail.get("qdyxhys").toString());
-            row.add(detail.get("qdhyd").toString());
-            row.add(detail.get("qdcjs").toString());
-            row.add(detail.get("qdtcs").toString());
-            row.add(detail.get("tczhl").toString());
 
             excelData.add(row);
         }
@@ -776,13 +755,16 @@ public class ExportFileService {
         titleRow.add("个人销售额");
         titleRow.add("全店销售额");
         titleRow.add("全店销售完成率");
+        titleRow.add("全店续课数");
+        titleRow.add("全店结课数");
+        titleRow.add("全店续课率");
         titleRow.add("全店季度转介绍数");
-        titleRow.add("全店成交数");
-        titleRow.add("全店体测数");
-        titleRow.add("全店体测成交率");
         titleRow.add("全店私教课数");
         titleRow.add("全店有效会员数");
         titleRow.add("全店活跃度");
+        titleRow.add("全店钉钉成交数");
+        titleRow.add("全店体侧数");
+        titleRow.add("全店体侧转化率");
 
 
         excelData.add(titleRow);
@@ -846,13 +828,16 @@ public class ExportFileService {
             row.add(detail.get("qdzye").toString());
             row.add(detail.get("xswcl").toString());
 
+            row.add(detail.get("qdxks").toString());
+            row.add(detail.get("qdjks").toString());
+            row.add(detail.get("qdxkl").toString());
             row.add(detail.get("qdzjs").toString());
-            row.add(detail.get("qdcjs").toString());
-            row.add(detail.get("qdtcs").toString());
-            row.add(detail.get("tczhl").toString());
             row.add(detail.get("qdsjks").toString());
             row.add(detail.get("qdyxhys").toString());
             row.add(detail.get("qdhyd").toString());
+            row.add(detail.get("qdcjs").toString());
+            row.add(detail.get("qdtcs").toString());
+            row.add(detail.get("tczhl").toString());
 
             excelData.add(row);
         }
