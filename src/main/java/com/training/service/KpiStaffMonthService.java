@@ -694,29 +694,29 @@ public class KpiStaffMonthService {
 //            System.out.println(" jks-0 = "+kpiStaffMonthEntity0.getJks());
 //            System.out.println(" jks-1 = "+kpiStaffMonthEntity1.getJks());
 //            System.out.println(" jks-2 = "+kpiStaffMonthEntity2.getJks());
-        int xks = 0;
-        int jks = 0;
+        double xks = 0;
+        double jks = 0;
         if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdxks())){
-            xks = xks + Integer.parseInt(kpiStaffMonthEntity0.getQdxks());
+            xks = xks + Double.parseDouble(kpiStaffMonthEntity0.getQdxks());
         }
         if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdxks())){
-            xks = xks + Integer.parseInt(kpiStaffMonthEntity1.getQdxks());
+            xks = xks + Double.parseDouble(kpiStaffMonthEntity1.getQdxks());
         }
         if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdxks())){
-            xks = xks + Integer.parseInt(kpiStaffMonthEntity2.getQdxks());
+            xks = xks + Double.parseDouble(kpiStaffMonthEntity2.getQdxks());
         }
         if(kpiStaffMonthEntity0!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity0.getQdjks())){
-            jks = jks + Integer.parseInt(kpiStaffMonthEntity0.getQdjks());
+            jks = jks + Double.parseDouble(kpiStaffMonthEntity0.getQdjks());
         }
         if(kpiStaffMonthEntity1!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity1.getQdjks())){
-            jks = jks + Integer.parseInt(kpiStaffMonthEntity1.getQdjks());
+            jks = jks + Double.parseDouble(kpiStaffMonthEntity1.getQdjks());
         }
         if(kpiStaffMonthEntity2!=null&&StringUtils.isNotEmpty(kpiStaffMonthEntity2.getQdjks())){
-            jks = jks + Integer.parseInt(kpiStaffMonthEntity2.getQdjks());
+            jks = jks + Double.parseDouble(kpiStaffMonthEntity2.getQdjks());
         }
         int qdxkl = 100;
         if(jks>0){
-            qdxkl = 100*xks/jks;
+            qdxkl = (int)(100*xks/jks);
         }
         return qdxkl;
     }

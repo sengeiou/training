@@ -368,7 +368,7 @@ public class ManualRestController {
     @GetMapping("dealJkAndXk")
     public void dealJkAndXk(HttpServletRequest request, HttpServletResponse response){
         logger.info("start dealJkAndXk!  time = {} ", ut.currentTime());
-        String start = "2018-12-07";
+        String start = "2018-06-01";
         String end = "2018-06-30";
         end = "2018-12-11";
         int days = ut.passDayByDate(start,end)+1;

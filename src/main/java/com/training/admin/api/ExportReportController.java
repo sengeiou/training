@@ -114,9 +114,9 @@ public class ExportReportController {
     public Object staffKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" staffKpi   ");
         String month = "201809";
-//        exportFileService.staffKpi(month);
-//        month = "201810";
-//        exportFileService.staffKpi(month);
+        exportFileService.staffKpi(month);
+        month = "201810";
+        exportFileService.staffKpi(month);
         month = "201811";
         exportFileService.staffKpi(month);
         exportFileService.managerKpi(month);
