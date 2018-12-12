@@ -77,7 +77,7 @@ public class MemberTrainingTaskService {
     }
 
     public String updateMemberInfo() {
-        logger.info(" MemberTrainingTaskService updateMemberInfo ");
+        logger.info(" updateMemberInfo ");
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member where coach_staff_id <> ''  ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {

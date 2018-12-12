@@ -2,6 +2,7 @@ package com.training.admin.task;
 
 import com.training.admin.service.BackupService;
 import com.training.admin.service.KpiStaffDetailAdminService;
+import com.training.admin.service.MemberTrainingTaskService;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,16 @@ public class BackupTask {
     @Autowired
     private KpiStaffDetailAdminService kpiStaffDetailAdminService;
 
+    @Autowired
+    MemberTrainingTaskService memberTrainingTaskService;
+
     @Scheduled(cron = "0 50 23 * * *")
     public void backupMemberAndStaff(){
         String month = ut.currentFullMonth();
         String day = ut.currentDate();
         try {
             logger.info("start backupMember!  month = {} , time = {} ",month, ut.currentTime());
+            memberTrainingTaskService.updateMemberInfo();
             backupService.backupMember();
             logger.info("end backupMember!  time = {} ", ut.currentTime());
         }catch (Exception e){
