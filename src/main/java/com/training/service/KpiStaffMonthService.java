@@ -169,7 +169,17 @@ public class KpiStaffMonthService {
         kpiStaffMonth.setExtraJks(kpiStaffMonth.getParam4());
         kpiStaffMonth.setExtraScore(kpiStaffMonth.getParam5());
 
-
+        double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
+        if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
+            double extraScore = Double.parseDouble(kpiStaffMonth.getExtraScore());
+            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
+            finalScore = finalScore + extraScore;
+            if(finalScore<0){
+                finalScore = 0;
+            }
+        }
+        logger.info(" calculateKpiStaffMonth final finalScore : {}   ",finalScore);
+        kpiStaffMonth.setFinalScore(ut.getDoubleString(finalScore));
         return kpiStaffMonth;
     }
 
@@ -262,16 +272,19 @@ public class KpiStaffMonthService {
         }else{
             kpiStaffMonth.setTemplateName("-");
         }
+        logger.info(" calculateKpiStaffMonth  kpiScore : {}   ",kpiScore);
+        kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
+        double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
             double extraScore = Double.parseDouble(kpiStaffMonth.getExtraScore());
             logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
-            kpiScore = kpiScore + extraScore;
-            if(kpiScore<0){
-                kpiScore = 0;
+            finalScore = finalScore + extraScore;
+            if(finalScore<0){
+                finalScore = 0;
             }
         }
-        logger.info(" calculateKpiStaffMonth final kpiScore : {}   ",kpiScore);
-        kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
+        logger.info(" calculateKpiStaffMonth final finalScore : {}   ",finalScore);
+        kpiStaffMonth.setFinalScore(ut.getDoubleString(finalScore));
         return kpiStaffMonth;
     }
 

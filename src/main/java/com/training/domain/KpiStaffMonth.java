@@ -136,5 +136,7 @@ public class KpiStaffMonth {
 
     private String star;
 
+    private String finalScore;
+
 }
 
