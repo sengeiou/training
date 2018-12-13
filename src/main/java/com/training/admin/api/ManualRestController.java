@@ -175,19 +175,20 @@ public class ManualRestController {
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateKpi  execute start  ");
-        String month = "201811";
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') ");
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
+
+        String month = "201809";
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
             try {
-                coachStaffKpiService.calculateStaffKpi(staffId,month);
+//                coachStaffKpiService.calculateStaffKpi(staffId,month);
             }catch (Exception e){
                 logger.error(" ============== calculateKpiError  staffId:{} ",staffId);
                 e.printStackTrace();
             }
         }
-        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         for (int i = 0; i < stores.size(); i++){
             Map store = stores.get(i);
             String store_id = store.get("store_id").toString();
@@ -198,7 +199,51 @@ public class ManualRestController {
                 e.printStackTrace();
             }
         }
-        logger.info(" =======   calculateKpi  execute end  ");
+
+        month = "201810";
+        for (int i = 0; i < coachs.size(); i++){
+            Map staff = coachs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            try {
+//                coachStaffKpiService.calculateStaffKpi(staffId,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  staffId:{} ",staffId);
+                e.printStackTrace();
+            }
+        }
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            String store_id = store.get("store_id").toString();
+            try {
+                coachStaffKpiService.calculateStoreKpi(store_id,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  store_id:{} ",store_id);
+                e.printStackTrace();
+            }
+        }
+
+        month = "201811";
+        for (int i = 0; i < coachs.size(); i++){
+            Map staff = coachs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            try {
+//                coachStaffKpiService.calculateStaffKpi(staffId,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  staffId:{} ",staffId);
+                e.printStackTrace();
+            }
+        }
+        for (int i = 0; i < stores.size(); i++){
+            Map store = stores.get(i);
+            String store_id = store.get("store_id").toString();
+            try {
+                coachStaffKpiService.calculateStoreKpi(store_id,month);
+            }catch (Exception e){
+                logger.error(" ============== calculateKpiError  store_id:{} ",store_id);
+                e.printStackTrace();
+            }
+        }
+        logger.info(" =======   calculateKpi  execute end  month = {}" ,month);
         return "calculateKpi执行成功";
     }
 
@@ -370,7 +415,7 @@ public class ManualRestController {
         logger.info("start dealJkAndXk!  time = {} ", ut.currentTime());
         String start = "2018-06-01";
         String end = "2018-06-30";
-        end = "2018-12-11";
+        end = "2018-12-12";
         int days = ut.passDayByDate(start,end)+1;
         for (int i = 0; i < days; i++) {
             String day = ut.currentDate(start,i);

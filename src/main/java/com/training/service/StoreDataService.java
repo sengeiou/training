@@ -735,7 +735,7 @@ public class StoreDataService {
      */
     private void queryContractMember(StoreEntity storeEntity, String startDate, String endDate, Map<String, MarketReportData> dataMap) {
         String sql = " select a.member_id,a.`name`,a.phone,a.store_id,a.coach_staff_id, a.origin,b.sign_date,b.money,b.type,b.created from member a , contract b " +
-                "where a.store_id = ? and a.origin <> '' and a.member_id = b.member_id and b.type in ('新会员','转介绍') " +
+                "where b.store_id = ?  and a.member_id = b.member_id and b.type in ('新会员','转介绍') " +
                 "and b.sign_date >= ? and b.sign_date <= ? ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate,endDate});
         for (int i = 0; i < data.size(); i++) {

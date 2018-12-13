@@ -436,7 +436,7 @@ public class CoachStaffKpiService {
         String today = ut.currentDate();
         List<String> staffIdList = new ArrayList<>();
         if(today.indexOf(month)>=0){
-            String sql = "select staff_id from staff where store_id = ? and job in ('教练','店长') and status >= 0 ";
+            String sql = "select staff_id from staff where store_id = ? and job in ('教练','店长') and status >= 0 and template_id <> '' ";
             List staffList = jdbcTemplate.queryForList(sql,new Object[]{storeId});
             for (int i = 0; i < staffList.size(); i++) {
                 Map staff = (Map)staffList.get(i);
@@ -444,11 +444,11 @@ public class CoachStaffKpiService {
                 staffIdList.add(staff_id);
             }
         }else{
-            List data = jdbcTemplate.queryForList(" select max(backup_date) backup_date from staff_his where backup_date like '%"+month+"%' ");
+            List data = jdbcTemplate.queryForList(" select max(backup_date) backup_date from staff_his where backup_date like '%"+month+"%'  ");
             if(data.size()>0){
                 Map item = (Map)data.get(0);
                 String backup_date = item.get("backup_date").toString();
-                String sql = "select staff_id from staff_his where store_id = ? and job in ('教练','店长') and status >= 0 and backup_date = ?  ";
+                String sql = "select staff_id from staff_his where store_id = ? and job in ('教练','店长') and status >= 0 and backup_date = ?  and template_id <> '' ";
                 List staffList = jdbcTemplate.queryForList(sql,new Object[]{storeId,backup_date});
                 for (int i = 0; i < staffList.size(); i++) {
                     Map staff = (Map)staffList.get(i);

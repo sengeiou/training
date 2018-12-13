@@ -115,8 +115,10 @@ public class ExportReportController {
         logger.info(" staffKpi   ");
         String month = "201809";
 //        exportFileService.staffKpi(month);
-//        month = "201810";
+        exportFileService.managerKpi(month);
+        month = "201810";
 //        exportFileService.staffKpi(month);
+        exportFileService.managerKpi(month);
         month = "201811";
 //        exportFileService.staffKpi(month);
         exportFileService.managerKpi(month);
