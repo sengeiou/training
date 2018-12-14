@@ -273,6 +273,7 @@ public class KpiStaffMonthService {
             kpiStaffMonth.setTemplateName("-");
         }
         logger.info(" calculateKpiStaffMonth  kpiScore : {}   ",kpiScore);
+        kpiStaffMonth.setExtraScore(kpiStaffMonthEntity.getParam5());
         kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
         double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
