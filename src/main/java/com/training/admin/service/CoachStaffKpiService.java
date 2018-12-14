@@ -429,6 +429,10 @@ public class CoachStaffKpiService {
             update.setQdtcs(""+qdtcs);
             update.setTczhl(""+tczhl);
             kpiStaffMonthDao.update(update);
+            item = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+            KpiStaffMonth kpiStaffMonthUpdate = kpiStaffMonthService.calculateKpiStaffMonth(item);
+            update.setKpiScore(kpiStaffMonthUpdate.getKpiScore());
+            kpiStaffMonthDao.update(update);
         }
     }
 
