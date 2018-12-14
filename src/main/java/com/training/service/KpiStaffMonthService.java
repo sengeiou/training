@@ -167,7 +167,7 @@ public class KpiStaffMonthService {
         kpiStaffMonth.setRestDays(kpiStaffMonth.getParam2());
         kpiStaffMonth.setExtraXks(kpiStaffMonth.getParam3());
         kpiStaffMonth.setExtraJks(kpiStaffMonth.getParam4());
-        kpiStaffMonth.setExtraScore(kpiStaffMonth.getParam5());
+        kpiStaffMonth.setExtraScore(kpiStaffMonthEntity.getParam5()==null?"0":kpiStaffMonthEntity.getParam5());
 
         double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
@@ -273,7 +273,7 @@ public class KpiStaffMonthService {
             kpiStaffMonth.setTemplateName("-");
         }
         logger.info(" calculateKpiStaffMonth  kpiScore : {}   ",kpiScore);
-        kpiStaffMonth.setExtraScore(kpiStaffMonthEntity.getParam5());
+        kpiStaffMonth.setExtraScore(kpiStaffMonthEntity.getParam5()==null?"0":kpiStaffMonthEntity.getParam5());
         kpiStaffMonth.setKpiScore(ut.getDoubleString(kpiScore));
         double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
