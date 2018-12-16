@@ -423,7 +423,7 @@ public class MemberTrainingTaskService {
                 String startDate = card.get("start_date").toString();
                 String endDate = card.get("end_date").toString();
                 int count = Integer.parseInt(card.get("count").toString());
-                logger.info(" updateMemberCardStatus   index = {} , card_no = {} , end_date = {}   ",i,card.get("card_no"),endDate);
+//                logger.info(" updateMemberCardStatus   index = {} , card_no = {} , end_date = {}   ",i,card.get("card_no"),endDate);
                 if(ut.passDayByDate(ut.currentDate(),startDate)>0){
                     if(status!=0){
                         jdbcTemplate.update(" update member_card set status = 0 where  card_no = ?  ",new Object[]{cardNo});
