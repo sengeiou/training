@@ -97,8 +97,7 @@ public class SessonFilter implements Filter {
                     Member member = JSONObject.parseObject(json, Member.class);
                     req.setAttribute("member",member);
                 }
-                System.out.println("member="+json);
-
+                logger.info("member={}",json);
                 Staff staff = JSONObject.parseObject(json, Staff.class);
                 if(StringUtils.isNotEmpty(staff.getStaffId())){
                     req.setAttribute("staff",staff);
