@@ -937,7 +937,11 @@ public class ut {
 
 //		System.out.println(getKpiMonth("201811",-12));
 
-		System.out.println(passDayByDate("2018-11-22","2018-11-30"));
+//		System.out.println(passDayByDate("2018-11-22","2018-11-30"));
+
+		System.out.println(ut.currentDate(-30));
+
+		System.out.println(ut.passDayByDate("2018-11-15",ut.currentDate(-30)));
 
 	}
 
