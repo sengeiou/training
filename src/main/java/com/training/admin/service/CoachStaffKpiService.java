@@ -215,7 +215,7 @@ public class CoachStaffKpiService {
                 yye = yye + (int)Double.parseDouble(money);
             }
         }
-        logger.info(" getZye = {} , staffId = {} , name = {} , month = {} , data.size = {} ",yye,staffEntity.getStaffId(),staffEntity.getCustname(),month,data.size());
+//        logger.info(" getZye = {} , staffId = {} , name = {} , month = {} , data.size = {} ",yye,staffEntity.getStaffId(),staffEntity.getCustname(),month,data.size());
         return yye;
     }
 
@@ -267,7 +267,7 @@ public class CoachStaffKpiService {
                 cjs++;
             }
         }
-        logger.info(" getCjs = {} , staffId = {} , name = {} , month = {} , data.size = {} ",cjs,staffEntity.getStaffId(),staffEntity.getCustname(),month,data.size());
+//        logger.info(" getCjs = {} , staffId = {} , name = {} , month = {} , data.size = {} ",cjs,staffEntity.getStaffId(),staffEntity.getCustname(),month,data.size());
         return cjs;
     }
 
@@ -300,7 +300,7 @@ public class CoachStaffKpiService {
         int qdtcs = 0;
         List<String> staffIdList = queryStoreStaffList(storeId,y+"-"+m);
         int staffCount = staffIdList.size();
-        logger.info(" staffCount  = {}  ",staffCount);
+//        logger.info(" staffCount  = {}  ",staffCount);
         for (String staffId : staffIdList){
             KpiStaffMonthEntity subKpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
             if(subKpiStaffMonthEntity==null){
@@ -473,7 +473,7 @@ public class CoachStaffKpiService {
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type = 'XK' ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
-        logger.info(" getXks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
+//        logger.info(" getXks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
         return data.size();
     }
 
@@ -486,7 +486,7 @@ public class CoachStaffKpiService {
         month = y+"-"+m;
         String sql = "select * from kpi_staff_detail where staff_id = ? and month = ? and type in ('JK') ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),month});
-        logger.info(" getJks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
+//        logger.info(" getJks name = {} , month = {} , data.size = {} ",staffEntity.getCustname(),month,data.size());
         return data.size();
     }
 
@@ -503,7 +503,7 @@ public class CoachStaffKpiService {
         }
         String sql = " select training_id,lesson_id,type,sign_time,card_type from training where staff_id = ? and lesson_date >= ? and lesson_date <= ? and show_tag = 1 and card_type in ('PT') ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),startDate,endDate});
-        logger.info(" queryLessonCount  count = {}  ",data.size());
+//        logger.info(" queryLessonCount  count = {}  ",data.size());
         return data.size();
     }
 
@@ -511,7 +511,7 @@ public class CoachStaffKpiService {
      *  有效会员数 ： 非停 非结
      */
     public int queryValidMemberCount(StaffEntity staffEntity, String month) {
-        logger.info(" queryValidMemberCount  staffEntity = {} , month = {} ",staffEntity,month);
+//        logger.info(" queryValidMemberCount  staffEntity = {} , month = {} ",staffEntity,month);
         String y = month.substring(0,4);
         String m = month.substring(4,6);
         String startDate = y+"-"+m+"-01";
@@ -522,14 +522,14 @@ public class CoachStaffKpiService {
         String tableName = "member_his_"+m;
         int count = 0;
         String sql = " select * from "+tableName+" where coach_staff_id = ? and status in (1) and created <= ? ";
-        logger.info(" sql = {} ",sql);
+//        logger.info(" sql = {} ",sql);
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getStaffId(),endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
 
             count++;
         }
-        logger.info(" queryValidMemberCount tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+//        logger.info(" queryValidMemberCount tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
         return count;
     }
 

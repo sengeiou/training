@@ -37,7 +37,7 @@ public class ProcessInstanceService {
     public void getConcract(ProcessCodeEnum processCodeEnum){
         logger.info("start getConcract   time = {} ", ut.currentTime());
         if(StringUtils.isEmpty(processCodeEnum.getCode())){
-            logger.info("end getConcract processCodeEnum is  null = {}",processCodeEnum);
+//            logger.info("end getConcract processCodeEnum is  null = {}",processCodeEnum);
             return;
         }
         if(processCodeEnum.getKey().equals(CardTypeEnum.PT.getKey())){
@@ -62,13 +62,13 @@ public class ProcessInstanceService {
     }
 
     private void getTTConcract(String processCode) {
-        logger.info("start getTTConcract   time = {} ", ut.currentTime());
+//        logger.info("start getTTConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList =  new ArrayList<>();
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -78,39 +78,39 @@ public class ProcessInstanceService {
             req.setSize(10L);
             int count = 0;
             do{
-                System.out.println(" ================================  cursor = "+cursor);
+//                System.out.println(" ================================  cursor = "+cursor);
                 req.setCursor(cursor);
                 SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  result = "+result);
+//                System.out.println(" ================================  result = "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converTT(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     contractService.add(contractEntity);
@@ -121,7 +121,7 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getTTConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getTTConcract end!");
+//        logger.info("end getTTConcract end!");
     }
 
     private ContractEntity converTT(SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo) {
@@ -161,13 +161,13 @@ public class ProcessInstanceService {
     }
 
     private void getSTConcract(String processCode) {
-        logger.info("start getSTConcract   time = {} ", ut.currentTime());
+//        logger.info("start getSTConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList =  new ArrayList<>();
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -177,40 +177,40 @@ public class ProcessInstanceService {
             req.setSize(10L);
             int count = 0;
             do{
-                System.out.println(" ================================  cursor = "+cursor);
+//                System.out.println(" ================================  cursor = "+cursor);
 
                 req.setCursor(cursor);
                 SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  result = "+result);
+//                System.out.println(" ================================  result = "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converST(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     contractService.add(contractEntity);
@@ -221,7 +221,7 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getSTConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getSTConcract end!");
+//        logger.info("end getSTConcract end!");
     }
 
     private ContractEntity converST(SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo) {
@@ -275,14 +275,14 @@ public class ProcessInstanceService {
     }
 
     private void getTKConcract(String processCode) {
-        logger.info("start getTKConcract   time = {} ", ut.currentTime());
+//        logger.info("start getTKConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
 
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -291,40 +291,40 @@ public class ProcessInstanceService {
             req.setSize(10L);
             int count = 0;
             do{
-                System.out.println(" ================================  cursor = "+cursor);
+//                System.out.println(" ================================  cursor = "+cursor);
                 req.setCursor(cursor);
                 SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  result = "+result);
+//                System.out.println(" ================================  result = "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converTK(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                     break;
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     contractService.add(contractEntity);
@@ -335,7 +335,7 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getTKConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getTKConcract end!");
+//        logger.info("end getTKConcract end!");
 
     }
 
@@ -370,14 +370,14 @@ public class ProcessInstanceService {
     }
 
     private void getZKConcract(String processCode) {
-        logger.info("start getZKConcract   time = {} ", ut.currentTime());
+//        logger.info("start getZKConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
 
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -387,40 +387,40 @@ public class ProcessInstanceService {
             req.setSize(10L);
             int count = 0;
             do{
-                System.out.println(" ================================  cursor = "+cursor);
+//                System.out.println(" ================================  cursor = "+cursor);
 
                 req.setCursor(cursor);
                 SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  result = "+result);
+//                System.out.println(" ================================  result = "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converZK(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     contractService.add(contractEntity);
@@ -431,7 +431,7 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getPersonalConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getPersonalConcract end!");
+//        logger.info("end getPersonalConcract end!");
 
     }
 
@@ -472,13 +472,13 @@ public class ProcessInstanceService {
     }
 
     public void getPTConcract(String processCode){
-        logger.info("start getPersonalConcract   time = {} ", ut.currentTime());
+//        logger.info("start getPersonalConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -488,40 +488,40 @@ public class ProcessInstanceService {
             req.setSize(10L);
             int count = 0;
             do{
-                System.out.println(" ================================  cursor = "+cursor);
+//                System.out.println(" ================================  cursor = "+cursor);
 
                 req.setCursor(cursor);
                 SmartworkBpmsProcessinstanceListResponse rsp = client.execute(req, access_token);
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  result = "+result);
+//                System.out.println(" ================================  result = "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converPT(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                 }
                 for (int i = 0; i < contractEntityList.size(); i++) {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     contractService.add(contractEntity);
@@ -532,18 +532,18 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getPersonalConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getPersonalConcract end!");
+//        logger.info("end getPersonalConcract end!");
     }
 
 
     public void getPMConcract(String processCode){
-        logger.info("start getPMConcract   time = {} ", ut.currentTime());
+//        logger.info("start getPMConcract   time = {} ", ut.currentTime());
         List<ContractEntity> contractEntityList = null;
         Long cursor = 1L;
         try {
             String access_token = DingtalkUtil.getSsoToken();
             String startDate = ut.currentDate(-30);
-            System.out.println(" ================================  startDate = "+startDate);
+//            System.out.println(" ================================  startDate = "+startDate);
             Long startTime = ut.df_day.parse(startDate).getTime();
             DingTalkClient client = new DefaultDingTalkClient("https://eco.taobao.com/router/rest");
             SmartworkBpmsProcessinstanceListRequest req = new SmartworkBpmsProcessinstanceListRequest();
@@ -558,27 +558,27 @@ public class ProcessInstanceService {
                 JSONObject result = JSON.parseObject(rsp.getBody());
                 SmartworkBpmsProcessinstanceListResponse.DingOpenResult result1 = rsp.getResult();
                 SmartworkBpmsProcessinstanceListResponse.PageResult result2 = result1.getResult();
-                System.out.println(" ================================  "+result);
+//                System.out.println(" ================================  "+result);
                 List<SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo> data = result2.getList();
                 count = 0;
                 if(data!=null){
                     contractEntityList = new ArrayList<>();
                     count = data.size();
-                    System.out.println(" ================================  data = "+data.size());
+//                    System.out.println(" ================================  data = "+data.size());
                     for (SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo item : data){
-                        System.out.println(" ================================  ");
-                        System.out.println(""+item.getTitle());
+//                        System.out.println(" ================================  ");
+//                        System.out.println(""+item.getTitle());
                         if(item.getStatus().equals(ProcessStatusEnum.COMPLETED.getKey())){
                             if(item.getProcessInstanceResult().equals(ProcessInstanceResultEnum.agree.getKey())){
                                 ContractEntity contractEntity = converPM(item);
                                 contractEntityList.add(contractEntity);
                             }else{
-                                logger.info(" refuse  process : {}  ",item);
+//                                logger.info(" refuse  process : {}  ",item);
                             }
                         }
                     }
                 }else{
-                    System.out.println(" ================================  data = null : "+data);
+//                    System.out.println(" ================================  data = null : "+data);
                     count = 0;
                     contractEntityList = new ArrayList<>();
                 }
@@ -586,7 +586,7 @@ public class ProcessInstanceService {
                     ContractEntity contractEntity = contractEntityList.get(i);
                     ContractEntity contractEntityDB = contractService.getById(contractEntity.getProcessInstanceId());
                     if(contractEntityDB!=null){
-                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
+//                        logger.info(contractEntityDB.getContractName().toString()+"已存在，无需重复添加");
                         continue;
                     }
                     try {
@@ -601,7 +601,7 @@ public class ProcessInstanceService {
         }catch (Exception e){
             logger.error(" getPMConcract  ERROR = {} ",e.getMessage(),e);
         }
-        logger.info("end getPMConcract end!");
+//        logger.info("end getPMConcract end!");
     }
 
     private static ContractEntity converPT(SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo) {

@@ -50,11 +50,11 @@ public class TrainingTaskService {
         String update_sql = " update training set show_tag = ? ,  modified = now()  where  training_id =  ? ";
 
         List data = jdbcTemplate.queryForList(sql,new Object[]{});
-        logger.info("  updateShowTag data.size()  = {}",data.size());
+//        logger.info("  updateShowTag data.size()  = {}",data.size());
         for (int i = 0; i < data.size(); i++) {
             Map training = (Map) data.get(i);
             try{
-                logger.info("  updateShowTag i = {}",i);
+//                logger.info("  updateShowTag i = {}",i);
                 int showTag = 0;
                 String trainingId = training.get("training_id").toString();
                 Integer status = Integer.parseInt(training.get("status").toString());
@@ -79,7 +79,7 @@ public class TrainingTaskService {
                     }
                 }
                 if(ut.passDayByDate(lessonDate,ut.currentDate())==0){
-                    System.out.println("lessonDate="+lessonDate+" , ut.currentDate()="+ut.currentDate());
+//                    System.out.println("lessonDate="+lessonDate+" , ut.currentDate()="+ut.currentDate());
                     int time = ut.currentHour();
                     if(time>endHour){
                         if(!StringUtils.isEmpty(signTime)){

@@ -54,7 +54,7 @@ public class ContractAdminService {
         String sql = "select * from contract where card_type in ('PT','PM','TT','ST1','ST2','ST3','ST4','ST5','ST6','TK') ";
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(sql);
         for (int i = 0; i < data.size(); i++){
-            logger.info(" updateContractInfo  i = {} ",i);
+//            logger.info(" updateContractInfo  i = {} ",i);
             Map contract = data.get(i);
             String pk_id = contract.get("pk_id").toString();
             String contractId = contract.get("contract_id").toString();

@@ -106,7 +106,7 @@ public class ReportMonthService {
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<ContractEntity> contractEntityList = contractDao.find(query,page);
-        logger.info(" *************  calculateBackLessonMoney   contractEntityList.size() = {} ", contractEntityList.size());
+//        logger.info(" *************  calculateBackLessonMoney   contractEntityList.size() = {} ", contractEntityList.size());
         for (ContractEntity contractEntity : contractEntityList){
             MemberEntity memberEntity = memberDao.getByPhone(contractEntity.getPhone());
             if(memberEntity==null){
@@ -137,7 +137,7 @@ public class ReportMonthService {
             }
 
         }
-        logger.info(" calculateBackLessonMoney  money  = {}",money);
+//        logger.info(" calculateBackLessonMoney  money  = {}",money);
         financeMonthReportEntity.setBackDaysMoney(ut.getDoubleString(money));
     }
 
@@ -160,7 +160,7 @@ public class ReportMonthService {
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<ContractEntity> contractEntityList = contractDao.find(query,page);
-        logger.info(" *************  calculateOutLessonMoney   contractEntityList.size() = {} ", contractEntityList.size());
+//        logger.info(" *************  calculateOutLessonMoney   contractEntityList.size() = {} ", contractEntityList.size());
         for (ContractEntity contractEntity : contractEntityList){
             SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contractEntity.getForm(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
             Map<String,String> contractMap = new HashMap();
@@ -197,8 +197,8 @@ public class ReportMonthService {
                 }
             }
         }
-        logger.info(" calculateDelayLessonMoney  out_money  = {} out_count = {} ",out_money);
-        logger.info(" calculateDelayLessonMoney  in_money  = {} in_count = {} ",in_money);
+//        logger.info(" calculateDelayLessonMoney  out_money  = {} out_count = {} ",out_money);
+//        logger.info(" calculateDelayLessonMoney  in_money  = {} in_count = {} ",in_money);
         financeMonthReportEntity.setOutDaysMoney(ut.getDoubleString(out_money));
         financeMonthReportEntity.setInDaysMoney(ut.getDoubleString(in_money));
     }
@@ -237,7 +237,7 @@ public class ReportMonthService {
                 count = count + this_count;
             }
         }
-        logger.info(" calculateUsedLessonMoney  money  = {} , count = {}  ",money,count);
+//        logger.info(" calculateUsedLessonMoney  money  = {} , count = {}  ",money,count);
         financeMonthReportEntity.setUsedDaysMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setUsedDaysCount(""+count);
     }
@@ -276,7 +276,7 @@ public class ReportMonthService {
                 count = count + this_count;
             }
         }
-        logger.info(" calculateWaitingLessonMoney  money  = {} , count = {}  ",money,count);
+//        logger.info(" calculateWaitingLessonMoney  money  = {} , count = {}  ",money,count);
         financeMonthReportEntity.setWaitingDaysMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setWaitingDaysCount(""+count);
     }
@@ -300,7 +300,7 @@ public class ReportMonthService {
             String endDay = contract.get("end_date").toString();
             count = count + ut.passDayByDate(startDay,endDay)+1;
         }
-        logger.info(" calculateSaleMoney  money  = {} , count = {}  ",money,count);
+//        logger.info(" calculateSaleMoney  money  = {} , count = {}  ",money,count);
         financeMonthReportEntity.setSaleMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setSaleDaysCount(""+count);
     }

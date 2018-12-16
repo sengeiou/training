@@ -396,16 +396,16 @@ public class CalculateKpiService {
         String sql = "select * from contract where card_type in ('PT','PM') and coach like concat('%',?,'%') and sign_date >= ? and sign_date <= ? ";
         int xks = 0;
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffEntity.getCustname(),startDate,endDate});
-        logger.info(" getXks  name = {} , startDate = {} , endDate = {} , data.size = {} ",staffEntity.getCustname(),startDate,endDate,data.size());
+//        logger.info(" getXks  name = {} , startDate = {} , endDate = {} , data.size = {} ",staffEntity.getCustname(),startDate,endDate,data.size());
         for (int i = 0; i < data.size(); i++) {
             Map item = (Map)data.get(i);
             String type = item.get("type").toString();
             if("续课".equals(type)){
-                logger.info(" getXks"+xks+"  item = {} ",item);
+//                logger.info(" getXks"+xks+"  item = {} ",item);
                 xks++;
             }
         }
-        logger.info(" getXks = {} , staffId = {} , name = {} , month = {} , data.size = {} ",xks,staffId,staffEntity.getCustname(),month,data.size());
+//        logger.info(" getXks = {} , staffId = {} , name = {} , month = {} , data.size = {} ",xks,staffId,staffEntity.getCustname(),month,data.size());
         return xks;
     }
 
@@ -432,7 +432,7 @@ public class CalculateKpiService {
                 if(trainings.size()>0){
                     trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and lesson_date > ? " ,new Object[]{cardNo,endDate});
                     if(trainings.size()==0){
-                        logger.info(" memberId = {} , cardNo = {} ",memberId,cardNo);
+//                        logger.info(" memberId = {} , cardNo = {} ",memberId,cardNo);
                         jks++;
                     }
                 }
@@ -445,11 +445,11 @@ public class CalculateKpiService {
             List cards_end = jdbcTemplate.queryForList("select * from member_card where member_id = ? and count > 0 and type <> 'TY' and end_date >= ? and end_date <= ? and created <= ?  " ,new Object[]{memberId,sd,ed,endDate+" 23:59:59"});
 //            logger.info(" memberId = {} , sd = {} , ed = {} ,  cards_end.size() = {} ",memberId,sd,ed,cards_end.size());
             if(cards_end.size()>0){
-                logger.info(" cards_end.size() > 0   memberId = {} ",memberId);
+//                logger.info(" cards_end.size() > 0   memberId = {} ",memberId);
                 jks++;
             }
         }
-        logger.info(" jks = {} ",jks);
+//        logger.info(" jks = {} ",jks);
         return jks;
     }
 
@@ -503,7 +503,7 @@ public class CalculateKpiService {
                 }
             }
         }
-        logger.info(" queryLessonCount  count = {} , count_sign = {} ,  count_ty = {} , count_ty_sign = {} ",count,count_sign,count_ty,count_ty_sign);
+//        logger.info(" queryLessonCount  count = {} , count_sign = {} ,  count_ty = {} , count_ty_sign = {} ",count,count_sign,count_ty,count_ty_sign);
         return count_sign;
     }
 
@@ -522,14 +522,14 @@ public class CalculateKpiService {
         String tableName = "member_his_"+m;
         int count = 0;
         String sql = " select * from "+tableName+" where coach_staff_id = ? and status in (1) and created <= ? ";
-        logger.info(" sql = {} ",sql);
+//        logger.info(" sql = {} ",sql);
         List data = jdbcTemplate.queryForList(sql,new Object[]{staffId,endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {
             Map member = (Map)data.get(i);
 
             count++;
         }
-        logger.info(" queryValidMemberCount tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+//        logger.info(" queryValidMemberCount tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
         return count;
     }
 
@@ -538,7 +538,7 @@ public class CalculateKpiService {
      *  有效会员数 ： 非停 非结
      */
     public int queryValidMemberCountByDay(String staffId, String day) {
-        logger.info(" queryValidMemberCountByDay  staffId = {} , day = {} ",staffId,day);
+//        logger.info(" queryValidMemberCountByDay  staffId = {} , day = {} ",staffId,day);
         String y = day.substring(0,4);
         String m = day.substring(5,7);
         String tableName = "member_his_"+m;
@@ -550,7 +550,7 @@ public class CalculateKpiService {
 
             count++;
         }
-        logger.info(" queryValidMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+//        logger.info(" queryValidMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
         return count;
     }
 
@@ -558,7 +558,7 @@ public class CalculateKpiService {
      *  有效会员数 ： 非停 非结
      */
     public int queryTotalMemberCountByDay(String staffId, String day) {
-        logger.info(" queryTotalMemberCountByDay  staffId = {} , day = {} ",staffId,day);
+//        logger.info(" queryTotalMemberCountByDay  staffId = {} , day = {} ",staffId,day);
         String y = day.substring(0,4);
         String m = day.substring(5,7);
         String tableName = "member_his_"+m;
@@ -570,7 +570,7 @@ public class CalculateKpiService {
 
             count++;
         }
-        logger.info(" queryTotalMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
+//        logger.info(" queryTotalMemberCountByDay tableName = {} ,  data.size() = {} , count = {} ",tableName,data.size(),count);
         return count;
     }
 

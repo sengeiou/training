@@ -65,7 +65,7 @@ public class CreateCardService {
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<ContractEntity> contractEntityList = contractDao.find(query,page);
-        logger.info(" *************  createCard   contractEntityList.size() = {} ", contractEntityList.size());
+//        logger.info(" *************  createCard   contractEntityList.size() = {} ", contractEntityList.size());
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
@@ -88,7 +88,7 @@ public class CreateCardService {
                 }
                 MemberEntity memberDB = memberDao.getByPhone(phone);
                 if(memberDB==null){
-                    logger.info("createCard  MemberEntity 不存在 ，  phone = {} ", phone);
+//                    logger.info("createCard  MemberEntity 不存在 ，  phone = {} ", phone);
                     memberDB = new MemberEntity();
                     memberDB.setMemberId(IDUtils.getId());
                     memberDB.setName(contractEntity.getMemberName());
@@ -142,7 +142,7 @@ public class CreateCardService {
     }
 
     public void createST(ContractEntity contractEntity, MemberEntity memberDB)  throws Exception {
-        logger.info(" ==== createST  contractEntity = {} ", contractEntity);
+//        logger.info(" ==== createST  contractEntity = {} ", contractEntity);
         MemberEntity coach = checkContract(contractEntity);
         MemberCardEntity memberCardEntity = new MemberCardEntity();
         memberCardEntity.setCardNo(IDUtils.getId());
@@ -349,7 +349,6 @@ public class CreateCardService {
         contractEntity.setStatus(1);
         updateContractStatus(contractEntity);
 
-        //todo  check
         if(StringUtils.isEmpty(memberDB.getCoachStaffId())){
             StaffEntity staffEntity = staffDao.getByPhone(coach.getPhone());
             MemberEntity memberUpdate = new MemberEntity();
