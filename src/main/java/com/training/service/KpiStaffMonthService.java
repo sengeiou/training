@@ -138,7 +138,7 @@ public class KpiStaffMonthService {
         double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
             double extraScore = Double.parseDouble(kpiStaffMonth.getExtraScore());
-            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
+//            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
             finalScore = finalScore + extraScore;
             if(finalScore<0){
                 finalScore = 0;
@@ -205,7 +205,7 @@ public class KpiStaffMonthService {
         double finalScore = Double.parseDouble(kpiStaffMonth.getKpiScore());
         if(StringUtils.isNotEmpty(kpiStaffMonth.getExtraScore())){
             double extraScore = Double.parseDouble(kpiStaffMonth.getExtraScore());
-            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
+//            logger.info(" calculateKpiStaffMonth kpiScore = {} , extraScore = {}   ",kpiScore,extraScore);
             finalScore = finalScore + extraScore;
             if(finalScore<0){
                 finalScore = 0;
@@ -255,7 +255,7 @@ public class KpiStaffMonthService {
                     }
                     if(hyd>=min&&hyd<max){
                         int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
+//                        logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(""+value);
                         double score = (double)value*kpiTemplateQuota.getWeight()/100;
                         kpiScore = score;
@@ -273,7 +273,7 @@ public class KpiStaffMonthService {
                 int hydp = Integer.parseInt(kpiStaffMonth.getHydp());
                 kpiTemplateQuota.setFinishRate(""+hydp+"%");
                 double score = (double)hydp*kpiTemplateQuota.getWeight()/100;
-                logger.info(" score = {} ",score);
+//                logger.info(" score = {} ",score);
                 kpiScore = score;
                 kpiTemplateQuota.setScore(""+hydp+".00");
                 kpiTemplateQuota.setKpiScore(ut.getDoubleString(score));
@@ -350,7 +350,7 @@ public class KpiStaffMonthService {
                 }
                 if(xkl>=min&&xkl<max){
                     int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                    logger.info(" value = {} ",value);
+//                    logger.info(" value = {} ",value);
                     kpiTemplateQuota.setScore(""+value);
                     double score = (double)value*kpiTemplateQuota.getWeight()/100;
                     kpiScore = score;
@@ -401,7 +401,7 @@ public class KpiStaffMonthService {
                     }
                     if(zjs>=min&&zjs<max){
                         double value = Double.parseDouble(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
+//                        logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(ut.getDoubleString(value));
                         double score = value*kpiTemplateQuota.getWeight()/100;
                         kpiScore = score;
@@ -458,7 +458,7 @@ public class KpiStaffMonthService {
                 }
                 if(xswcl>=min&&xswcl<max){
                     int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                    logger.info(" value = {} ",value);
+//                    logger.info(" value = {} ",value);
                     kpiTemplateQuota.setScore(""+value);
                     double score = (double)value*kpiTemplateQuota.getWeight()/100;
                     kpiScore = score;
@@ -485,7 +485,7 @@ public class KpiStaffMonthService {
                 }
                 if(qdxkl>=min&&qdxkl<max){
                     int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                    logger.info(" value = {} ",value);
+//                    logger.info(" value = {} ",value);
                     kpiTemplateQuota.setScore(""+value);
                     double score = (double)value*kpiTemplateQuota.getWeight()/100;
                     kpiScore = score;
@@ -514,7 +514,7 @@ public class KpiStaffMonthService {
                 }
                 if(qdzjs>=min&&qdzjs<max){
                     int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                    logger.info(" value = {} ",value);
+//                    logger.info(" value = {} ",value);
                     kpiTemplateQuota.setScore(""+value);
                     double score = (double)value*kpiTemplateQuota.getWeight()/100;
                     kpiScore = score;
@@ -544,7 +544,7 @@ public class KpiStaffMonthService {
                     }
                     if(tczhl>=min&&tczhl<max){
                         int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
+//                        logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(""+value);
                         double score = (double)value*kpiTemplateQuota.getWeight()/100;
                         kpiScore = score;
@@ -574,7 +574,7 @@ public class KpiStaffMonthService {
                     }
                     if(qdhyd>=min&&qdhyd<max){
                         int value = Integer.parseInt(kpiQuotaStandard.getScore());
-                        logger.info(" value = {} ",value);
+//                        logger.info(" value = {} ",value);
                         kpiTemplateQuota.setScore(""+value);
                         double score = (double)value*kpiTemplateQuota.getWeight()/100;
                         kpiScore = score;
@@ -656,9 +656,9 @@ public class KpiStaffMonthService {
             zjs2 = Double.parseDouble(kpiStaffMonthEntity2.getQdzjs());
         }
 
-        System.out.println(" zjs-0 = "+zjs0);
-        System.out.println(" zjs-1 = "+zjs1);
-        System.out.println(" zjs-2 = "+zjs2);
+//        System.out.println(" zjs-0 = "+zjs0);
+//        System.out.println(" zjs-1 = "+zjs1);
+//        System.out.println(" zjs-2 = "+zjs2);
 
         double qdzjs = (zjs0 + zjs1 + zjs2);
         return qdzjs;
