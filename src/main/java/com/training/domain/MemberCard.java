@@ -21,6 +21,8 @@ public class MemberCard {
 
     private String memberName;
 
+    private String phone;
+
     private String coachId;
 
     private String coachName;
@@ -81,6 +83,9 @@ public class MemberCard {
 
     private String showStatus = " ";
 
+    private String memberStoreId;
+
+    private String memberStoreName;
 
 }
 

@@ -159,7 +159,7 @@ public class MemberCardRestController {
         Page<MemberCard> page = memberCardService.findPro(query,pageRequest);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
-        String[] headers = { "卡号", "会员姓名","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","剩余次数"};
+        String[] headers = { "所属门店", "卡号", "会员姓名", "会员电话","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","剩余次数"};
         String fileName = "card-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
@@ -176,24 +176,25 @@ public class MemberCardRestController {
             }
         }
         logger.info(" targetFile.exists() = {} " , targetFile.exists());
-
         try {
             List<String[]> dataList = new ArrayList<>();
             for (MemberCard memberCard : page.getContent()){
                 if(memberCard==null){
                     continue;
                 }
-                String[] row = new String[10];
-                row[0] = memberCard.getCardNo();
-                row[1] = memberCard.getMemberName();
-                row[2] = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
-                row[3] = ""+memberCard.getTotal();
-                row[4] = memberCard.getStartDate();
-                row[5] = memberCard.getEndDate();
-                row[6] = memberCard.getCoachName();
-                row[7] = memberCard.getSaleStaffName();
-                row[8] = memberCard.getStoreName();
-                row[9] = ""+memberCard.getCount();
+                String[] row = new String[12];
+                row[0] = memberCard.getMemberStoreName();
+                row[1] = memberCard.getCardNo();
+                row[2] = memberCard.getMemberName();
+                row[3] = memberCard.getPhone();
+                row[4] = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
+                row[5] = ""+memberCard.getTotal();
+                row[6] = memberCard.getStartDate();
+                row[7] = memberCard.getEndDate();
+                row[8] = memberCard.getCoachName();
+                row[9] = memberCard.getSaleStaffName();
+                row[10] = memberCard.getStoreName();
+                row[11] = ""+memberCard.getCount();
                 dataList.add(row);
             }
             String sheetName = "课卡"+ ut.currentDate();

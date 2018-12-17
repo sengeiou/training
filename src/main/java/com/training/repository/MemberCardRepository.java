@@ -73,7 +73,7 @@ public interface MemberCardRepository {
             " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
-            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id from member where store_id = #{query.storeId} )  </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
@@ -98,7 +98,7 @@ public interface MemberCardRepository {
             " <if test=\"query.cardId != null\"> AND card_id = #{query.cardId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.coachId != null\"> AND coach_id = #{query.coachId} </if>" +
-            " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
+            " <if test=\"query.storeId != null\"> AND member_id in ( select member_id from member where store_id = #{query.storeId} )  </if>" +
             " <if test=\"query.type != null\"> AND type = #{query.type} </if>" +
             " <if test=\"query.money != null\"> AND money = #{query.money} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +

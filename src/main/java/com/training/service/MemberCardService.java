@@ -173,12 +173,23 @@ public class MemberCardService {
         }
         memberCard.setCardName(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
         memberCard.setMemberName(memberEntity.getName());
+        memberCard.setPhone(memberEntity.getPhone());
         StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());
         if(storeEntity!=null){
             memberCard.setStoreName(storeEntity.getName());
         }else{
             memberCard.setStoreName("");
         }
+
+        StoreEntity memberStoreEntity = storeDao.getById(memberEntity.getStoreId());
+        if(memberStoreEntity!=null){
+            memberCard.setMemberStoreId(memberStoreEntity.getStoreId());
+            memberCard.setMemberStoreName(memberStoreEntity.getName());
+        }else{
+            memberCard.setMemberStoreId("");
+            memberCard.setMemberStoreName("");
+        }
+
         String cardType = "";
         if(CardTypeEnum.getEnumByKey(memberCard.getType())!=null){
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
@@ -196,7 +207,7 @@ public class MemberCardService {
         memberCard.setDelayFee("0");
         memberCard.setDelayDays(60);
         if(memberCard.getType().equals(CardTypeEnum.PT.getKey())||memberCard.getType().equals(CardTypeEnum.TT.getKey())){
-            if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) < 0){
+            if(ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCard.getEndDate(),ut.currentDate(-30)) <= 0){
                 if(memberCard.getDelay()==0){
                     memberCard.setCanDelay(1);
                     memberCard.setDelayFee("0");
