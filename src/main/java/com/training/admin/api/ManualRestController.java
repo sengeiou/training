@@ -445,7 +445,7 @@ public class ManualRestController {
     @GetMapping("dealXK")
     public void dealXK(HttpServletRequest request, HttpServletResponse response){
         logger.info("start dealXK!  time = {} ", ut.currentTime());
-        String start = "2018-12-01";
+        String start = "2018-12-18";
         String end = "2018-06-30";
         end = "2018-12-18";
         int days = ut.passDayByDate(start,end)+1;

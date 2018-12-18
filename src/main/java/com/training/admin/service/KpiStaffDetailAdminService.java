@@ -59,7 +59,7 @@ public class KpiStaffDetailAdminService {
             }
         }
         String lastMonth = ut.currentFullMonth(month,-1);
-        String sql = "select * from contract where card_type in ('PT','PM') and sign_date >= ? and sign_date <= ? and contract_id not in ( select contract_id from kpi_staff_detail ) ";
+        String sql = "select * from contract where card_type in ('PT','PM') and sign_date >= ? and sign_date <= ?  ";
         int xks = 0;
         int xqs = 0;
         int zjs = 0;
@@ -159,11 +159,14 @@ public class KpiStaffDetailAdminService {
                         kpiStaffDetailEntity.setMemberId(contract.get("member_id").toString());
                         kpiStaffDetailEntity.setStoreId(contract.get("store_id").toString());
                         kpiStaffDetailEntity.setStaffId(contract.get("sale_staff_id").toString());
-                        int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
-                        if(n>0){
-                            zjs++;
+                        try {
+                            int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+                            if(n>0){
+                                zjs++;
+                            }
+                        }catch (Exception e){
+                            logger.info(" ============= contractId = {}",contractId);
                         }
-
                         SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contract.get("form").toString(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
                         Map<String,String> contractMap = new HashMap();
                         List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
@@ -172,7 +175,10 @@ public class KpiStaffDetailAdminService {
                             contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
                         }
                         String coach_zjs = contractMap.get("转介绍教练");
-
+                        logger.info(" =============coach_zjs = {} contractId = {}",coach_zjs,contractId);
+                        if(StringUtils.isEmpty(coach_zjs)){
+                            continue;
+                        }
                         coach_zjs = coach_zjs.replaceAll("（","(").replaceAll("）",")");
                         if(coach_zjs.indexOf("(")>0){
                             coach_zjs = coach_zjs.substring(0,coach_zjs.indexOf("("));
@@ -182,7 +188,7 @@ public class KpiStaffDetailAdminService {
                             kpiStaffDetailEntity.setStoreId(zjsStaff.getStoreId());
                             kpiStaffDetailEntity.setStaffId(zjsStaff.getStaffId());
                             kpiStaffDetailEntity.setType("ZJS_SALE");
-                            n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
+                            int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                         }
                     }
                 }
