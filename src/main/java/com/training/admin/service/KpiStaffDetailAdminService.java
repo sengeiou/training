@@ -58,13 +58,12 @@ public class KpiStaffDetailAdminService {
                 day = ut.currentDate();
             }
         }
-
-        String sql = "select * from contract where card_type in ('PT','PM') and sign_date >= ? and sign_date <= ? ";
+        String lastMonth = ut.currentFullMonth(month,-1);
+        String sql = "select * from contract where card_type in ('PT','PM') and sign_date >= ? and sign_date <= ? and contract_id not in ( select contract_id from kpi_staff_detail ) ";
         int xks = 0;
         int xqs = 0;
         int zjs = 0;
-
-        List data = jdbcTemplate.queryForList(sql,new Object[]{day,day});
+        List data = jdbcTemplate.queryForList(sql,new Object[]{lastMonth+"-01",month+"-31"});
         logger.info(" dealXk   startDate = {} , endDate = {} , data.size = {} ",day,day,data.size());
         for (int i = 0; i < data.size(); i++) {
             Map contract = (Map)data.get(i);
@@ -163,6 +162,27 @@ public class KpiStaffDetailAdminService {
                         int n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                         if(n>0){
                             zjs++;
+                        }
+
+                        SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo processInstanceTopVo = JSON.parseObject(contract.get("form").toString(),SmartworkBpmsProcessinstanceListResponse.ProcessInstanceTopVo.class);
+                        Map<String,String> contractMap = new HashMap();
+                        List<SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo> forms = processInstanceTopVo.getFormComponentValues();
+                        for (SmartworkBpmsProcessinstanceListResponse.FormComponentValueVo form : forms){
+                            System.out.println(form.getName()+" : "+form.getValue());
+                            contractMap.put(form.getName(),form.getValue()==null?"":form.getValue());
+                        }
+                        String coach_zjs = contractMap.get("转介绍教练");
+
+                        coach_zjs = coach_zjs.replaceAll("（","(").replaceAll("）",")");
+                        if(coach_zjs.indexOf("(")>0){
+                            coach_zjs = coach_zjs.substring(0,coach_zjs.indexOf("("));
+                        }
+                        StaffEntity zjsStaff = staffDao.getByCustname(coach_zjs);
+                        if(zjsStaff!=null){
+                            kpiStaffDetailEntity.setStoreId(zjsStaff.getStoreId());
+                            kpiStaffDetailEntity.setStaffId(zjsStaff.getStaffId());
+                            kpiStaffDetailEntity.setType("ZJS_SALE");
+                            n = kpiStaffDetailDao.add(kpiStaffDetailEntity);
                         }
                     }
                 }

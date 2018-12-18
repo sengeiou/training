@@ -442,6 +442,21 @@ public class ManualRestController {
         logger.info("end dealTk!  time = {} ", ut.currentTime());
     }
 
+    @GetMapping("dealXK")
+    public void dealXK(HttpServletRequest request, HttpServletResponse response){
+        logger.info("start dealXK!  time = {} ", ut.currentTime());
+        String start = "2018-12-01";
+        String end = "2018-06-30";
+        end = "2018-12-18";
+        int days = ut.passDayByDate(start,end)+1;
+        for (int i = 0; i < days; i++) {
+            String day = ut.currentDate(start,i);
+            logger.info(" dealTk !  day = {} ",day);
+            kpiStaffDetailAdminService.dealXk(day);
+        }
+        logger.info("end dealXK!  time = {} ", ut.currentTime());
+    }
+
     @GetMapping("updateKpiAndStar")
     public Object updateKpiAndStar(HttpServletRequest request, HttpServletResponse response){
         logger.info("start updateKpiAndStar!  time = {} ", ut.currentTime());
