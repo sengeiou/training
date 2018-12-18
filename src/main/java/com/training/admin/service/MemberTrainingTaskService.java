@@ -77,11 +77,11 @@ public class MemberTrainingTaskService {
     }
 
     public String updateMemberInfo() {
-        logger.info(" updateMemberInfo ");
+//        logger.info(" updateMemberInfo ");
         List<Map<String,Object>> data =  jdbcTemplate.queryForList(" SELECT * from member where coach_staff_id <> ''  ");
         int total = 0;
         for (int i = 0; i < data.size(); i++) {
-            logger.info(" updateMemberInfo  i = {} ",i);
+//            logger.info(" updateMemberInfo  i = {} ",i);
             Map member = data.get(i);
             String memberId = member.get("member_id").toString();
             String coach_staff_id = member.get("coach_staff_id").toString();
@@ -91,7 +91,7 @@ public class MemberTrainingTaskService {
                 total++;
             }
         }
-        logger.info("total = "+total);
+//        logger.info("total = "+total);
         return "updateMemberInfo执行成功";
     }
 
