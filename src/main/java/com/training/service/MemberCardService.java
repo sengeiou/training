@@ -73,6 +73,7 @@ public class MemberCardService {
     public Page<MemberCard> findPro(MemberCardQuery query , PageRequest page){
         Staff staffRequest = RequestContextHelper.getStaff();
         logger.info("  findPro  staffRequest = {} ", staffRequest);
+        logger.info("  findPro  MemberCardQuery1 = {} ", query);
 
         StaffEntity staffDB = staffDao.getById(staffRequest.getStaffId());
         RoleEntity roleEntity = roleDao.getById(staffDB.getRoleId());
@@ -108,18 +109,7 @@ public class MemberCardService {
 
         }
 
-        if(roleEntity!=null&&StringUtils.isNotEmpty(roleEntity.getStoreData())){
-            query.setStoreId(roleEntity.getStoreData());
-        }else{
-            if(staffDB.getUsername().equals("admin")){
-//            query.setStoreId(null);
-            }else {
-                query.setStoreId("123456789");
-            }
-
-        }
-
-        logger.info("  findPro  MemberCardQuery = {} ", query);
+        logger.info("  findPro  MemberCardQuery2 = {} ", query);
         List<MemberCardEntity> memberCardList = memberCardDao.findPro(query,page);
         List<MemberCard> content = new ArrayList<>();
         for(MemberCardEntity memberCardEntity : memberCardList){
