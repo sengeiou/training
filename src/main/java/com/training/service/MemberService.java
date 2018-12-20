@@ -854,6 +854,22 @@ public class MemberService {
         if(trainingEntity==null){
             return ResponseUtil.exception("签到异常");
         }
+
+        List<TrainingEntity>  trainingEntityList = trainingDao.getByLessonId(trainingEntity.getLessonId());
+        for (TrainingEntity trainingThis : trainingEntityList){
+            if(trainingThis.getMemberId().equals(memberRequest.getMemberId())){
+                int n = trainingDao.signIn(trainingThis);
+                if(n==1){
+                    if(trainingThis.getTrainingId().equals(trainingEntity.getTrainingId())){
+                        return ResponseUtil.success("签到成功!!!");
+                    }else{
+                        logger.info("  signIn  同课签到成功 memberId = {} , TrainingId1 = {} , TrainingId2 = {} ",memberRequest.getMemberId(),trainingThis.getTrainingId(),trainingEntity.getTrainingId());
+                        return ResponseUtil.success("同课签到成功!!!");
+                    }
+                }
+            }
+        }
+
         if(!trainingEntity.getMemberId().equals(memberRequest.getMemberId())){
             logger.error("  signIn  只有学员本人的微信才能扫码签到 ");
             return ResponseUtil.exception("只有学员本人的微信才能扫码签到");
@@ -861,7 +877,7 @@ public class MemberService {
 
         int n = trainingDao.signIn(trainingEntity);
         if(n==1){
-            return ResponseUtil.success("签到成功");
+            return ResponseUtil.success("签到成功!");
         }
         return ResponseUtil.exception("签到失败");
     }
