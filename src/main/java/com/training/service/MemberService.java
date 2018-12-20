@@ -861,9 +861,10 @@ public class MemberService {
                 int n = trainingDao.signIn(trainingThis);
                 if(n==1){
                     if(trainingThis.getTrainingId().equals(trainingEntity.getTrainingId())){
+                        logger.info("  signInSuccess1  自己签到成功 memberId = {} , TrainingId1 = {} , TrainingId2 = {} ",memberRequest.getMemberId(),trainingThis.getTrainingId(),trainingEntity.getTrainingId());
                         return ResponseUtil.success("签到成功!!!");
                     }else{
-                        logger.info("  signIn  同课签到成功 memberId = {} , TrainingId1 = {} , TrainingId2 = {} ",memberRequest.getMemberId(),trainingThis.getTrainingId(),trainingEntity.getTrainingId());
+                        logger.info("  signInSuccess2  同课签到成功 memberId = {} , TrainingId1 = {} , TrainingId2 = {} ",memberRequest.getMemberId(),trainingThis.getTrainingId(),trainingEntity.getTrainingId());
                         return ResponseUtil.success("同课签到成功!!!");
                     }
                 }
