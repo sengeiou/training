@@ -108,7 +108,19 @@ public class ExportReportController {
     }
 
     /**
-     * 死课结课明细表
+     * 死课明细表
+     */
+    @GetMapping("deadCard")
+    public Object deadCard(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" deadCard   ");
+        String startDate = "2018-11-01";
+        String endDate = "2018-11-30";
+        exportFileService.deadCard(startDate,endDate);
+        return "deadCard执行成功";
+    }
+
+    /**
+     * kpi报表
      */
     @GetMapping("staffKpi")
     public Object staffKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {

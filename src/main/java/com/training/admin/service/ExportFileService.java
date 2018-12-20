@@ -605,6 +605,71 @@ public class ExportFileService {
         ExcelUtil.writeExcel(excelData,"C://product/结课死课报表_"+endDate.replaceAll("-","")+".xls");
     }
 
+    /**
+     * 死课结课明细表
+     */
+    public void deadCard(String startDate, String endDate) {
+        List<List<String>> excelData = new ArrayList<>();
+        List<String> titleRow = new ArrayList();
+        titleRow.add("门店");
+        titleRow.add("姓名");
+        titleRow.add("电话");
+        titleRow.add("卡号");
+        titleRow.add("类型");
+        titleRow.add("教练");
+        titleRow.add("购课节数");
+        titleRow.add("购课金额");
+        titleRow.add("开始日期");
+        titleRow.add("结束日期");
+        titleRow.add("剩余节数");
+        titleRow.add("剩余金额");
+        titleRow.add("备注");
+        excelData.add(titleRow);
+        String sql = " SELECT * from kpi_staff_detail where day >= ? and day <= ? and type in ('SK') order by store_id ";
+        List<Map<String,Object>> detailList =  jdbcTemplate.queryForList(sql,new Object[]{startDate,endDate});
+        for (int i = 0; i < detailList.size(); i++) {
+            Map detail = detailList.get(i);
+            String cardNo = detail.get("card_no").toString();
+            String memberId = detail.get("member_id").toString();
+            String storeId = detail.get("store_id").toString();
+            String staffId = detail.get("staff_id").toString();
+
+            String storeName = "";
+            if(StringUtils.isNotEmpty(storeId)){
+                StoreEntity storeEntity = storeDao.getById(storeId);
+                if(storeEntity!=null){
+                    storeName = storeEntity.getName();
+                }
+            }
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            MemberCardEntity memberCardEntity = memberCardDao.getById(cardNo);
+            StaffEntity staffEntity = staffDao.getById(staffId);
+            List<String> row = new ArrayList();
+            row.add(storeName);
+            row.add(memberEntity.getName());
+            row.add(memberEntity.getPhone());
+            row.add(cardNo);
+            row.add(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
+            row.add(staffEntity.getCustname());
+            row.add(memberCardEntity.getTotal().toString());
+            row.add(memberCardEntity.getMoney());
+            row.add(memberCardEntity.getStartDate());
+            row.add(memberCardEntity.getEndDate());
+            row.add(memberCardEntity.getCount().toString());
+            if(memberCardEntity.getType().equals(CardTypeEnum.PT.getKey())){
+                double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
+                double money = price*memberCardEntity.getCount();
+                row.add(ut.getDoubleString(money));
+            }else{
+                row.add("-");
+            }
+            row.add(detail.get("remark").toString());
+            excelData.add(row);
+        }
+        logger.info(" deadCard     excelData = {} ",excelData.size());
+        ExcelUtil.writeExcel(excelData,"C://product/死课报表_"+endDate.replaceAll("-","")+".xls");
+    }
+
     public void staffKpi(String month) {
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
