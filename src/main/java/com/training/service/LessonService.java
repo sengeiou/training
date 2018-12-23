@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,6 +64,9 @@ public class LessonService {
 
     @Autowired
     private LessonSettingDao lessonSettingDao;
+
+    @Autowired
+    private SysLogDao sysLogDao;
 
     @Autowired
     private SmsUtil smsUtil;
@@ -1203,12 +1207,14 @@ public class LessonService {
             lesson.setMemberId(memberRequest.getMemberId());
         }
 
+        String operStaffId = "";
 
         MemberEntity memberEntity = memberDao.getById(lesson.getMemberId());
 
         boolean manageFlag = false;
         if(StringUtils.isNotEmpty(memberRequest.getStaffId())){
             manageFlag = true;
+            operStaffId = memberRequest.getStaffId();
         }
         logger.info(" cancel  manageFlag = {}",manageFlag);
 
@@ -1258,6 +1264,24 @@ public class LessonService {
             int n = trainingDao.cancel(trainingUpdate);
             if(n==1){
                 n = memberCardDao.addCount(memberCardEntity.getCount()+1,memberCardEntity.getCount(),memberCardEntity.getCardNo());
+
+                SysLogEntity sysLogEntity = new SysLogEntity();
+                sysLogEntity.setLogId(IDUtils.getId());
+                sysLogEntity.setType(SysLogEnum.CANCEL.getKey());
+                sysLogEntity.setId1(trainingEntity.getTrainingId());
+                sysLogEntity.setId2(operStaffId);
+                sysLogEntity.setCardNo(memberCardEntity.getCardNo());
+                sysLogEntity.setLevel(2);
+                sysLogEntity.setLogText(JSON.toJSONString(memberCardEntity));
+                sysLogEntity.setContent(JSON.toJSONString(memberCardEntity));
+                sysLogEntity.setCreated(new Date());
+                sysLogEntity.setMemberId(memberCardEntity.getMemberId());
+                if(memberEntity!=null){
+                    sysLogEntity.setStoreId(memberEntity.getStoreId());
+                    sysLogEntity.setStaffId(memberEntity.getCoachStaffId());
+                }
+                sysLogDao.add(sysLogEntity);
+
                 if(n==1){
                     try{
                         logger.info(" staff = {} , ",staffEntity);
