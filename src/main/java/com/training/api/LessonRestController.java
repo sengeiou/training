@@ -62,7 +62,12 @@ public class LessonRestController {
     @RequestMapping (value = "cancel", method = RequestMethod.POST)
     public ResponseEntity<String> cancel(@RequestBody Lesson lesson, HttpServletRequest request, HttpServletResponse response){
         logger.info("  cancel  lesson = {}",lesson);
-        return lessonService.cancel(lesson);
+        try {
+            return lessonService.cancel(lesson);
+        } catch (Exception e) {
+            logger.error("  orderCancel  lesson = {} ",lesson,e);
+            return ResponseUtil.exception("取消约课异常!"+e.getMessage());
+        }
     }
 
     /**
