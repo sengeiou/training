@@ -83,7 +83,7 @@ public class DingDingRestController {
             if(storeEntity==null){
                 storeService.add(store);
             }else{
-                logger.info(store.getName()+"已存在，无需重复添加");
+//                logger.info(store.getName()+"已存在，无需重复添加");
             }
 
         }
@@ -96,26 +96,26 @@ public class DingDingRestController {
         List<Map<String,Object>> deptList =  jdbcTemplate.queryForList("select * from store ");
         for (int i = 0; i < deptList.size(); i++) {
             Map dept = deptList.get(i);
-            System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
+//            System.out.println("dept_id: " + dept.get("dept_id").toString()+" , name: " + dept.get("name").toString());
 
             String deptId = dept.get("dept_id").toString();
             List<Map> staffList = DingtalkUtil.getStaffs(dept.get("dept_id").toString());
             for (int j = 0; j < staffList.size(); j++) {
                 try{
                     Map item = staffList.get(j);
-                    System.out.println("userid: " + item.get("userid").toString());
-                    System.out.println("name: " + item.get("name").toString());
+//                    System.out.println("userid: " + item.get("userid").toString());
+//                    System.out.println("name: " + item.get("name").toString());
 
                     String hiredDate = "";
                     if(item.containsKey("hiredDate")){
                         hiredDate = ut.getDateFromTimeStamp(Long.parseLong(item.get("hiredDate").toString()));
                     }
-                    System.out.println(" hiredDate = "+hiredDate);
+//                    System.out.println(" hiredDate = "+hiredDate);
 
                     String userid = item.get("userid").toString();
                     StaffEntity staffDB = staffService.getByPhone(item.get("mobile").toString());
                     if(staffDB!=null){
-                        logger.info(item.get("name").toString()+"已存在，无需重复添加");
+//                        logger.info(item.get("name").toString()+"已存在，无需重复添加");
                         StaffEntity staffUpdate = new StaffEntity();
                         staffUpdate.setStaffId(staffDB.getStaffId());
                         staffUpdate.setCustname(item.get("name").toString());
