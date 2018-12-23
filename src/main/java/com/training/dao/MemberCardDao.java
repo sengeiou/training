@@ -110,16 +110,15 @@ public class MemberCardDao {
     public int reduceCount(String cardNo) {
         MemberCardEntity memberCardDB = memberCardRepository.getById(cardNo);
         int count = memberCardDB.getCount()-1;
-        memberCardDB.setCount(count);
-        int n = memberCardRepository.updateCount(memberCardDB);
+        if(count<0){
+            return 0;
+        }
+        int n = memberCardRepository.updateCount(count,memberCardDB.getCount(),cardNo);
         return n;
     }
 
-    public int addCount(String cardNo) {
-        MemberCardEntity memberCardDB = memberCardRepository.getById(cardNo);
-        int count = memberCardDB.getCount()+1;
-        memberCardDB.setCount(count);
-        int n = memberCardRepository.updateCount(memberCardDB);
+    public int addCount(Integer newCount ,Integer oldCount ,String cardNo) {
+        int n = memberCardRepository.updateCount(newCount,oldCount,cardNo);
         return n;
     }
 

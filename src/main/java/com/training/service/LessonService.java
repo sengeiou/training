@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -972,6 +974,7 @@ public class LessonService {
         return ResponseUtil.exception("约课失败!");
     }
 
+    @Transactional
     private ResponseEntity<String> orderPersonal(Lesson lesson) {
         String lessonId = lesson.getLessonId();
         String[] ids = lessonId.split(",");
@@ -1188,7 +1191,8 @@ public class LessonService {
         return ResponseUtil.exception("约课失败!该时段课程已约满!");
     }
 
-    public ResponseEntity<String> cancel(Lesson lesson) {
+    @Transactional
+    public ResponseEntity<String> cancel(Lesson lesson) throws Exception {
         Member memberRequest = RequestContextHelper.getMember();
         logger.info(" cancel  memberRequest = {}",memberRequest);
         logger.info(" cancel  lesson = {}",lesson);
@@ -1211,6 +1215,11 @@ public class LessonService {
         TrainingEntity trainingEntity = trainingDao.getById(lesson.getTrainingId());
         if(trainingEntity==null){
             return ResponseUtil.exception("取消约课异常!");
+        }
+
+        MemberCardEntity memberCardEntity = memberCardDao.getById(trainingEntity.getCardNo());
+        if(memberCardEntity==null){
+            return ResponseUtil.exception("取消约课异常!会员卡无效！");
         }
 
         //如果已经过期了
@@ -1246,19 +1255,22 @@ public class LessonService {
             trainingUpdate.setTrainingId(trainingEntity.getTrainingId());
             trainingUpdate.setStatus(-1);
             trainingUpdate.setShowTag(-1);
-            int n = trainingDao.update(trainingUpdate);
+            int n = trainingDao.cancel(trainingUpdate);
             if(n==1){
-                n = memberCardDao.addCount(trainingEntity.getCardNo());
-                try{
-                    logger.info(" staff = {} , ",staffEntity);
-                    logger.info(" trainingEntity = {} , ",trainingEntity);
-                    String hour = ut.changeLessonHour(trainingEntity.getStartHour());
-                    smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",trainingEntity.getLessonDate()+" "+hour,trainingEntity.getTitle());
-                }catch (Exception e){
-
-                    e.printStackTrace();
+                n = memberCardDao.addCount(memberCardEntity.getCount()+1,memberCardEntity.getCount(),memberCardEntity.getCardNo());
+                if(n==1){
+                    try{
+                        logger.info(" staff = {} , ",staffEntity);
+                        logger.info(" trainingEntity = {} , ",trainingEntity);
+                        String hour = ut.changeLessonHour(trainingEntity.getStartHour());
+                        smsUtil.sendCancelLessonNotice(staffEntity.getPhone(),"【"+memberEntity.getName()+"】",trainingEntity.getLessonDate()+" "+hour,trainingEntity.getTitle());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return ResponseUtil.success("取消成功!");
+                }else {
+                    throw new Exception("取消约课异常,更新课卡次数异常");
                 }
-                return ResponseUtil.success("取消成功!");
             }
         }
         return ResponseUtil.exception("取消约课失败!");

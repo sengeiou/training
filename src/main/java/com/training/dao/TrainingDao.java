@@ -117,5 +117,16 @@ public class TrainingDao {
         return n;
     }
 
+    /**
+     * 根据实体更新
+     * @param training
+     * Created by huai23 on 2018-05-26 17:09:14.
+     */
+    public int cancel(TrainingEntity training){
+        logger.info("  cancelTraining  memberId = {} , lessonDate = {} ,trainingData = {}",training.getMemberId(),training.getLessonDate(),training.getTrainingData());
+        int n = trainingRepository.cancel(training);
+        return n;
+    }
+
 }
 

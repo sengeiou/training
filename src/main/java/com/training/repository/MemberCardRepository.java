@@ -152,9 +152,9 @@ public interface MemberCardRepository {
             "</script>")
     int delete(@Param("id") String id);
 
-    @Update("<script> UPDATE member_card SET count = #{memberCard.count} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
+    @Update("<script> UPDATE member_card SET count = #{newCount} ,modified = now()  WHERE card_no = #{cardNo} and count = #{oldCount} " +
             "</script>")
-    int updateCount(@Param("memberCard") MemberCardEntity memberCard);
+    int updateCount(@Param("newCount")Integer newCount ,@Param("oldCount")Integer oldCount ,@Param("cardNo")String cardNo);
 
     @Update("<script> UPDATE member_card SET delay = delay + 1 , end_date = #{memberCard.endDate} ,modified = now()  WHERE card_no = #{memberCard.cardNo} " +
             "</script>")

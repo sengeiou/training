@@ -173,5 +173,10 @@ public interface TrainingRepository {
             "</script>")
     int signIn(@Param("training") TrainingEntity training);
 
+    @Update("<script> UPDATE training SET status = -1 , show_tag = -1 ,  modified = now()  WHERE training_id = #{training.trainingId} and status >= 0 " +
+            "</script>")
+    int cancel(@Param("training") TrainingEntity training);
+
+
 }
 
