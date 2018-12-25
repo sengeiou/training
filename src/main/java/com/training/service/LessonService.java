@@ -626,7 +626,11 @@ public class LessonService {
             isFromAdmin = false;
             lesson.setMemberId(memberRequest.getMemberId());
         }else{
-            features.put("operStaffId",staff.getStaffId());
+            if(staff!=null){
+                features.put("operStaffId",staff.getStaffId());
+            }else{
+                features.put("operStaffId",null);
+            }
         }
         lesson.setFeature(JSON.toJSONString(features));
         if(isFromAdmin){
