@@ -4,7 +4,7 @@
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="com.training.domain.User" %>
 <%
-System.out.println(" ****************     index.jsp   ");
+System.out.println(" ****************     index.jsp  *********  ");
 JdbcTemplate jdbcTemplate = (JdbcTemplate)ContextUtil.getBean("jdbcTemplate");
 String id = request.getParameter("id");
 if(StringUtils.isNotEmpty(id)){
