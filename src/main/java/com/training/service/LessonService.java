@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * lesson 核心业务操作类
@@ -620,13 +618,17 @@ public class LessonService {
 
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
+        Staff staff = RequestContextHelper.getStaff();
         logger.info(" order  lesson = {}",lesson);
         boolean isFromAdmin = true;
+        Map features = new HashMap();
         if(StringUtils.isEmpty(lesson.getMemberId())){
             isFromAdmin = false;
             lesson.setMemberId(memberRequest.getMemberId());
+        }else{
+            features.put("operStaffId",staff.getStaffId());
         }
-
+        lesson.setFeature(JSON.toJSONString(features));
         if(isFromAdmin){
             logger.info(" ********    order  isFromAdmin ");
             String month = ut.currentFullMonth();
@@ -867,6 +869,7 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+        trainingEntity.setFeature(lesson.getFeature());
 
         String bizId = lessonId+"-"+lesson.getMemberId();
         try{
@@ -976,6 +979,7 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+        trainingEntity.setFeature(lesson.getFeature());
 
         String bizId = lessonId+"-"+lesson.getMemberId();
         try{
@@ -1202,6 +1206,7 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+        trainingEntity.setFeature(lesson.getFeature());
 
         String bizId = lessonId+"-"+lesson.getMemberId();
         try{
