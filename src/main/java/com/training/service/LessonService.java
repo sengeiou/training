@@ -619,7 +619,7 @@ public class LessonService {
     public ResponseEntity<String> order(Lesson lesson) {
         Member memberRequest = RequestContextHelper.getMember();
         Staff staff = RequestContextHelper.getStaff();
-        logger.info(" order  lesson = {}",lesson);
+        logger.info(" order  lesson = {} , staff = {}",lesson,staff);
         boolean isFromAdmin = true;
         Map features = new HashMap();
         if(StringUtils.isEmpty(lesson.getMemberId())){
