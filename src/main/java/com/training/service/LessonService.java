@@ -69,6 +69,9 @@ public class LessonService {
     private SysLogDao sysLogDao;
 
     @Autowired
+    private BizUniqueDao bizUniqueDao;
+
+    @Autowired
     private SmsUtil smsUtil;
 
     @Autowired
@@ -864,6 +867,15 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+
+        String bizId = lessonId+"-"+lesson.getMemberId();
+        try{
+            bizUniqueDao.add(bizId);
+        }catch (Exception e){
+            logger.error(" orderPT  bizId = {}",bizId,e);
+            return ResponseUtil.exception("约课异常!请稍后再试!");
+        }
+
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
@@ -964,6 +976,15 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+
+        String bizId = lessonId+"-"+lesson.getMemberId();
+        try{
+            bizUniqueDao.add(bizId);
+        }catch (Exception e){
+            logger.error(" orderPT  bizId = {}",bizId,e);
+            return ResponseUtil.exception("约课异常!请稍后再试!");
+        }
+
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
@@ -1181,6 +1202,15 @@ public class LessonService {
         trainingEntity.setStoreId(staffEntity.getStoreId());
         trainingEntity.setCardNo(memberCardEntity.getCardNo());
         trainingEntity.setCardType(memberCardEntity.getType());
+
+        String bizId = lessonId+"-"+lesson.getMemberId();
+        try{
+            bizUniqueDao.add(bizId);
+        }catch (Exception e){
+            logger.error(" orderPT  bizId = {}",bizId,e);
+            return ResponseUtil.exception("约课异常!请稍后再试!");
+        }
+
         int n = trainingDao.add(trainingEntity);
         if(n > 0){
             n = memberCardDao.reduceCount(memberCardEntity.getCardNo());
@@ -1283,6 +1313,14 @@ public class LessonService {
                 sysLogDao.add(sysLogEntity);
 
                 if(n==1){
+                    String bizId = trainingEntity.getLessonId()+"-"+trainingEntity.getMemberId();
+                    try{
+                        bizUniqueDao.delete(bizId);
+                    }catch (Exception e){
+                        logger.error(" cancelOrderError  bizId = {}",bizId,e);
+                        return ResponseUtil.exception("取消约课异常!请稍后再试!");
+                    }
+
                     try{
                         logger.info(" staff = {} , ",staffEntity);
                         logger.info(" trainingEntity = {} , ",trainingEntity);
