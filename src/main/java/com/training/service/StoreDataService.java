@@ -230,6 +230,14 @@ public class StoreDataService {
         tsk.setMoney(ut.getDoubleString(tsk_money));
         storeDataList.add(tsk);
 
+
+        StoreData total = new StoreData();
+        total.setLabel("合计");
+        total.setCount(""+(sjkxq_count+sjkxk_count+sjkzjs_count+ttk_count+tsk_count));
+        total.setLesson(""+(sjkxq_lesson+sjkxk_lesson+sjkzjs_lesson+ttk_lesson+tsk_lesson));
+        total.setMoney(ut.getDoubleString(sjkxq_money+sjkxk_money+sjkzjs_money+ttk_money+tsk_money));
+        storeDataList.add(total);
+
         return storeDataList;
     }
 
@@ -327,6 +335,12 @@ public class StoreDataService {
         yqsr.setValue(ut.getDoubleString(yqFee));
         yqsr.setLesson(""+yqLessonCount);
         storeDataList.add(yqsr);
+
+        StoreData total = new StoreData();
+        total.setLabel("合计");
+        total.setValue(ut.getDoubleString(money_hk+money_sk+yqFee));
+        total.setLesson(""+(count_hk+count_sk+yqLessonCount));
+        storeDataList.add(total);
 
         return storeDataList;
     }
@@ -667,10 +681,31 @@ public class StoreDataService {
         queryComingMember(storeEntity,startDate,endDate,dataMap);
         //统计成交人数和金额
         queryContractMember(storeEntity,startDate,endDate,dataMap);
+
+        MarketReportData total = new MarketReportData();
+        total.setOrigin("合计");
+        total.setStoreName(storeEntity.getName());
+        dataList.add(total);
+
+
+        int newMember = 0;
+        int comingMember = 0;
+        int orderCount = 0;
+        double money = 0;
+
         for ( MarketReportData marketReportData : dataMap.values()){
 //            logger.info(" marketReportData = {} ",marketReportData);
+            newMember = newMember + marketReportData.getNewCount();
+            comingMember = comingMember + marketReportData.getArriveCount();
+            orderCount = orderCount + marketReportData.getOrderCount();
+            money = money + ut.doubled(marketReportData.getMoney());
             dataList.add(marketReportData);
         }
+
+        total.setOrderCount(orderCount);
+        total.setArriveCount(comingMember);
+        total.setNewCount(newMember);
+        total.setMoney(ut.getDoubleString(money));
         logger.info(" dataList = {} ",dataList.size());
         return dataList;
     }
