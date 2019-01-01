@@ -335,7 +335,7 @@ public class MemberCardService {
         }else{
             return ResponseUtil.exception("此种课卡不能延期");
         }
-        if(ut.passDayByDate(memberCardDB.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCardDB.getEndDate(),ut.currentDate(-30)) < 0){
+        if(ut.passDayByDate(memberCardDB.getEndDate(),ut.currentDate(7)) > 0 && ut.passDayByDate(memberCardDB.getEndDate(),ut.currentDate(-30)) <= 0){
 
         }else{
             return ResponseUtil.exception("课卡到期前一周才可延期");
