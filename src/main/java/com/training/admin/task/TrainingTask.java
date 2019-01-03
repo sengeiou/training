@@ -21,9 +21,9 @@ public class TrainingTask {
      */
     @Scheduled(cron = "0 2,32 * * * *")
     public void updateShowTag(){
-        logger.info("start backupMember!  time = {} ", ut.currentTime());
+        logger.info("start updateShowTag!  time = {} ", ut.currentTime());
         trainingTaskService.updateShowTag();
-        logger.info("end backupMember!  time = {} ", ut.currentTime());
+        logger.info("end updateShowTag!  time = {} ", ut.currentTime());
     }
 
 
