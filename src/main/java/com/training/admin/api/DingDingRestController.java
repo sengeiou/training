@@ -1,9 +1,11 @@
 package com.training.admin.api;
 
 import com.alibaba.fastjson.JSON;
+import com.training.admin.service.ProcessInstanceService;
 import com.training.common.CardTypeEnum;
 import com.training.common.Page;
 import com.training.common.PageRequest;
+import com.training.common.ProcessCodeEnum;
 import com.training.dao.ContractManualDao;
 import com.training.dao.MemberDao;
 import com.training.dao.MemberPauseDao;
@@ -65,6 +67,9 @@ public class DingDingRestController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    ProcessInstanceService processInstanceService;
 
     @GetMapping("dept")
     public Object dept(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -500,6 +505,12 @@ public class DingDingRestController {
         return "change_valid_date执行成功";
     }
 
+    @GetMapping("contract")
+    public Object contract(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" DingDingRestController   contract  ");
+        processInstanceService.getPTConcract(ProcessCodeEnum.PT.getCode());
+        return "contract执行成功";
+    }
 
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
