@@ -405,6 +405,9 @@ public class CoachStaffKpiService {
         List<StaffEntity> managers = staffDao.getManagerByStoreId(storeId);
         for (StaffEntity staffEntity : managers){
             KpiStaffMonthEntity item = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+            if(item==null){
+                continue;
+            }
             int xswcl_manager = 100;
             if(StringUtils.isNotEmpty(item.getXsmb())){
                 int xsmb = Integer.parseInt(item.getXsmb());
