@@ -425,8 +425,8 @@ public class ManualRestController {
     public Object calculateStoreFinanceOnceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2018-11-30";
-        today = ut.currentDate();
+        String today = "2018-12-31";
+//        today = ut.currentDate();
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
         for (int i = 0; i < stores.size(); i++){
@@ -443,8 +443,8 @@ public class ManualRestController {
     public Object calculateStoreFinanceMonthReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2018-11-30";
-        today = ut.currentDate();
+        String today = "2018-12-31";
+//        today = ut.currentDate();
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
         for (int i = 0; i < stores.size(); i++){
@@ -461,8 +461,8 @@ public class ManualRestController {
     public Object calculateStaffFinanceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
-        String today = "2018-11-30";
-        today = ut.currentDate();
+        String today = "2018-12-31";
+//        today = ut.currentDate();
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff  ");
         String msg = "";
         for (int i = 0; i < staffs.size(); i++){
