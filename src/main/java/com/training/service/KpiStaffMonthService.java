@@ -712,11 +712,11 @@ public class KpiStaffMonthService {
         String lastMOnth = ut.currentKpiMonth(-1);
         if(Integer.parseInt(ut.currentDay())<6){
             if(!kpiStaffMonth.getMonth().equals(thisMOnth) && !kpiStaffMonth.getMonth().equals(lastMOnth)){
-                return ResponseUtil.exception("修改失败!每月5日之前只能修改本月和上月的数据!");
+//                return ResponseUtil.exception("修改失败!每月5日之前只能修改本月和上月的数据!");
             }
         }else{
             if(!kpiStaffMonth.getMonth().equals(thisMOnth)){
-                return ResponseUtil.exception("修改失败!每月5日之后只能修改本月的数据!");
+//                return ResponseUtil.exception("修改失败!每月5日之后只能修改本月的数据!");
             }
         }
 
