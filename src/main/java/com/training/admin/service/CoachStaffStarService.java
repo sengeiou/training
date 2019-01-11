@@ -74,10 +74,13 @@ public class CoachStaffStarService {
 //        logger.info(" calculateStaffStar   staffName = {} , month = {} , star = {}   ",staffEntity.getCustname(),month,staffEntity.getStar());
         String month1 = ut.getKpiMonth(month,-1);
         KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month1);
-        int star = 0;
+        int star = 1;
         staffEntity.setStar(star);
         if(kpiStaffMonthEntity1!=null && StringUtils.isNotEmpty(kpiStaffMonthEntity1.getParam1())){
             star = Integer.parseInt(kpiStaffMonthEntity1.getParam1());
+            if(star==0){
+                star = 1;
+            }
             staffEntity.setStar(star);
         }
         int n = 0;

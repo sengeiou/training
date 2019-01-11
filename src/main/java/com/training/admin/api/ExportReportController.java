@@ -125,14 +125,8 @@ public class ExportReportController {
     @GetMapping("staffKpi")
     public Object staffKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" staffKpi   ");
-        String month = "201809";
-//        exportFileService.staffKpi(month);
-        exportFileService.managerKpi(month);
-        month = "201810";
-//        exportFileService.staffKpi(month);
-        exportFileService.managerKpi(month);
-        month = "201811";
-//        exportFileService.staffKpi(month);
+        String month = "201812";
+        exportFileService.staffKpi(month);
         exportFileService.managerKpi(month);
         return "staffKpi";
     }
