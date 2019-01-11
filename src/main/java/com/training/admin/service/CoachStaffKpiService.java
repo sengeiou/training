@@ -144,18 +144,14 @@ public class CoachStaffKpiService {
         kpiStaffMonthEntity.setTcs(""+tcs);
         kpiStaffMonthEntity.setZye(""+zye);
 
-        if(month.equals("201811")){
-            if(StringUtils.isNotEmpty(templateId)){
-                KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
-                kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
-            }
-            else{
-                kpiStaffMonthEntity.setKpiScore("0");
-            }
-            kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
-        }else{
-            kpiStaffMonthEntity.setKpiScore(null);
+        if(StringUtils.isNotEmpty(templateId)){
+            KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
+            kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
         }
+        else{
+            kpiStaffMonthEntity.setKpiScore("0");
+        }
+        kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
     }
 
