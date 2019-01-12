@@ -31,7 +31,7 @@ public class GenEntityMysql {
     private boolean f_sql = false; // 是否需要导入包java.sql.*
 
     //数据库连接
-    private static final String URL ="jdbc:mysql://localhost:3306/training?rewriteBatchedStatements=true&allowMultiQueries=true&characterEncoding=utf-8&useSSL=true";
+    private static final String URL ="jdbc:mysql://127.0.0.1:3306/training?characterEncoding=utf-8";
     private static final String NAME = "root";
     private static final String PASS = "jordan23";
     private static final String DRIVER ="com.mysql.jdbc.Driver";
@@ -269,7 +269,7 @@ public class GenEntityMysql {
     public static void main(String[] args) {
         GenEntityMysql gen = new GenEntityMysql();
 //        gen.getAllTables();
-        gen.genEntityByOne("message_user");
+//        gen.genEntityByOne("message_user");
 //        gen.genEntity();
     }
 }
