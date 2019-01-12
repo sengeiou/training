@@ -1,17 +1,21 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.KpiStaffDetail;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +29,12 @@ public class KpiStaffDetailService {
 
     @Autowired
     private KpiStaffDetailDao kpiStaffDetailDao;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 新增实体
@@ -103,6 +113,45 @@ public class KpiStaffDetailService {
         return ResponseUtil.exception("删除失败");
     }
 
+    public List<KpiStaffDetail> queryXkAndJkByMonth(KpiStaffDetailQuery query){
+        PageRequest page = new PageRequest();
+        page.setPageSize(1000);
+        List<KpiStaffDetail> data = new ArrayList<>();
+        List<KpiStaffDetailEntity> kpiStaffDetailList = kpiStaffDetailDao.queryXkAndJkByMonth(query);
+        for (KpiStaffDetailEntity kpiStaffDetailEntity:kpiStaffDetailList){
+            KpiStaffDetail kpiStaffDetail = transfer(kpiStaffDetailEntity);
+            data.add(kpiStaffDetail);
+        }
+        return data;
+    }
+
+    private KpiStaffDetail transfer(KpiStaffDetailEntity kpiStaffDetailEntity) {
+        KpiStaffDetail kpiStaffDetail = new KpiStaffDetail();
+        BeanUtils.copyProperties(kpiStaffDetailEntity,kpiStaffDetail);
+        MemberEntity memberEntity = memberService.getById(kpiStaffDetailEntity.getMemberId());
+        if(memberEntity!=null){
+            kpiStaffDetail.setMemberName(memberEntity.getName());
+            kpiStaffDetail.setPhone(memberEntity.getPhone());
+        }
+        if(kpiStaffDetailEntity.getType().equals("XK")){
+            kpiStaffDetail.setShowType("续课");
+        } else if(kpiStaffDetailEntity.getType().equals("JK")){
+            kpiStaffDetail.setShowType("结课");
+        } else{
+            kpiStaffDetail.setShowType(kpiStaffDetailEntity.getType());
+        }
+        return kpiStaffDetail;
+    }
+
+    public List queryValidMemberCountByMonth(KpiStaffDetailQuery query){
+        String m = query.getMonth().substring(5,7);
+        String tableName = "member_his_"+m;
+        List data = new ArrayList();
+        String sql = "select backup_date day , count(member_id) total from "+tableName+" where coach_staff_id = ? GROUP BY backup_date ";
+        List result = jdbcTemplate.queryForList(sql,new Object[]{query.getStaffId()});
+
+        return result;
+    }
 
 }
 

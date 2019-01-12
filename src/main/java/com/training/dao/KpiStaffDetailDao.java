@@ -83,6 +83,10 @@ public class KpiStaffDetailDao {
         return n;
     }
 
+    public List<KpiStaffDetailEntity> queryXkAndJkByMonth(KpiStaffDetailQuery query){
+        List<KpiStaffDetailEntity> kpiStaffDetailList = kpiStaffDetailRepository.queryXkAndJkByMonth(query);
+        return kpiStaffDetailList;
+    }
 
 }
 

@@ -111,6 +111,11 @@ public interface KpiStaffDetailRepository {
             "</script>")
     int delete(@Param("id") String id);
 
+    @Select("<script> SELECT pk_id,card_no,contract_id,type,card_type,month,day,staff_id,store_id,member_id,remark,status,created,modified " +
+            " FROM kpi_staff_detail " +
+            " WHERE 1 = 1 AND staff_id = #{query.staffId} AND month = #{query.month} and type in ('XK','JK') order by day asc " +
+            "</script>")
+    List<KpiStaffDetailEntity> queryXkAndJkByMonth(@Param("query") KpiStaffDetailQuery kpiStaffDetail);
 
 }
 

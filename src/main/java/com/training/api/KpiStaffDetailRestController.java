@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.KpiStaffDetail;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -100,6 +101,31 @@ public class KpiStaffDetailRestController {
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
         logger.info("  delete  id = {}",id);
         return kpiStaffDetailService.delete(id);
+    }
+
+
+    /**
+     * 教练续结课日志查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-11-18 12:13:37.
+     */
+    @RequestMapping (value = "queryXkAndJkByMonth", method = RequestMethod.GET)
+    public ResponseEntity<String> queryXkAndJkByMonth(@ModelAttribute KpiStaffDetailQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        List<KpiStaffDetail> data = kpiStaffDetailService.queryXkAndJkByMonth(query);
+        return ResponseUtil.success(data);
+    }
+
+    /**
+     * 教练续结课日志查询
+     * @param query
+     * @param pageRequest
+     * Created by huai23 on 2018-11-18 12:13:37.
+     */
+    @RequestMapping (value = "queryValidMemberCountByMonth", method = RequestMethod.GET)
+    public ResponseEntity<String> queryValidMemberCountByMonth(@ModelAttribute KpiStaffDetailQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        List data = kpiStaffDetailService.queryValidMemberCountByMonth(query);
+        return ResponseUtil.success(data);
     }
 
 
