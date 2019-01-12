@@ -70,6 +70,7 @@ public class KpiStaffDetailAdminService {
             try {
                 String contractId = contract.get("contract_id").toString();
                 String memberId = ut.getString(contract,"member_id");
+                String signDate = contract.get("sign_date").toString();
 
                 String type = contract.get("type").toString();
                 if(type.indexOf("续课")>=0){
@@ -82,8 +83,8 @@ public class KpiStaffDetailAdminService {
                         }
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
-                        kpiStaffDetailEntity.setMonth(month);
-                        kpiStaffDetailEntity.setDay(day);
+                        kpiStaffDetailEntity.setMonth(signDate.substring(0,7));
+                        kpiStaffDetailEntity.setDay(signDate);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("XK");
@@ -98,15 +99,14 @@ public class KpiStaffDetailAdminService {
                             if(memberCardEntity==null){
                                 continue;
                             }
-                            String signDate = contract.get("sign_date").toString();
                             String sql_card = "select * from member_card where member_id = ? and card_no <> ? and type = ? and end_date >= ? and created <= ? ";
                             List cards = jdbcTemplate.queryForList(sql_card,new Object[]{memberCardEntity.getMemberId(),cardNo,memberCardEntity.getType(),signDate,signDate+" 23:59:59"});
                             for (int j = 0; j < cards.size(); j++) {
                                 Map card = (Map)cards.get(j);
                                 try {
                                     KpiStaffDetailEntity kpiStaffDetailEntityJk = new KpiStaffDetailEntity();
-                                    kpiStaffDetailEntityJk.setMonth(month);
-                                    kpiStaffDetailEntityJk.setDay(day);
+                                    kpiStaffDetailEntityJk.setMonth(signDate.substring(0,7));
+                                    kpiStaffDetailEntityJk.setDay(signDate);
                                     kpiStaffDetailEntityJk.setCardNo(card.get("card_no").toString());
                                     kpiStaffDetailEntityJk.setContractId("");
                                     kpiStaffDetailEntityJk.setType("JK");
@@ -129,8 +129,8 @@ public class KpiStaffDetailAdminService {
                         logger.info(" xqs = "+xqs+"  contract = {} ",contract);
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
-                        kpiStaffDetailEntity.setMonth(month);
-                        kpiStaffDetailEntity.setDay(day);
+                        kpiStaffDetailEntity.setMonth(signDate.substring(0,7));
+                        kpiStaffDetailEntity.setDay(signDate);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("XQ");
@@ -150,8 +150,8 @@ public class KpiStaffDetailAdminService {
                     if(contract.get("card_no")!=null && contract.get("sale_staff_id")!=null && contract.get("member_id")!=null && contract.get("store_id")!=null){
                         String cardNo = contract.get("card_no").toString();
                         KpiStaffDetailEntity kpiStaffDetailEntity = new KpiStaffDetailEntity();
-                        kpiStaffDetailEntity.setMonth(month);
-                        kpiStaffDetailEntity.setDay(day);
+                        kpiStaffDetailEntity.setMonth(signDate.substring(0,7));
+                        kpiStaffDetailEntity.setDay(signDate);
                         kpiStaffDetailEntity.setCardNo(cardNo);
                         kpiStaffDetailEntity.setContractId(contractId);
                         kpiStaffDetailEntity.setType("ZJS");

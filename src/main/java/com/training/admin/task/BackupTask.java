@@ -31,6 +31,7 @@ public class BackupTask {
         try {
             logger.info("start backupMember!  month = {} , time = {} ",month, ut.currentTime());
             memberTrainingTaskService.updateMemberInfo();
+            memberTrainingTaskService.updateMemberStatus();
             backupService.backupMember();
             logger.info("end backupMember!  time = {} ", ut.currentTime());
         }catch (Exception e){

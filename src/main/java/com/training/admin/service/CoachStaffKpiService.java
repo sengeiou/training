@@ -121,9 +121,9 @@ public class CoachStaffKpiService {
             if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam2())){
                 restDays = Integer.parseInt(kpiStaffMonthEntity.getParam2());
             }
-            int average = 0;
+            double average = 0;
             if(days>0){
-                average = validMemberCount/days;
+                average = (double)validMemberCount/days;
             }
             hyd = (double)lessonCount*100/(validMemberCount-average*restDays);
         }
@@ -144,18 +144,14 @@ public class CoachStaffKpiService {
         kpiStaffMonthEntity.setTcs(""+tcs);
         kpiStaffMonthEntity.setZye(""+zye);
 
-        if(month.equals("201811")){
-            if(StringUtils.isNotEmpty(templateId)){
-                KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
-                kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
-            }
-            else{
-                kpiStaffMonthEntity.setKpiScore("0");
-            }
-            kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
-        }else{
-            kpiStaffMonthEntity.setKpiScore(null);
+        if(StringUtils.isNotEmpty(templateId)){
+            KpiStaffMonth kpiStaffMonth = kpiStaffMonthService.calculateKpiStaffMonth(kpiStaffMonthEntity);
+            kpiStaffMonthEntity.setKpiScore(kpiStaffMonth.getKpiScore());
         }
+        else{
+            kpiStaffMonthEntity.setKpiScore("0");
+        }
+        kpiStaffMonthEntity.setKpiData(JSON.toJSONString(kpiTemplateEntity));
         int n = kpiStaffMonthDao.update(kpiStaffMonthEntity);
     }
 
@@ -288,8 +284,8 @@ public class CoachStaffKpiService {
 
         double qdxks = 0;
         double qdjks = 0;
-        int qdlessonCount = 0;
-        int qdvalidMemberCount = 0;
+        double qdlessonCount = 0;
+        double qdvalidMemberCount = 0;
 
         double qdzjs = 0;
         int qdhydp = 0;
@@ -326,17 +322,16 @@ public class CoachStaffKpiService {
                 qdlessonCount = qdlessonCount + Integer.parseInt(subKpiStaffMonthEntity.getSjks());
             }
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getYxhys())){
-                int validMemberCount = Integer.parseInt(subKpiStaffMonthEntity.getYxhys());
+                double validMemberCount = Double.parseDouble(subKpiStaffMonthEntity.getYxhys());
                 int restDays = 0;
                 if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getParam2())){
                     restDays = Integer.parseInt(subKpiStaffMonthEntity.getParam2());
                 }
-                int average = 0;
+                double average = 0;
                 if(days>0){
                     average = validMemberCount/days;
                 }
-                validMemberCount = validMemberCount - average*restDays;
-                qdvalidMemberCount = qdvalidMemberCount + validMemberCount;
+                qdvalidMemberCount = qdvalidMemberCount + (validMemberCount - average*restDays);
             }
             if(StringUtils.isNotEmpty(subKpiStaffMonthEntity.getZjs())){
                 qdzjs = qdzjs + Integer.parseInt(subKpiStaffMonthEntity.getZjs());

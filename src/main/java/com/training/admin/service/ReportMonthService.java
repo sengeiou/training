@@ -231,6 +231,12 @@ public class ReportMonthService {
                 String start = card.get("start_date").toString();
                 String end = card.get("end_date").toString();
                 int days = ut.passDayByDate(start,end)+1;
+
+                int pauseDays = getPauseDaysByMonth(memberId,startDate,endDate);
+
+
+                days = days - pauseDays;
+
                 double price = Double.parseDouble(card.get("money").toString())/days;
                 int this_count = ut.passDayByDate(startDate,today)+1;
                 money = money + this_count*price;
@@ -240,6 +246,53 @@ public class ReportMonthService {
 //        logger.info(" calculateUsedLessonMoney  money  = {} , count = {}  ",money,count);
         financeMonthReportEntity.setUsedDaysMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setUsedDaysCount(""+count);
+    }
+
+    public int getPauseDaysByMonth(String memberId, String startDate, String endDate) {
+        String start = startDate;
+        String end = endDate;
+        int pauseDays = 0;
+        String sql = " select * from member_pause where member_id = ? and status = 0 and restore_date > ?";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, start});
+        for (int i = 0; i < data.size(); i++) {
+            Map pause = (Map)data.get(i);
+            String pause_date = pause.get("pause_date").toString();
+            if(pause_date.indexOf(":")>0){
+                pause_date = pause_date.substring(0,10);
+            }
+            String restore_date = pause.get("restore_date").toString();
+            if(ut.passDayByDate(startDate,pause_date)>0){
+                startDate = pause_date;
+            }
+            if(ut.passDayByDate(endDate,restore_date)<0){
+                endDate = restore_date;
+            }
+            int days = ut.passDayByDate(startDate,endDate);
+            pauseDays = pauseDays + days;
+        }
+
+        startDate = start;
+        endDate = end;
+
+        sql = " select * from member_pause where member_id = ? and status = 1 and pause_date < ?";
+        data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, end});
+        for (int i = 0; i < data.size(); i++) {
+            Map pause = (Map)data.get(i);
+            String pause_date = pause.get("pause_date").toString();
+            if(pause_date.indexOf(":")>0){
+                pause_date = pause_date.substring(0,10);
+            }
+            String restore_date = pause.get("restore_date").toString();
+            if(ut.passDayByDate(startDate,pause_date)>0){
+                startDate = pause_date;
+            }
+            if(ut.passDayByDate(endDate,restore_date)<0){
+                endDate = restore_date;
+            }
+            int days = ut.passDayByDate(startDate,endDate);
+            pauseDays = pauseDays + days;
+        }
+        return pauseDays;
     }
 
     /**

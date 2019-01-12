@@ -159,7 +159,7 @@ public interface StaffRepository {
 
     @Select("<script> SELECT pk_id,staff_id,store_id,role_id,username,password,custname,email,phone,job,image,open_id,union_id,template_id,feature,status,rel_id,star,hired_date,created,modified " +
             " FROM staff " +
-            " WHERE store_id = #{storeId} and job = '店长' " +
+            " WHERE store_id = #{storeId} and job = '店长' and status = 0 " +
             "</script>")
     List<StaffEntity> getManagerByStoreId(@Param("storeId") String storeId);
 
