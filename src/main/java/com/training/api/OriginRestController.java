@@ -54,16 +54,15 @@ public class OriginRestController {
     }
 
     /**
-     * 查询总数
+     * 分页查询
      * @param query
+     * @param pageRequest
      * Created by huai23 on 2019-01-12 13:23:55.
-     */ 
-    @RequestMapping (value = "count", method = RequestMethod.GET)
-    public ResponseEntity<String> count(@ModelAttribute OriginQuery query,HttpServletRequest request, HttpServletResponse response){
-        Long count = originService.count(query);
-        JSONObject jo = new JSONObject();
-        jo.put("count", count);
-        return ResponseUtil.success(jo);
+     */
+    @RequestMapping (value = "findAll", method = RequestMethod.GET)
+    public ResponseEntity<String> findAll(@ModelAttribute OriginQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
+        List<OriginEntity> page = originService.findAll();
+        return ResponseUtil.success(page);
     }
 
     /**

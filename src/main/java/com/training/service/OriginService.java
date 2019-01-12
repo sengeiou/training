@@ -58,6 +58,19 @@ public class OriginService {
     }
 
     /**
+     * 查询全部
+     * Created by huai23 on 2019-01-12 13:23:55.
+     */
+    public List<OriginEntity> findAll(){
+        OriginQuery query = new OriginQuery();
+        query.setStatus(0);
+        PageRequest page = new PageRequest();
+        page.setPageSize(10000);
+        List<OriginEntity> originList = originDao.find(query,page);
+        return originList;
+    }
+
+    /**
      * 查询总数
      * @param query
      * Created by huai23 on 2019-01-12 13:23:55.

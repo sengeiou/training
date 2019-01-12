@@ -14,7 +14,6 @@ import java.util.List;
 public interface OriginRepository {
 
     @Insert("<script> INSERT INTO origin ( " +
-                " <if test=\"origin.originId != null\"> origin_id, </if>" +
                 " <if test=\"origin.code != null\"> code, </if>" +
                 " <if test=\"origin.name != null\"> name, </if>" +
                 " <if test=\"origin.type != null\"> type, </if>" +
@@ -25,7 +24,6 @@ public interface OriginRepository {
                 " created , " +
                 " modified " +
             " ) VALUES ( " +
-                " <if test=\"origin.originId != null\"> #{origin.originId}, </if>" +
                 " <if test=\"origin.code != null\"> #{origin.code}, </if>" +
                 " <if test=\"origin.name != null\"> #{origin.name}, </if>" +
                 " <if test=\"origin.type != null\"> #{origin.type}, </if>" +
@@ -74,7 +72,6 @@ public interface OriginRepository {
     OriginEntity getById(@Param("id") String id);
 
     @Update("<script> UPDATE origin SET " +
-                " <if test=\"origin.originId != null\"> origin_id = #{origin.originId} , </if>" +
                 " <if test=\"origin.code != null\"> code = #{origin.code} , </if>" +
                 " <if test=\"origin.name != null\"> name = #{origin.name} , </if>" +
                 " <if test=\"origin.type != null\"> type = #{origin.type} , </if>" +
