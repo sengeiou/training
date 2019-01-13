@@ -5,6 +5,7 @@ import com.training.entity.*;
 import com.training.common.PageRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +22,9 @@ public class HeroListDao {
 
     @Autowired
     private HeroListRepository heroListRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 新增实体
@@ -83,6 +87,11 @@ public class HeroListDao {
         return n;
     }
 
+
+    public String getLastDay(String month) {
+
+        return "";
+    }
 
 }
 

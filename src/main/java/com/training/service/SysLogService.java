@@ -264,6 +264,7 @@ public class SysLogService {
                 StaffEntity staffEntity = staffDao.getById(wxpayAuditLogEntity.getAuditStaffId());
                 wechatPayLog.setAudit(true);
                 wechatPayLog.setAuditStaffId(wxpayAuditLogEntity.getAuditStaffId());
+                wechatPayLog.setAuditTime(wxpayAuditLogEntity.getAuditTime());
                 if(staffEntity!=null){
                     wechatPayLog.setAuditStaffName(staffEntity.getCustname());
                 }

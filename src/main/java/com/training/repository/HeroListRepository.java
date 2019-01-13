@@ -69,9 +69,7 @@ public interface HeroListRepository {
             " <if test=\"query.label != null\"> AND label = #{query.label} </if>" +
             " <if test=\"query.value != null\"> AND value = #{query.value} </if>" +
             " <if test=\"query.unit != null\"> AND unit = #{query.unit} </if>" +
-            " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by sort LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<HeroListEntity> find(@Param("query") HeroListQuery heroList , @Param("page") PageRequest page);
 
@@ -90,8 +88,6 @@ public interface HeroListRepository {
             " <if test=\"query.label != null\"> AND label = #{query.label} </if>" +
             " <if test=\"query.value != null\"> AND value = #{query.value} </if>" +
             " <if test=\"query.unit != null\"> AND unit = #{query.unit} </if>" +
-            " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             "</script>")
     Long count(@Param("query") HeroListQuery heroList);
 

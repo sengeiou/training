@@ -7,10 +7,7 @@ import com.training.dao.StaffDao;
 import com.training.dao.StoreDao;
 import com.training.dao.TrainingDao;
 import com.training.domain.Staff;
-import com.training.entity.HeroListEntity;
-import com.training.entity.StaffEntity;
-import com.training.entity.StaffQuery;
-import com.training.entity.StoreEntity;
+import com.training.entity.*;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -193,6 +190,30 @@ public class HeroListService {
         return "更新"+day+"英雄榜成功";
     }
 
+
+    public List<HeroListEntity> queryLesson(HeroListQuery query) {
+        String month = query.getMonth();
+        if(month==null){
+            month = ut.currentFullMonth();
+        }
+        String day = heroListDao.getLastDay(month);
+        HeroListQuery heroListQuery = new HeroListQuery();
+        heroListQuery.setHeroDate(day);
+        heroListQuery.setType(HeroListTypeEnum.LC.getKey());
+        PageRequest page = new PageRequest(1000);
+        List<HeroListEntity> heroListList = heroListDao.find(heroListQuery,page);
+        return heroListList;
+    }
+
+    public List<HeroListEntity> queryMoney(HeroListQuery query) {
+
+        return null;
+    }
+
+    public List<HeroListEntity> queryActiveRate(HeroListQuery query) {
+
+        return null;
+    }
 
 }
 

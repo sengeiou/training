@@ -12,6 +12,8 @@ public class HeroListQuery {
 
     private Long pkId;
 
+    private String month;
+
     private String heroDate;
 
     private String type;
