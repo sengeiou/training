@@ -1,14 +1,18 @@
 package com.training.service;
 
+import com.training.common.HeroListTypeEnum;
 import com.training.common.PageRequest;
+import com.training.dao.HeroListDao;
 import com.training.dao.StaffDao;
 import com.training.dao.StoreDao;
 import com.training.dao.TrainingDao;
 import com.training.domain.Staff;
+import com.training.entity.HeroListEntity;
 import com.training.entity.StaffEntity;
 import com.training.entity.StaffQuery;
 import com.training.entity.StoreEntity;
 import com.training.util.ut;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,9 @@ public class HeroListService {
 
     @Autowired
     private StaffService staffService;
+
+    @Autowired
+    private HeroListDao heroListDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -125,6 +132,67 @@ public class HeroListService {
         }
         return staffList;
     }
+
+    public String backupHeroList(String day) {
+        List<Staff> lesson = this.lessonList();
+        if(CollectionUtils.isNotEmpty(lesson)){
+            jdbcTemplate.update(" delete from hero_list where hero_date = ? and type = ? ",new Object[]{day,HeroListTypeEnum.LC.getKey()});
+            int sort = 1;
+            for (Staff staff : lesson){
+                HeroListEntity heroListEntity = new HeroListEntity();
+                heroListEntity.setType(HeroListTypeEnum.LC.getKey());
+                heroListEntity.setHeroDate(day);
+                heroListEntity.setSort(sort);
+                heroListEntity.setStaffId(staff.getStaffId());
+                heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setStoreId(staff.getStoreId());
+                heroListEntity.setStoreName(staff.getStoreName());
+                heroListEntity.setValue(staff.getHeroNumber());
+                heroListDao.add(heroListEntity);
+                sort++;
+            }
+        }
+
+        List<Staff> money = this.lessonList();
+        if(CollectionUtils.isNotEmpty(money)){
+            jdbcTemplate.update(" delete from hero_list where hero_date = ? and type = ? ",new Object[]{day,HeroListTypeEnum.XK.getKey()});
+            int sort = 1;
+            for (Staff staff : money){
+                HeroListEntity heroListEntity = new HeroListEntity();
+                heroListEntity.setType(HeroListTypeEnum.XK.getKey());
+                heroListEntity.setHeroDate(day);
+                heroListEntity.setSort(sort);
+                heroListEntity.setStaffId(staff.getStaffId());
+                heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setStoreId(staff.getStoreId());
+                heroListEntity.setStoreName(staff.getStoreName());
+                heroListEntity.setValue(staff.getHeroNumber());
+                heroListDao.add(heroListEntity);
+                sort++;
+            }
+        }
+
+        List<Staff> hyd = this.activeRateList();
+        if(CollectionUtils.isNotEmpty(money)){
+            jdbcTemplate.update(" delete from hero_list where hero_date = ? and type = ? ",new Object[]{day,HeroListTypeEnum.HYD.getKey()});
+            int sort = 1;
+            for (Staff staff : hyd){
+                HeroListEntity heroListEntity = new HeroListEntity();
+                heroListEntity.setType(HeroListTypeEnum.HYD.getKey());
+                heroListEntity.setHeroDate(day);
+                heroListEntity.setSort(sort);
+                heroListEntity.setStaffId(staff.getStaffId());
+                heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setStoreId(staff.getStoreId());
+                heroListEntity.setStoreName(staff.getStoreName());
+                heroListEntity.setValue(staff.getHeroNumber());
+                heroListDao.add(heroListEntity);
+                sort++;
+            }
+        }
+        return "更新"+day+"英雄榜成功";
+    }
+
 
 }
 

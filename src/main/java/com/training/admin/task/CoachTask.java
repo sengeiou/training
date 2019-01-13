@@ -1,8 +1,8 @@
 package com.training.admin.task;
 
-import com.training.admin.service.BackupService;
 import com.training.admin.service.CoachKpiUpdateService;
 import com.training.admin.service.ManualService;
+import com.training.service.HeroListService;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,11 @@ public class CoachTask {
     @Autowired
     private ManualService manualService;
 
+    @Autowired
+    private HeroListService heroListService;
+
     /**
-     * 更新教练KPI
+     * 更新教练信息
      */
     @Scheduled(cron = "0 30 23 * * *")
     public void updateCoachStaff(){
@@ -39,6 +42,16 @@ public class CoachTask {
         logger.info("start updateMemberTrainingTimes!  time = {} ", ut.currentTime());
         coachKpiUpdateService.execute();
         logger.info("end updateMemberTrainingTimes!  time = {} ", ut.currentTime());
+    }
+
+    /**
+     * 更新英雄榜
+     */
+    @Scheduled(cron = "0 40 1,12,20,23 * * *")
+    public void updateHeroList(){
+        logger.info("start updateHeroList!  time = {} ", ut.currentTime());
+        heroListService.backupHeroList(ut.currentDate());
+        logger.info("end updateHeroList!  time = {} ", ut.currentTime());
     }
 
 }

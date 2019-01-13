@@ -88,6 +88,9 @@ public class ManualRestController {
     private CoachStaffKpiService coachStaffKpiService;
 
     @Autowired
+    private HeroListService heroListService;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -493,6 +496,16 @@ public class ManualRestController {
         String day = ut.currentDate();
         String msg = memberTaskService.restorePauseMembers(day);
         logger.info("end restorePauseMembers!  time = {} ", ut.currentTime());
+        return msg;
+    }
+
+
+    @GetMapping("backupHeroList")
+    public Object backupHeroList(HttpServletRequest request, HttpServletResponse response){
+        logger.info("start backupHeroList!  time = {} ", ut.currentTime());
+        String day = ut.currentDate();
+        String msg = heroListService.backupHeroList(day);
+        logger.info("end backupHeroList!  time = {} ", ut.currentTime());
         return msg;
     }
 
