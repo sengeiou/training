@@ -31,5 +31,13 @@ public class WechatPayLog {
 
     private String storeName;
 
+    private boolean isAudit;
+
+    private String auditStaffId;
+
+    private String auditStaffName;
+
+    private String auditTime;
+
 }
 

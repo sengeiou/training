@@ -44,6 +44,9 @@ public class SysLogService {
     @Autowired
     private MemberCardDao memberCardDao;
 
+    @Autowired
+    private WxpayAuditLogDao wxpayAuditLogDao;
+
     /**
      * 新增实体
      * @param sysLog
@@ -256,6 +259,17 @@ public class SysLogService {
             wechatPayLog.setMoney(ut.getDoubleString(money-taxFee));
             wechatPayLog.setPayTime(ut.df_day.format(sysLogEntity.getCreated()));
 
+            WxpayAuditLogEntity wxpayAuditLogEntity = wxpayAuditLogDao.getById(transactionId);
+            if(wxpayAuditLogEntity!=null && wxpayAuditLogEntity.getType().equals("1")){
+                StaffEntity staffEntity = staffDao.getById(wxpayAuditLogEntity.getAuditStaffId());
+                wechatPayLog.setAudit(true);
+                wechatPayLog.setAuditStaffId(wxpayAuditLogEntity.getAuditStaffId());
+                if(staffEntity!=null){
+                    wechatPayLog.setAuditStaffName(staffEntity.getCustname());
+                }
+            }else{
+                wechatPayLog.setAudit(false);
+            }
             logList.add(wechatPayLog);
         }
         Long count = sysLogDao.countPayLog(query);

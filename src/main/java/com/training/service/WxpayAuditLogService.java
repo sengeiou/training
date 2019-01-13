@@ -1,9 +1,11 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,17 +29,35 @@ public class WxpayAuditLogService {
     private WxpayAuditLogDao wxpayAuditLogDao;
 
     /**
-     * 新增实体
+     * 审核
      * @param wxpayAuditLog
      * Created by huai23 on 2019-01-13 20:31:38.
      */ 
-    public ResponseEntity<String> add(WxpayAuditLogEntity wxpayAuditLog){
-        User user = RequestContextHelper.getUser();
+    public ResponseEntity<String> audit(WxpayAuditLogEntity wxpayAuditLog){
+        Staff staff = RequestContextHelper.getStaff();
+        wxpayAuditLog.setType(AuditTypeEnum.SUCCESS.getKey());
+        wxpayAuditLog.setAuditTime(ut.currentTime());
         int n = wxpayAuditLogDao.add(wxpayAuditLog);
         if(n==1){
-            return ResponseUtil.success("添加成功");
+            return ResponseUtil.success("审核成功");
         }
-        return ResponseUtil.exception("添加失败");
+        return ResponseUtil.exception("审核失败");
+    }
+
+    /**
+     * 取消审核
+     * @param wxpayAuditLog
+     * Created by huai23 on 2019-01-13 20:31:38.
+     */
+    public ResponseEntity<String> cancel(WxpayAuditLogEntity wxpayAuditLog){
+        Staff staff = RequestContextHelper.getStaff();
+        wxpayAuditLog.setType(AuditTypeEnum.CANCEL.getKey());
+        wxpayAuditLog.setAuditTime(ut.currentTime());
+        int n = wxpayAuditLogDao.add(wxpayAuditLog);
+        if(n==1){
+            return ResponseUtil.success("取消审核成功");
+        }
+        return ResponseUtil.exception("取消审核失败");
     }
 
     /**

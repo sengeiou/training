@@ -31,14 +31,25 @@ public class WxpayAuditLogRestController {
     private WxpayAuditLogService wxpayAuditLogService;
 
     /**
-     * 新增实体
+     * 审核
      * @param wxpayAuditLog
      * Created by huai23 on 2019-01-13 20:31:38.
-     */ 
-    @RequestMapping (value = "add", method = RequestMethod.POST)
-    public ResponseEntity<String> add(@RequestBody WxpayAuditLogEntity wxpayAuditLog,HttpServletRequest request, HttpServletResponse response){
-        logger.info(" wxpay_audit_logRestController  add  wxpayAuditLog = {}",wxpayAuditLog);
-        return wxpayAuditLogService.add(wxpayAuditLog);
+     */
+    @RequestMapping (value = "audit", method = RequestMethod.POST)
+    public ResponseEntity<String> audit(@RequestBody WxpayAuditLogEntity wxpayAuditLog,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" wxpay_audit_logRestController  audit  wxpayAuditLog = {}",wxpayAuditLog);
+        return wxpayAuditLogService.audit(wxpayAuditLog);
+    }
+
+    /**
+     * 取消审核
+     * @param wxpayAuditLog
+     * Created by huai23 on 2019-01-13 20:31:38.
+     */
+    @RequestMapping (value = "cancel", method = RequestMethod.POST)
+    public ResponseEntity<String> cancel(@RequestBody WxpayAuditLogEntity wxpayAuditLog,HttpServletRequest request, HttpServletResponse response){
+        logger.info(" wxpay_audit_logRestController  cancel  wxpayAuditLog = {}",wxpayAuditLog);
+        return wxpayAuditLogService.cancel(wxpayAuditLog);
     }
 
     /**

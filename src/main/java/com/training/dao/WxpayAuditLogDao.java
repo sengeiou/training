@@ -57,7 +57,7 @@ public class WxpayAuditLogDao {
      * 根据ID查询实体
      * @param id
      * Created by huai23 on 2019-01-13 20:31:38.
-     */ 
+     */
     public WxpayAuditLogEntity getById(String id){
         WxpayAuditLogEntity wxpayAuditLogDB = wxpayAuditLogRepository.getById(id);
         return wxpayAuditLogDB;

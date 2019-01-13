@@ -61,7 +61,7 @@ public interface WxpayAuditLogRepository {
 
     @Select("<script> SELECT pk_id,transaction_id,TYPE,audit_staff_id,audit_time,feature,remark,created,modified " +
             " FROM wxpay_audit_log " +
-            " WHERE transaction_id = #{id} " +
+            " WHERE transaction_id = #{id} order by pk_id desc limit 0,1" +
             "</script>")
     WxpayAuditLogEntity getById(@Param("id") String id);
 
