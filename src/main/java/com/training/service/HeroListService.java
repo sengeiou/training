@@ -142,6 +142,7 @@ public class HeroListService {
                 heroListEntity.setSort(sort);
                 heroListEntity.setStaffId(staff.getStaffId());
                 heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setImage(staff.getImage());
                 heroListEntity.setStoreId(staff.getStoreId());
                 heroListEntity.setStoreName(staff.getStoreName());
                 heroListEntity.setValue(staff.getHeroNumber());
@@ -161,6 +162,7 @@ public class HeroListService {
                 heroListEntity.setSort(sort);
                 heroListEntity.setStaffId(staff.getStaffId());
                 heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setImage(staff.getImage());
                 heroListEntity.setStoreId(staff.getStoreId());
                 heroListEntity.setStoreName(staff.getStoreName());
                 heroListEntity.setValue(staff.getHeroNumber());
@@ -180,6 +182,7 @@ public class HeroListService {
                 heroListEntity.setSort(sort);
                 heroListEntity.setStaffId(staff.getStaffId());
                 heroListEntity.setStaffName(staff.getCustname());
+                heroListEntity.setImage(staff.getImage());
                 heroListEntity.setStoreId(staff.getStoreId());
                 heroListEntity.setStoreName(staff.getStoreName());
                 heroListEntity.setValue(staff.getHeroNumber());
@@ -206,14 +209,33 @@ public class HeroListService {
     }
 
     public List<HeroListEntity> queryMoney(HeroListQuery query) {
-
-        return null;
+        String month = query.getMonth();
+        if(month==null){
+            month = ut.currentFullMonth();
+        }
+        String day = heroListDao.getLastDay(month);
+        HeroListQuery heroListQuery = new HeroListQuery();
+        heroListQuery.setHeroDate(day);
+        heroListQuery.setType(HeroListTypeEnum.XK.getKey());
+        PageRequest page = new PageRequest(1000);
+        List<HeroListEntity> heroListList = heroListDao.find(heroListQuery,page);
+        return heroListList;
     }
 
     public List<HeroListEntity> queryActiveRate(HeroListQuery query) {
-
-        return null;
+        String month = query.getMonth();
+        if(month==null){
+            month = ut.currentFullMonth();
+        }
+        String day = heroListDao.getLastDay(month);
+        HeroListQuery heroListQuery = new HeroListQuery();
+        heroListQuery.setHeroDate(day);
+        heroListQuery.setType(HeroListTypeEnum.HYD.getKey());
+        PageRequest page = new PageRequest(1000);
+        List<HeroListEntity> heroListList = heroListDao.find(heroListQuery,page);
+        return heroListList;
     }
+
 
 }
 

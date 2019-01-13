@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * hero_list 数据库操作类
@@ -87,10 +88,14 @@ public class HeroListDao {
         return n;
     }
 
-
     public String getLastDay(String month) {
-
-        return "";
+        String sql = "select max(hero_date) day from hero_list where hero_date <= ? ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{month+"-31",});
+        if(data.size()>0){
+            Map item = (Map)data.get(0);
+            return item.get("day").toString();
+        }
+        return null;
     }
 
 }
