@@ -36,7 +36,7 @@ public class HttpHelper {
         RequestConfig requestConfig = RequestConfig.custom().
         		setSocketTimeout(2000).setConnectTimeout(2000).build();
         httpGet.setConfig(requestConfig);
-
+        httpGet.addHeader("accept", "application/vnd.XoneAPI.v2+json");
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
 
@@ -84,7 +84,7 @@ public class HttpHelper {
         		setSocketTimeout(2000).setConnectTimeout(2000).build();
         httpPost.setConfig(requestConfig);
         httpPost.addHeader("Content-Type", "application/json");
-
+        httpPost.addHeader("accept", "application/vnd.XoneAPI.v2+json");
         try {
         	StringEntity requestEntity = new StringEntity(JSON.toJSONString(data), "utf-8");
             httpPost.setEntity(requestEntity);
@@ -100,19 +100,10 @@ public class HttpHelper {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
+                System.out.println("request resultStr=" + resultStr);
 
                 JSONObject result = JSON.parseObject(resultStr);
-                if (result.getInteger("errcode") == 0) {
-                	result.remove("errcode");
-                	result.remove("errmsg");
-                    return result;
-                } else {
-                    System.out.println("request url=" + url + ",return value=");
-                    System.out.println(resultStr);
-                    int errCode = result.getInteger("errcode");
-                    String errMsg = result.getString("errmsg");
-                    throw new OApiException(errCode, errMsg);
-                }
+                return result;
             }
         } catch (IOException e) {
             System.out.println("request url=" + url + ", exception, msg=" + e.getMessage());
