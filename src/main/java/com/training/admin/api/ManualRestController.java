@@ -504,7 +504,7 @@ public class ManualRestController {
     public Object backupHeroList(HttpServletRequest request, HttpServletResponse response){
         logger.info("start backupHeroList!  time = {} ", ut.currentTime());
         String day = ut.currentDate();
-        day = "2019-01-14";
+//        day = "2019-01-14";
         String msg = heroListService.backupHeroList(day);
         logger.info("end backupHeroList!  time = {} ", ut.currentTime());
         return msg;

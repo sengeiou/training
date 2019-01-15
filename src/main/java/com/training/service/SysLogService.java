@@ -243,8 +243,10 @@ public class SysLogService {
                 wechatPayLog.setName(memberEntity.getName());
                 wechatPayLog.setPhone(memberEntity.getPhone());
                 StoreEntity storeEntity = storeDao.getById(memberEntity.getStoreId());
-                wechatPayLog.setStoreId(storeEntity.getStoreId());
-                wechatPayLog.setStoreName(storeEntity.getName());
+                if(storeEntity!=null){
+                    wechatPayLog.setStoreId(storeEntity.getStoreId());
+                    wechatPayLog.setStoreName(storeEntity.getName());
+                }
             }else{
                 wechatPayLog.setMemberId("");
                 wechatPayLog.setName("");
