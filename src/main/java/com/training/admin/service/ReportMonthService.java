@@ -281,9 +281,8 @@ public class ReportMonthService {
         String end = endDate;
         int pauseDays = 0;
         Set endSet = new HashSet();
-        String sql = " select * from member_pause where member_id = ? and status = 0 " +
-                " and  ( pause_date between ? and ?  or restore_date between ? and ? ) ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, startDate,endDate, startDate,endDate});
+        String sql = " select * from member_pause where member_id = ? and status = 0 ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{ memberId});
         for (int i = 0; i < data.size(); i++) {
             Map pause = (Map)data.get(i);
             String pause_date = pause.get("pause_date").toString();
@@ -305,6 +304,9 @@ public class ReportMonthService {
                 endDate = restore_date;
             }
             int days = ut.passDayByDate(startDate,endDate)+1;
+            if(days<0){
+                days = 0;
+            }
             pauseDays = pauseDays + days;
         }
 
@@ -327,6 +329,9 @@ public class ReportMonthService {
                 endDate = restore_date;
             }
             int days = ut.passDayByDate(startDate,endDate)+1;
+            if(days<0){
+                days = 0;
+            }
             pauseDays = pauseDays + days;
         }
         return pauseDays;

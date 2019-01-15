@@ -507,7 +507,7 @@ public class ManualRestController {
 //        day = "2019-01-14";
 //        String msg = heroListService.backupHeroList(day);
         String msg = "";
-        int days = reportMonthService.getPauseDaysByMonth("1533018601223577cbd5f2e4f415e9e46c1ab2c56a252","2018-12-01","2018-12-31");
+        int days = reportMonthService.getPauseDaysByMonth("1536205656763c435304a003f4c16b2217145a86d48f4","2018-12-01","2018-12-31");
 
         System.out.println(days);
 
