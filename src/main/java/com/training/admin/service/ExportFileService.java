@@ -21,9 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * staff 核心业务操作类
@@ -175,6 +173,37 @@ public class ExportFileService {
         List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? " +
 //                " and card_no = 10916 " +
                 " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
+
+        Set memberCount = new HashSet();
+        int cards = 0;
+        int count = 0;
+        int pause_count = 0;
+
+        double total = 0;
+
+        List members = jdbcTemplate.queryForList("select * from member_his_12 where backup_date = ? ",new Object[]{ endDate});
+        Map<String,MemberEntity> memberMap = new HashMap<>();
+        for (int i = 0; i < members.size(); i++) {
+            Map member = (Map)members.get(i);
+            String memberId = member.get("member_id").toString();
+            String coachStaffId = member.get("coach_staff_id").toString();
+            MemberEntity memberEntity = memberDao.getById(memberId);
+            memberEntity.setCoachStaffId(coachStaffId);
+            memberMap.put(memberId,memberEntity);
+        }
+
+        List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
+        Map<String,StaffEntity> staffMap = new HashMap<>();
+        for (int i = 0; i < staffs.size(); i++) {
+            Map staff = (Map)staffs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            String storeId = staff.get("store_id").toString();
+            StaffEntity staffEntity = new StaffEntity();
+            staffEntity.setStaffId(staffId);
+            staffEntity.setStoreId(storeId);
+            staffMap.put(staffId,staffEntity);
+        }
+
         List<List<String>> excelData = new ArrayList<>();
         List<String> titleRow = new ArrayList();
         titleRow.add("门店");
@@ -202,12 +231,12 @@ public class ExportFileService {
                 String start_date = ((Map) card).get("start_date").toString();
                 String end_date = ((Map) card).get("end_date").toString();
 
-                MemberEntity member = memberDao.getById(memberId);
+                MemberEntity member = memberMap.get(memberId);
                 if(member==null){
                     logger.error(" member==null ,  "+ JSON.toJSONString(card));
                     continue;
                 }
-                StaffEntity staffEntity = staffDao.getById(member.getCoachStaffId());
+                StaffEntity staffEntity = staffMap.get(member.getCoachStaffId());
                 if(staffEntity==null){
                     logger.error(" staffEntity==null ,  "+ JSON.toJSONString(member));
                     continue;
@@ -229,16 +258,25 @@ public class ExportFileService {
                 }
 
                 int pauseDays = reportMonthService.getPauseDaysByMonth(memberId,startDate,endDate);
-
-                memberCardEntity.getMoney();
-                double price =  Double.parseDouble(memberCardEntity.getMoney())/memberCardEntity.getTotal();
                 int days = memberCardEntity.getDays();
+                double price =  0;
                 if(days>0){
                     price = Double.parseDouble(memberCardEntity.getMoney())/days;
                     if(monthDays-pauseDays>0){
                         money = price*(monthDays-pauseDays);
+
+                        if(staffEntity.getStoreId().equals("43860173")){
+                            cards++;
+                            total = total + money;
+                            count = count + monthDays-pauseDays;
+                            pause_count = pause_count + pauseDays;
+                            memberCount.add(memberId);
+                        }
+
                     }
                 }
+
+
                 memberCardEntity.setTotal(days);
                 row.add(storeEntity.getName());
                 row.add(memberCardEntity.getCardNo());
@@ -250,7 +288,7 @@ public class ExportFileService {
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());
-                row.add(""+monthDays);
+                row.add(""+(monthDays-pauseDays));
                 row.add(""+pauseDays);
                 row.add(ut.getDoubleString(money));
 
@@ -259,6 +297,13 @@ public class ExportFileService {
                 logger.error(" training = "+ JSON.toJSONString(card),e);
             }
         }
+        System.out.println(" monthCard memberCount = "+memberCount.size());
+        System.out.println(" monthCard cards = "+cards);
+        System.out.println(" monthCard total = "+ut.getDoubleString(total));
+        System.out.println(" monthCard count = "+count);
+        System.out.println(" monthCard pause_count = "+pause_count);
+
+
         ExcelUtil.writeExcel(excelData,"C://product/monthCard"+System.currentTimeMillis()+".xls");
     }
 

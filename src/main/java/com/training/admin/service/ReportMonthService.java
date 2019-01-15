@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 报表计算核心业务操作类
@@ -211,39 +209,69 @@ public class ReportMonthService {
     private void calculateUsedLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
-        String today = ut.currentDate();
-        if(ut.passDayByDate(today,endDate)<0){
-            today = endDate;
+
+        List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
+        Map<String,StaffEntity> staffMap = new HashMap<>();
+        for (int i = 0; i < staffs.size(); i++) {
+            Map staff = (Map)staffs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            String storeId = staff.get("store_id").toString();
+            StaffEntity staffEntity = new StaffEntity();
+            staffEntity.setStaffId(staffId);
+            staffEntity.setStoreId(storeId);
+            staffMap.put(staffId,staffEntity);
         }
+
+//        String today = ut.currentDate();
+//        if(ut.passDayByDate(today,endDate)<0){
+//            today = endDate;
+//        }
         // 1 先查询所有会员
-        String sql = "select member_id from member where store_id = ? and created <= ? ";
-        String card_sql = "select * from member_card where member_id = ? and type in ('PM','TM') and end_date >= ? ";
-        List members = jdbcTemplate.queryForList(sql,new Object[]{financeMonthReportEntity.getStoreId(),endDate+" 23:59:59"});
+        String sql = "select member_id,coach_staff_id from member_his_12 where backup_date = ? ";
+        String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ? ";
+        List members = jdbcTemplate.queryForList(sql,new Object[]{endDate});
         // 2 再查询所有会员卡
         double money = 0;
         int count = 0;
+        Set memberCount = new HashSet();
+
+        int cardCount = 0;
+        int pause = 0;
+
         for (int i = 0; i < members.size(); i++) {
             Map member = (Map)members.get(i);
             String memberId = member.get("member_id").toString();
-            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,endDate});
+            String coachStaffId = member.get("coach_staff_id").toString();
+
+            StaffEntity staffEntity = staffMap.get(coachStaffId);
+            if(staffEntity==null||!staffEntity.getStoreId().equals(financeMonthReportEntity.getStoreId())){
+                continue;
+            }
+            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59"});
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);
                 String start = card.get("start_date").toString();
                 String end = card.get("end_date").toString();
-                int days = ut.passDayByDate(start,end)+1;
+                int days = Integer.parseInt(card.get("days").toString());
+
+                int monthDays = ut.passDayByDate(startDate,endDate)+1;
+                int monthDays2 = ut.passDayByDate(startDate,end)+1;
+                if(monthDays>monthDays2){
+                    monthDays = monthDays2;
+                }
 
                 int pauseDays = getPauseDaysByMonth(memberId,startDate,endDate);
-
-
-                days = days - pauseDays;
-
                 double price = Double.parseDouble(card.get("money").toString())/days;
-                int this_count = ut.passDayByDate(startDate,today)+1;
-                money = money + this_count*price;
-                count = count + this_count;
+                if(monthDays-pauseDays>0){
+                    money = money + price*(monthDays-pauseDays);
+                    count = count + monthDays-pauseDays;
+                    pause = pause + pauseDays;
+                    memberCount.add(memberId);
+                    cardCount++;
+                }
             }
         }
-//        logger.info(" calculateUsedLessonMoney  money  = {} , count = {}  ",money,count);
+        logger.info(" calculateUsedLessonMoney  endDate = {} , memberCount = {} , cardCount = {} , money  = {} , count = {} ,pause = {}  ",endDate,memberCount.size(),cardCount,ut.getDoubleString(money),count,pause);
         financeMonthReportEntity.setUsedDaysMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setUsedDaysCount(""+count);
     }
@@ -252,15 +280,23 @@ public class ReportMonthService {
         String start = startDate;
         String end = endDate;
         int pauseDays = 0;
+        Set endSet = new HashSet();
         String sql = " select * from member_pause where member_id = ? and status = 0 and restore_date > ?";
         List data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, start});
         for (int i = 0; i < data.size(); i++) {
             Map pause = (Map)data.get(i);
             String pause_date = pause.get("pause_date").toString();
+            String restore_date = pause.get("restore_date").toString();
+
+            if(endSet.contains(restore_date)){
+                continue;
+            }else {
+                endSet.add(restore_date);
+            }
+
             if(pause_date.indexOf(":")>0){
                 pause_date = pause_date.substring(0,10);
             }
-            String restore_date = pause.get("restore_date").toString();
             if(ut.passDayByDate(startDate,pause_date)>0){
                 startDate = pause_date;
             }
