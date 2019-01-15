@@ -73,9 +73,6 @@ public class ManualRestController {
     private ReportOnceService reportOnceService;
 
     @Autowired
-    private ReportMonthService reportMonthService;
-
-    @Autowired
     private ReportStaffService reportStaffService;
 
     @Autowired
@@ -89,6 +86,9 @@ public class ManualRestController {
 
     @Autowired
     private HeroListService heroListService;
+
+    @Autowired
+    private ReportMonthService reportMonthService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -505,7 +505,12 @@ public class ManualRestController {
         logger.info("start backupHeroList!  time = {} ", ut.currentTime());
         String day = ut.currentDate();
 //        day = "2019-01-14";
-        String msg = heroListService.backupHeroList(day);
+//        String msg = heroListService.backupHeroList(day);
+        String msg = "";
+        int days = reportMonthService.getPauseDaysByMonth("1533018601223577cbd5f2e4f415e9e46c1ab2c56a252","2018-12-01","2018-12-31");
+
+        System.out.println(days);
+
         logger.info("end backupHeroList!  time = {} ", ut.currentTime());
         return msg;
     }
