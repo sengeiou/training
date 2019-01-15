@@ -209,7 +209,8 @@ public class ReportMonthService {
     private void calculateUsedLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
-
+        String m = month.substring(5,7);
+        String tableName = "member_his_"+m;
         List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
         Map<String,StaffEntity> staffMap = new HashMap<>();
         for (int i = 0; i < staffs.size(); i++) {
@@ -227,7 +228,7 @@ public class ReportMonthService {
 //            today = endDate;
 //        }
         // 1 先查询所有会员
-        String sql = "select member_id,coach_staff_id from member_his_12 where backup_date = ? ";
+        String sql = "select member_id,coach_staff_id from "+tableName+" where backup_date = ? ";
         String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ? ";
         List members = jdbcTemplate.queryForList(sql,new Object[]{endDate});
         // 2 再查询所有会员卡
@@ -345,30 +346,50 @@ public class ReportMonthService {
     private void calculateWaitingLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
-        String today = ut.currentDate();
-        if(ut.passDayByDate(today,endDate)<0){
-            today = endDate;
+        String m = month.substring(5,7);
+        String tableName = "member_his_"+m;
+
+        List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
+        Map<String,StaffEntity> staffMap = new HashMap<>();
+        for (int i = 0; i < staffs.size(); i++) {
+            Map staff = (Map)staffs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            String storeId = staff.get("store_id").toString();
+            StaffEntity staffEntity = new StaffEntity();
+            staffEntity.setStaffId(staffId);
+            staffEntity.setStoreId(storeId);
+            staffMap.put(staffId,staffEntity);
         }
+
         // 1 先查询所有会员
-        String sql = "select member_id from member where store_id = ? and created <= ? ";
-        String card_sql = "select * from member_card where member_id = ? and type in ('PM','TM') and end_date >= ? ";
-        List members = jdbcTemplate.queryForList(sql,new Object[]{financeMonthReportEntity.getStoreId(),endDate+" 23:59:59"});
+        String sql = "select member_id,coach_staff_id from "+tableName+" where backup_date = ? ";
+        String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ?  ";
+        List members = jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
         // 2 再查询所有会员卡
         double money = 0;
         int count = 0;
         for (int i = 0; i < members.size(); i++) {
             Map member = (Map)members.get(i);
             String memberId = member.get("member_id").toString();
-            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,endDate});
+            String coachStaffId = member.get("coach_staff_id").toString();
+
+            StaffEntity staffEntity = staffMap.get(coachStaffId);
+            if(staffEntity==null||!staffEntity.getStoreId().equals(financeMonthReportEntity.getStoreId())){
+                continue;
+            }
+
+            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59"});
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);
                 String start = card.get("start_date").toString();
                 String end = card.get("end_date").toString();
-                int days = ut.passDayByDate(start,end)+1;
+                int days = Integer.parseInt(card.get("days").toString());
                 double price = Double.parseDouble(card.get("money").toString())/days;
-                int this_count = ut.passDayByDate(today,end)+1;
-                money = money + this_count*price;
-                count = count + this_count;
+                int this_count = ut.passDayByDate(endDate,end)+1;
+                if(this_count>0){
+                    money = money + this_count*price;
+                    count = count + this_count;
+                }
             }
         }
 //        logger.info(" calculateWaitingLessonMoney  money  = {} , count = {}  ",money,count);
