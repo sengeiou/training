@@ -147,7 +147,7 @@ public class KpiStaffDetailService {
         String m = query.getMonth().substring(5,7);
         String tableName = "member_his_"+m;
         List data = new ArrayList();
-        String sql = "select backup_date day , count(member_id) total from "+tableName+" where coach_staff_id = ? GROUP BY backup_date ";
+        String sql = "select backup_date day , count(member_id) total from "+tableName+" where coach_staff_id = ? and status = 1 GROUP BY backup_date ";
         List result = jdbcTemplate.queryForList(sql,new Object[]{query.getStaffId()});
 
         return result;
