@@ -364,7 +364,7 @@ public class ReportMonthService {
         // 1 先查询所有会员
         String sql = "select member_id,coach_staff_id from "+tableName+" where backup_date = ? ";
         String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ?  ";
-        List members = jdbcTemplate.queryForList(sql,new Object[]{endDate+" 23:59:59"});
+        List members = jdbcTemplate.queryForList(sql,new Object[]{endDate});
         // 2 再查询所有会员卡
         double money = 0;
         int count = 0;
