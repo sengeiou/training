@@ -203,12 +203,14 @@ public class MemberCardService {
                     memberCard.setDelayFee("0");
                 }else if(memberCard.getDelay()>0){
                     if(StringUtils.isNotEmpty(memberCard.getMoney())){
-                        int count = memberCard.getCount();
-                        int total = memberCard.getTotal();
                         double money = Double.parseDouble(memberCard.getMoney());
-                        double delayMoney = count*money/(total*10);
-                        memberCard.setDelayFee(ut.getDoubleString(delayMoney));
-                        memberCard.setCanDelay(2);
+                        if(money>0){
+                            int count = memberCard.getCount();
+                            int total = memberCard.getTotal();
+                            double delayMoney = count*money/(total*10);
+                            memberCard.setDelayFee(ut.getDoubleString(delayMoney));
+                            memberCard.setCanDelay(2);
+                        }
                     }
                 }
             }
