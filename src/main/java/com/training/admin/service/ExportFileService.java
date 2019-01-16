@@ -173,7 +173,8 @@ public class ExportFileService {
         List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? " +
 //                " and card_no = 10916 " +
                 " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
-
+        String m = endDate.substring(5,7);
+        String tableName = "member_his_"+m;
         Set memberCount = new HashSet();
         int cards = 0;
         int count = 0;
@@ -181,7 +182,7 @@ public class ExportFileService {
 
         double total = 0;
 
-        List members = jdbcTemplate.queryForList("select * from member_his_12 where backup_date = ? ",new Object[]{ endDate});
+        List members = jdbcTemplate.queryForList("select * from "+tableName+" where backup_date = ? ",new Object[]{ endDate});
         Map<String,MemberEntity> memberMap = new HashMap<>();
         for (int i = 0; i < members.size(); i++) {
             Map member = (Map)members.get(i);

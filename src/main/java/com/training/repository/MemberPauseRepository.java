@@ -90,7 +90,7 @@ public interface MemberPauseRepository {
                 " <if test=\"memberPause.restoreStaffId != null\"> restore_staff_id = #{memberPause.restoreStaffId} , </if>" +
                 " <if test=\"memberPause.status != null\"> status = #{memberPause.status} , </if>" +
                 " modified = now() " +
-            " WHERE member_id = #{memberPause.memberId} " +
+            " WHERE member_id = #{memberPause.memberId} and status = 1 " +
             "</script>")
     int update(@Param("memberPause") MemberPauseEntity memberPause);
 
