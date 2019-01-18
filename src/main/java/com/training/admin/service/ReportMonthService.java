@@ -229,7 +229,7 @@ public class ReportMonthService {
 //        }
         // 1 先查询所有会员
         String sql = "select member_id,coach_staff_id from "+tableName+" where backup_date = ? ";
-        String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ? ";
+        String card_sql = "select * from member_card where member_id = ? and type in ('PM') and end_date >= ? and created <= ? and start_date <= ? ";
         List members = jdbcTemplate.queryForList(sql,new Object[]{endDate});
         // 2 再查询所有会员卡
         double money = 0;
@@ -248,7 +248,7 @@ public class ReportMonthService {
             if(staffEntity==null||!staffEntity.getStoreId().equals(financeMonthReportEntity.getStoreId())){
                 continue;
             }
-            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59"});
+            List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59",endDate});
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);
                 String start = card.get("start_date").toString();

@@ -170,9 +170,9 @@ public class ExportFileService {
 
 
     public void monthCardExcel(String startDate, String endDate) {
-        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM' ) and end_date >= ? and created <= ? " +
+        List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM') and end_date >= ? and created <= ? and start_date <= ?  " +
 //                " and card_no = 10916 " +
-                " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59"});
+                " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59",endDate});
         String m = endDate.substring(5,7);
         String tableName = "member_his_"+m;
         Set memberCount = new HashSet();
