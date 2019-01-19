@@ -89,11 +89,11 @@ public class HeroListDao {
     }
 
     public String getLastDay(String month) {
-        String sql = "select max(hero_date) day from hero_list where hero_date <= ? ";
-        List data = jdbcTemplate.queryForList(sql,new Object[]{month+"-31",});
+        String sql = "select max(hero_date) day from hero_list where hero_date >= ? and hero_date <= ?  ";
+        List data = jdbcTemplate.queryForList(sql,new Object[]{month+"-01",month+"-31"});
         if(data.size()>0){
             Map item = (Map)data.get(0);
-            return item.get("day").toString();
+            return item.get("day")==null?null:item.get("day").toString();
         }
         return null;
     }
