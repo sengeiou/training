@@ -252,6 +252,10 @@ public class ExportFileService {
                 }
 
                 int monthDays = ut.passDayByDate(startDate,endDate)+1;
+                if(ut.passDayByDate(startDate,start_date)>0){
+                    monthDays = ut.passDayByDate(start_date,endDate)+1;
+                }
+
                 double money = 0;
                 int monthDays2 = ut.passDayByDate(startDate,end_date)+1;
                 if(monthDays>monthDays2){
