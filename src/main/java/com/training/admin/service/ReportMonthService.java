@@ -251,11 +251,15 @@ public class ReportMonthService {
             List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59",endDate});
             for (int j = 0; j < cards.size(); j++) {
                 Map card = (Map)cards.get(j);
-                String start = card.get("start_date").toString();
+                String start_date = card.get("start_date").toString();
                 String end = card.get("end_date").toString();
                 int days = Integer.parseInt(card.get("days").toString());
 
                 int monthDays = ut.passDayByDate(startDate,endDate)+1;
+                if(ut.passDayByDate(startDate,start_date)>0){
+                    monthDays = ut.passDayByDate(start_date,endDate)+1;
+                }
+
                 int monthDays2 = ut.passDayByDate(startDate,end)+1;
                 if(monthDays>monthDays2){
                     monthDays = monthDays2;
