@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * measurement 实体类
- * Created by huai23 on 2019-01-22 18:13:44.
+ * Created by huai23 on 2019-01-22 21:54:18.
  */ 
 @Data
 public class MeasurementEntity {
@@ -13,6 +13,8 @@ public class MeasurementEntity {
     private Long pkId;
 
     private String measurementId;
+
+    private String bodyId;
 
     private String memberId;
 

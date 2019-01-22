@@ -8,13 +8,14 @@ import java.util.List;
 
 /**
  * measurement 数据库操作类
- * Created by huai23 on 2019-01-22 18:13:44.
+ * Created by huai23 on 2019-01-22 21:54:18.
  */ 
 @Mapper
 public interface MeasurementRepository {
 
     @Insert("<script> INSERT INTO measurement ( " +
                 " <if test=\"measurement.measurementId != null\"> measurement_id, </if>" +
+                " <if test=\"measurement.bodyId != null\"> body_id, </if>" +
                 " <if test=\"measurement.memberId != null\"> member_id, </if>" +
                 " <if test=\"measurement.storeId != null\"> store_id, </if>" +
                 " <if test=\"measurement.deviceSn != null\"> device_sn, </if>" +
@@ -36,6 +37,7 @@ public interface MeasurementRepository {
                 " modified " +
             " ) VALUES ( " +
                 " <if test=\"measurement.measurementId != null\"> #{measurement.measurementId}, </if>" +
+                " <if test=\"measurement.bodyId != null\"> #{measurement.bodyId}, </if>" +
                 " <if test=\"measurement.memberId != null\"> #{measurement.memberId}, </if>" +
                 " <if test=\"measurement.storeId != null\"> #{measurement.storeId}, </if>" +
                 " <if test=\"measurement.deviceSn != null\"> #{measurement.deviceSn}, </if>" +
@@ -59,10 +61,11 @@ public interface MeasurementRepository {
             "</script>")
     int add(@Param("measurement") MeasurementEntity measurement);
 
-    @Select("<script> SELECT pk_id,measurement_id,member_id,store_id,device_sn,gender,age,height,weight,phone,outline,measurement,composition,posture,girth,feature,measure_date,start_time,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,measurement_id,body_id,member_id,store_id,device_sn,gender,age,height,weight,phone,outline,measurement,composition,posture,girth,feature,measure_date,start_time,REMARK,created,modified " +
             " FROM measurement " +
             " WHERE 1 = 1 " +
             " <if test=\"query.measurementId != null\"> AND measurement_id = #{query.measurementId} </if>" +
+            " <if test=\"query.bodyId != null\"> AND body_id = #{query.bodyId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.deviceSn != null\"> AND device_sn = #{query.deviceSn} </if>" +
@@ -87,6 +90,7 @@ public interface MeasurementRepository {
     @Select("<script> SELECT COUNT(1) FROM measurement " +
             " WHERE 1 = 1 " +
             " <if test=\"query.measurementId != null\"> AND measurement_id = #{query.measurementId} </if>" +
+            " <if test=\"query.bodyId != null\"> AND body_id = #{query.bodyId} </if>" +
             " <if test=\"query.memberId != null\"> AND member_id = #{query.memberId} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.deviceSn != null\"> AND device_sn = #{query.deviceSn} </if>" +
@@ -107,7 +111,7 @@ public interface MeasurementRepository {
             "</script>")
     Long count(@Param("query") MeasurementQuery measurement);
 
-    @Select("<script> SELECT pk_id,measurement_id,member_id,store_id,device_sn,gender,age,height,weight,phone,outline,measurement,composition,posture,girth,feature,measure_date,start_time,REMARK,created,modified " +
+    @Select("<script> SELECT pk_id,measurement_id,body_id,member_id,store_id,device_sn,gender,age,height,weight,phone,outline,measurement,composition,posture,girth,feature,measure_date,start_time,REMARK,created,modified " +
             " FROM measurement " +
             " WHERE measurement_id = #{id} " +
             "</script>")
@@ -115,6 +119,7 @@ public interface MeasurementRepository {
 
     @Update("<script> UPDATE measurement SET " +
                 " <if test=\"measurement.measurementId != null\"> measurement_id = #{measurement.measurementId} , </if>" +
+                " <if test=\"measurement.bodyId != null\"> body_id = #{measurement.bodyId} , </if>" +
                 " <if test=\"measurement.memberId != null\"> member_id = #{measurement.memberId} , </if>" +
                 " <if test=\"measurement.storeId != null\"> store_id = #{measurement.storeId} , </if>" +
                 " <if test=\"measurement.deviceSn != null\"> device_sn = #{measurement.deviceSn} , </if>" +

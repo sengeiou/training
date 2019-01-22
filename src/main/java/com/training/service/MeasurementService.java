@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * measurement 核心业务操作类
- * Created by huai23 on 2019-01-22 18:13:44.
+ * Created by huai23 on 2019-01-22 21:54:18.
  */ 
 @Service
 public class MeasurementService {
@@ -29,7 +29,7 @@ public class MeasurementService {
     /**
      * 新增实体
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public ResponseEntity<String> add(MeasurementEntity measurement){
         User user = RequestContextHelper.getUser();
@@ -44,7 +44,7 @@ public class MeasurementService {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public Page<MeasurementEntity> find(MeasurementQuery query , PageRequest page){
         List<MeasurementEntity> measurementList = measurementDao.find(query,page);
@@ -60,7 +60,7 @@ public class MeasurementService {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public Long count(MeasurementQuery query){
         Long count = measurementDao.count(query);
@@ -70,7 +70,7 @@ public class MeasurementService {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public MeasurementEntity getById(String id){
         MeasurementEntity measurementDB = measurementDao.getById(id);
@@ -80,7 +80,7 @@ public class MeasurementService {
     /**
      * 根据实体更新
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public  ResponseEntity<String> update(MeasurementEntity measurement){
         int n = measurementDao.update(measurement);
@@ -93,7 +93,7 @@ public class MeasurementService {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public ResponseEntity<String> delete(String id){
         int n = measurementDao.delete(id);

@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * measurement API控制器
- * Created by huai23 on 2019-01-22 18:13:44.
+ * Created by huai23 on 2019-01-22 21:54:18.
  */ 
 @RestController
 @RequestMapping("/api/measurement")
@@ -33,7 +33,7 @@ public class MeasurementRestController {
     /**
      * 新增实体
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody MeasurementEntity measurement,HttpServletRequest request, HttpServletResponse response){
@@ -45,7 +45,7 @@ public class MeasurementRestController {
      * 分页查询
      * @param query
      * @param pageRequest
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute MeasurementQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
@@ -56,7 +56,7 @@ public class MeasurementRestController {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "count", method = RequestMethod.GET)
     public ResponseEntity<String> count(@ModelAttribute MeasurementQuery query,HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,7 @@ public class MeasurementRestController {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
@@ -83,7 +83,7 @@ public class MeasurementRestController {
     /**
      * 根据实体更新
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody MeasurementEntity measurement,HttpServletRequest request, HttpServletResponse response){
@@ -94,7 +94,7 @@ public class MeasurementRestController {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){

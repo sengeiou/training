@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * measurement 数据库操作类
- * Created by huai23 on 2019-01-22 18:13:44.
+ * Created by huai23 on 2019-01-22 21:54:18.
  */ 
 @Service
 public class MeasurementDao {
@@ -25,7 +25,7 @@ public class MeasurementDao {
     /**
      * 新增实体
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public int add(MeasurementEntity measurement){
         int n = measurementRepository.add(measurement);
@@ -36,7 +36,7 @@ public class MeasurementDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public List<MeasurementEntity> find(MeasurementQuery query , PageRequest page){
         List<MeasurementEntity> measurementList = measurementRepository.find(query,page);
@@ -46,7 +46,7 @@ public class MeasurementDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public Long count(MeasurementQuery query){
         Long n = measurementRepository.count(query);
@@ -56,7 +56,7 @@ public class MeasurementDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public MeasurementEntity getById(String id){
         MeasurementEntity measurementDB = measurementRepository.getById(id);
@@ -66,7 +66,7 @@ public class MeasurementDao {
     /**
      * 根据实体更新
      * @param measurement
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public int update(MeasurementEntity measurement){
         int n = measurementRepository.update(measurement);
@@ -76,7 +76,7 @@ public class MeasurementDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2019-01-22 18:13:44.
+     * Created by huai23 on 2019-01-22 21:54:18.
      */ 
     public int delete(String id){
         int n = measurementRepository.delete(id);
