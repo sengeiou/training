@@ -3,10 +3,8 @@ package com.training.admin.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.training.dao.MemberCardDao;
-import com.training.dao.MemberDao;
-import com.training.dao.StaffDao;
-import com.training.dao.StoreDao;
+import com.training.dao.*;
+import com.training.entity.MeasurementEntity;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.HttpHelper;
@@ -59,6 +57,9 @@ public class MeasureService {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MeasurementDao measurementDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -122,8 +123,13 @@ public class MeasureService {
 
                     String phone = measurement.getString("phone");
                     System.out.println("id:"+id+" , phone="+phone);
-                    String sql = "insert into measurement (measurement_id,device_sn,gender,age,height,weight,phone,outline,measurement,created,modified) values (?,?,?,?,?,?,?,?,?,now(),now()) ";
-                    jdbcTemplate.update(sql,new Object[]{id,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString()});
+
+                    MeasurementEntity measurementEntity = measurementDao.getById(id);
+                    if(measurementEntity==null){
+                        String sql = "insert into measurement (measurement_id,device_sn,gender,age,height,weight,phone,outline,measurement,created,modified) values (?,?,?,?,?,?,?,?,?,now(),now()) ";
+                        jdbcTemplate.update(sql,new Object[]{id,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString()});
+                    }
+                    queryDetail(id);
                 }
             }
         } catch (IOException e) {
