@@ -56,6 +56,7 @@ public class MemberBodyQuery {
 
     private Date modified;
 
+    private String measurementId;
 
 }
 

@@ -56,6 +56,7 @@ public class MemberBodyEntity {
 
     private Date modified;
 
+    private String measurementId;
 
 }
 
