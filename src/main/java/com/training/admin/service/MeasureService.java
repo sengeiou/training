@@ -5,9 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.training.dao.*;
 import com.training.entity.MeasurementEntity;
+import com.training.entity.MemberBodyEntity;
+import com.training.entity.MemberEntity;
+import com.training.entity.StaffEntity;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.HttpHelper;
+import com.training.util.IDUtils;
 import com.training.util.OApiException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -57,6 +61,9 @@ public class MeasureService {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberBodyDao memberBodyDao;
 
     @Autowired
     private MeasurementDao measurementDao;
@@ -120,14 +127,45 @@ public class MeasureService {
                     String height = measurement.getString("height");
                     String weight = measurement.getString("weight");
                     String outline = measurement.getString("outline");
+                    String start_time = measurement.getString("start_time");
+                    String measure_date = start_time.substring(0,7);
+
+
+                    JSONObject outlineObj = JSON.parseObject(outline);
+                    String bmi = outlineObj.getString("bmi");
 
                     String phone = measurement.getString("phone");
                     System.out.println("id:"+id+" , phone="+phone);
+                    MemberEntity memberEntity = memberDao.getByPhone(phone);
 
                     MeasurementEntity measurementEntity = measurementDao.getById(id);
                     if(measurementEntity==null){
-                        String sql = "insert into measurement (measurement_id,device_sn,gender,age,height,weight,phone,outline,measurement,created,modified) values (?,?,?,?,?,?,?,?,?,now(),now()) ";
-                        jdbcTemplate.update(sql,new Object[]{id,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString()});
+                        String bodyId = "";
+                        String memberId = "";
+                        if(memberEntity!=null){
+                            memberId = memberEntity.getMemberId();
+                            bodyId = IDUtils.getId();
+                            String coachId = "";
+                            StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                            if(staffEntity!=null){
+                                MemberEntity staff = memberDao.getByOpenId(staffEntity.getOpenId());
+                                if(staff!=null){
+                                    coachId = staff.getMemberId();
+                                }
+                            }
+                            MemberBodyEntity memberBody = new MemberBodyEntity();
+                            memberBody.setBodyId(bodyId);
+                            memberBody.setCoachId(coachId);
+                            memberBody.setMemberId(memberEntity.getMemberId());
+                            memberBody.setBmi(bmi);
+                            memberBody.setHeight(height);
+                            memberBody.setWeight(weight);
+                            memberBody.setMeasurementId(id);
+                            int n = memberBodyDao.add(memberBody);
+                        }
+
+                        String sql = "insert into measurement (measurement_id,body_id,member_id,device_sn,gender,age,height,weight,phone,outline,measurement,measure_date,start_time,created,modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),now()) ";
+                        jdbcTemplate.update(sql,new Object[]{id,bodyId,memberId,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString(),measure_date,start_time});
                     }
                     queryDetail(id);
                 }
