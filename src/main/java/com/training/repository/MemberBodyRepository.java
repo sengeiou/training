@@ -32,6 +32,7 @@ public interface MemberBodyRepository {
                 " <if test=\"memberBody.imageRight != null\"> image_right, </if>" +
                 " <if test=\"memberBody.imageReport != null\"> image_report, </if>" +
                 " <if test=\"memberBody.feature != null\"> feature, </if>" +
+                " <if test=\"memberBody.measurementId != null\"> measurement_id, </if>" +
                 " <if test=\"memberBody.remark != null\"> remark, </if>" +
                 " <if test=\"memberBody.status != null\"> status, </if>" +
                 " created , " +
@@ -55,6 +56,7 @@ public interface MemberBodyRepository {
                 " <if test=\"memberBody.imageRight != null\"> #{memberBody.imageRight}, </if>" +
                 " <if test=\"memberBody.imageReport != null\"> #{memberBody.imageReport}, </if>" +
                 " <if test=\"memberBody.feature != null\"> #{memberBody.feature}, </if>" +
+                " <if test=\"memberBody.measurementId != null\"> #{memberBody.measurementId}, </if>" +
                 " <if test=\"memberBody.remark != null\"> #{memberBody.remark}, </if>" +
                 " <if test=\"memberBody.status != null\"> #{memberBody.status}, </if>" +
                 " now() , " +
@@ -63,7 +65,7 @@ public interface MemberBodyRepository {
             "</script>")
     int add(@Param("memberBody") MemberBodyEntity memberBody);
 
-    @Select("<script> SELECT pk_id,body_id,member_id,coach_id,height,weight,bmi,fat,arm_left,arm_right,waist,hip,leg_left,leg_right,image_face,image_left,image_right,image_report,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,body_id,member_id,coach_id,height,weight,bmi,fat,arm_left,arm_right,waist,hip,leg_left,leg_right,image_face,image_left,image_right,image_report,feature,measurement_id,remark,status,created,modified " +
             " FROM member_body " +
             " WHERE 1 = 1 " +
             " <if test=\"query.bodyId != null\"> AND body_id = #{query.bodyId} </if>" +
@@ -84,6 +86,7 @@ public interface MemberBodyRepository {
             " <if test=\"query.imageRight != null\"> AND image_right = #{query.imageRight} </if>" +
             " <if test=\"query.imageReport != null\"> AND image_report = #{query.imageReport} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.measurementId != null\"> AND measurement_id = #{query.measurementId} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
@@ -110,12 +113,13 @@ public interface MemberBodyRepository {
             " <if test=\"query.imageRight != null\"> AND image_right = #{query.imageRight} </if>" +
             " <if test=\"query.imageReport != null\"> AND image_report = #{query.imageReport} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
+            " <if test=\"query.measurementId != null\"> AND measurement_id = #{query.measurementId} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
             "</script>")
     Long count(@Param("query") MemberBodyQuery memberBody);
 
-    @Select("<script> SELECT pk_id,body_id,member_id,coach_id,height,weight,bmi,fat,arm_left,arm_right,waist,hip,leg_left,leg_right,image_face,image_left,image_right,image_report,feature,remark,status,created,modified " +
+    @Select("<script> SELECT pk_id,body_id,member_id,coach_id,height,weight,bmi,fat,arm_left,arm_right,waist,hip,leg_left,leg_right,image_face,image_left,image_right,image_report,feature,measurement_id,remark,status,created,modified " +
             " FROM member_body " +
             " WHERE body_id = #{id} " +
             "</script>")
@@ -140,6 +144,7 @@ public interface MemberBodyRepository {
                 " <if test=\"memberBody.imageRight != null\"> image_right = #{memberBody.imageRight} , </if>" +
                 " <if test=\"memberBody.imageReport != null\"> image_report = #{memberBody.imageReport} , </if>" +
                 " <if test=\"memberBody.feature != null\"> feature = #{memberBody.feature} , </if>" +
+                " <if test=\"memberBody.measurementId != null\"> measurement_id = #{memberBody.measurementId} , </if>" +
                 " <if test=\"memberBody.remark != null\"> remark = #{memberBody.remark} , </if>" +
                 " <if test=\"memberBody.status != null\"> status = #{memberBody.status} , </if>" +
                 " modified = now() " +
