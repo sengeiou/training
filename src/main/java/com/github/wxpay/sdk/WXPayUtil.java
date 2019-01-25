@@ -1,30 +1,32 @@
 package com.github.wxpay.sdk;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.*;
-import java.security.MessageDigest;
-
+import com.github.wxpay.sdk.WXPayConstants.SignType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import com.github.wxpay.sdk.WXPayConstants.SignType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.*;
 
 
 public class WXPayUtil {
+
+    private static final String SYMBOLS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private static final Random RANDOM = new SecureRandom();
 
     /**
      * XML格式字符串转换为Map
@@ -36,8 +38,7 @@ public class WXPayUtil {
     public static Map<String, String> xmlToMap(String strXML) throws Exception {
         try {
             Map<String, String> data = new HashMap<String, String>();
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            DocumentBuilder documentBuilder = WXPayXmlUtil.newDocumentBuilder();
             InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
             org.w3c.dom.Document doc = documentBuilder.parse(stream);
             doc.getDocumentElement().normalize();
@@ -70,9 +71,7 @@ public class WXPayUtil {
      * @throws Exception
      */
     public static String mapToXml(Map<String, String> data) throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder= documentBuilderFactory.newDocumentBuilder();
-        org.w3c.dom.Document document = documentBuilder.newDocument();
+        org.w3c.dom.Document document = WXPayXmlUtil.newDocument();
         org.w3c.dom.Element root = document.createElement("xml");
         document.appendChild(root);
         for (String key: data.keySet()) {
@@ -207,39 +206,15 @@ public class WXPayUtil {
                 sb.append(k).append("=").append(data.get(k).trim()).append("&");
         }
         sb.append("key=").append(key);
-        String str = sb.toString();
         if (SignType.MD5.equals(signType)) {
-            return MD5(str).toUpperCase();
+            return MD5(sb.toString()).toUpperCase();
         }
         else if (SignType.HMACSHA256.equals(signType)) {
-            return HMACSHA256(str, key);
+            return HMACSHA256(sb.toString(), key);
         }
         else {
             throw new Exception(String.format("Invalid sign_type: %s", signType));
         }
-    }
-
-    /**
-     * 生成签名. 注意，若含有sign_type字段，必须和signType参数保持一致。
-     *
-     * @param data 待签名数据
-     * @return 签名
-     */
-    public static String generateSignature(final Map<String, String> data) throws Exception {
-        Set<String> keySet = data.keySet();
-        String[] keyArray = keySet.toArray(new String[keySet.size()]);
-        Arrays.sort(keyArray);
-        StringBuilder sb = new StringBuilder();
-        for (String k : keyArray) {
-            if (k.equals(WXPayConstants.FIELD_SIGN)) {
-                continue;
-            }
-            if (data.get(k).trim().length() > 0) // 参数值为空，则不参与签名
-                sb.append(k).append("=").append(data.get(k).trim()).append("&");
-        }
-        String str = sb.toString();
-        System.out.println(str);
-        return MD5(str).toUpperCase();
     }
 
 
@@ -249,7 +224,11 @@ public class WXPayUtil {
      * @return String 随机字符串
      */
     public static String generateNonceStr() {
-        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
+        char[] nonceChars = new char[32];
+        for (int index = 0; index < nonceChars.length; ++index) {
+            nonceChars[index] = SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()));
+        }
+        return new String(nonceChars);
     }
 
 
@@ -311,14 +290,6 @@ public class WXPayUtil {
      */
     public static long getCurrentTimestampMs() {
         return System.currentTimeMillis();
-    }
-
-    /**
-     * 生成 uuid， 即用来标识一笔单，也用做 nonce_str
-     * @return
-     */
-    public static String generateUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 32);
     }
 
 }

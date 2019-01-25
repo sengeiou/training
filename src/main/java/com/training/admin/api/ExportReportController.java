@@ -40,8 +40,8 @@ public class ExportReportController {
     @GetMapping("trainingExcel")
     public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" trainingExcel   ");
-        String startDate = "2018-11-01";
-        String endDate = "2018-11-30";
+        String startDate = "2018-12-01";
+        String endDate = "2018-12-31";
         exportFileService.trainingExcel(startDate,endDate);
         return "trainingExcel执行成功";
     }

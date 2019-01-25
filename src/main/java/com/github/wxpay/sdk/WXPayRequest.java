@@ -24,6 +24,8 @@ import java.net.UnknownHostException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
+import static com.github.wxpay.sdk.WXPayConstants.USER_AGENT;
+
 public class WXPayRequest {
     private WXPayConfig config;
     public WXPayRequest(WXPayConfig config) throws Exception{
@@ -100,7 +102,7 @@ public class WXPayRequest {
 
         StringEntity postEntity = new StringEntity(data, "UTF-8");
         httpPost.addHeader("Content-Type", "text/xml");
-        httpPost.addHeader("User-Agent", "wxpay sdk java v1.0 " + config.getMchID());  // TODO: 很重要，用来检测 sdk 的使用情况，要不要加上商户信息？
+        httpPost.addHeader("User-Agent", USER_AGENT + " " + config.getMchID());
         httpPost.setEntity(postEntity);
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -215,7 +217,6 @@ public class WXPayRequest {
      */
     public String requestWithoutCert(String urlSuffix, String uuid, String data, boolean autoReport) throws Exception {
         return this.request(urlSuffix, uuid, data, config.getHttpConnectTimeoutMs(), config.getHttpReadTimeoutMs(), false, autoReport);
-        //return requestWithoutCert(urlSuffix, uuid, data, config.getHttpConnectTimeoutMs(), config.getHttpReadTimeoutMs(), autoReport);
     }
 
     /**
@@ -229,44 +230,6 @@ public class WXPayRequest {
      */
     public String requestWithoutCert(String urlSuffix, String uuid, String data, int connectTimeoutMs, int readTimeoutMs,  boolean autoReport) throws Exception {
         return this.request(urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, false, autoReport);
-
-        /*
-        String result;
-        Exception exception;
-        boolean shouldRetry = false;
-
-        boolean useCert = false;
-        try {
-            result = requestOnce(domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert);
-            return result;
-        }
-        catch (UnknownHostException ex) {  // dns 解析错误，或域名不存在
-            exception = ex;
-            WXPayUtil.getLogger().warn("UnknownHostException for domain {}, try to use {}", domain, this.primaryDomain);
-            shouldRetry = true;
-        }
-        catch (ConnectTimeoutException ex) {
-            exception = ex;
-            WXPayUtil.getLogger().warn("connect timeout happened for domain {}, try to use {}", domain, this.primaryDomain);
-            shouldRetry = true;
-        }
-        catch (SocketTimeoutException ex) {
-            exception = ex;
-            shouldRetry = false;
-        }
-        catch (Exception ex) {
-            exception = ex;
-            shouldRetry = false;
-        }
-
-        if (shouldRetry) {
-            result = requestOnce(this.primaryDomain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert);
-            return result;
-        }
-        else {
-            throw exception;
-        }
-        */
     }
 
     /**
@@ -278,7 +241,6 @@ public class WXPayRequest {
      */
     public String requestWithCert(String urlSuffix, String uuid, String data, boolean autoReport) throws Exception {
         return this.request(urlSuffix, uuid, data, config.getHttpConnectTimeoutMs(), config.getHttpReadTimeoutMs(), true, autoReport);
-        //return requestWithCert(urlSuffix, uuid, data, config.getHttpConnectTimeoutMs(), config.getHttpReadTimeoutMs(), autoReport);
     }
 
     /**
@@ -292,38 +254,5 @@ public class WXPayRequest {
      */
     public String requestWithCert(String urlSuffix, String uuid, String data, int connectTimeoutMs, int readTimeoutMs, boolean autoReport) throws Exception {
         return this.request(urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, true, autoReport);
-
-        /*
-        String result;
-        Exception exception;
-        boolean shouldRetry = false;
-
-        boolean useCert = true;
-        try {
-            result = requestOnce(domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert);
-            return result;
-        }
-        catch (ConnectTimeoutException ex) {
-            exception = ex;
-            WXPayUtil.getLogger().warn(String.format("connect timeout happened for domain {}, try to use {}", domain, this.primaryDomain));
-            shouldRetry = true;
-        }
-        catch (SocketTimeoutException ex) {
-            exception = ex;
-            shouldRetry = false;
-        }
-        catch (Exception ex) {
-            exception = ex;
-            shouldRetry = false;
-        }
-
-        if (shouldRetry && this.primaryDomain != null) {
-            result = requestOnce(this.primaryDomain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert, autoReport);
-            return result;
-        }
-        else {
-            throw exception;
-        }
-        */
     }
 }
