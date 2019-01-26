@@ -25,11 +25,8 @@ public class MeasureRestController {
     @GetMapping("query")
     public Object query(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" MeasureRestController  query     ");
-        measureService.query(1);
-        measureService.queryDetail("13379139");
+        measureService.queryAll();
         return "MeasureRestController  query执行成功";
     }
-
-
 
 }

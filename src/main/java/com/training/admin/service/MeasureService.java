@@ -3,13 +3,9 @@ package com.training.admin.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.training.common.PageRequest;
 import com.training.dao.*;
-import com.training.entity.MeasurementEntity;
-import com.training.entity.MemberBodyEntity;
-import com.training.entity.MemberEntity;
-import com.training.entity.StaffEntity;
-import com.training.service.MemberService;
-import com.training.service.SysLogService;
+import com.training.entity.*;
 import com.training.util.HttpHelper;
 import com.training.util.IDUtils;
 import com.training.util.OApiException;
@@ -27,9 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,11 +40,8 @@ public class MeasureService {
     String app_id = "537881128711959";
     String app_secret = "MWJkZTkyYTIyNzI0YTBmNjBkNTk4NTExN2RkZmQ1OThkOTA3MDcxZQ";
     String token_url = "https://open.youjiuhealth.com/api/session";
-
-    String device_sn = "1106131816684";
-    String query_url = "https://open.youjiuhealth.com/api/reports?device_sn="+device_sn;
+    String query_url = "https://open.youjiuhealth.com/api/reports";
     String detail_url = "https://open.youjiuhealth.com/api/reports/";
-    private String token;
 
     @Autowired
     private StoreDao storeDao;
@@ -60,60 +53,79 @@ public class MeasureService {
     private StaffDao staffDao;
 
     @Autowired
-    private MemberService memberService;
-
-    @Autowired
     private MemberBodyDao memberBodyDao;
 
     @Autowired
     private MeasurementDao measurementDao;
 
     @Autowired
+    private DeviceDao deviceDao;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public String getToken() {
-        if(StringUtils.isNotEmpty(token)){
-            return token;
-        }else{
-            Map param = new HashMap();
-            param.put("app_id",app_id);
-            param.put("app_secret",app_secret);
-            JSONObject response = null;
-            try {
-                response = HttpHelper.httpPost(token_url,param);
-            } catch (OApiException e) {
-                e.printStackTrace();
-            }
-            if (response.containsKey("access_token")) {
-                token = response.getString("access_token");
-            } else {
-
-            }
+        String token = "";
+        Map param = new HashMap();
+        param.put("app_id",app_id);
+        param.put("app_secret",app_secret);
+        JSONObject response = null;
+        try {
+            response = HttpHelper.httpPost(token_url,param);
+        } catch (OApiException e) {
+            e.printStackTrace();
+        }
+        if (response.containsKey("access_token")) {
+            token = response.getString("access_token");
         }
         return token;
     }
 
-    public void query(int page) {
-        HttpGet httpGet = new HttpGet(query_url);
+    public void queryAll() {
+        String token = getToken();
+        int page = 1;
+        DeviceQuery query = new DeviceQuery();
+        PageRequest pageRequest = new PageRequest(1000);
+        List<DeviceEntity> deviceEntities = deviceDao.find(query,pageRequest);
+        for (DeviceEntity deviceEntity:deviceEntities){
+            String device_sn = deviceEntity.getDeviceSn();
+            int totalPage = query(token,device_sn,page);
+            if(totalPage>1){
+                for (int i = 2; i <= totalPage; i++) {
+                    query(token,device_sn,i);
+                }
+            }
+        }
+    }
+
+    public int query(String token,String deviceSn,int page) {
+        logger.info(" query , deviceSn = {} , page = {} ",deviceSn,page);
+        int totalPage = 0;
+        HttpGet httpGet = new HttpGet(query_url+"?device_sn="+deviceSn+"&page="+page);
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         RequestConfig requestConfig = RequestConfig.custom().
                 setSocketTimeout(2000).setConnectTimeout(2000).build();
         httpGet.setConfig(requestConfig);
         httpGet.addHeader("accept", "application/vnd.XoneAPI.v2+json");
-        httpGet.addHeader("Authorization","Bearer "+getToken());
+        httpGet.addHeader("Authorization","Bearer "+token);
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
             if (response.getStatusLine().getStatusCode() != 200) {
                 System.out.println("request url failed, http code=" + response.getStatusLine().getStatusCode()
-                        + ", url=" + query_url+"&page="+page);
-                return;
+                        + ", url=" + query_url+"?device_sn="+deviceSn+"&page="+page);
+                return totalPage;
             }
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 String resultStr = EntityUtils.toString(entity, "utf-8");
                 JSONObject result = JSON.parseObject(resultStr);
                 System.out.println("meta:"+result.getString("meta"));
+                JSONObject meta = JSON.parseObject(result.getString("meta"));
+                System.out.println("pagination:"+meta.getString("pagination"));
+                JSONObject pagination = meta.getJSONObject("pagination");
+                totalPage = Integer.parseInt(pagination.getString("total_pages"));
+
                 JSONArray list = JSON.parseArray(result.getString("data"));
                 for (int i = 0; i < list.size(); i++) {
                     JSONObject item = list.getJSONObject(i);
@@ -147,7 +159,7 @@ public class MeasureService {
                             bodyId = IDUtils.getId();
                             String coachId = "";
                             StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
-                            if(staffEntity!=null){
+                            if(staffEntity!=null&&StringUtils.isNotEmpty(staffEntity.getOpenId())){
                                 MemberEntity staff = memberDao.getByOpenId(staffEntity.getOpenId());
                                 if(staff!=null){
                                     coachId = staff.getMemberId();
@@ -166,8 +178,11 @@ public class MeasureService {
 
                         String sql = "insert into measurement (measurement_id,body_id,member_id,device_sn,gender,age,height,weight,phone,outline,measurement,measure_date,start_time,created,modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),now()) ";
                         jdbcTemplate.update(sql,new Object[]{id,bodyId,memberId,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString(),measure_date,start_time});
+                        queryDetail(token,id);
+                    }else if(StringUtils.isEmpty(measurementEntity.getComposition())){
+                        queryDetail(token,id);
                     }
-                    queryDetail(id);
+
                 }
             }
         } catch (IOException e) {
@@ -180,10 +195,11 @@ public class MeasureService {
                 e.printStackTrace();
             }
         }
+        return totalPage;
     }
 
 
-    public void queryDetail(String id) {
+    public void queryDetail(String token,String id) {
         HttpGet httpGet = new HttpGet(detail_url+id);
         CloseableHttpResponse response = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -191,7 +207,7 @@ public class MeasureService {
                 setSocketTimeout(2000).setConnectTimeout(2000).build();
         httpGet.setConfig(requestConfig);
         httpGet.addHeader("accept", "application/vnd.XoneAPI.v2+json");
-        httpGet.addHeader("Authorization","Bearer "+getToken());
+        httpGet.addHeader("Authorization","Bearer "+token);
         try {
             response = httpClient.execute(httpGet, new BasicHttpContext());
             if (response.getStatusLine().getStatusCode() != 200) {
