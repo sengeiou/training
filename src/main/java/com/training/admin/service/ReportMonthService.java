@@ -95,6 +95,9 @@ public class ReportMonthService {
     private void calculateBackLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         double money = 0;
         int count = 0;
         ContractQuery query = new ContractQuery();
@@ -147,6 +150,9 @@ public class ReportMonthService {
     private void calculateInAndOutLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         double in_money = 0;
         int in_count = 0;
         double out_money = 0;
@@ -209,6 +215,9 @@ public class ReportMonthService {
     private void calculateUsedLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         String m = month.substring(5,7);
         String tableName = "member_his_"+m;
         List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
@@ -283,7 +292,11 @@ public class ReportMonthService {
 
     public int getPauseDaysByMonth(String memberId, String startDate, String endDate) {
         String start = startDate;
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         String end = endDate;
+
         int pauseDays = 0;
         Set endSet = new HashSet();
         String sql = " select * from member_pause where member_id = ? and status = 0 ";
@@ -350,6 +363,9 @@ public class ReportMonthService {
     private void calculateWaitingLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         String m = month.substring(5,7);
         String tableName = "member_his_"+m;
 
@@ -409,6 +425,9 @@ public class ReportMonthService {
     private void calculateSaleMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
         String endDate = month+"-31";
+        if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
+            endDate = ut.currentDate(-1);
+        }
         String sql = "select * from contract where card_type in ('PM','TM') and store_id = ? and sign_date >= ? and sign_date <= ? ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{financeMonthReportEntity.getStoreId(),startDate,endDate});
         double money = 0;

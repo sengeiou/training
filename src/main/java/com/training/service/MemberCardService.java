@@ -164,6 +164,12 @@ public class MemberCardService {
         memberCard.setCardName(CardTypeEnum.getEnumByKey(memberCardEntity.getType()).getDesc());
         memberCard.setMemberName(memberEntity.getName());
         memberCard.setPhone(memberEntity.getPhone());
+
+        StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+        if(staffEntity!=null){
+            memberCard.setCoachName(staffEntity.getCustname());
+        }
+
         StoreEntity storeEntity = storeDao.getById(memberCard.getStoreId());
         if(storeEntity!=null){
             memberCard.setStoreName(storeEntity.getName());
@@ -220,7 +226,7 @@ public class MemberCardService {
         if(StringUtils.isNotEmpty(memberCardEntity.getContractId())){
             List<ContractEntity> contractEntitieList = contractDao.getByContractId(memberCardEntity.getContractId());
             if(contractEntitieList.size()>0){
-                memberCard.setCoachName(contractEntitieList.get(0).getCoach());
+//                memberCard.setCoachName(contractEntitieList.get(0).getCoach());
                 memberCard.setSaleStaffName(contractEntitieList.get(0).getSalesman());
             }else{
                 memberCard.setCoachName(" ");
