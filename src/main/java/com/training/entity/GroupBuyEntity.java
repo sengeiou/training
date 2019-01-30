@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * group_buy 实体类
- * Created by huai23 on 2019-01-30 22:53:15.
+ * Created by huai23 on 2019-01-30 23:03:41.
  */ 
 @Data
 public class GroupBuyEntity {
@@ -19,6 +19,8 @@ public class GroupBuyEntity {
     private String image;
 
     private String shareTitle;
+
+    private String shareDesc;
 
     private String shareImage;
 

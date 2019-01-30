@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * group_buy 数据库操作类
- * Created by huai23 on 2019-01-30 22:53:15.
+ * Created by huai23 on 2019-01-30 23:03:41.
  */ 
 @Mapper
 public interface GroupBuyRepository {
@@ -18,6 +18,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.title != null\"> title, </if>" +
                 " <if test=\"groupBuy.image != null\"> image, </if>" +
                 " <if test=\"groupBuy.shareTitle != null\"> share_title, </if>" +
+                " <if test=\"groupBuy.shareDesc != null\"> share_desc, </if>" +
                 " <if test=\"groupBuy.shareImage != null\"> share_image, </if>" +
                 " <if test=\"groupBuy.shareUrl != null\"> share_url, </if>" +
                 " <if test=\"groupBuy.count != null\"> count, </if>" +
@@ -43,6 +44,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.title != null\"> #{groupBuy.title}, </if>" +
                 " <if test=\"groupBuy.image != null\"> #{groupBuy.image}, </if>" +
                 " <if test=\"groupBuy.shareTitle != null\"> #{groupBuy.shareTitle}, </if>" +
+                " <if test=\"groupBuy.shareDesc != null\"> #{groupBuy.shareDesc}, </if>" +
                 " <if test=\"groupBuy.shareImage != null\"> #{groupBuy.shareImage}, </if>" +
                 " <if test=\"groupBuy.shareUrl != null\"> #{groupBuy.shareUrl}, </if>" +
                 " <if test=\"groupBuy.count != null\"> #{groupBuy.count}, </if>" +
@@ -67,13 +69,14 @@ public interface GroupBuyRepository {
             "</script>")
     int add(@Param("groupBuy") GroupBuyEntity groupBuy);
 
-    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
+    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
             " FROM group_buy " +
             " WHERE 1 = 1 " +
             " <if test=\"query.buyId != null\"> AND buy_id = #{query.buyId} </if>" +
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.shareTitle != null\"> AND share_title = #{query.shareTitle} </if>" +
+            " <if test=\"query.shareDesc != null\"> AND share_desc = #{query.shareDesc} </if>" +
             " <if test=\"query.shareImage != null\"> AND share_image = #{query.shareImage} </if>" +
             " <if test=\"query.shareUrl != null\"> AND share_url = #{query.shareUrl} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
@@ -102,6 +105,7 @@ public interface GroupBuyRepository {
             " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.shareTitle != null\"> AND share_title = #{query.shareTitle} </if>" +
+            " <if test=\"query.shareDesc != null\"> AND share_desc = #{query.shareDesc} </if>" +
             " <if test=\"query.shareImage != null\"> AND share_image = #{query.shareImage} </if>" +
             " <if test=\"query.shareUrl != null\"> AND share_url = #{query.shareUrl} </if>" +
             " <if test=\"query.count != null\"> AND count = #{query.count} </if>" +
@@ -123,7 +127,7 @@ public interface GroupBuyRepository {
             "</script>")
     Long count(@Param("query") GroupBuyQuery groupBuy);
 
-    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
+    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
             " FROM group_buy " +
             " WHERE buy_id = #{id} " +
             "</script>")
@@ -134,6 +138,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.title != null\"> title = #{groupBuy.title} , </if>" +
                 " <if test=\"groupBuy.image != null\"> image = #{groupBuy.image} , </if>" +
                 " <if test=\"groupBuy.shareTitle != null\"> share_title = #{groupBuy.shareTitle} , </if>" +
+                " <if test=\"groupBuy.shareDesc != null\"> share_desc = #{groupBuy.shareDesc} , </if>" +
                 " <if test=\"groupBuy.shareImage != null\"> share_image = #{groupBuy.shareImage} , </if>" +
                 " <if test=\"groupBuy.shareUrl != null\"> share_url = #{groupBuy.shareUrl} , </if>" +
                 " <if test=\"groupBuy.count != null\"> count = #{groupBuy.count} , </if>" +
