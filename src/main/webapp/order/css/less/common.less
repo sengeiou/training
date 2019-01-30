@@ -1,0 +1,144 @@
+html,
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+img,
+area,
+param {
+  margin: 0;
+  padding: 0;
+  font-family: SF UI Display, Roboto, Helvetica, PingFang SC, Heiti SC, Noto Sans Han,
+    Droid San Fallback;
+  -webkit-font-smoothing: antialiased !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ol,
+ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+html,
+body {
+  // height: 100%;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+body {
+  font-size: .14rem; // line-height: 1;
+  color: #4a4a4a;
+  user-select: none;
+  padding: 0 !important;
+}
+
+input {
+  border: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input[type="number"] {
+  -moz-appearance: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+textarea {
+  border: 0;
+}
+
+a {
+  outline: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  &:hover {
+    outline: none;
+    text-decoration: none;
+  }
+  &:visited {
+    outline: none;
+    text-decoration: none;
+  }
+  &:active {
+    outline: none;
+    text-decoration: none;
+  }
+}
+
+em {
+  font-style: normal;
+}
+
+.content {
+  // width: 100%;
+  // height: 100%;
+  // min-height: 100%;
+  padding-bottom: .48rem;
+}
+
+#__bs_notify__ {
+  display: none !important;
+}
+
+.margin-top {
+  margin-top: .1rem;
+}
+
+.humane {
+  line-height: .24rem !important;
+  font-size: .16rem !important;
+  border-radius: 10px !important;
+  min-height: .16rem !important;
+  background-color: RGBA(0, 0, 0, .8) !important;
+}
+
+.btn-hover {
+  transition: all ease .3s;
+  opacity: 1;
+  &:active {
+    transition: all ease .3s;
+    opacity: 0.8;
+  }
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="yes" name="apple-touch-fullscreen">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <title>HeyHeroes</title>
+
+  <script>
+    window.onresize = function () {
+      document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    };
+    window.onresize();
+  </script>
+
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../components/humane/themes/bigbox.css">
+</head>
+
+<style type="text/css">
+  html,
+  body {
+    background-color: #fff;
+  }
+</style>
+
+<body>
+  <!-- 添加信息 -->
+  <div class="flexColumn formBox ">
+    <div class="flexRow formBox-item formBox-selection">
+      <div class="formBox-item-label">您体验的门店</div>
+      <div class="flexRow formBox-item-selection">
+        <select name="" class="formBox-selectedBox"  >
+          <option value="0">A店</option>
+          <option value="1">B店</option>
+        </select>
+        <input class="item-radio" name="gander" type="radio"  style="display:none"/>
+        <div class="formBox-item-selection-label" id="selectedLabel"></div>
+        <img class="fromBox-item-selection-icon"  src="../img/icon-selection.png"/>
+      </div>
+    </div>
+
+    <div class="flexRow formBox-item">
+      <div class="formBox-item-label">姓名</div>
+      <div class="flexRow formBox-item-box">
+        <input class="formBox-item-box-input" value=""/>
+      </div>
+    </div>
+
+     <div class="flexRow formBox-item">
+      <div class="formBox-item-label">性别</div>
+      <div class="flexRow formBox-item-radioBox">
+
+        <div class="flexRow formBox-item-radioBox-item" data-value="0">
+          <div class="radio-btn" data-value="0"></div>
+          <div class="radio-label" data-value="0">男</div>
+        </div>
+        <div class="flexRow formBox-item-radioBox-item" data-value="1">
+          <div class="radio-btn radio-btn-selected" data-value="1"></div>
+          <div class="radio-label" data-value="1">女</div>
+        </div>
+        <input class="item-radio" name="gander" type="radio"  style="display:none"/>
+      </div>
+    </div>
+
+    <div class="flexRow formBox-item">
+      <div class="formBox-item-label">手机号</div>
+      <div class="flexRow formBox-item-box">
+        <input class="formBox-item-box-input" value=""/>
+      </div>
+    </div>
+
+    <div class="flexRow formBox-item">
+      <div class="formBox-item-label">验证码</div>
+      <div class="flexRow formBox-item-box">
+        <input class="formBox-item-box-input-short" value=""/>
+        <div class="formBox-item-box-input-btn btn-hover" id="btnSend">获取验证码</div>
+      </div>
+    </div>
+
+    <div class="formBox-btn btn-hover">保存</div>
+  </div>
+
+
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script src="../components/humane/humane.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      var timer;
+      var defaultCount = 10;
+      var count = 0;
+      var sending = false;
+      /* 单选框 */
+      $('.formBox-item-radioBox-item').on('click',function(){
+        var value = $(this).data('value');
+        $('.radio-btn').removeClass('radio-btn-selected');
+        $(this).find('.radio-btn').addClass('radio-btn-selected')
+        $('.item-radio').val(value)
+      })
+
+       /* 下拉框 */
+      $('.formBox-selectedBox').on('change',function(){
+        var value=$(this).val();
+        var label = $(this)[0][value].text;
+        $('.item-select').val(value)
+        document.getElementById('selectedLabel').innerHTML = label;
+      })
+
+      $('#btnSend').on('click',function(){
+        if(sending){
+          return humane.log(count + '秒后重发');
+        }
+        sending = true;
+        clearInterval(timer);
+
+        count = defaultCount;
+        timer = setInterval(function(){
+          document.getElementById('btnSend').innerHTML = count + '秒后重发';
+          count -= 1;
+          if(count < 0){
+            sending = false;
+            clearInterval(timer);
+            count = defaultCount;
+            document.getElementById('btnSend').innerHTML = '获取验证码';
+          }
+        },1000)
+
+      })
+    });
+
+  </script>
+</body>
+
+</html>

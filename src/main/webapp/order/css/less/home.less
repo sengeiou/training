@@ -1,0 +1,560 @@
+.topBox {
+  background: #fff;
+  padding-bottom: .17rem;
+  .project-img {
+    height: 3.2rem;
+    width: 7.5rem;
+  }
+  .project-title {
+    width: 6.5rem;
+    padding-left: .5rem;
+    padding-right: .5rem;
+    margin-top: .25rem;
+    font-size: .34rem;
+    line-height: .52rem;
+    font-weight: 600;
+  }
+}
+
+.userBox {
+  background: #fff;
+  width: 7.5rem;
+  margin-top: .17rem;
+  .userBox-head {
+    justify-content: space-between;
+    width: 7.5rem;
+    height: .87rem;
+    border-bottom: .02rem solid #dfdfdf;
+    .userBox-head-label {
+      height: .28rem;
+      margin-left: .4rem;
+      font-size: .28rem;
+      line-height: .28rem;
+    }
+    .userBox-head-link {
+      justify-content: flex-end;
+      height: .87rem;
+      margin-right: .33rem;
+      .userBox-head-link-label {
+        height: .28rem;
+        margin-right: .15rem;
+        font-size: .28rem;
+        color: #9b9b9b;
+        line-height: .28rem;
+      }
+      .userBox-head-link-icon {
+        height: .285rem;
+        width: .165rem;
+        background: url(../../img/icon-arrow-right.png) no-repeat center;
+        background-size: .165rem .285rem;
+      }
+    }
+  }
+  .userBox-list {
+    .userBox-item {
+      width: 7.5rem;
+      height: 1.3rem;
+      border-top: .02rem solid #dfdfdf;
+      &:first-child {
+        border-top: none;
+      }
+      justify-content: space-between;
+      .userBox-item-left {
+        margin-left: .4rem;
+        .userBox-item-left-img {
+          height: .8rem;
+          width: .8rem;
+          border-radius: .8rem;
+          margin-right: .2rem;
+        }
+        .userBox-item-left-name {
+          height: .28rem;
+          font-size: .28rem;
+          line-height: .28rem;
+        }
+      }
+      .userBox-item-right {
+        margin-right: .36rem;
+        .userBox-item-right-info {
+          align-content: flex-end;
+          .userBox-item-right-info-top {
+            height: .26rem;
+            font-size: .26rem;
+            line-height: .26rem;
+            margin-bottom: .09rem;
+            text-align: right;
+            span {
+              color: #f74543;
+            }
+          }
+          .userBox-item-right-info-bottom {
+            height: .22rem;
+            font-size: .22rem;
+            line-height: .22rem;
+            text-align: right;
+          }
+        }
+        .userBox-item-right-btn {
+          width: 1.5rem;
+          height: .6rem;
+          margin-left: .16rem;
+          border-radius: .08rem;
+          background: #bd1f2d;
+          font-size: .28rem;
+          line-height: .6rem;
+          color: #fff;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+.protectBox {
+  width: 6.7rem;
+  margin-top: .17rem;
+  padding-left: .4rem;
+  padding-right: .4rem;
+  background: #fff;
+  padding-bottom: 2rem;
+  padding-top: .4rem;
+  align-items: flex-start;
+  .protectBox-title {
+    height: .45rem;
+    font-size: .32rem;
+    line-height: .45rem;
+    margin-bottom: .25rem;
+  }
+  .protectBox-text {
+    font-size: .28rem;
+    line-height: .48rem;
+    margin-bottom: .28rem;
+    margin-bottom: .25rem;
+  }
+  .protectBox-image {
+    width: 6.7rem;
+    margin-bottom: .25rem;
+  }
+}
+
+.bottomBtnBox {
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  z-index: 99;
+  width: 7.5rem;
+  height: 1.1rem;
+  background: #fff;
+  .bottomBtnBox-paybtn-info {
+    margin-left: .5rem;
+    height: .38rem;
+    align-items: flex-end;
+    .bottomBtnBox-info-label {
+      height: .28rem;
+      font-size: .28rem;
+      line-height: .28rem;
+      font-weight: 600;
+    }
+    .bottomBtnBox-info-num {
+      height: .38rem;
+      font-size: .38rem;
+      line-height: .38rem;
+      font-weight: 600;
+      color: #dd3d4b;
+    }
+  }
+  .bottomBtnBox-paybtn {
+    width: 3.75rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
+    background: #bd1f2d;
+    color: #fff;
+    font-size: .36rem;
+    text-align: center;
+    font-weight: 600;
+  }
+  .bottomBtnBox-btn {
+    width: 3.74rem;
+    height: 1.1rem;
+    align-items: center;
+    background: #c4575f;
+    .bottomBtnBox-btn-top {
+      height: .44rem;
+      width: 100%;
+      text-align: center;
+      font-size: .36rem;
+      line-height: .44rem;
+      color: #fff;
+      &:first-child {
+        margin-top: .13rem;
+      }
+    }
+  }
+  .bottomBtnBox-btn-right {
+    background: #af1d23;
+  }
+}
+
+.cover {
+  position: fixed;
+  top: 0;
+  justify-content: center;
+  height: 100vh;
+  width: 7.5rem;
+  z-index: 100;
+  background: rgba(0, 0, 0, .5);
+}
+
+.modal-user {
+  position: relative;
+  width: 6.2rem;
+  max-height: 7.16rem;
+  background: #fff;
+  border-radius: .12rem;
+  align-items: center;
+  .modal-close {
+    position: absolute;
+    top: .31rem;
+    right: .39rem;
+    height: .24rem;
+    width: .24rem;
+    background: url(../../img/icon-close.png) no-repeat center;
+    background-size: .24rem;
+  }
+  .modal-user-title {
+    width: 5.5rem;
+    height: .98rem;
+    border-bottom: .02rem solid #e3e3e3;
+    font-size: .3rem;
+    font-weight: 600;
+    line-height: .98rem;
+    text-align: center;
+  }
+  .modal-userBox {
+    width: 5.5rem;
+    border-bottom: .02rem solid #e3e3e3;
+    font-size: .3rem;
+    font-weight: 600;
+    line-height: .98rem;
+    text-align: center;
+    overflow: scroll;
+    .modal-userBox-item {
+      width: 5.5rem;
+      height: 1.1rem;
+      border-bottom: 2rpx solid #e3e3e3;
+      justify-content: space-between;
+      .modal-userBox-item-left {
+      }
+      .modal-userBox-item-left-head {
+        width: .8rem;
+        height: .8rem;
+        border-radius: .8rem;
+        margin-right: .18rem;
+      }
+      .modal-userBox-item-left-infoBox {
+        align-items: flex-start;
+      }
+      .modal-userBox-item-left-infoBox-top {
+        height: .4rem;
+        font-size: .24rem;
+        line-height: .4rem;
+        margin-bottom: .06rem;
+        font-weight: 500;
+      }
+      .modal-userBox-item-left-infoBox-bottom {
+        height: .3rem;
+        font-size: .22rem;
+        line-height: .3rem;
+        font-weight: 500;
+      }
+      .modal-userBox-item-right {
+        height: .52rem;
+        width: 1.22rem;
+        background: #bd1f2d;
+        border-radius: .06rem;
+        text-align: center;
+        line-height: .52rem;
+        font-size: .26rem;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.modal-project {
+  position: relative;
+  width: 6rem;
+  min-height: 4.2rem;
+  background: #fff;
+  border-radius: .12rem;
+  align-items: center;
+  padding-bottom: .25rem;
+  .modal-close {
+    position: absolute;
+    top: .24rem;
+    right: .52rem;
+    height: .24rem;
+    width: .24rem;
+    background: url(../../img/icon-close.png) no-repeat center;
+    background-size: .24rem;
+  }
+  .modal-project-title {
+    width: 5.5rem;
+    height: .3rem;
+    margin-top: .58rem;
+    font-size: .3rem;
+    font-weight: 600;
+    text-align: center;
+  }
+  .modal-project-sub {
+    width: 5.5rem;
+    height: .28rem;
+    margin-top: .34rem;
+    font-size: .24rem;
+    font-weight: 500;
+    text-align: center;
+    span {
+      color: #f74543;
+    }
+  }
+  .modal-project-users {
+    margin-top: .39rem;
+    width: 5.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    .modal-project-users-image {
+      height: .8rem;
+      width: .8rem;
+      border-radius: .8rem;
+      margin-left: .7rem;
+      margin-bottom: .2rem;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  .modal-project-btn {
+    display: block;
+    width: 5.2rem;
+    height: .8rem;
+    border-radius: .06rem;
+    margin-top: .19rem;
+    background: #bd1f2d;
+    font-size: .32rem;
+    color: #fff;
+    line-height: .8rem;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+/* 支付页面 */
+
+.infoBox {
+  height: .99rem;
+  border-bottom: .02rem solid #d8d8d8;
+  justify-content: space-between;
+  .infoBox-left {
+    margin-left: .44rem;
+    .icon-add {
+      width: .4rem;
+      height: .4rem;
+      background: url(../../img/icon-add.png) no-repeat center;
+      background-size: .4rem;
+      margin-right: .44rem;
+    }
+    .infoBox-left-label {
+      height: .4rem;
+      font-size: .28rem;
+      line-height: .4rem;
+      font-weight: 600;
+    }
+  }
+  .infoBox-link {
+    margin-right: .55rem;
+    width: .165rem;
+    height: .285rem;
+    background: url(../../img/icon-arrow-right.png) no-repeat center;
+    background-size: .165rem .285rem;
+  }
+}
+
+.projectBox {
+  padding: .3rem .44rem;
+  border-bottom: .02rem solid #d8d8d8;
+  align-items: flex-start;
+  .projectBox-img {
+    width: 1.9rem;
+    height: 1.73rem;
+    margin-right: .28rem;
+  }
+  .projectBox-info {
+    margin-top: .18rem;
+    font-size: .3rem;
+    line-height: .52rem;
+    font-weight: 600;
+  }
+}
+
+.payBottomBtn {
+  border-top: .02rem solid #d8d8d8;
+}
+
+.payBox {
+  height: 1.66rem;
+  width: 7.5rem;
+  justify-content: space-between;
+  .payBox-left {
+    margin-left: .44rem;
+    .payBox-img {
+      height: .76rem;
+      width: .76rem;
+      margin-right: .39rem;
+      background: url(../../img/icon-wechat.png) no-repeat center;
+      background-size: .76rem;
+    }
+    .payBox-label {
+      height: .42rem;
+      font-size: .3rem;
+      line-height: .42rem;
+    }
+  }
+  .payBox-btn {
+    height: .46rem;
+    width: .46rem;
+    margin-right: .43rem;
+    background: url(../../img/icon-radio.png) no-repeat center;
+    background-size: .43rem;
+  }
+}
+
+.pay-tip {
+  position: absolute;
+  width: 6.54rem;
+  bottom: 1.35rem;
+  left: .5rem;
+}
+
+/* 添加信息页面 */
+
+.formBox {
+  width: 7.5rem;
+  padding-top: .4rem;
+  align-items: center;
+  .formBox-btn {
+    height: .8rem;
+    width: 5.9rem;
+    line-height: .8rem;
+    background: #bd1f2d;
+    font-size: .32rem;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    border-radius: .06rem;
+    margin-top: 1rem;
+  }
+  .formBox-item {
+    width: 7.5rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 1.05rem;
+    margin-bottom: .32rem;
+    .formBox-item-label {
+      margin-left: .44rem;
+      font-size: .28rem;
+      font-weight: 600;
+    }
+    .formBox-item-box {
+      justify-content: flex-end;
+      margin-right: .72rem;
+      width: 4.4rem;
+      height: 1.05rem;
+      border-bottom: .02rem solid rgba(155, 155, 155, .55);
+      .formBox-item-box-input {
+        width: 4.4rem;
+        height: 1.05rem;
+        border: none;
+        outline: none;
+        text-align: right;
+      }
+      .formBox-item-box-input-short {
+        width: 2rem;
+        height: 1.05rem;
+        border: none;
+        outline: none;
+        text-align: right;
+      }
+      .formBox-item-box-input-btn {
+        width: 1.8rem;
+        height: .7rem;
+        margin-left: .2rem;
+        background-color: #bd1f2d;
+        border-radius: .1rem;
+        line-height: .7rem;
+        font-size: .28rem;
+        color: #fff;
+        text-align: center;
+      }
+    }
+    .formBox-item-selection {
+      position: relative;
+      margin-right: .72rem;
+      height: .74rem;
+      width: 4.36rem;
+      border: .02rem solid rgba(155, 155, 155, .55);
+      border-radius: .12rem;
+      justify-content: flex-end;
+      .fromBox-item-selection-label {
+        height: .36rem;
+      }
+      .fromBox-item-selection-icon {
+        width: .22rem;
+        height: .36rem;
+        margin-left: .25rem;
+        margin-right: .25rem;
+      }
+      .formBox-selectedBox {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: .74rem;
+        width: 4.36rem;
+        opacity: 0;
+      }
+    }
+    .formBox-item-radioBox {
+      margin-right: .72rem;
+      width: 4.4rem;
+      height: 1.05rem;
+      align-items: flex-end;
+      .formBox-item-radioBox-item {
+        margin-left: 1.54rem;
+        &:first-child {
+          margin-left: 0;
+        }
+        .radio-btn {
+          height: .36rem;
+          width: .36rem;
+          background: url(../../img/icon-radio-unselected.png) no-repeat center;
+          background-size: .36rem;
+          margin-right: .22rem;
+        }
+        .radio-btn-selected {
+          background: url(../../img/icon-radio-selected.png) no-repeat center !important;
+          background-size: .36rem !important;
+        }
+        .radio-label {
+          height: .4rem;
+          font-size: .28rem;
+          line-height: .4rem;
+        }
+      }
+    }
+    .noBorder {
+      border: none;
+    }
+  }
+  .formBox-selection {
+    align-items: center;
+  }
+}

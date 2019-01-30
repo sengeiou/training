@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="yes" name="apple-touch-fullscreen">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <title>HeyHeroes</title>
+
+  <script>
+    window.onresize = function () {
+      document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    };
+    window.onresize();
+  </script>
+
+  <link rel="stylesheet" href="../css/app.css">
+</head>
+
+<style type="text/css">
+  html,
+  body {
+    background-color: #fff;
+  }
+</style>
+
+<body>
+  <!-- 添加信息 -->
+  <a class="flexRow infoBox btn-hover">
+    <div class="flexRow infoBox-left">
+      <div class="icon-add"></div>
+      <div class="infoBox-left-label">添加您的信息</div>
+    </div>
+    <div class="infoBox-link"></div>
+  </a>
+
+  <!-- 项目信息 -->
+  <div class="flexRow projectBox">
+    <img class="projectBox-img" align="middle" src="../img/porject_image.png"/>
+    <div class="projectBox-info">
+    [22店通用]仅售68元，价值800元极速瘦身一对一私教套课
+    </div>
+  </div>
+
+  <!-- 支付信息 -->
+  <div class="flexRow payBox">
+    <div class="flexRow payBox-left">
+      <div class="payBox-img" ></div>
+      <div class="payBox-label">微信支付</div>
+    </div>
+
+    <div class="payBox-btn">
+    </div>
+  </div>
+
+  <div class="pay-tip">拼团成功后，系统将会将产品体验码发送至您预留的手机号码，您可到店进行体验。</div>
+
+    <!-- 底部按钮 -->
+  <div class="flexRow bottomBtnBox payBottomBtn">
+    <div class="flexRow bottomBtnBox-paybtn-info">
+      <div class="bottomBtnBox-info-label">实付:</div>
+      <div class="bottomBtnBox-info-num">￥68</div>
+    </div>
+    <div class="bottomBtnBox-paybtn btn-hover">立即支付
+    </div>
+  </div>
+
+
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+
+
+  </script>
+</body>
+
+</html>

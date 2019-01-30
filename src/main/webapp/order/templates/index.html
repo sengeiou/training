@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="yes" name="apple-touch-fullscreen">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <title>HeyHeroes</title>
+
+  <script>
+    window.onresize = function () {
+      document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+    };
+    window.onresize();
+  </script>
+
+  <link rel="stylesheet" href="../css/app.css">
+</head>
+
+<style type="text/css">
+  html,
+  body {
+    background-color: #F0EFF0;
+  }
+</style>
+
+<body>
+  <!-- 项目图片及名称 -->
+  <div class="topBox">
+    <img class="project-img" src="../img/porject_image.png" />
+    <div class="project-title">
+    [22店通用]仅售68元，价值800元极速瘦身一对一私教套课
+    </div>
+  </div>
+
+
+  <!-- 开团列表 -->
+  <div class="flexColumn userBox">
+    <div class="flexRow userBox-head">
+      <div class="userBox-head-label">36人在拼单</div>
+      <div class="flexRow userBox-head-link btn-hover" id="btnOpenModalList">
+        <div class="userBox-head-link-label">查看更多</div>
+        <div class="userBox-head-link-icon" ></div>
+      </div>
+    </div>
+
+    <div class="userBox-list">
+      <!-- 开团人 -->
+      <div class="flexRow userBox-item">
+        <div class="flexRow userBox-item-left">
+          <img class="userBox-item-left-img" src="../img/headImage.png" />
+          <div class="userBox-item-left-name">听听</div>
+        </div>
+        <div class="flexRow userBox-item-right">
+          <div class="userBox-item-right-info">
+            <div class="userBox-item-right-info-top">还差<span>2人</span>拼成</div>
+            <div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>
+          </div>
+          <div class="userBox-item-right-btn btn-hover btnOpenModalProject">去拼团</div>
+        </div>
+      </div>
+      <!-- 开团人 -->
+      <!-- 开团人 -->
+      <div class="flexRow userBox-item">
+        <div class="flexRow userBox-item-left">
+          <img class="userBox-item-left-img" src="../img/headImage.png" />
+          <div class="userBox-item-left-name">听听</div>
+        </div>
+        <div class="flexRow userBox-item-right">
+          <div class="userBox-item-right-info">
+            <div class="userBox-item-right-info-top">还差<span>2人</span>拼成</div>
+            <div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>
+          </div>
+          <div class="userBox-item-right-btn btn-hover btnOpenModalProject">去拼团</div>
+        </div>
+      </div>
+      <!-- 开团人 -->
+    </div>
+  </div>
+
+  <!-- 项目简介 -->
+  <div class="protectBox">
+    <div class="protectBox-title">内容简介</div>
+    <div class="protectBox-text">舞蹈是一种表演艺术，使用身体来完成各种优雅或高难度的动作，一般有音乐伴奏，以有节奏的动作为主要表现手段的艺术形式。它一般借助音乐，也借助其他的道具。
+</div>
+    <img class="protectBox-image" src="../img/porject_image.png"/>
+  </div>
+
+  <!-- 底部按钮 -->
+  <div class="flexRow bottomBtnBox">
+    <a class="flexColumn bottomBtnBox-btn btn-hover">
+      <div class="bottomBtnBox-btn-top">￥99</div>
+      <div class="bottomBtnBox-btn-top">单独购买</div>
+    </a>
+    <a class="flexColumn bottomBtnBox-btn bottomBtnBox-btn-right btn-hover">
+      <div class="bottomBtnBox-btn-top">￥69</div>
+      <div class="bottomBtnBox-btn-top">发起拼团</div>
+    </a>
+  </div>
+
+
+  <!-- 正在拼团提示框 -->
+  <div class="flexRow cover" id="modalList" style="display:none">
+    <div class="flexColumn modal-user">
+      <div class="modal-close"  id="btnCloseModalList"></div>
+      <div class="modal-user-title">正在拼团</div>
+      <div class="modal-userBox">
+        <!-- 遍历部分-拼团item -->
+        <div class="flexRow modal-userBox-item">
+          <div class="flexRow modal-userBox-item-left">
+            <img class="modal-userBox-item-left-head" src="../img/headImage.png"/>
+            <div class="flexColumn modal-userBox-item-left-infoBox">
+              <div class="modal-userBox-item-left-infoBox-top">machiael 还差2人</div>
+              <div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>
+            </div>
+          </div>
+          <div class="modal-userBox-item-right btn-hover btnOpenModalProject">去拼团</div>
+        </div>
+        <!-- 遍历部分-拼团item -->
+
+        <!-- 遍历部分-拼团item -->
+        <div class="flexRow modal-userBox-item">
+          <div class="flexRow modal-userBox-item-left">
+            <img class="modal-userBox-item-left-head" src="../img/headImage.png"/>
+            <div class="flexColumn modal-userBox-item-left-infoBox">
+              <div class="modal-userBox-item-left-infoBox-top">machiael 还差2人</div>
+              <div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>
+            </div>
+          </div>
+          <div class="modal-userBox-item-right btn-hover btnOpenModalProject">去拼团</div>
+        </div>
+        <!-- 遍历部分-拼团item -->
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 参与拼团提示框 -->
+  <div class="flexRow cover" id="modalProject"  style="display:none">
+    <div class="flexColumn modal-project">
+      <div class="modal-close"  id="btnCloseModalProject"></div>
+      <div class="modal-project-title">参与XXX的拼单</div>
+      <div class="modal-project-sub">仅剩<span>2</span>个名额，29天 20: 43: 30后结束</div>
+      <div class="flexRow modal-project-users">
+        <img class="modal-project-users-image" src="../img/headImage.png" />
+        <img class="modal-project-users-image" src="../img/headImage.png" />
+        <img class="modal-project-users-image" src="../img/icon-noUser.png" />
+      </div>
+      <a class="modal-project-btn btn-hover">参与拼团</div>
+    </div>
+  </div>
+
+  <script src="../components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      $('#btnOpenModalList').on('click',function(){
+        $('#modalList').show();
+      })
+       $('#btnCloseModalList').on('click',function(){
+        $('#modalList').hide();
+      })
+
+
+      $('.btnOpenModalProject').on('click',function(){
+        $('#modalList').hide();
+        $('#modalProject').show();
+      })
+       $('#btnCloseModalProject').on('click',function(){
+        $('#modalProject').hide();
+      })
+    });
+
+
+
+  </script>
+</body>
+
+</html>

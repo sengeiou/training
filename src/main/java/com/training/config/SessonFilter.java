@@ -50,7 +50,7 @@ public class SessonFilter implements Filter {
         // 不过滤的uri
         String[] notFilter = new String[] {"/test","/auth/", "/api/upload","browser_error","/upload",".html","/api/wechat/code","/manual/","/exportReport",
                 "/api/export/file", "missPwd", "/login", "/page" ,"/app/" ,"/logout", "/error","/refreshToken","/wechat/pay/callback","/measure/",
-                "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",".txt","/dingding","/static/","/admin","/public/",
+                "/api/upload","/register","/authImage","/pic","/favicon.ico","index","api-doc","swagger",".js",".txt","/dingding","/static/","/admin","/public/","/order/",
                 ".css",".jpg",".png",".jpeg",".gif","manualKpiReportPageForZJ.jsp"};
         // 是否过滤
         boolean doFilter = true;
