@@ -191,6 +191,11 @@ public class LessonService {
 
         MemberEntity memberEntity = memberDao.getById(query.getMemberId());
 
+        if(memberEntity==null){
+            logger.error(" quertPersonalScheduleError memberEntity = null , query = {} ",query);
+            return lessonList;
+        }
+
         String coachId = memberService.getCoachIdByMemberId(query.getMemberId());
         logger.info(" quertPersonalSchedule  coachId = {} ",coachId);
         query.setCoachId(coachId);
