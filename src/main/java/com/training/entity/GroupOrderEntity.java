@@ -5,14 +5,12 @@ import java.util.Date;
 
 /**
  * group_order 实体类
- * Created by huai23 on 2019-01-30 22:53:43.
+ * Created by huai23 on 2019-02-01 20:05:18.
  */ 
 @Data
 public class GroupOrderEntity {
 
-    private Long pkId;
-
-    private String orderId;
+    private Long orderId;
 
     private String storeId;
 
@@ -23,6 +21,8 @@ public class GroupOrderEntity {
     private Integer gender;
 
     private Integer count;
+
+    private String totalFee;
 
     private String mainFlag;
 
@@ -36,7 +36,7 @@ public class GroupOrderEntity {
 
     private String payId;
 
-    private String payDate;
+    private String payTime;
 
     private String remark;
 

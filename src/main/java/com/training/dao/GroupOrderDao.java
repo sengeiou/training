@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * group_order 数据库操作类
- * Created by huai23 on 2019-01-30 22:53:43.
+ * Created by huai23 on 2019-02-01 20:05:18.
  */ 
 @Service
 public class GroupOrderDao {
@@ -25,7 +25,7 @@ public class GroupOrderDao {
     /**
      * 新增实体
      * @param groupOrder
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public int add(GroupOrderEntity groupOrder){
         int n = groupOrderRepository.add(groupOrder);
@@ -36,7 +36,7 @@ public class GroupOrderDao {
      * 分页查询
      * @param query
      * @param page
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public List<GroupOrderEntity> find(GroupOrderQuery query , PageRequest page){
         List<GroupOrderEntity> groupOrderList = groupOrderRepository.find(query,page);
@@ -46,7 +46,7 @@ public class GroupOrderDao {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public Long count(GroupOrderQuery query){
         Long n = groupOrderRepository.count(query);
@@ -56,7 +56,7 @@ public class GroupOrderDao {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public GroupOrderEntity getById(String id){
         GroupOrderEntity groupOrderDB = groupOrderRepository.getById(id);
@@ -66,7 +66,7 @@ public class GroupOrderDao {
     /**
      * 根据实体更新
      * @param groupOrder
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public int update(GroupOrderEntity groupOrder){
         int n = groupOrderRepository.update(groupOrder);
@@ -76,7 +76,7 @@ public class GroupOrderDao {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     public int delete(String id){
         int n = groupOrderRepository.delete(id);

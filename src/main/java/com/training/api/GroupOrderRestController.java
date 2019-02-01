@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * group_order API控制器
- * Created by huai23 on 2019-01-30 22:53:43.
+ * Created by huai23 on 2019-02-01 20:05:18.
  */ 
 @RestController
 @RequestMapping("/api/groupOrder")
@@ -33,7 +33,7 @@ public class GroupOrderRestController {
     /**
      * 新增实体
      * @param groupOrder
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody GroupOrderEntity groupOrder,HttpServletRequest request, HttpServletResponse response){
@@ -45,7 +45,7 @@ public class GroupOrderRestController {
      * 分页查询
      * @param query
      * @param pageRequest
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute GroupOrderQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
@@ -56,7 +56,7 @@ public class GroupOrderRestController {
     /**
      * 查询总数
      * @param query
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "count", method = RequestMethod.GET)
     public ResponseEntity<String> count(@ModelAttribute GroupOrderQuery query,HttpServletRequest request, HttpServletResponse response){
@@ -69,7 +69,7 @@ public class GroupOrderRestController {
     /**
      * 根据ID查询实体
      * @param id
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
@@ -83,7 +83,7 @@ public class GroupOrderRestController {
     /**
      * 根据实体更新
      * @param groupOrder
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody GroupOrderEntity groupOrder,HttpServletRequest request, HttpServletResponse response){
@@ -94,7 +94,7 @@ public class GroupOrderRestController {
     /**
      * 根据ID删除
      * @param id
-     * Created by huai23 on 2019-01-30 22:53:43.
+     * Created by huai23 on 2019-02-01 20:05:18.
      */ 
     @RequestMapping (value = "delete/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> delete(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
