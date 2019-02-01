@@ -1,17 +1,20 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.GroupOrder;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +28,18 @@ public class GroupOrderService {
 
     @Autowired
     private GroupOrderDao groupOrderDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private GroupOrderLogDao groupOrderLogDao;
 
     /**
      * 新增实体
@@ -46,15 +61,28 @@ public class GroupOrderService {
      * @param page
      * Created by huai23 on 2019-02-01 20:05:18.
      */ 
-    public Page<GroupOrderEntity> find(GroupOrderQuery query , PageRequest page){
+    public Page<GroupOrder> find(GroupOrderQuery query , PageRequest page){
         List<GroupOrderEntity> groupOrderList = groupOrderDao.find(query,page);
+        List<GroupOrder> result = new ArrayList();
+        for (GroupOrderEntity groupOrderEntity:groupOrderList){
+            GroupOrder groupOrder = transferOrder(groupOrderEntity);
+            result.add(groupOrder);
+        }
         Long count = groupOrderDao.count(query);
-        Page<GroupOrderEntity> returnPage = new Page<>();
-        returnPage.setContent(groupOrderList);
+        Page<GroupOrder> returnPage = new Page<>();
+        returnPage.setContent(result);
         returnPage.setPage(page.getPage());
         returnPage.setSize(page.getPageSize());
         returnPage.setTotalElements(count);
         return returnPage;
+    }
+
+    private GroupOrder transferOrder(GroupOrderEntity groupOrderEntity) {
+        GroupOrder groupOrder = new GroupOrder();
+        BeanUtils.copyProperties(groupOrderEntity,groupOrder);
+
+
+        return groupOrder;
     }
 
     /**
@@ -72,9 +100,10 @@ public class GroupOrderService {
      * @param id
      * Created by huai23 on 2019-02-01 20:05:18.
      */ 
-    public GroupOrderEntity getById(String id){
+    public GroupOrder getById(String id){
         GroupOrderEntity groupOrderDB = groupOrderDao.getById(id);
-        return groupOrderDB;
+        GroupOrder groupOrder = transferOrder(groupOrderDB);
+        return groupOrder;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.training.api;
 
+import com.training.domain.GroupOrder;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
@@ -49,7 +50,7 @@ public class GroupOrderRestController {
      */ 
     @RequestMapping (value = "find", method = RequestMethod.GET)
     public ResponseEntity<String> find(@ModelAttribute GroupOrderQuery query ,@ModelAttribute PageRequest pageRequest,HttpServletRequest request, HttpServletResponse response){
-        Page<GroupOrderEntity> page = groupOrderService.find(query,pageRequest);
+        Page<GroupOrder> page = groupOrderService.find(query,pageRequest);
         return ResponseUtil.success(page);
     }
 
@@ -73,11 +74,11 @@ public class GroupOrderRestController {
      */ 
     @RequestMapping (value = "get/{id}", method = RequestMethod.GET)
     public ResponseEntity<String> getById(@PathVariable String id,HttpServletRequest request, HttpServletResponse response){
-        GroupOrderEntity groupOrderDB = groupOrderService.getById(id);
-        if(groupOrderDB==null){
+        GroupOrder groupOrder = groupOrderService.getById(id);
+        if(groupOrder==null){
             return ResponseUtil.exception("查无数据");
         }
-        return ResponseUtil.success(groupOrderDB);
+        return ResponseUtil.success(groupOrder);
     }
 
     /**
