@@ -36,6 +36,17 @@ public class GroupOrderRestController {
      * @param groupOrder
      * Created by huai23 on 2019-02-01 20:05:18.
      */ 
+    @RequestMapping (value = "addOrder", method = RequestMethod.POST)
+    public ResponseEntity<String> addOrder(@ModelAttribute GroupOrderEntity groupOrder,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info(" group_orderRestController  addOrder  groupOrder = {}",groupOrder);
+        return groupOrderService.addOrder(groupOrder);
+    }
+
+    /**
+     * 新增实体
+     * @param groupOrder
+     * Created by huai23 on 2019-02-01 20:05:18.
+     */
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody GroupOrderEntity groupOrder,HttpServletRequest request, HttpServletResponse response){
         logger.info(" group_orderRestController  add  groupOrder = {}",groupOrder);

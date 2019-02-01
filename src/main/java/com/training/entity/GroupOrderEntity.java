@@ -44,6 +44,9 @@ public class GroupOrderEntity {
 
     private Date modified;
 
+    private String code;
+
+    private String openId;
 
 }
 

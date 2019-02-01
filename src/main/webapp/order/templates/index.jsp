@@ -7,6 +7,8 @@
 <%@ page import="org.apache.http.util.EntityUtils" %>
 <%@ page import="com.alibaba.fastjson.JSON" %>
 <%@ page import="com.training.util.SHA1" %>
+<%@ page import="org.springframework.jdbc.core.JdbcTemplate" %>
+<%@ page import="com.training.config.ContextUtil" %>
 <%
 System.out.println(" ****************     index.jsp  *********  ");
     String timeStamp = ""+System.currentTimeMillis()/1000;
@@ -44,6 +46,10 @@ System.out.println(" ****************     index.jsp  *********  ");
         System.out.println("sha1 = "+sha1);
     }
 
+    JdbcTemplate jdbcTemplate = (JdbcTemplate) ContextUtil.getBean("jdbcTemplate");
+    List buys = jdbcTemplate.queryForList("select * from group_buy limit 1 ");
+    Map buy = (Map)buys.get(0);
+
 //    Map<String, String> signMap = new HashMap<>();
 //    signMap.put("appId","wx07d9e50873fe1786");
 //    signMap.put("timeStamp",timeStamp);
@@ -64,6 +70,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>HeyHeroes</title>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script src="../components/jquery/dist/jquery.min.js"></script>
     <script>
         wx.config({
             debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -77,10 +84,10 @@ System.out.println(" ****************     index.jsp  *********  ");
         wx.ready(function () {
             // 分享给朋友
             wx.onMenuShareAppMessage({
-                title: "测试支付页面-带缩略图",
-                desc: "测试分享内容简介",
+                title: "<%= buy.get("share_title") %>",
+                desc: "<%= buy.get("share_desc") %>",
                 link: "http://cloud.heyheroes.com/order/templates/index.jsp?<%= query %>",
-                imgUrl: "http://cloud.heyheroes.com/static/static/300300.png",
+                imgUrl: "http://cloud.heyheroes.com/<%= buy.get("share_image") %>",
                 success: function () {
                     alert('分享成功');
                 },
@@ -93,8 +100,19 @@ System.out.println(" ****************     index.jsp  *********  ");
             document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
         };
         window.onresize();
+
+        $(function(){
+
+            $("#gotoPt").click(function () {
+                var orderId = "111";
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?id="+orderId+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                document.location.href = url;
+                return false;
+            })
+
+        })
     </script>
-    <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" href="../css/app.css?v=<%= UUID.randomUUID() %>">
 </head>
 
 <style type="text/css">
@@ -109,7 +127,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <div class="topBox">
     <img class="project-img" src="../img/porject_image.png" />
     <div class="project-title">
-        [22店通用]仅售68元，价值800元极速瘦身一对一私教套课
+        <%= buy.get("title") %>
     </div>
 </div>
 
@@ -117,7 +135,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <!-- 开团列表 -->
 <div class="flexColumn userBox">
     <div class="flexRow userBox-head">
-        <div class="userBox-head-label">36人在拼单</div>
+        <div class="userBox-head-label"><%= buy.get("init_count") %>人在拼单</div>
         <div class="flexRow userBox-head-link btn-hover" id="btnOpenModalList">
             <div class="userBox-head-link-label">查看更多</div>
             <div class="userBox-head-link-icon" ></div>
@@ -161,19 +179,18 @@ System.out.println(" ****************     index.jsp  *********  ");
 <!-- 项目简介 -->
 <div class="protectBox">
     <div class="protectBox-title">内容简介</div>
-    <div class="protectBox-text">舞蹈是一种表演艺术，使用身体来完成各种优雅或高难度的动作，一般有音乐伴奏，以有节奏的动作为主要表现手段的艺术形式。它一般借助音乐，也借助其他的道具。
-    </div>
+    <div class="protectBox-text"><%= buy.get("content") %></div>
     <img class="protectBox-image" src="../img/porject_image.png"/>
 </div>
 
 <!-- 底部按钮 -->
 <div class="flexRow bottomBtnBox">
     <a class="flexColumn bottomBtnBox-btn btn-hover">
-        <div class="bottomBtnBox-btn-top">￥99</div>
+        <div class="bottomBtnBox-btn-top">￥<%= buy.get("price") %></div>
         <div class="bottomBtnBox-btn-top">单独购买</div>
     </a>
     <a class="flexColumn bottomBtnBox-btn bottomBtnBox-btn-right btn-hover">
-        <div class="bottomBtnBox-btn-top">￥69</div>
+        <div class="bottomBtnBox-btn-top">￥<%= buy.get("group_price") %></div>
         <div class="bottomBtnBox-btn-top">发起拼团</div>
     </a>
 </div>
@@ -227,7 +244,7 @@ System.out.println(" ****************     index.jsp  *********  ");
             <img class="modal-project-users-image" src="../img/headImage.png" />
             <img class="modal-project-users-image" src="../img/icon-noUser.png" />
         </div>
-        <a class="modal-project-btn btn-hover" href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp&response_type=code&scope=snsapi_base&state=123#wechat_redirect">参与拼团</a>
+        <a id="gotoPt" class="modal-project-btn btn-hover" href="">参与拼团</a>
     </div>
 </div>
 </div>

@@ -1,5 +1,6 @@
 package com.training.service;
 
+import com.github.wxpay.sdk.WXPayUtil;
 import com.training.dao.*;
 import com.training.domain.GroupOrder;
 import com.training.entity.*;
@@ -14,8 +15,7 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * group_order 核心业务操作类
@@ -46,8 +46,64 @@ public class GroupOrderService {
      * @param groupOrder
      * Created by huai23 on 2019-02-01 20:05:18.
      */ 
-    public ResponseEntity<String> add(GroupOrderEntity groupOrder){
+    public ResponseEntity<String> addOrder(GroupOrderEntity groupOrder) throws Exception {
+        String openId = groupOrder.getOpenId();
+        int n = groupOrderDao.add(groupOrder);
+        if(n==1){
+            String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+            String mch_id = "1284812401";
+            String key = "DyCGX2iQOMt1S5spSWdB8wmya7aO3ACj";
+            String device_info = "1000";
+            String nonce_str = "abc123cba321";
+            String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
+            String timeStamp = ""+System.currentTimeMillis()/1000;
+
+            Map<String,String> param = new HashMap();
+            param.put("appid","wx07d9e50873fe1786");
+            param.put("mch_id",mch_id);
+            param.put("openid",openId);
+            param.put("device_info",device_info);
+            param.put("nonce_str",nonce_str);
+            param.put("sign_type","MD5");
+            param.put("body",openId);
+            param.put("detail","detail123");
+            param.put("attach",openId);
+            param.put("out_trade_no",out_trade_no);
+            param.put("fee_type","CNY");
+            param.put("total_fee",groupOrder.getTotalFee());
+            param.put("spbill_create_ip","47.104.252.220");
+            param.put("notify_url","https://cloud.heyheroes.com/wechat/pay/group/callback");
+            param.put("trade_type","JSAPI");
+            String sign = WXPayUtil.generateSignature(param,key);
+//            System.out.println("sign："+sign);
+            param.put("sign",sign);
+            String reqBody = WXPayUtil.mapToXml(param);
+            System.out.println("reqBody："+reqBody);
+            String data = com.training.util.HttpUtils.doPost(unifiedorderUrl,reqBody); // java的网络请求，这里是我自己封装的一个工具包，返回字符串
+            System.out.println("请求结果："+data);
+            System.out.println("请求结果："+new String(data.getBytes("gbk"),"UTF-8"));
+            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"UTF-8"));
+            System.out.println("请求结果："+new String(data.getBytes("iso-8859-1"),"gbk"));
+            System.out.println("请求结果："+new String(data.getBytes("UTF-8"),"gbk"));
+            Map<String, String> result = WXPayUtil.xmlToMap(data);
+            System.out.println("timeStamp="+timeStamp);
+            Map<String, String> signMap = new HashMap<>();
+            String package1 = "prepay_id="+result.get("prepay_id");
+            signMap.put("appId","wx07d9e50873fe1786");
+            signMap.put("timeStamp",timeStamp);
+            signMap.put("nonceStr",nonce_str);
+            signMap.put("package",package1);
+            signMap.put("signType","MD5");
+            sign = WXPayUtil.generateSignature(signMap,key);
+            signMap.put("paySign",sign);
+            return ResponseUtil.success("添加成功",signMap);
+        }
+        return ResponseUtil.exception("添加失败");
+    }
+
+    public ResponseEntity<String> add(GroupOrderEntity groupOrder) {
         User user = RequestContextHelper.getUser();
+        String openId = groupOrder.getOpenId();
         int n = groupOrderDao.add(groupOrder);
         if(n==1){
             return ResponseUtil.success("添加成功");

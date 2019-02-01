@@ -208,7 +208,7 @@ em {
 .userBox .userBox-head .userBox-head-link .userBox-head-link-icon {
   height: .285rem;
   width: .165rem;
-  background: url(../../img/icon-arrow-right.png) no-repeat center;
+  background: url(../img/icon-arrow-right.png) no-repeat center;
   background-size: .165rem .285rem;
 }
 .userBox .userBox-list .userBox-item {
@@ -396,7 +396,7 @@ em {
   right: .39rem;
   height: .24rem;
   width: .24rem;
-  background: url(../../img/icon-close.png) no-repeat center;
+  background: url(../img/icon-close.png) no-repeat center;
   background-size: .24rem;
 }
 .modal-user .modal-user-title {
@@ -479,7 +479,7 @@ em {
   right: .52rem;
   height: .24rem;
   width: .24rem;
-  background: url(../../img/icon-close.png) no-repeat center;
+  background: url(../img/icon-close.png) no-repeat center;
   background-size: .24rem;
 }
 .modal-project .modal-project-title {
@@ -550,7 +550,7 @@ em {
 .infoBox .infoBox-left .icon-add {
   width: .4rem;
   height: .4rem;
-  background: url(../../img/icon-add.png) no-repeat center;
+  background: url(../img/icon-add.png) no-repeat center;
   background-size: .4rem;
   margin-right: .44rem;
 }
@@ -564,7 +564,7 @@ em {
   margin-right: .55rem;
   width: .165rem;
   height: .285rem;
-  background: url(../../img/icon-arrow-right.png) no-repeat center;
+  background: url(../img/icon-arrow-right.png) no-repeat center;
   background-size: .165rem .285rem;
 }
 .projectBox {
@@ -604,7 +604,7 @@ em {
   height: .76rem;
   width: .76rem;
   margin-right: .39rem;
-  background: url(../../img/icon-wechat.png) no-repeat center;
+  background: url(../img/icon-wechat.png) no-repeat center;
   background-size: .76rem;
 }
 .payBox .payBox-left .payBox-label {
@@ -616,7 +616,7 @@ em {
   height: .46rem;
   width: .46rem;
   margin-right: .43rem;
-  background: url(../../img/icon-radio.png) no-repeat center;
+  background: url(../img/icon-radio.png) no-repeat center;
   background-size: .43rem;
 }
 .pay-tip {
@@ -626,6 +626,14 @@ em {
   left: .5rem;
 }
 /* 添加信息页面 */
+.addPanel {
+  position: fixed;
+  z-index: 999;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: #FFF;
+}
 .formBox {
   width: 7.5rem;
   padding-top: .4rem;
@@ -746,12 +754,12 @@ em {
 .formBox .formBox-item .formBox-item-radioBox .formBox-item-radioBox-item .radio-btn {
   height: .36rem;
   width: .36rem;
-  background: url(../../img/icon-radio-unselected.png) no-repeat center;
+  background: url(../img/icon-radio-unselected.png) no-repeat center;
   background-size: .36rem;
   margin-right: .22rem;
 }
 .formBox .formBox-item .formBox-item-radioBox .formBox-item-radioBox-item .radio-btn-selected {
-  background: url(../../img/icon-radio-selected.png) no-repeat center !important;
+  background: url(../img/icon-radio-selected.png) no-repeat center !important;
   background-size: .36rem !important;
 }
 .formBox .formBox-item .formBox-item-radioBox .formBox-item-radioBox-item .radio-label {
