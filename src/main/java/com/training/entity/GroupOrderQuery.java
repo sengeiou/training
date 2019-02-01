@@ -44,6 +44,9 @@ public class GroupOrderQuery {
 
     private Date modified;
 
+    private String startDate;
+
+    private String endDate;
 
 }
 
