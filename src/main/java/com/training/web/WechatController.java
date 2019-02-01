@@ -127,5 +127,63 @@ public class WechatController {
         return null;
     }
 
+    /**
+     * 支付回调接口
+     * Created by huai23 on 2018-06-03 16:44:48.
+     */
+    @RequestMapping (value = "/wechat/pay/group/callback")
+    public String groupCallback(HttpServletRequest request, HttpServletResponse response){
+        logger.info("  WechatController  groupCallback  ");
+        try{
+            request.setCharacterEncoding("UTF-8");
+            BufferedReader reader = request.getReader();
+            String line = "";
+            StringBuffer inputString = new StringBuffer();
+            while ((line = reader.readLine()) != null) {
+                inputString.append(line);
+            }
+            request.getReader().close();
+            String result = inputString.toString();
+            logger.info("----callback接收到的报文---  {}" ,result);
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("gbk"),"UTF-8"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("iso-8859-1"),"UTF-8"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("iso-8859-1"),"gbk"));
+//            System.out.println("callback接收到的报文："+new String(result.getBytes("UTF-8"),"gbk"));
+            Map<String, String> data  = WXPayUtil.xmlToMap(result);
+            logger.info("----data---  {}" ,data);
+            logger.info("----return_code---  {}" ,data.get("return_code"));
+            logger.info("----openid---  {}" ,data.get("openid"));
+            logger.info("----attach---  {}" ,data.get("attach"));
+            String openId = data.get("openid");
+            String transactionId = data.get("transaction_id");
+            MemberEntity memberEntity = memberService.getByOpenId(openId);
+            String logId = data.get("out_trade_no");
+            String resultStr = "group_success";
+            SysLogEntity sysLogEntity = new SysLogEntity();
+            sysLogEntity.setLogId(IDUtils.getId());
+            sysLogEntity.setType(SysLogEnum.PAY.getKey());
+            sysLogEntity.setLevel(1);
+            if(memberEntity!=null){
+                sysLogEntity.setId1(memberEntity.getMemberId());
+                sysLogEntity.setStoreId(memberEntity.getStoreId());
+                sysLogEntity.setStaffId(memberEntity.getCoachStaffId());
+            }else{
+
+            }
+            sysLogEntity.setId2(transactionId);
+            String dataStr = JSON.toJSONString(data);
+            sysLogEntity.setLogText(dataStr.length()>1900?dataStr.substring(0,1900):dataStr);
+            sysLogEntity.setContent(result);
+            sysLogEntity.setCreated(new Date());
+            sysLogEntity.setRemark(resultStr);
+            sysLogService.add(sysLogEntity);
+            response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }
 
