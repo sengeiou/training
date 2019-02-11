@@ -14,8 +14,11 @@
 <%@ page import="com.training.util.HttpUtils" %>
 <%
     System.out.println(" ****************     index.jsp  *********  ");
-    String id2  = request.getParameter("id");
-    System.out.println(" ****************     id = "+id2);
+    String info  = request.getParameter("info");
+    System.out.println(" ****************     info = "+info);
+    String[] infos = info.split("_");
+    String buyId = infos[0];
+    String type = infos[1];
     String code  = request.getParameter("code");
     System.out.println(" ****************     code = "+code);
     String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx07d9e50873fe1786&secret=ddbc05a576ef96e7c08bdc31e3639d3f&code="+code+"&grant_type=authorization_code";
@@ -29,14 +32,35 @@
 
     JSONObject obj = JSON.parseObject(tokens);
     String openId = obj.getString("openid");
+    String access_token = obj.getString("access_token");
+    System.out.println(" ****************     access_token = "+access_token);
     System.out.println(" ****************     openId = "+openId);
 
-
     JdbcTemplate jdbcTemplate = (JdbcTemplate)ContextUtil.getBean("jdbcTemplate");
-    String id = request.getParameter("id");
-    if(StringUtils.isNotEmpty(id)){
-        session.setAttribute("user",new User());
+
+
+    List stores = jdbcTemplate.queryForList("select * from store  ",new Object[]{ });
+
+
+    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id =  ? ",new Object[]{buyId});
+    Map buy = (Map)buys.get(0);
+    String price = buy.get("group_price").toString();
+    String mainOrderId = "";
+    if(type.equals("0")){
+        price = buy.get("price").toString();
     }
+
+    if(type.equals("2")){
+        mainOrderId = infos[2];
+    }
+
+//    String info_url = "https://api.weixin.qq.com/sns/userinfo?access_token="+access_token+"&openid="+openId+"&lang=zh_CN";
+//    httpGet = new HttpGet(info_url);
+//    httpResponse = httpClient.execute(httpGet);
+//    httpEntity = httpResponse.getEntity();
+//    String infos = EntityUtils.toString(httpEntity, "utf-8");
+//    System.out.println(" ****************     infos = "+infos);
+
 %>
 <!DOCTYPE html>
 <html>
@@ -105,7 +129,7 @@
 <div class="flexRow bottomBtnBox payBottomBtn">
     <div class="flexRow bottomBtnBox-paybtn-info">
         <div class="bottomBtnBox-info-label">实付:</div>
-        <div class="bottomBtnBox-info-num">￥68</div>
+        <div class="bottomBtnBox-info-num">￥<%= price %></div>
     </div>
     <div id="payBtn" class="bottomBtnBox-paybtn btn-hover">立即支付
     </div>
@@ -117,10 +141,13 @@
         <div class="formBox-item-label">您体验的门店</div>
         <div class="flexRow formBox-item-selection">
             <select name="" class="formBox-selectedBox"  >
-                <option value="0">A店</option>
-                <option value="1">B店</option>
+                <%
+                    for(int i=0;i<stores.size();i++){
+                        Map store = (Map)stores.get(i);
+                %>
+                <option value="<%= store.get("store_id")%>"><%= store.get("name")%></option>
+                <% } %>
             </select>
-            <input class="item-radio" name="gander" type="radio"  style="display:none"/>
             <div class="formBox-item-selection-label" id="selectedLabel"></div>
             <img class="fromBox-item-selection-icon"  src="../img/icon-selection.png"/>
         </div>
@@ -129,7 +156,7 @@
     <div class="flexRow formBox-item">
         <div class="formBox-item-label">姓名</div>
         <div class="flexRow formBox-item-box">
-            <input class="formBox-item-box-input" value=""/>
+            <input id="custname" class="formBox-item-box-input" value=""/>
         </div>
     </div>
 
@@ -152,7 +179,7 @@
     <div class="flexRow formBox-item">
         <div class="formBox-item-label">手机号</div>
         <div class="flexRow formBox-item-box">
-            <input class="formBox-item-box-input" value=""/>
+            <input id="" class="formBox-item-box-input" value=""/>
         </div>
     </div>
 
@@ -169,7 +196,14 @@
 
 <script type="text/javascript">
 
+
+
     $(function(){
+
+        var timer;
+        var defaultCount = 10;
+        var count = 0;
+        var sending = false;
 
         /* 显示添加面板 */
         $('#showAddPanel').on('click',function(){
@@ -178,13 +212,9 @@
 
         $('#btnAdd').on('click',function(){
             $('.addPanel').hide();
+//            sending = false;
         })
 
-
-        var timer;
-        var defaultCount = 10;
-        var count = 0;
-        var sending = false;
         /* 单选框 */
         $('.formBox-item-radioBox-item').on('click',function(){
             var value = $(this).data('value');
@@ -195,30 +225,50 @@
 
         /* 下拉框 */
         $('.formBox-selectedBox').on('change',function(){
-            var value=$(this).val();
-            var label = $(this)[0][value].text;
-            $('.item-select').val(value)
-            document.getElementById('selectedLabel').innerHTML = label;
+//            var value=$(this).val();
+//            var label = $(this)[0][value].text;
+//            $('.item-select').val(value)
+//            document.getElementById('selectedLabel').innerHTML = label;
         })
 
         $('#btnSend').on('click',function(){
             if(sending){
                 return humane.log(count + '秒后重发');
             }
-            sending = true;
-            clearInterval(timer);
 
-            count = defaultCount;
-            timer = setInterval(function(){
-                document.getElementById('btnSend').innerHTML = count + '秒后重发';
-                count -= 1;
-                if(count < 0){
-                    sending = false;
-                    clearInterval(timer);
-                    count = defaultCount;
-                    document.getElementById('btnSend').innerHTML = '获取验证码';
+            if($("#phone").val()==''){
+                alert('请先填写手机号码');
+                return;
+            }
+            sending = true;
+            var info = {};
+            info.phone= $("#phone").val();
+            alert(info.phone)
+            $.post("/api/member/sendCode",info,function(result){
+                alert(JSON.stringify(result))
+//                alert(result.status)
+                if(result.status!=200){
+                    alert("发送验证码异常，请稍后再试！"+result.msg);
+                    setTimeout(function(){
+                        sending = false;
+                    },1000);
+                    return;
                 }
-            },1000)
+                clearInterval(timer);
+
+                count = defaultCount;
+                timer = setInterval(function(){
+                    document.getElementById('btnSend').innerHTML = count + '秒后重发';
+                    count -= 1;
+                    if(count < 0){
+                        sending = false;
+                        clearInterval(timer);
+                        count = defaultCount;
+                        document.getElementById('btnSend').innerHTML = '获取验证码';
+                    }
+                },1000)
+
+            }, "json");
 
         })
 
@@ -226,14 +276,21 @@
             if(flag>0){
                 return;
             }
+            if($("#phone").val()==''){
+                alert('请先填写您的信息');
+                return;
+            }
             flag = 1;
             var order = {};
+            order.buyId="<%= buyId %>";
             order.storeId="1";
-            order.phone="1";
+            order.phone=$("#phone").val();
+            order.name=$("#custname").val();
             order.gender="1";
-            order.totalFee="2";
-            order.mainFlag="1";
-            order.mainOrderId="1";
+            <%--order.totalFee="<%= price %>";--%>
+            order.totalFee="1";
+            order.mainFlag="<%= type %>";
+            order.mainOrderId="<%= mainOrderId %>";
             order.count="1";
             order.openId="<%= openId %>";
 
@@ -264,6 +321,9 @@
                             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
                             alert("支付成功："+res);
                             document.location.href="success.jsp";
+                        }else{
+                            flag = 0;
+//                            alert("支付失败："+res);
                         }
                     }
                 );

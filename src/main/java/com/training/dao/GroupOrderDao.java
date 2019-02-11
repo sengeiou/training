@@ -63,6 +63,11 @@ public class GroupOrderDao {
         return groupOrderDB;
     }
 
+    public List<GroupOrderEntity> getByBuyId(String buyId){
+        List<GroupOrderEntity> groupOrderList = groupOrderRepository.getByBuyId(buyId);
+        return groupOrderList;
+    }
+
     /**
      * 根据实体更新
      * @param groupOrder

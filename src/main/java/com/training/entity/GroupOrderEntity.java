@@ -12,11 +12,15 @@ public class GroupOrderEntity {
 
     private Long orderId;
 
+    private String buyId;
+
     private String storeId;
 
     private String memberId;
 
     private String phone;
+
+    private String name;
 
     private Integer gender;
 

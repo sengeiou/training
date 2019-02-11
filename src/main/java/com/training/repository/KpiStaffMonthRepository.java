@@ -180,6 +180,8 @@ public interface KpiStaffMonthRepository {
             " <if test=\"query.param8 != null\"> AND param8 = #{query.param8} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+
+            " AND staff_id in ( select staff_id from  staff  where status >= 0 and store_id not in ( '1' , '83168141' ) ) " +
             " order by month desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<KpiStaffMonthEntity> find(@Param("query") KpiStaffMonthQuery kpiStaffMonth , @Param("page") PageRequest page);
@@ -225,6 +227,8 @@ public interface KpiStaffMonthRepository {
             " <if test=\"query.param8 != null\"> AND param8 = #{query.param8} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
             " <if test=\"query.status != null\"> AND status = #{query.status} </if>" +
+
+            " AND staff_id in ( select staff_id from  staff  where status >= 0 and store_id not in ( '1' , '83168141' ) ) " +
             "</script>")
     Long count(@Param("query") KpiStaffMonthQuery kpiStaffMonth);
 

@@ -50,6 +50,11 @@ System.out.println(" ****************     index.jsp  *********  ");
     List buys = jdbcTemplate.queryForList("select * from group_buy limit 1 ");
     Map buy = (Map)buys.get(0);
 
+    String buyId = buy.get("buy_id").toString();
+
+    List orders = jdbcTemplate.queryForList("select * from group_order where buy_id = ? and status = 2 ",new Object[]{buyId});
+    System.out.println(" orders = "+orders.size());
+
 //    Map<String, String> signMap = new HashMap<>();
 //    signMap.put("appId","wx07d9e50873fe1786");
 //    signMap.put("timeStamp",timeStamp);
@@ -103,9 +108,28 @@ System.out.println(" ****************     index.jsp  *********  ");
 
         $(function(){
 
+            $("#gotoBuy").click(function () {
+                var buyId = "<%= buy.get("buy_id") %>";
+                var info = buyId+"_0";
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                document.location.href = url;
+                return false;
+            })
+
+            $("#createPt").click(function () {
+                var buyId = "<%= buy.get("buy_id") %>";
+                var info = buyId+"_1";
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                document.location.href = url;
+                return false;
+            })
+
+
             $("#gotoPt").click(function () {
-                var orderId = "111";
-                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?id="+orderId+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                var buyId = "<%= buy.get("buy_id") %>";
+                var mainOrderId = $("#mainOrderId").val();
+                var info = buyId+"_2_"+mainOrderId;
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
                 document.location.href = url;
                 return false;
             })
@@ -137,42 +161,49 @@ System.out.println(" ****************     index.jsp  *********  ");
     <div class="flexRow userBox-head">
         <div class="userBox-head-label"><%= buy.get("init_count") %>人在拼单</div>
         <div class="flexRow userBox-head-link btn-hover" id="btnOpenModalList">
+            <% if(orders.size() > 2) { %>
             <div class="userBox-head-link-label">查看更多</div>
             <div class="userBox-head-link-icon" ></div>
+            <% } %>
         </div>
     </div>
 
     <div class="userBox-list">
+        <%
+            for(int i=0;i<orders.size();i++){
+                Map order = (Map)orders.get(i);
+        %>
         <!-- 开团人 -->
         <div class="flexRow userBox-item">
             <div class="flexRow userBox-item-left">
                 <img class="userBox-item-left-img" src="../img/headImage.png" />
-                <div class="userBox-item-left-name">听听</div>
+                <div class="userBox-item-left-name"></div>
             </div>
             <div class="flexRow userBox-item-right">
                 <div class="userBox-item-right-info">
-                    <div class="userBox-item-right-info-top">还差<span>2人</span>拼成</div>
+                    <div class="userBox-item-right-info-top">还差<span>1人</span>拼成</div>
                     <div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>
                 </div>
-                <div class="userBox-item-right-btn btn-hover btnOpenModalProject">去拼团</div>
+                <div class="userBox-item-right-btn btn-hover btnOpenModalProject" orderId="<%= order.get("order_id") %>">去拼团</div>
             </div>
         </div>
         <!-- 开团人 -->
-        <!-- 开团人 -->
-        <div class="flexRow userBox-item">
-            <div class="flexRow userBox-item-left">
-                <img class="userBox-item-left-img" src="../img/headImage.png" />
-                <div class="userBox-item-left-name">听听</div>
-            </div>
-            <div class="flexRow userBox-item-right">
-                <div class="userBox-item-right-info">
-                    <div class="userBox-item-right-info-top">还差<span>2人</span>拼成</div>
-                    <div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>
-                </div>
-                <div class="userBox-item-right-btn btn-hover btnOpenModalProject">去拼团</div>
-            </div>
-        </div>
-        <!-- 开团人 -->
+        <% } %>
+        <%--<!-- 开团人 -->--%>
+        <%--<div class="flexRow userBox-item">--%>
+            <%--<div class="flexRow userBox-item-left">--%>
+                <%--<img class="userBox-item-left-img" src="../img/headImage.png" />--%>
+                <%--<div class="userBox-item-left-name">听听</div>--%>
+            <%--</div>--%>
+            <%--<div class="flexRow userBox-item-right">--%>
+                <%--<div class="userBox-item-right-info">--%>
+                    <%--<div class="userBox-item-right-info-top">还差<span>2人</span>拼成</div>--%>
+                    <%--<div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>--%>
+                <%--</div>--%>
+                <%--<div class="userBox-item-right-btn btn-hover btnOpenModalProject">去拼团</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--<!-- 开团人 -->--%>
     </div>
 </div>
 
@@ -187,11 +218,11 @@ System.out.println(" ****************     index.jsp  *********  ");
 <div class="flexRow bottomBtnBox">
     <a class="flexColumn bottomBtnBox-btn btn-hover">
         <div class="bottomBtnBox-btn-top">￥<%= buy.get("price") %></div>
-        <div class="bottomBtnBox-btn-top">单独购买</div>
+        <div class="bottomBtnBox-btn-top" id="gotoBuy" >单独购买</div>
     </a>
     <a class="flexColumn bottomBtnBox-btn bottomBtnBox-btn-right btn-hover">
         <div class="bottomBtnBox-btn-top">￥<%= buy.get("group_price") %></div>
-        <div class="bottomBtnBox-btn-top">发起拼团</div>
+        <div class="bottomBtnBox-btn-top" id="createPt" >发起拼团</div>
     </a>
 </div>
 
@@ -202,18 +233,11 @@ System.out.println(" ****************     index.jsp  *********  ");
         <div class="modal-close"  id="btnCloseModalList"></div>
         <div class="modal-user-title">正在拼团</div>
         <div class="modal-userBox">
-            <!-- 遍历部分-拼团item -->
-            <div class="flexRow modal-userBox-item">
-                <div class="flexRow modal-userBox-item-left">
-                    <img class="modal-userBox-item-left-head" src="../img/headImage.png"/>
-                    <div class="flexColumn modal-userBox-item-left-infoBox">
-                        <div class="modal-userBox-item-left-infoBox-top">machiael 还差2人</div>
-                        <div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>
-                    </div>
-                </div>
-                <div class="modal-userBox-item-right btn-hover btnOpenModalProject">去拼团</div>
-            </div>
-            <!-- 遍历部分-拼团item -->
+
+            <%
+                for(int i=2;i<orders.size();i++){
+                    Map order = (Map)orders.get(i);
+            %>
 
             <!-- 遍历部分-拼团item -->
             <div class="flexRow modal-userBox-item">
@@ -224,9 +248,22 @@ System.out.println(" ****************     index.jsp  *********  ");
                         <div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>
                     </div>
                 </div>
-                <div class="modal-userBox-item-right btn-hover btnOpenModalProject">去拼团</div>
+                <div class="modal-userBox-item-right btn-hover btnOpenModalProject" orderId="<%= order.get("order_id") %>">去拼团</div>
             </div>
             <!-- 遍历部分-拼团item -->
+            <% } %>
+            <%--<!-- 遍历部分-拼团item -->--%>
+            <%--<div class="flexRow modal-userBox-item">--%>
+                <%--<div class="flexRow modal-userBox-item-left">--%>
+                    <%--<img class="modal-userBox-item-left-head" src="../img/headImage.png"/>--%>
+                    <%--<div class="flexColumn modal-userBox-item-left-infoBox">--%>
+                        <%--<div class="modal-userBox-item-left-infoBox-top">machiael 还差2人</div>--%>
+                        <%--<div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="modal-userBox-item-right btn-hover btnOpenModalProject">去拼团</div>--%>
+            <%--</div>--%>
+            <%--<!-- 遍历部分-拼团item -->--%>
 
         </div>
     </div>
@@ -237,10 +274,10 @@ System.out.println(" ****************     index.jsp  *********  ");
 <div class="flexRow cover" id="modalProject"  style="display:none">
     <div class="flexColumn modal-project">
         <div class="modal-close"  id="btnCloseModalProject"></div>
-        <div class="modal-project-title">参与XXX的拼单</div>
-        <div class="modal-project-sub">仅剩<span>2</span>个名额，29天 20: 43: 30后结束</div>
+        <div class="modal-project-title">参与拼单</div>
+        <input id = "mainOrderId" type="hidden" value ="" />
+        <div class="modal-project-sub">仅剩<span>1</span>个名额，29天 20: 43: 30后结束</div>
         <div class="flexRow modal-project-users">
-            <img class="modal-project-users-image" src="../img/headImage.png" />
             <img class="modal-project-users-image" src="../img/headImage.png" />
             <img class="modal-project-users-image" src="../img/icon-noUser.png" />
         </div>
@@ -262,10 +299,12 @@ System.out.println(" ****************     index.jsp  *********  ");
 
         $('.btnOpenModalProject').on('click',function(){
             $('#modalList').hide();
+            $("#mainOrderId").val($(this).attr("orderId"));
             $('#modalProject').show();
         })
         $('#btnCloseModalProject').on('click',function(){
             $('#modalProject').hide();
+            $("#mainOrderId").val('');
         })
     });
 
