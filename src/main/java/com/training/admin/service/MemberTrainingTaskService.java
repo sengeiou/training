@@ -372,13 +372,17 @@ public class MemberTrainingTaskService {
                     String startDate = card.get("start_date").toString();
                     String endDate = card.get("end_date").toString();
 
+                    if(ut.passDayByDate(startDate,ut.currentDate())<0){
+                        continue;
+                    }
+
                     if(type.equals("TM")||type.equals("PM")){
-                        if(ut.passDayByDate(startDate,ut.currentDate())>=0 && ut.passDayByDate(ut.currentDate(),endDate)>=0 ){
+                        if(ut.passDayByDate(ut.currentDate(),endDate)>=0 ){
                             isValid = true;
                             break;
                         }
                     }else{
-                        if(ut.passDayByDate(startDate,ut.currentDate())>=0 && ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
+                        if(ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
                             isValid = true;
                             break;
                         }
