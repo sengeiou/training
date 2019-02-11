@@ -387,11 +387,14 @@ public class MemberTrainingTaskService {
                             break;
                         }
 
-                        List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where card_no = ? and type like 'JK%' ",new Object[]{cardNo});
-                        if(jkInfo.size()==0){
-                            isValid = true;
-                            break;
+                        if(type.equals("PT")){
+                            List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where card_no = ? and type like 'JK%' ",new Object[]{cardNo});
+                            if(jkInfo.size()==0){
+                                isValid = true;
+                                break;
+                            }
                         }
+
                     }
                 }
                 if(isValid){
