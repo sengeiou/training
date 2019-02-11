@@ -40,8 +40,8 @@ public class ExportReportController {
     @GetMapping("trainingExcel")
     public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" trainingExcel   ");
-        String startDate = "2018-12-01";
-        String endDate = "2018-12-31";
+        String startDate = "2019-01-01";
+        String endDate = "2019-01-31";
         exportFileService.trainingExcel(startDate,endDate);
         return "trainingExcel执行成功";
     }
@@ -74,8 +74,8 @@ public class ExportReportController {
     @GetMapping("monthCardExcel")
     public Object monthCardExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" monthCardExcel   ");
-        String startDate = "2018-12-01";
-        String endDate = "2018-12-31";
+        String startDate = "2019-01-01";
+        String endDate = "2019-01-31";
         exportFileService.monthCardExcel(startDate,endDate);
         return "monthCardExcel执行成功";
     }
@@ -83,8 +83,8 @@ public class ExportReportController {
     @GetMapping("contractSale")
     public Object contractSale(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" contractSale   ");
-        String startDate = "2018-09-01";
-        String endDate = "2018-09-30";
+        String startDate = "2019-01-01";
+        String endDate = "2019-01-31";
         exportFileService.contractSale(startDate,endDate);
         return "contractSale执行成功";
     }
@@ -95,14 +95,8 @@ public class ExportReportController {
     @GetMapping("deadAndEndCard")
     public Object deadAndEndCard(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" deadAndEndCard   ");
-        String startDate = "2018-09-01";
-        String endDate = "2018-09-30";
-        exportFileService.deadAndEndCard(startDate,endDate);
-        startDate = "2018-10-01";
-        endDate = "2018-10-31";
-        exportFileService.deadAndEndCard(startDate,endDate);
-        startDate = "2018-11-01";
-        endDate = "2018-11-30";
+        String startDate = "2019-01-01";
+        String endDate = "2019-01-31";
         exportFileService.deadAndEndCard(startDate,endDate);
         return "deadAndEndCard执行成功";
     }
@@ -125,7 +119,7 @@ public class ExportReportController {
     @GetMapping("staffKpi")
     public Object staffKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" staffKpi   ");
-        String month = "201812";
+        String month = "201901";
         exportFileService.staffKpi(month);
         exportFileService.managerKpi(month);
         return "staffKpi";
@@ -137,9 +131,9 @@ public class ExportReportController {
     @GetMapping("staffMemberDetailByDay")
     public Object staffMemberDetailByDay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" staffMemberDetailByDay   ");
-        String startDate = "2018-11-01";
-        String endDate = "2018-11-30";
-        String month = "2018-11";
+        String startDate = "2019-01-01";
+        String endDate = "2019-01-31";
+        String month = "2019-01";
         exportFileService.staffMemberDetailByDay(month);
         return "staffMemberDetailByDay";
     }

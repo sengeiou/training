@@ -165,7 +165,7 @@ public class ExportFileService {
                 logger.error(" training = "+ JSON.toJSONString(training),e);
             }
         }
-        ExcelUtil.writeExcel(excelData,"C://product/training201811.xls");
+        ExcelUtil.writeExcel(excelData,"C://product/training201901.xls");
     }
 
 
@@ -265,22 +265,24 @@ public class ExportFileService {
                 int pauseDays = reportMonthService.getPauseDaysByMonth(memberId,startDate,endDate);
                 int days = memberCardEntity.getDays();
                 double price =  0;
+
+                int useDays = 0;
+
                 if(days>0){
                     price = Double.parseDouble(memberCardEntity.getMoney())/days;
                     if(monthDays-pauseDays>0){
-                        money = price*(monthDays-pauseDays);
-
+                        useDays = monthDays-pauseDays;
+                        money = price*useDays;
                         if(staffEntity.getStoreId().equals("43860173")){
                             cards++;
                             total = total + money;
-                            count = count + monthDays-pauseDays;
+                            count = count + useDays;
                             pause_count = pause_count + pauseDays;
                             memberCount.add(memberId);
                         }
 
                     }
                 }
-
 
                 memberCardEntity.setTotal(days);
                 row.add(storeEntity.getName());
@@ -293,7 +295,7 @@ public class ExportFileService {
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());
-                row.add(""+(monthDays-pauseDays));
+                row.add(""+useDays);
                 row.add(""+pauseDays);
                 row.add(ut.getDoubleString(money));
 
@@ -714,6 +716,9 @@ public class ExportFileService {
             String storeId = detail.get("store_id").toString();
 
             StaffEntity staffEntity = staffDao.getById(staffId);
+            if(staffEntity==null){
+                continue;
+            }
             if(staffEntity.getJob().equals("店长")){
                 continue;
             }
@@ -852,6 +857,9 @@ public class ExportFileService {
             String storeId = detail.get("store_id").toString();
 
             StaffEntity staffEntity = staffDao.getById(staffId);
+            if(staffEntity==null){
+                continue;
+            }
             if(!staffEntity.getJob().equals("店长")){
                 continue;
             }

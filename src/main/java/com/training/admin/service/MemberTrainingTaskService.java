@@ -367,10 +367,27 @@ public class MemberTrainingTaskService {
                 for (int j = 0; j < cards.size(); j++) {
                     Map card = cards.get(j);
                     int count = Integer.parseInt(card.get("count").toString());
+                    String type = card.get("type").toString();
+
                     String startDate = card.get("start_date").toString();
                     String endDate = card.get("end_date").toString();
-                    if(ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
-                        isValid = true;
+
+                    if(type.equals("TM")||type.equals("PM")){
+                        if(ut.passDayByDate(startDate,ut.currentDate())>=0 && ut.passDayByDate(ut.currentDate(),endDate)>=0 ){
+                            isValid = true;
+                            break;
+                        }
+                    }else{
+                        if(ut.passDayByDate(startDate,ut.currentDate())>=0 && ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
+                            isValid = true;
+                            break;
+                        }
+
+                        List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where catd_no = ? and type like 'JK%' ");
+                        if(jkInfo.size()==0){
+                            isValid = true;
+                            break;
+                        }
                     }
                 }
                 if(isValid){

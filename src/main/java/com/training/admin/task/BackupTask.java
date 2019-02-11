@@ -28,6 +28,23 @@ public class BackupTask {
     public void backupMemberAndStaff(){
         String month = ut.currentFullMonth();
         String day = ut.currentDate();
+
+        try {
+            kpiStaffDetailAdminService.dealTk(day);
+        }catch (Exception e){
+
+        }
+        try {
+            kpiStaffDetailAdminService.dealJk(day);
+        }catch (Exception e){
+
+        }
+        try {
+            kpiStaffDetailAdminService.dealXk(day);
+        }catch (Exception e){
+
+        }
+
         try {
             logger.info("start backupMember!  month = {} , time = {} ",month, ut.currentTime());
             memberTrainingTaskService.updateMemberInfo();
@@ -44,21 +61,7 @@ public class BackupTask {
         }catch (Exception e){
 
         }
-        try {
-            kpiStaffDetailAdminService.dealTk(day);
-        }catch (Exception e){
 
-        }
-        try {
-            kpiStaffDetailAdminService.dealJk(day);
-        }catch (Exception e){
-
-        }
-        try {
-            kpiStaffDetailAdminService.dealXk(day);
-        }catch (Exception e){
-
-        }
 
         try {
             logger.info("start backupStaff!  time = {} ", ut.currentTime());
