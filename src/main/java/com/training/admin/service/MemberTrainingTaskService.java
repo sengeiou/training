@@ -367,8 +367,8 @@ public class MemberTrainingTaskService {
                 for (int j = 0; j < cards.size(); j++) {
                     Map card = cards.get(j);
                     int count = Integer.parseInt(card.get("count").toString());
+                    String cardNo = card.get("card_no").toString();
                     String type = card.get("type").toString();
-
                     String startDate = card.get("start_date").toString();
                     String endDate = card.get("end_date").toString();
 
@@ -387,7 +387,7 @@ public class MemberTrainingTaskService {
                             break;
                         }
 
-                        List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where catd_no = ? and type like 'JK%' ");
+                        List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where card_no = ? and type like 'JK%' ",new Object[]{cardNo});
                         if(jkInfo.size()==0){
                             isValid = true;
                             break;
