@@ -87,5 +87,7 @@ public class MemberCard {
 
     private String memberStoreName;
 
+    private String realFee;
+
 }
 

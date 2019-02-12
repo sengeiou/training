@@ -191,13 +191,30 @@ public class MemberCardService {
             cardType = CardTypeEnum.getEnumByKey(memberCard.getType()).getDesc();
         }
 
+
+        double realFee = 0;
+        double money = 0;
+        try{
+            money = Double.parseDouble(memberCardEntity.getMoney());
+        }catch (Exception e){
+
+        }
+        if(memberCardEntity.getTotal()>0){
+            realFee = money*memberCardEntity.getCount()/memberCardEntity.getTotal();
+        }
+
         if(memberCard.getType().equals(CardTypeEnum.PM.getKey())||memberCard.getType().equals(CardTypeEnum.TM.getKey())) {
+            int days = memberCardEntity.getDays();
             int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
             int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
             memberCard.setTotal(total);
             memberCard.setCount(count);
             memberCard.setDays(total);
+            if(days>0){
+                realFee = money*count/days;
+            }
         }
+        memberCard.setRealFee(ut.getDoubleString(realFee));
         memberCard.setCardType(cardType);
         memberCard.setCanDelay(0);
         memberCard.setDelayFee("0");
@@ -209,7 +226,6 @@ public class MemberCardService {
                     memberCard.setDelayFee("0");
                 }else if(memberCard.getDelay()>0){
                     if(StringUtils.isNotEmpty(memberCard.getMoney())){
-                        double money = Double.parseDouble(memberCard.getMoney());
                         if(money>0){
                             int count = memberCard.getCount();
                             int total = memberCard.getTotal();
@@ -233,6 +249,7 @@ public class MemberCardService {
                 memberCard.setSaleStaffName(" ");
             }
         }
+
         memberCard.setShowStatus(CardStatusEnum.getEnumByKey(memberCardEntity.getStatus()).getDesc());
         return memberCard;
     }
