@@ -185,7 +185,7 @@ public class MemberCouponRestController {
                 if(type.equals("DZ")){
                     type = "打折";
                 }
-                String[] row = new String[12];
+                String[] row = new String[7];
                 row[0] = memberCoupon.getCouponId().toString();
                 row[1] = memberCoupon.getTitle();
                 row[2] = type;
