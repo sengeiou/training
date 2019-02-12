@@ -886,6 +886,9 @@ public class StoreDataService {
         for (FinanceStaffReportEntity financeStaffReportEntity:financeStaffReportEntityList){
             FinanceStaffReportData financeStaffReportData = new FinanceStaffReportData();
             BeanUtils.copyProperties(financeStaffReportEntity,financeStaffReportData);
+            financeStaffReportData.setStar(financeStaffReportEntity.getStar().toString());
+            StaffEntity staffEntity = staffDao.getById(financeStaffReportEntity.getStaffId());
+            financeStaffReportData.setPhone(staffEntity.getPhone());
             dataList.add(financeStaffReportData);
         }
         Long count = financeStaffReportDao.count(financeStaffReportQuery);
