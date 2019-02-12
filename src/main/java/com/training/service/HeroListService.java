@@ -10,6 +10,7 @@ import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +152,7 @@ public class HeroListService {
             }
         }
 
-        List<Staff> money = this.lessonList();
+        List<Staff> money = this.moneyList();
         if(CollectionUtils.isNotEmpty(money)){
             jdbcTemplate.update(" delete from hero_list where hero_date = ? and type = ? ",new Object[]{day,HeroListTypeEnum.XK.getKey()});
             int sort = 1;
@@ -195,11 +196,17 @@ public class HeroListService {
 
 
     public List<HeroListEntity> queryLesson(HeroListQuery query) {
+        logger.info(" queryLesson query = {}",query);
         String month = query.getMonth();
         if(month==null){
             month = ut.currentFullMonth();
         }
         String day = heroListDao.getLastDay(month);
+        logger.info(" queryLesson month = {} , day = {}",query.getMonth(),day);
+        if(StringUtils.isEmpty(day)){
+//            day = "2099-01-01";
+            return new ArrayList<>();
+        }
         HeroListQuery heroListQuery = new HeroListQuery();
         heroListQuery.setHeroDate(day);
         heroListQuery.setType(HeroListTypeEnum.LC.getKey());
