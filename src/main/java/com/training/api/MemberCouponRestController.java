@@ -178,8 +178,11 @@ public class MemberCouponRestController {
                 if(memberCoupon==null){
                     continue;
                 }
-                String type = "满减";
-                if(memberCoupon.getType().equals("DZ")){
+                String type = memberCoupon.getType();
+                if(type.equals("MZ")){
+                    type = "满减";
+                }
+                if(type.equals("DZ")){
                     type = "打折";
                 }
                 String[] row = new String[12];
