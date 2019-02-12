@@ -1,9 +1,14 @@
 package com.training.api;
 
+import com.training.config.ConstData;
+import com.training.domain.MemberCard;
 import com.training.domain.MemberCoupon;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.ExportUtil;
+import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -14,9 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 import com.alibaba.fastjson.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * member_coupon API控制器
@@ -118,7 +129,7 @@ public class MemberCouponRestController {
     }
 
     /**
-     * 分页查询
+     * 分页查询优惠券核销记录
      * @param query
      * @param pageRequest
      * Created by huai23 on 2018-06-30 10:02:47.
@@ -129,6 +140,73 @@ public class MemberCouponRestController {
         Page<MemberCoupon> page = memberCouponService.queryUseLog(query,pageRequest);
         return ResponseUtil.success(page);
     }
+
+
+    /**
+     * 导出优惠券核销记录
+     * @param query
+     * Created by huai23 on 2018-06-30 10:02:47.
+     */
+    @RequestMapping (value = "exportUseLog", method = RequestMethod.GET)
+    public ResponseEntity<String> exportUseLog(@ModelAttribute MemberCouponQuery query ,HttpServletRequest request, HttpServletResponse response){
+        logger.info("  exportUseLog  MemberCouponQuery = {}",query);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100000);
+        Page<MemberCoupon> page = memberCouponService.queryUseLog(query,pageRequest);
+        String path = request.getSession().getServletContext().getRealPath("/export/member");
+        logger.info(" path = {} ",path);
+        String[] headers = { "编号", "名称", "类型", "描述","创建人","核销人","核销时间"};
+        String fileName = "CouponUseLog-"+System.currentTimeMillis()+".xls";
+        File targetFile = new File(path+"/"+ fileName);
+        File pathf = new File(path);
+        logger.info(" pathf.getPath() = {} " , pathf.getPath());
+        logger.info(" targetFile.getPath() = {} " , targetFile.getPath());
+        if(!pathf.exists()){
+            pathf.mkdir();
+        }
+        if(!targetFile.exists()){
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info(" targetFile.exists() = {} " , targetFile.exists());
+        try {
+            List<String[]> dataList = new ArrayList<>();
+            for (MemberCoupon memberCoupon : page.getContent()){
+                if(memberCoupon==null){
+                    continue;
+                }
+                String type = "满减";
+                if(memberCoupon.getType().equals("DZ")){
+                    type = "打折";
+                }
+                String[] row = new String[12];
+                row[0] = memberCoupon.getCouponId().toString();
+                row[1] = memberCoupon.getTitle();
+                row[2] = type;
+                row[3] = memberCoupon.getContent();
+                row[4] = memberCoupon.getCreator();
+                row[5] = memberCoupon.getUseStaffName();
+                row[6] = memberCoupon.getUseDate();
+                dataList.add(row);
+            }
+            String sheetName = "优惠券核销记录";
+            ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
+            logger.info("filename = {}",targetFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map result = new HashMap();
+        String id = IDUtils.getId();
+        ConstData.data.put(id,fileName);
+        String url = "/api/export/file/"+id;
+        result.put("url",url);
+        return ResponseUtil.success("导出优惠券核销记录信息成功！",result);
+    }
+
 
 }
 
