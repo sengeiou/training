@@ -69,6 +69,7 @@ public class CallbackController {
 
     /**
      * 支付回调接口
+     * https://cloud.heyheroes.com/measure/callback
      * Created by huai23 on 2018-06-03 16:44:48.
      */
     @RequestMapping (value = "/measure/callback")
