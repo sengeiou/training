@@ -446,8 +446,8 @@ public class ManualRestController {
     public Object calculateStoreFinanceMonthReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2018-12-31";
-        today = ut.currentDate(-1);
+        String today = "2019-01-31";
+//        today = ut.currentDate(-1);
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
         for (int i = 0; i < stores.size(); i++){
