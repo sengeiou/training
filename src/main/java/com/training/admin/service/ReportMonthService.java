@@ -306,6 +306,9 @@ public class ReportMonthService {
             String pause_date = pause.get("pause_date").toString();
             String restore_date = pause.get("restore_date").toString();
 
+            String startDate_temp = startDate;
+            String endDate_temp = endDate;
+
             if(endSet.contains(restore_date)){
                 continue;
             }else {
@@ -316,12 +319,12 @@ public class ReportMonthService {
                 pause_date = pause_date.substring(0,10);
             }
             if(ut.passDayByDate(startDate,pause_date)>0){
-                startDate = pause_date;
+                startDate_temp = pause_date;
             }
             if(ut.passDayByDate(endDate,restore_date)<0){
-                endDate = restore_date;
+                endDate_temp = restore_date;
             }
-            int days = ut.passDayByDate(startDate,endDate)+1;
+            int days = ut.passDayByDate(startDate_temp,endDate_temp)+1;
             if(days<0){
                 days = 0;
             }
@@ -335,18 +338,22 @@ public class ReportMonthService {
         data = jdbcTemplate.queryForList(sql,new Object[]{ memberId, end});
         for (int i = 0; i < data.size(); i++) {
             Map pause = (Map)data.get(i);
+
+            String startDate_temp = startDate;
+            String endDate_temp = endDate;
+
             String pause_date = pause.get("pause_date").toString();
             if(pause_date.indexOf(":")>0){
                 pause_date = pause_date.substring(0,10);
             }
             String restore_date = pause.get("restore_date").toString();
             if(ut.passDayByDate(startDate,pause_date)>0){
-                startDate = pause_date;
+                startDate_temp = pause_date;
             }
             if(ut.passDayByDate(endDate,restore_date)<0){
-                endDate = restore_date;
+                endDate_temp = restore_date;
             }
-            int days = ut.passDayByDate(startDate,endDate)+1;
+            int days = ut.passDayByDate(startDate_temp,endDate_temp)+1;
             if(days<0){
                 days = 0;
             }

@@ -279,6 +279,7 @@ public class ExportFileService {
                             count = count + useDays;
                             pause_count = pause_count + pauseDays;
                             memberCount.add(memberId);
+                            System.out.println(" monthCard card_no = "+card_no+" , pauseDays = "+pauseDays);
                         }
 
                     }
