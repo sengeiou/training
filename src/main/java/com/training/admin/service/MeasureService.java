@@ -168,12 +168,22 @@ public class MeasureService {
                             MemberBodyEntity memberBody = new MemberBodyEntity();
                             memberBody.setBodyId(bodyId);
                             memberBody.setCoachId(coachId);
-                            memberBody.setMemberId(memberEntity.getMemberId());
+                            memberBody.setMemberId(memberId);
                             memberBody.setBmi(bmi);
                             memberBody.setHeight(height);
                             memberBody.setWeight(weight);
                             memberBody.setMeasurementId(id);
                             int n = memberBodyDao.add(memberBody);
+
+                            try {
+                                MemberEntity memberUpdate = new MemberEntity();
+                                memberUpdate.setMemberId(memberId);
+                                memberUpdate.setAge(Integer.parseInt(age));
+                                memberUpdate.setHeight(Integer.parseInt(height));
+                                int m = memberDao.update(memberUpdate);
+                            }catch (Exception e){
+                                logger.error(" updateMember age And height error memberId = {}, age = {},height= {}",memberId,age,height);
+                            }
                         }
 
                         String sql = "insert into measurement (measurement_id,body_id,member_id,device_sn,gender,age,height,weight,phone,outline,measurement,measure_date,start_time,created,modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),now()) ";
