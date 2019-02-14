@@ -1080,7 +1080,7 @@ public class MemberService {
             }
 
             if(lesson.getType().startsWith(LessonTypeEnum.S.getKey())){
-                if(memberCardEntity.getType().equals(lesson.getType())){
+                if(memberCardEntity.getType().equals("ST1")||memberCardEntity.getType().equals("ST2")||memberCardEntity.getType().equals("ST3")||memberCardEntity.getType().equals("ST4")){
                     if(memberCardEntity.getCount()>0){
                         validCardList.add(memberCardEntity);
                     }
