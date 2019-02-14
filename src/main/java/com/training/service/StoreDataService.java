@@ -745,8 +745,8 @@ public class StoreDataService {
      *  统计到店人数,即发体验卡的人数
      */
     private void queryComingMember(StoreEntity storeEntity, String startDate, String endDate, Map<String, MarketReportData> dataMap) {
-        String sql = " select a.member_id,a.`name`,a.phone,a.store_id,a.coach_staff_id, a.origin,b.card_no,b.type,b.created from member a , member_card b " +
-                " where a.store_id = ? and a.origin <> ''  and a.member_id = b.member_id and b.type = 'TY' " +
+        String sql = " select a.member_id,a.`name`,a.phone,a.store_id,a.coach_staff_id, a.origin,b.card_no,b.type,b.created from member a , member_card b , staff c  " +
+                " where c.store_id = ? and a.member_id = b.member_id and b.type = 'TY' and a.coach_staff_id = c.staff_id  " +
                 " and b.created >= ? and b.created <= ? ";
         List data = jdbcTemplate.queryForList(sql,new Object[]{storeEntity.getStoreId(),startDate+" 00:00:00",endDate+" 23:59:59"});
         for (int i = 0; i < data.size(); i++) {

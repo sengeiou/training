@@ -610,7 +610,7 @@ public class LessonService {
 
             }
 
-            lesson.setType(LessonTypeEnum.P.getKey());
+            lesson.setType(LessonTypeEnum.S.getKey());
             lessonList.add(lesson);
         }
 
