@@ -384,7 +384,7 @@ public class MemberTrainingTaskService {
 
                         String sql = "select 1 from training where card_no = ? and lesson_date > ? and status >= 0 ";
                         List lessons = jdbcTemplate.queryForList(sql,new Object[]{cardNo,ut.currentDate()});
-                        if(lessons.size()==0){
+                        if(lessons.size()>0){
                             isValid = true;
                             break;
                         }
@@ -397,7 +397,7 @@ public class MemberTrainingTaskService {
 
                         String sql = "select 1 from training where card_no = ? and lesson_date > ? and status >= 0 ";
                         List lessons = jdbcTemplate.queryForList(sql,new Object[]{cardNo,ut.currentDate()});
-                        if(lessons.size()==0){
+                        if(lessons.size()>0){
                             isValid = true;
                             break;
                         }
