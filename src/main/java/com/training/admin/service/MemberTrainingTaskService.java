@@ -381,18 +381,25 @@ public class MemberTrainingTaskService {
                             isValid = true;
                             break;
                         }
+
+                        String sql = "select 1 from training where card_no = ? and lesson_date > ? and status >= 0 ";
+                        List lessons = jdbcTemplate.queryForList(sql,new Object[]{cardNo,ut.currentDate()});
+                        if(lessons.size()==0){
+                            isValid = true;
+                            break;
+                        }
+
                     }else{
                         if(ut.passDayByDate(ut.currentDate(),endDate)>=0 && count >0){
                             isValid = true;
                             break;
                         }
 
-                        if(type.equals("PT")){
-                            List jkInfo = jdbcTemplate.queryForList("select 1 from kpi_staff_detail where card_no = ? and type like 'JK%' ",new Object[]{cardNo});
-                            if(jkInfo.size()==0){
-                                isValid = true;
-                                break;
-                            }
+                        String sql = "select 1 from training where card_no = ? and lesson_date > ? and status >= 0 ";
+                        List lessons = jdbcTemplate.queryForList(sql,new Object[]{cardNo,ut.currentDate()});
+                        if(lessons.size()==0){
+                            isValid = true;
+                            break;
                         }
 
                     }
