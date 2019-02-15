@@ -632,7 +632,7 @@ em {
   height: 100vh;
   top: 0;
   left: 0;
-  background: #FFF;
+  background: #fff;
 }
 .formBox {
   width: 7.5rem;
@@ -641,6 +641,7 @@ em {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  border-bottom: .02rem solid #d8d8d8;
 }
 .formBox .formBox-btn {
   height: .8rem;
@@ -688,6 +689,7 @@ em {
   border: none;
   outline: none;
   text-align: right;
+  font-size: .42rem;
 }
 .formBox .formBox-item .formBox-item-box .formBox-item-box-input-short {
   width: 2rem;
@@ -695,6 +697,7 @@ em {
   border: none;
   outline: none;
   text-align: right;
+  font-size: .42rem;
 }
 .formBox .formBox-item .formBox-item-box .formBox-item-box-input-btn {
   width: 1.8rem;

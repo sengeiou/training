@@ -29,48 +29,15 @@
 </style>
 
 <body>
-  <!-- 添加信息 -->
-  <a class="flexRow infoBox btn-hover" id="showAddPanel">
-    <div class="flexRow infoBox-left">
-      <div class="icon-add"></div>
-      <div class="infoBox-left-label">添加您的信息</div>
-    </div>
-    <div class="infoBox-link"></div>
-  </a>
-
-  <!-- 项目信息 -->
+ <!-- 项目信息 -->
   <div class="flexRow projectBox">
     <img class="projectBox-img" align="middle" src="../img/porject_image.png"/>
     <div class="projectBox-info">
     [22店通用]仅售68元，价值800元极速瘦身一对一私教套课
     </div>
   </div>
-
-  <!-- 支付信息 -->
-  <div class="flexRow payBox">
-    <div class="flexRow payBox-left">
-      <div class="payBox-img" ></div>
-      <div class="payBox-label">微信支付</div>
-    </div>
-
-    <div class="payBox-btn">
-    </div>
-  </div>
-
-  <div class="pay-tip">拼团成功后，系统将会将产品体验码发送至您预留的手机号码，您可到店进行体验。</div>
-
-    <!-- 底部按钮 -->
-  <div class="flexRow bottomBtnBox payBottomBtn">
-    <div class="flexRow bottomBtnBox-paybtn-info">
-      <div class="bottomBtnBox-info-label">实付:</div>
-      <div class="bottomBtnBox-info-num">￥68</div>
-    </div>
-    <div class="bottomBtnBox-paybtn btn-hover">立即支付
-    </div>
-  </div>
-
   <!-- 添加信息面板 -->
-  <div class="flexColumn addPanel formBox " style="display:none">
+  <div class="flexColumn addInfoBox formBox " >
     <div class="flexRow formBox-item formBox-selection">
       <div class="formBox-item-label">您体验的门店</div>
       <div class="flexRow formBox-item-selection">
@@ -96,14 +63,14 @@
       <div class="flexRow formBox-item-radioBox">
 
         <div class="flexRow formBox-item-radioBox-item" data-value="0">
-          <div class="radio-btn" data-value="0"></div>
+          <div class="radio-btn radio-btn-selected" data-value="0"></div>
           <div class="radio-label" data-value="0">男</div>
         </div>
         <div class="flexRow formBox-item-radioBox-item" data-value="1">
-          <div class="radio-btn radio-btn-selected" data-value="1"></div>
+          <div class="radio-btn " data-value="1"></div>
           <div class="radio-label" data-value="1">女</div>
         </div>
-        <input class="item-radio" name="gander" type="radio"  style="display:none"/>
+        <input class="item-radio" name="gander" type="radio" value="0" style="display:none"/>
       </div>
     </div>
 
@@ -122,8 +89,44 @@
       </div>
     </div>
 
-    <div class="formBox-btn btn-hover" id="btnAdd">保存</div>
   </div>
+  <!-- 添加信息 -->
+  <!--
+  <a class="flexRow infoBox btn-hover" id="showAddPanel">
+    <div class="flexRow infoBox-left">
+      <div class="icon-add"></div>
+      <div class="infoBox-left-label">添加您的信息</div>
+    </div>
+    <div class="infoBox-link"></div>
+  </a>
+  -->
+
+
+
+  <!-- 支付信息 -->
+  <div class="flexRow payBox">
+    <div class="flexRow payBox-left">
+      <div class="payBox-img" ></div>
+      <div class="payBox-label">微信支付</div>
+    </div>
+
+    <div class="payBox-btn">
+    </div>
+  </div>
+
+  <div class="pay-tip">拼团成功后，系统将会将产品体验码发送至您预留的手机号码，您可到店进行体验。</div>
+
+    <!-- 底部按钮 -->
+  <div class="flexRow bottomBtnBox payBottomBtn">
+    <div class="flexRow bottomBtnBox-paybtn-info">
+      <div class="bottomBtnBox-info-label">实付:</div>
+      <div class="bottomBtnBox-info-num">￥68</div>
+    </div>
+    <div class="bottomBtnBox-paybtn btn-hover">立即支付
+    </div>
+  </div>
+
+
 
 
   <script src="../components/jquery/dist/jquery.min.js"></script>
