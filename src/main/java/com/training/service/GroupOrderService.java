@@ -57,6 +57,22 @@ public class GroupOrderService {
         if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
             return ResponseUtil.exception("验证码无效");
         }
+
+        String[] codes = Const.validCodeMap.get(groupOrder.getPhone()).split("_");
+        logger.info(" code : {} " ,codes[0]);
+        logger.info(" time : {} " ,codes[1]);
+
+        long time = Long.parseLong(codes[1]);
+        long now = System.currentTimeMillis();
+
+        logger.info(" time : {} " ,time);
+        logger.info(" now : {} " ,now);
+
+        if(!validCode.equals(codes[0])){
+            return ResponseUtil.exception("验证码错误!");
+        }
+
+
         int n = groupOrderDao.add(groupOrder);
 
         if(n > 0){

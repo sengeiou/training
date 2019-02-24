@@ -197,9 +197,6 @@
     </div>
 </div>
 
-
-
-
 <script src="../components/jquery/dist/jquery.min.js"></script>
 <script src="../components/humane/humane.min.js"></script>
 <script type="text/javascript">
@@ -223,7 +220,7 @@
 
 
         var timer;
-        var defaultCount = 10;
+        var defaultCount = 60;
         var count = 0;
         var sending = false;
         /* 单选框 */
@@ -267,9 +264,9 @@
             var info = {};
             info.phone= $("#phone").val();
             info.openId = '<%= openId %>';
-            alert(info.phone)
+            //alert(info.phone)
             $.post("/api/member/sendOrderCode",info,function(result){
-                alert(JSON.stringify(result))
+                //alert(JSON.stringify(result))
 //                alert(result.status)
                 if(result.status!=200){
                     alert("发送验证码异常，请稍后再试！"+result.msg);
@@ -365,7 +362,7 @@
                         if(res.err_msg == "get_brand_wcpay_request:ok" ){
                             // 使用以上方式判断前端返回,微信团队郑重提示：
                             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                            alert("支付成功："+res);
+                            //alert("支付成功："+res);
                             document.location.href="success.jsp";
                         }else{
                             flag = 0;

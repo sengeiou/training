@@ -213,10 +213,18 @@ public class WechatController {
             sysLogService.add(sysLogEntity);
             response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
 
-            jdbcTemplate.update(" update group_order set status = 3 , pay_id = ?, pay_time = ? where order_id = ? ",new Object[]{transactionId, ut.currentTime(),orderId});
+            String sql = "update group_order set status = ? , pay_id = ?, pay_time = ? where order_id = ? ";
+
             if(groupOrder.getMainFlag().equals("2")){
                 String mainId = groupOrder.getMainOrderId();
                 jdbcTemplate.update(" update group_order set count = count+1, status = 3 where order_id = ? ",new Object[]{mainId});
+                jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
+
+            }else if(groupOrder.getMainFlag().equals("1")){
+                jdbcTemplate.update(sql,new Object[]{"2",transactionId, ut.currentTime(),orderId});
+
+            }else if(groupOrder.getMainFlag().equals("0")){
+                jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
             }
 
         } catch (Exception e) {

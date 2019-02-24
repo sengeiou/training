@@ -61,7 +61,7 @@ System.out.println(" ****************     index.jsp  *********  ");
         passdays = 1;
     }
 
-    List orders = jdbcTemplate.queryForList("select * from group_order where buy_id = ? and status = 2 and main_flag <> '2' ",new Object[]{buyId});
+    List orders = jdbcTemplate.queryForList("select * from group_order where buy_id = ? and status = 2 and main_flag = '1' ",new Object[]{buyId});
     System.out.println(" orders = "+orders.size());
 
 //    Map<String, String> signMap = new HashMap<>();
@@ -87,7 +87,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     <script src="/order/components/jquery/dist/jquery.min.js"></script>
     <script>
         wx.config({
-            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: 'wx07d9e50873fe1786', // 必填，公众号的唯一标识
             timestamp: '<%= timeStamp %>', // 必填，生成签名的时间戳
             nonceStr: 'Wm3WZYTPz0wzccnW', // 必填，生成签名的随机串
