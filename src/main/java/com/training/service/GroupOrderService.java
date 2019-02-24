@@ -55,17 +55,19 @@ public class GroupOrderService {
             return ResponseUtil.exception("请输入手机验证码");
         }
         if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
-            return ResponseUtil.exception("验证码无效");
+//            return ResponseUtil.exception("验证码无效");
         }
-        int orderId = groupOrderDao.add(groupOrder);
-        logger.info(" addOrder orderId = {} ",orderId);
-        if(orderId > 0){
+        int n = groupOrderDao.add(groupOrder);
+
+        if(n > 0){
+            Long orderId = groupOrder.getOrderId();
+            logger.info(" addOrder orderId = {} ",orderId);
             String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
             String mch_id = "1284812401";
             String key = "DyCGX2iQOMt1S5spSWdB8wmya7aO3ACj";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
-            String out_trade_no = ""+orderId;
+            String out_trade_no = ""+orderId+"_"+System.currentTimeMillis();
             String timeStamp = ""+System.currentTimeMillis()/1000;
 
             Map<String,String> param = new HashMap();
@@ -78,7 +80,7 @@ public class GroupOrderService {
             param.put("body",openId);
             param.put("detail","detail123");
             param.put("attach",openId);
-            param.put("out_trade_no",out_trade_no+"_"+System.currentTimeMillis());
+            param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
             param.put("total_fee",groupOrder.getTotalFee());
             param.put("total_fee","1");

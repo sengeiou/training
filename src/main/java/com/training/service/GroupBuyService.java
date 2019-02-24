@@ -33,8 +33,14 @@ public class GroupBuyService {
      * Created by huai23 on 2019-01-30 22:53:15.
      */ 
     public ResponseEntity<String> add(GroupBuyEntity groupBuy){
-        User user = RequestContextHelper.getUser();
-        groupBuy.setBuyId(IDUtils.getId());
+        logger.info("content:{}",groupBuy.getContent().length());
+        if(groupBuy.getContent()!=null&&groupBuy.getContent().length()>400000){
+            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
+        }
+        logger.info(" group_buyRestController  add  groupBuy = {}",groupBuy);
+        String id = IDUtils.getId();
+        groupBuy.setBuyId(id);
+        groupBuy.setShareUrl("http://cloud.heyheroes.com/od/"+id);
         int n = groupBuyDao.add(groupBuy);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -85,6 +91,10 @@ public class GroupBuyService {
      * Created by huai23 on 2019-01-30 22:53:15.
      */ 
     public  ResponseEntity<String> update(GroupBuyEntity groupBuy){
+        logger.info("content:{}",groupBuy.getContent().length());
+        if(groupBuy.getContent()!=null&&groupBuy.getContent().length()>400000){
+            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
+        }
         int n = groupBuyDao.update(groupBuy);
         if(n==1){
             return ResponseUtil.success("修改成功");

@@ -15,11 +15,13 @@ import com.training.service.MemberCardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,6 +65,15 @@ public class WechatController {
         logger.info("  IndexController  root  ");
         return "index";
     }
+
+    @RequestMapping (value = "/od/{id}")
+    public String order(@PathVariable String id, HttpServletRequest request, HttpServletResponse response){
+        logger.info("  order  id = {}",id);
+        request.setAttribute("id",id);
+        return "order/templates/index";
+    }
+
+
 
     /**
      * 支付回调接口
@@ -167,8 +178,10 @@ public class WechatController {
             logger.info("----attach---  {}" ,data.get("attach"));
             String openId = data.get("openid");
             String transactionId = data.get("transaction_id");
-            String orderId = data.get("out_trade_no");
-
+            String out_trade_no = data.get("out_trade_no");
+            String orderId = out_trade_no.split("_")[0];
+            logger.info("----out_trade_no---  {}" ,out_trade_no);
+            logger.info("----orderId---  {}" ,orderId);
             GroupOrder groupOrder = groupOrderService.getById(orderId);
             MemberEntity memberEntity = memberService.getByPhone(groupOrder.getPhone());
             if(memberEntity==null){
@@ -200,7 +213,11 @@ public class WechatController {
             sysLogService.add(sysLogEntity);
             response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
 
-            jdbcTemplate.update(" update group_order set status = 2 where order_id = ? ",new Object[]{orderId});
+            jdbcTemplate.update(" update group_order set status = 3 , pay_id = ?, pay_time = ? where order_id = ? ",new Object[]{transactionId, ut.currentTime(),orderId});
+            if(groupOrder.getMainFlag().equals("2")){
+                String mainId = groupOrder.getMainOrderId();
+                jdbcTemplate.update(" update group_order set count = count+1, status = 3 where order_id = ? ",new Object[]{mainId});
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

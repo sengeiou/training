@@ -35,6 +35,12 @@
             document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
         };
         window.onresize();
+
+        history.pushState(null,null, document.URL);
+        window.addEventListener('popstate',function(){
+            history.pushState(null,null, document.URL);
+        });
+
     </script>
 
     <link rel="stylesheet" href="../css/app.css?v=<%= UUID.randomUUID() %>">

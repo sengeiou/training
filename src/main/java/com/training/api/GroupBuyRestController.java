@@ -37,7 +37,7 @@ public class GroupBuyRestController {
      */ 
     @RequestMapping (value = "add", method = RequestMethod.POST)
     public ResponseEntity<String> add(@RequestBody GroupBuyEntity groupBuy,HttpServletRequest request, HttpServletResponse response){
-        logger.info(" group_buyRestController  add  groupBuy = {}",groupBuy);
+        logger.info(" group_buyRestController  add  groupBuy = {}");
         return groupBuyService.add(groupBuy);
     }
 
@@ -87,7 +87,7 @@ public class GroupBuyRestController {
      */ 
     @RequestMapping (value = "update", method = RequestMethod.POST)
     public ResponseEntity<String> update(@RequestBody GroupBuyEntity groupBuy,HttpServletRequest request, HttpServletResponse response){
-        logger.info("  update  groupBuy = {}",groupBuy);
+//        logger.info("  update  groupBuy = {}",groupBuy);
         return groupBuyService.update(groupBuy);
     }
 

@@ -9,12 +9,14 @@
 <%@ page import="com.training.util.SHA1" %>
 <%@ page import="org.springframework.jdbc.core.JdbcTemplate" %>
 <%@ page import="com.training.config.ContextUtil" %>
+<%@ page import="com.training.util.ut" %>
 <%
 System.out.println(" ****************     index.jsp  *********  ");
     String timeStamp = ""+System.currentTimeMillis()/1000;
     String nonce_str = "abc123cba321";
     String sha1 = "";
     System.out.println("timeStamp = "+timeStamp);
+    String id = request.getAttribute("id").toString();
 
     String uri = request.getRequestURI();
     System.out.println("uri = "+uri);
@@ -41,18 +43,25 @@ System.out.println(" ****************     index.jsp  *********  ");
         String ticket = jsonObject.getString("ticket");
         System.out.println("ticket = "+ticket);
         String str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url=http://cloud.heyheroes.com/order/templates/index.jsp?"+query;
+        str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url=http://cloud.heyheroes.com/od/"+id+"?"+query;
         System.out.println(str);
         sha1 = SHA1.encode(str);
         System.out.println("sha1 = "+sha1);
     }
 
     JdbcTemplate jdbcTemplate = (JdbcTemplate) ContextUtil.getBean("jdbcTemplate");
-    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = '15508012564848cfa29b862bf4b939e721e1eb8f51dc5' limit 1 ");
+    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = ? ",new Object[]{id});
     Map buy = (Map)buys.get(0);
 
     String buyId = buy.get("buy_id").toString();
+    String endDate = buy.get("end_date").toString();
 
-    List orders = jdbcTemplate.queryForList("select * from group_order where buy_id = ? and status = 2 ",new Object[]{buyId});
+    int passdays = ut.passDayByDate(ut.currentDate(),endDate);
+    if(passdays<0){
+        passdays = 1;
+    }
+
+    List orders = jdbcTemplate.queryForList("select * from group_order where buy_id = ? and status = 2 and main_flag <> '2' ",new Object[]{buyId});
     System.out.println(" orders = "+orders.size());
 
 //    Map<String, String> signMap = new HashMap<>();
@@ -75,7 +84,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>HeyHeroes</title>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
-    <script src="../components/jquery/dist/jquery.min.js"></script>
+    <script src="/order/components/jquery/dist/jquery.min.js"></script>
     <script>
         wx.config({
             debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -91,14 +100,28 @@ System.out.println(" ****************     index.jsp  *********  ");
             wx.onMenuShareAppMessage({
                 title: "<%= buy.get("share_title") %>",
                 desc: "<%= buy.get("share_desc") %>",
-                link: "http://cloud.heyheroes.com/order/templates/index.jsp?<%= query %>",
+                link: "http://cloud.heyheroes.com/od/<%= id %>?<%= query %>",
                 imgUrl: "http://cloud.heyheroes.com/<%= buy.get("share_image") %>",
                 success: function () {
-                    alert('分享成功');
+                    alert('分享给朋友成功');
                 },
                 cancel: function () {
                 }
             });
+
+            // 分享朋友圈
+            wx.onMenuShareTimeline({
+                title: "<%= buy.get("share_title") %>",
+                desc: "<%= buy.get("share_desc") %>",
+                link: "http://cloud.heyheroes.com/od/<%= id %>?<%= query %>",
+                imgUrl: "http://cloud.heyheroes.com/<%= buy.get("share_image") %>",
+                success: function () {
+                    alert('分享朋友圈成功');
+                },
+                cancel: function () {
+                }
+            });
+
         })
 
         window.onresize = function () {
@@ -136,7 +159,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 
         })
     </script>
-    <link rel="stylesheet" href="../css/app.css?v=<%= UUID.randomUUID() %>">
+    <link rel="stylesheet" href="/order/css/app.css?v=<%= UUID.randomUUID() %>">
 </head>
 
 <style type="text/css">
@@ -149,7 +172,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <body>
 <!-- 项目图片及名称 -->
 <div class="topBox">
-    <img class="project-img" src="../img/porject_image.png" />
+    <img class="project-img" src="/order/img/porject_image.png" />
     <div class="project-title">
         <%= buy.get("title") %>
     </div>
@@ -163,7 +186,6 @@ System.out.println(" ****************     index.jsp  *********  ");
         <div class="flexRow userBox-head-link btn-hover" id="btnOpenModalList">
             <% if(orders.size() > 2) { %>
             <div class="userBox-head-link-label">查看更多</div>
-            .0................./...........
             <div class="userBox-head-link-icon" ></div>
             <% } %>
         </div>
@@ -171,19 +193,19 @@ System.out.println(" ****************     index.jsp  *********  ");
 
     <div class="userBox-list">
         <%
-            for(int i=0;i<orders.size();i++){
+            for(int i=0;i< (orders.size()>2?2:orders.size());i++){
                 Map order = (Map)orders.get(i);
         %>
         <!-- 开团人 -->
         <div class="flexRow userBox-item">
             <div class="flexRow userBox-item-left">
-                <img class="userBox-item-left-img" src="../img/headImage.png" />
+                <img class="userBox-item-left-img" src="/order/img/headImage.png" />
                 <div class="userBox-item-left-name"></div>
             </div>
             <div class="flexRow userBox-item-right">
                 <div class="userBox-item-right-info">
                     <div class="userBox-item-right-info-top">还差<span>1人</span>拼成</div>
-                    <div class="userBox-item-right-info-bottom">剩余29天 20: 43: 30</div>
+                    <div class="userBox-item-right-info-bottom">剩余<%= passdays %>天</div>
                 </div>
                 <div class="userBox-item-right-btn btn-hover btnOpenModalProject" orderId="<%= order.get("order_id") %>">去拼团</div>
             </div>
@@ -211,8 +233,8 @@ System.out.println(" ****************     index.jsp  *********  ");
 <!-- 项目简介 -->
 <div class="protectBox">
     <div class="protectBox-title">内容简介</div>
-    <div class="protectBox-text"><%= buy.get("title") %></div>
-    <img class="protectBox-image" src="../img/porject_image.png"/>
+    <div class="protectBox-text"><%= buy.get("content") %></div>
+    <img class="protectBox-image" src="/order/img/porject_image.png"/>
 </div>
 
 <!-- 底部按钮 -->
@@ -243,10 +265,10 @@ System.out.println(" ****************     index.jsp  *********  ");
             <!-- 遍历部分-拼团item -->
             <div class="flexRow modal-userBox-item">
                 <div class="flexRow modal-userBox-item-left">
-                    <img class="modal-userBox-item-left-head" src="../img/headImage.png"/>
+                    <img class="modal-userBox-item-left-head" src="/order/img/headImage.png"/>
                     <div class="flexColumn modal-userBox-item-left-infoBox">
-                        <div class="modal-userBox-item-left-infoBox-top">machiael 还差2人</div>
-                        <div class="modal-userBox-item-left-infoBox-bottom">剩余29天 20: 43: 30</div>
+                        <div class="modal-userBox-item-left-infoBox-top">还差1人</div>
+                        <div class="modal-userBox-item-left-infoBox-bottom">剩余<%= passdays %>天</div>
                     </div>
                 </div>
                 <div class="modal-userBox-item-right btn-hover btnOpenModalProject" orderId="<%= order.get("order_id") %>">去拼团</div>
@@ -277,17 +299,17 @@ System.out.println(" ****************     index.jsp  *********  ");
         <div class="modal-close"  id="btnCloseModalProject"></div>
         <div class="modal-project-title">参与拼单</div>
         <input id = "mainOrderId" type="hidden" value ="" />
-        <div class="modal-project-sub">仅剩<span>1</span>个名额，29天 20: 43: 30后结束</div>
+        <div class="modal-project-sub">仅剩<span>1</span>个名额，<%= passdays %>天后结束</div>
         <div class="flexRow modal-project-users">
-            <img class="modal-project-users-image" src="../img/headImage.png" />
-            <img class="modal-project-users-image" src="../img/icon-noUser.png" />
+            <img class="modal-project-users-image" src="/order/img/headImage.png" />
+            <img class="modal-project-users-image" src="/order/img/icon-noUser.png" />
         </div>
         <a id="gotoPt" class="modal-project-btn btn-hover" href="">参与拼团</a>
     </div>
 </div>
 </div>
 
-<script src="../components/jquery/dist/jquery.min.js"></script>
+<script src="/order/components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript">
     $(function(){
         $('#btnOpenModalList').on('click',function(){
