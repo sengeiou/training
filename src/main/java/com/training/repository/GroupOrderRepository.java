@@ -55,6 +55,7 @@ public interface GroupOrderRepository {
                 " now() " +
             " ) " +
             "</script>")
+    @Options(useGeneratedKeys=true, keyProperty="orderId", keyColumn="order_id")
     int add(@Param("groupOrder") GroupOrderEntity groupOrder);
 
     @Select("<script> SELECT order_id,buy_id,store_id,member_id,phone,name,gender,count,total_fee,main_flag,main_order_id,status,feature,pay_type,pay_id,pay_time,remark,created,modified " +

@@ -284,6 +284,12 @@ em {
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
           align-items: flex-start;
+  font-size: .32rem;
+  line-height: .45rem;
+}
+.protectBox img {
+  width: 6.7rem !important;
+  margin-bottom: .25rem;
 }
 .protectBox .protectBox-title {
   height: .45rem;
@@ -620,10 +626,10 @@ em {
   background-size: .43rem;
 }
 .pay-tip {
-  position: absolute;
-  width: 6.54rem;
-  bottom: 1.35rem;
-  left: .5rem;
+  width: 6.5rem;
+  margin-left: .5rem;
+  margin-top: .4rem;
+  margin-bottom: 2rem;
 }
 /* 添加信息页面 */
 .addPanel {
@@ -722,10 +728,12 @@ em {
       -ms-flex-pack: end;
           justify-content: flex-end;
 }
-.formBox .formBox-item .formBox-item-selection .fromBox-item-selection-label {
+.formBox .formBox-item .formBox-item-selection .formBox-item-selection-label {
   height: .36rem;
+  font-size: .36rem;
+  line-height: .36rem;
 }
-.formBox .formBox-item .formBox-item-selection .fromBox-item-selection-icon {
+.formBox .formBox-item .formBox-item-selection .formBox-item-selection-icon {
   width: .22rem;
   height: .36rem;
   margin-left: .25rem;

@@ -207,6 +207,7 @@ public class MemberCardService {
             int days = memberCardEntity.getDays();
             int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
             int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
+            count = memberCardEntity.getDays();
             memberCard.setTotal(total);
             memberCard.setCount(count);
             memberCard.setDays(total);

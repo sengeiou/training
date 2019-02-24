@@ -106,7 +106,6 @@ public class MemberService {
         member.setMemberId(IDUtils.getId());
         int n = memberDao.add(member);
         if(n==1){
-
             MemberEntity memberEntity = memberDao.getById(member.getMemberId());
             if(!StringUtils.isEmpty(member.getCoachStaffId())){
                 StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
@@ -475,6 +474,33 @@ public class MemberService {
         try {
             smsUtil.sendCode(member.getPhone(),code);
             logger.info(" memberRestController  sendCode  getPhone = {} , code = {} ",member.getPhone(),code);
+            return ResponseUtil.success("发送验证码成功");
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return ResponseUtil.exception("发送验证码失败");
+        }
+    }
+
+    /**
+     * 根据手机号码发送验证码
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    public ResponseEntity<String> sendOrderCode(Member member) {
+        logger.info("sendOrderCode  getOpenId = {}",member.getOpenId());
+        logger.info("sendOrderCode  getPhone = {}",member.getPhone());
+        if(!Const.openIds.contains(member.getOpenId())){
+            return ResponseUtil.exception("发送失败");
+        }
+        if(StringUtils.isEmpty(member.getPhone())||member.getPhone().length()!=11){
+            return ResponseUtil.exception("手机号码输入有误!");
+        }
+        String code = IDUtils.getVerifyCode();
+//        code = "1234";
+        Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
+        try {
+            smsUtil.sendCode(member.getPhone(),code);
+            logger.info(" sendOrderCode  getPhone = {} , code = {} ",member.getPhone(),code);
             return ResponseUtil.success("发送验证码成功");
         } catch (ClientException e) {
             e.printStackTrace();

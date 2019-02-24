@@ -52,5 +52,7 @@ public class GroupOrderEntity {
 
     private String openId;
 
+    private String validCode;
+
 }
 

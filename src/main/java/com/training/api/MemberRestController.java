@@ -170,6 +170,17 @@ public class MemberRestController {
     }
 
     /**
+     * 根据手机号码发送验证码
+     * @param member
+     * Created by huai23 on 2018-05-26 13:39:33.
+     */
+    @RequestMapping (value = "sendOrderCode", method = RequestMethod.POST)
+    public ResponseEntity<String> sendOrderCode(@ModelAttribute Member member, HttpServletRequest request, HttpServletResponse response){
+        logger.info(" memberRestController  sendOrderCode  member = {}",member);
+        return memberService.sendOrderCode(member);
+    }
+
+    /**
      * 根据手机号码绑定会员
      * @param member
      * Created by huai23 on 2018-05-26 13:39:33.

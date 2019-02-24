@@ -47,7 +47,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     }
 
     JdbcTemplate jdbcTemplate = (JdbcTemplate) ContextUtil.getBean("jdbcTemplate");
-    List buys = jdbcTemplate.queryForList("select * from group_buy limit 1 ");
+    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = '15508012564848cfa29b862bf4b939e721e1eb8f51dc5' limit 1 ");
     Map buy = (Map)buys.get(0);
 
     String buyId = buy.get("buy_id").toString();
@@ -159,10 +159,11 @@ System.out.println(" ****************     index.jsp  *********  ");
 <!-- 开团列表 -->
 <div class="flexColumn userBox">
     <div class="flexRow userBox-head">
-        <div class="userBox-head-label"><%= buy.get("init_count") %>人在拼单</div>
+        <div class="userBox-head-label"><%= orders.size() %>人在拼单</div>
         <div class="flexRow userBox-head-link btn-hover" id="btnOpenModalList">
             <% if(orders.size() > 2) { %>
             <div class="userBox-head-link-label">查看更多</div>
+            .0................./...........
             <div class="userBox-head-link-icon" ></div>
             <% } %>
         </div>
@@ -210,7 +211,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <!-- 项目简介 -->
 <div class="protectBox">
     <div class="protectBox-title">内容简介</div>
-    <div class="protectBox-text"><%= buy.get("content") %></div>
+    <div class="protectBox-text"><%= buy.get("title") %></div>
     <img class="protectBox-image" src="../img/porject_image.png"/>
 </div>
 

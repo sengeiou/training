@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 @Component
 public class Const {
@@ -13,6 +14,8 @@ public class Const {
     public static final String DOMAIN = "http://localhost:8080";
 
     public static ConcurrentHashMap<String,String> validCodeMap = new ConcurrentHashMap();
+
+    public static ConcurrentSkipListSet<String> openIds = new ConcurrentSkipListSet();
 
     public static List<Integer> times;
 

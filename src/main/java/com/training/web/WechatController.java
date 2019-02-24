@@ -2,11 +2,15 @@ package com.training.web;
 
 import com.alibaba.fastjson.JSON;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.training.common.OriginEnum;
 import com.training.common.SysLogEnum;
 import com.training.dao.SysLogDao;
+import com.training.domain.GroupOrder;
+import com.training.entity.GroupOrderEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
 import com.training.entity.SysLogEntity;
+import com.training.service.GroupOrderService;
 import com.training.service.MemberCardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
@@ -14,6 +18,7 @@ import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +46,13 @@ public class WechatController {
     private MemberService memberService;
 
     @Autowired
+    private GroupOrderService groupOrderService;
+
+    @Autowired
     private SysLogDao sysLogDao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 首页
@@ -156,8 +167,18 @@ public class WechatController {
             logger.info("----attach---  {}" ,data.get("attach"));
             String openId = data.get("openid");
             String transactionId = data.get("transaction_id");
-            MemberEntity memberEntity = memberService.getByOpenId(openId);
-            String logId = data.get("out_trade_no");
+            String orderId = data.get("out_trade_no");
+
+            GroupOrder groupOrder = groupOrderService.getById(orderId);
+            MemberEntity memberEntity = memberService.getByPhone(groupOrder.getPhone());
+            if(memberEntity==null){
+                memberEntity = new MemberEntity();
+                memberEntity.setPhone(groupOrder.getPhone());
+                memberEntity.setStoreId(groupOrder.getStoreId());
+                memberEntity.setGender(groupOrder.getGender());
+                memberEntity.setOrigin(OriginEnum.WX.getDesc());
+                memberService.add(memberEntity);
+            }
             String resultStr = "group_success";
             SysLogEntity sysLogEntity = new SysLogEntity();
             sysLogEntity.setLogId(IDUtils.getId());
@@ -178,6 +199,9 @@ public class WechatController {
             sysLogEntity.setRemark(resultStr);
             sysLogService.add(sysLogEntity);
             response.getWriter().write("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
+
+            jdbcTemplate.update(" update group_order set status = 2 where order_id = ? ",new Object[]{orderId});
+
         } catch (Exception e) {
             e.printStackTrace();
         }

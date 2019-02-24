@@ -6,6 +6,7 @@ import com.training.domain.GroupOrder;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -48,14 +49,23 @@ public class GroupOrderService {
      */ 
     public ResponseEntity<String> addOrder(GroupOrderEntity groupOrder) throws Exception {
         String openId = groupOrder.getOpenId();
-        int n = groupOrderDao.add(groupOrder);
-        if(n==1){
+        String validCode = groupOrder.getValidCode();
+        logger.info(" validCodeMap : {} " , Const.validCodeMap);
+        if(StringUtils.isEmpty(validCode)){
+            return ResponseUtil.exception("请输入手机验证码");
+        }
+        if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
+            return ResponseUtil.exception("验证码无效");
+        }
+        int orderId = groupOrderDao.add(groupOrder);
+        logger.info(" addOrder orderId = {} ",orderId);
+        if(orderId > 0){
             String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
             String mch_id = "1284812401";
             String key = "DyCGX2iQOMt1S5spSWdB8wmya7aO3ACj";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
-            String out_trade_no = UUID.randomUUID().toString().replaceAll("-","");
+            String out_trade_no = ""+orderId;
             String timeStamp = ""+System.currentTimeMillis()/1000;
 
             Map<String,String> param = new HashMap();
@@ -68,9 +78,10 @@ public class GroupOrderService {
             param.put("body",openId);
             param.put("detail","detail123");
             param.put("attach",openId);
-            param.put("out_trade_no",out_trade_no);
+            param.put("out_trade_no",out_trade_no+"_"+System.currentTimeMillis());
             param.put("fee_type","CNY");
             param.put("total_fee",groupOrder.getTotalFee());
+            param.put("total_fee","1");
             param.put("spbill_create_ip","47.104.252.220");
             param.put("notify_url","https://cloud.heyheroes.com/wechat/pay/group/callback");
             param.put("trade_type","JSAPI");
@@ -96,6 +107,7 @@ public class GroupOrderService {
             signMap.put("signType","MD5");
             sign = WXPayUtil.generateSignature(signMap,key);
             signMap.put("paySign",sign);
+//            Const.validCodeMap.remove(groupOrder.getPhone());
             return ResponseUtil.success("添加成功",signMap);
         }
         return ResponseUtil.exception("添加失败");

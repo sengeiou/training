@@ -184,7 +184,7 @@ public class UploadPicTest {
         InputStream in = new FileInputStream(file);
         byte[] strBuffer = new byte[(int)file.length()];
         in.read(strBuffer, 0, (int)file.length());
-        String result = httpPost("https://trainingbj.huai23.com/api/upload/image",strBuffer);
+        String result = httpPost("https://cloud.heyheroes.com/api/upload/image",strBuffer);
 
         System.out.println(result);
     }

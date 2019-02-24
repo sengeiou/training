@@ -29,6 +29,7 @@ public class GroupOrderDao {
      */ 
     public int add(GroupOrderEntity groupOrder){
         int n = groupOrderRepository.add(groupOrder);
+        logger.info(" GroupOrderDao add  groupOrder = {} ",groupOrder);
         return n;
     }
 

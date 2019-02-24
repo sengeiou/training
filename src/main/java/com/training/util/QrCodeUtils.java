@@ -58,7 +58,7 @@ public class QrCodeUtils {
     }
 
     public static void main(String[] args) {
-        getBase64Str("https://trainingbj.huai23.com/sign_in?id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        getBase64Str("https://cloud.heyheroes.com/sign_in?id=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     }
 
 }
