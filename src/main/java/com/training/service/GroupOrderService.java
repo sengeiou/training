@@ -55,7 +55,7 @@ public class GroupOrderService {
             return ResponseUtil.exception("请输入手机验证码");
         }
         if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
-//            return ResponseUtil.exception("验证码无效");
+            return ResponseUtil.exception("验证码无效");
         }
         int n = groupOrderDao.add(groupOrder);
 
