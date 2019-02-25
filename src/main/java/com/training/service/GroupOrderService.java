@@ -3,6 +3,7 @@ package com.training.service;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.training.dao.*;
 import com.training.domain.GroupOrder;
+import com.training.domain.StoreData;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -42,6 +45,8 @@ public class GroupOrderService {
     @Autowired
     private GroupOrderLogDao groupOrderLogDao;
 
+    @Autowired
+    private GroupBuyDao groupBuyDao;
     /**
      * 新增实体
      * @param groupOrder
@@ -166,8 +171,27 @@ public class GroupOrderService {
     private GroupOrder transferOrder(GroupOrderEntity groupOrderEntity) {
         GroupOrder groupOrder = new GroupOrder();
         BeanUtils.copyProperties(groupOrderEntity,groupOrder);
-
-
+        GroupBuyEntity groupBuyEntity = groupBuyDao.getById(groupOrderEntity.getBuyId());
+        if(groupBuyEntity!=null){
+            groupOrder.setTitle(groupBuyEntity.getTitle());
+        }
+        StoreEntity storeEntity = storeDao.getById(groupOrder.getStoreId());
+        if(storeEntity!=null){
+            groupOrder.setStoreName(storeEntity.getName());
+        }
+        if(groupOrder.getStatus()==0){
+            groupOrder.setShowStatus("待付款");
+        }else if(groupOrder.getStatus()==2){
+            groupOrder.setShowStatus("已付款待拼团");
+        }else if(groupOrder.getStatus()==-1){
+            groupOrder.setShowStatus("已失效");
+        }else if(groupOrder.getStatus()==3){
+            groupOrder.setShowStatus("已完成");
+        }else{
+            groupOrder.setShowStatus(""+groupOrder.getStatus());
+        }
+        DateFormat df_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        groupOrder.setCreateTime(df_time.format(groupOrderEntity.getCreated()));
         return groupOrder;
     }
 

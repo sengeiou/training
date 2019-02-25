@@ -37,8 +37,25 @@ public class ut {
 	public static double formatDouble(double d){
 		String temp = getDoubleString(d);
 		return Double.parseDouble(temp); 
-	};
-	
+	}
+
+	/**
+	 * 时间戳转换成日期格式字符串
+	 * @param seconds 精确到秒的字符串
+	 * @param format
+	 * @return
+	 */
+     public static String timeStamp2Date(String seconds,String format) {
+		 if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+		     return "";
+		 }
+		 if(format == null || format.isEmpty()){
+		    format = "yyyy-MM-dd HH:mm:ss";
+		 }
+		 SimpleDateFormat sdf = new SimpleDateFormat(format);
+		 return sdf.format(new Date(Long.valueOf(seconds)));
+     }
+
 	public static int passMin(String time){
 		int min = 0;
 		try {
@@ -52,7 +69,7 @@ public class ut {
 			return min;
 		}//转换成功的Date对象
 		return min;
-	};
+	}
 	
 	public static int passMin(String time1,String time2){
 		int min = 0;

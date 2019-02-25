@@ -120,7 +120,20 @@ public class ReportStaffService {
 
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month.replace("-",""));
         if(kpiStaffMonthEntity!=null){
-            financeStaffReportEntity.setKpiScore(kpiStaffMonthEntity.getKpiScore());
+            double finalScore = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getExtraScore())){
+                double extraScore = Double.parseDouble(kpiStaffMonthEntity.getExtraScore());
+                finalScore = finalScore + extraScore;
+                if(finalScore<0){
+                    finalScore = 0;
+                }
+            }
+            logger.info(" calculateStaffFinanceReport  final finalScore : {}   ",finalScore);
+            financeStaffReportEntity.setKpiScore(ut.getDoubleString(finalScore));
+
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam1())){
+                financeStaffReportEntity.setStar(Integer.parseInt(kpiStaffMonthEntity.getParam1()));
+            }
         }else {
             financeStaffReportEntity.setKpiScore("-");
         }

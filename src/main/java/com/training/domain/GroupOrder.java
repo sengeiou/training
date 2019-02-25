@@ -57,5 +57,7 @@ public class GroupOrder {
 
     private List<GroupOrderLogEntity> logs = new ArrayList();
 
+    private String createTime;
+
 }
 

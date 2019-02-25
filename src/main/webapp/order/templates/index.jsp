@@ -172,7 +172,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <body>
 <!-- 项目图片及名称 -->
 <div class="topBox">
-    <img class="project-img" src="/order/img/porject_image.png" />
+    <img class="project-img" src="<%= buy.get("image") %>" />
     <div class="project-title">
         <%= buy.get("title") %>
     </div>
@@ -234,7 +234,7 @@ System.out.println(" ****************     index.jsp  *********  ");
 <div class="protectBox">
     <div class="protectBox-title">内容简介</div>
     <div class="protectBox-text"><%= buy.get("content") %></div>
-    <img class="protectBox-image" src="/order/img/porject_image.png"/>
+    <%--<img class="protectBox-image" src="/order/img/porject_image.png"/>--%>
 </div>
 
 <!-- 底部按钮 -->

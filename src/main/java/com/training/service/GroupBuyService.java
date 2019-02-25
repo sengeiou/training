@@ -40,7 +40,7 @@ public class GroupBuyService {
         logger.info(" group_buyRestController  add  groupBuy = {}",groupBuy);
         String id = IDUtils.getId();
         groupBuy.setBuyId(id);
-        groupBuy.setShareUrl("http://cloud.heyheroes.com/od/"+id);
+        groupBuy.setShareUrl("http://cloud.heyheroes.com/od/"+id+"?from=singlemessage&isappinstalled=0");
         int n = groupBuyDao.add(groupBuy);
         if(n==1){
             return ResponseUtil.success("添加成功");
