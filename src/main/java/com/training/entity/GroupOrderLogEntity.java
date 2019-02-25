@@ -30,6 +30,8 @@ public class GroupOrderLogEntity {
 
     private Date modified;
 
+    private String staffName;
+
 
 }
 

@@ -1,6 +1,7 @@
 package com.training.service;
 
 import com.training.dao.*;
+import com.training.domain.Staff;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
@@ -27,14 +28,24 @@ public class GroupOrderLogService {
     @Autowired
     private GroupOrderLogDao groupOrderLogDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
+    @Autowired
+    private StaffDao staffDao;
+
+    @Autowired
+    private StoreDao storeDao;
+
     /**
      * 新增实体
      * @param groupOrderLog
      * Created by huai23 on 2019-01-30 23:16:13.
      */ 
     public ResponseEntity<String> add(GroupOrderLogEntity groupOrderLog){
-        User user = RequestContextHelper.getUser();
+        Staff staff = RequestContextHelper.getStaff();
         groupOrderLog.setLogId(IDUtils.getId());
+        groupOrderLog.setStaffId(staff.getStaffId());
         int n = groupOrderLogDao.add(groupOrderLog);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -50,6 +61,12 @@ public class GroupOrderLogService {
      */ 
     public Page<GroupOrderLogEntity> find(GroupOrderLogQuery query , PageRequest page){
         List<GroupOrderLogEntity> groupOrderLogList = groupOrderLogDao.find(query,page);
+        for (GroupOrderLogEntity groupOrderLogEntity:groupOrderLogList){
+            StaffEntity staffEntity = staffDao.getById(groupOrderLogEntity.getStaffId());
+            if(staffEntity!=null){
+                groupOrderLogEntity.setStaffName(staffEntity.getCustname());
+            }
+        }
         Long count = groupOrderLogDao.count(query);
         Page<GroupOrderLogEntity> returnPage = new Page<>();
         returnPage.setContent(groupOrderLogList);
