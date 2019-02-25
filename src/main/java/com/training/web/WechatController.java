@@ -15,6 +15,7 @@ import com.training.service.MemberCardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.IDUtils;
+import com.training.util.SmsUtil;
 import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,9 @@ public class WechatController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    SmsUtil smsUtil;
 
     /**
      * 首页

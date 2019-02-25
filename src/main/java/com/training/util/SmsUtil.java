@@ -379,6 +379,50 @@ public class SmsUtil {
         return sendSmsResponse;
     }
 
+    /**
+     * 购买成功通知
+     * @param phone
+     * @param orderId
+     * @return
+     * @throws ClientException
+     */
+    public SendSmsResponse sendOrderBuyNotice(String phone,String orderId) throws ClientException {
+        if(StringUtils.isEmpty(phone)){
+            return null;
+        }
+        SendSmsRequest request = new SendSmsRequest();
+        request.setPhoneNumbers(phone);
+        request.setSignName("HeyHeroes健身");
+        request.setTemplateCode("SMS_158547766");
+        request.setTemplateParam("{\"order\":\""+orderId+"\"}");
+        request.setOutId("huai23");
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));
+        return sendSmsResponse;
+    }
+
+    /**
+     * 拼团成功通知
+     * @param phone
+     * @param orderId
+     * @return
+     * @throws ClientException
+     */
+    public SendSmsResponse sendOrderPintuanNotice(String phone,String orderId) throws ClientException {
+        if(StringUtils.isEmpty(phone)){
+            return null;
+        }
+        SendSmsRequest request = new SendSmsRequest();
+        request.setPhoneNumbers(phone);
+        request.setSignName("HeyHeroes健身");
+        request.setTemplateCode("SMS_158547767");
+        request.setTemplateParam("{\"order\":\""+orderId+"\"}");
+        request.setOutId("huai23");
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));
+        return sendSmsResponse;
+    }
+
     private SendSmsResponse sendSms(SendSmsRequest request) throws ClientException {
         SendSmsResponse sendSmsResponse = null;
         if(sendTag){
