@@ -121,8 +121,8 @@ public class ReportStaffService {
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month.replace("-",""));
         if(kpiStaffMonthEntity!=null){
             double finalScore = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());
-            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getExtraScore())){
-                double extraScore = Double.parseDouble(kpiStaffMonthEntity.getExtraScore());
+            if(StringUtils.isNotEmpty(kpiStaffMonthEntity.getParam5())){
+                double extraScore = Double.parseDouble(kpiStaffMonthEntity.getParam5());
                 finalScore = finalScore + extraScore;
                 if(finalScore<0){
                     finalScore = 0;
