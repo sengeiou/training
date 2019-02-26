@@ -1,6 +1,7 @@
 .topBox {
+  position: relative;
   background: #fff;
-  padding-bottom: .17rem;
+  padding-bottom: .2rem;
   .project-img {
     height: 3.2rem;
     width: 7.5rem;
@@ -13,6 +14,18 @@
     font-size: .34rem;
     line-height: .52rem;
     font-weight: 600;
+    margin-bottom: .2rem;
+  }
+  .project-sub {
+    width: 7.3rem;
+    padding-right: .2rem;
+    height: .12rem;
+    font-size: .12rem;
+    line-height: .12rem;
+    text-align: right;
+    span {
+      color: #af1d23;
+    }
   }
 }
 
@@ -119,6 +132,12 @@
   padding-bottom: 2rem;
   padding-top: .4rem;
   align-items: flex-start;
+  font-size: .32rem;
+  line-height: .45rem;
+  img {
+    width: 6.7rem !important;
+    margin-bottom: .25rem;
+  }
   .protectBox-title {
     height: .45rem;
     font-size: .32rem;
@@ -429,10 +448,10 @@
 }
 
 .pay-tip {
-  position: absolute;
-  width: 6.54rem;
-  bottom: 1.35rem;
-  left: .5rem;
+  width: 6.5rem;
+  margin-left: .5rem;
+  margin-top: .4rem;
+  margin-bottom: 2rem;
 }
 
 /* 添加信息页面 */
@@ -516,10 +535,12 @@
       border: .02rem solid rgba(155, 155, 155, .55);
       border-radius: .12rem;
       justify-content: flex-end;
-      .fromBox-item-selection-label {
+      .formBox-item-selection-label {
         height: .36rem;
+        font-size: .36rem;
+        line-height: .36rem;
       }
-      .fromBox-item-selection-icon {
+      .formBox-item-selection-icon {
         width: .22rem;
         height: .36rem;
         margin-left: .25rem;
@@ -568,5 +589,52 @@
   }
   .formBox-selection {
     align-items: center;
+  }
+}
+
+.spage {
+  position: relative;
+  width: 7.5rem;
+  align-items: center;
+  .icon-share {
+    position: absolute;
+    top: .14rem;
+    right: .21rem;
+    height: .9rem;
+    width: 3.37rem;
+    background: url(../img/icon-share.png) no-repeat center;
+    background-size: 3.37rem .9rem;
+  }
+  .icon-success {
+    height: 1.28rem;
+    width: 1.28rem;
+    margin-top: 1.96rem;
+    background: url(../img/icon-success.png) no-repeat center;
+    background-size: 1.28rem;
+  }
+  .spage-title {
+    margin-top: .14rem;
+    margin-bottom: .31rem;
+    height: .6rem;
+    font-size: .36rem;
+    line-height: .6rem;
+    font-weight: 600;
+    color: #4a4a4a;
+  }
+  .spage-sub {
+    margin-top: .12rem;
+    width: 2.7rem;
+    height: .42rem;
+    font-size: .3rem;
+    line-height: .42rem;
+    text-align: left;
+    color: #4a4a4a;
+  }
+  .spage-message {
+    margin-top: .78rem;
+    height: .42rem;
+    font-size: .3rem;
+    line-height: .42rem;
+    color: #bd1f2d;
   }
 }
