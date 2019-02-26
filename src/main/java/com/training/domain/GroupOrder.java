@@ -15,6 +15,8 @@ public class GroupOrder {
 
     private Long orderId;
 
+    private String buyId;
+
     private String storeId;
 
     private String storeName;

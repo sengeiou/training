@@ -55,6 +55,10 @@ System.out.println(" ****************     index.jsp  *********  ");
 
     String buyId = buy.get("buy_id").toString();
     String endDate = buy.get("end_date").toString();
+    String init_count = buy.get("init_count").toString();
+    String sale_count = buy.get("sale_count").toString();
+
+    int count = Integer.parseInt(init_count)+Integer.parseInt(sale_count);
 
     int passdays = ut.passDayByDate(ut.currentDate(),endDate);
     if(passdays<0){
@@ -176,6 +180,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     <div class="project-title">
         <%= buy.get("title") %>
     </div>
+    <div class="project-sub">共有<span><%= count %></span>位参与</div>
 </div>
 
 

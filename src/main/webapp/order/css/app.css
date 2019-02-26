@@ -154,8 +154,9 @@ em {
           align-items: flex-start;
 }
 .topBox {
+  position: relative;
   background: #fff;
-  padding-bottom: .17rem;
+  padding-bottom: .2rem;
 }
 .topBox .project-img {
   height: 3.2rem;
@@ -169,6 +170,18 @@ em {
   font-size: .34rem;
   line-height: .52rem;
   font-weight: 600;
+  margin-bottom: .2rem;
+}
+.topBox .project-sub {
+  width: 7.3rem;
+  padding-right: .2rem;
+  height: .12rem;
+  font-size: .28rem;
+  line-height: .12rem;
+  text-align: right;
+}
+.topBox .project-sub span {
+  color: #af1d23;
 }
 .userBox {
   background: #fff;

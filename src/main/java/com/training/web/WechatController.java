@@ -231,6 +231,8 @@ public class WechatController {
                 jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
             }
 
+            jdbcTemplate.update("update group_buy set sale_count = sale_count+1 where buy_id = ? ",new Object[]{groupOrder.getBuyId()});
+
         } catch (Exception e) {
             e.printStackTrace();
         }
