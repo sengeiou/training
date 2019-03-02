@@ -26,6 +26,9 @@ public class MeasurementService {
     @Autowired
     private MeasurementDao measurementDao;
 
+    @Autowired
+    private MemberDao memberDao;
+
     /**
      * 新增实体
      * @param measurement
@@ -74,6 +77,14 @@ public class MeasurementService {
      */ 
     public MeasurementEntity getById(String id){
         MeasurementEntity measurementDB = measurementDao.getById(id);
+        if(measurementDB!=null&&measurementDB.getMemberId()!=null){
+            MemberEntity memberEntity = memberDao.getById(measurementDB.getMemberId());
+            if(memberEntity!=null){
+                measurementDB.setMemberImage(memberEntity.getImage());
+            }else{
+                measurementDB.setMemberImage("");
+            }
+        }
         return measurementDB;
     }
 
