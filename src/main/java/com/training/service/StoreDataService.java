@@ -851,6 +851,8 @@ public class StoreDataService {
 
         logger.info(" queryFinanceMonthCardReport financeMonthReportQuery = {} ",financeMonthReportQuery);
         List<FinanceMonthReportEntity> financeMonthReportEntities = financeMonthReportDao.find(financeMonthReportQuery,pageRequest);
+        logger.info(" queryFinanceMonthCardReport financeMonthReportEntities = {} ",financeMonthReportEntities.size());
+
         for (FinanceMonthReportEntity financeMonthReportEntity:financeMonthReportEntities){
             FinanceMonthCardReportData financeMonthCardReportData = new FinanceMonthCardReportData();
             BeanUtils.copyProperties(financeMonthReportEntity,financeMonthCardReportData);

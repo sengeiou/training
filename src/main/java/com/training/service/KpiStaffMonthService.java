@@ -526,6 +526,9 @@ public class KpiStaffMonthService {
         }else if(KpiQuotaEnum.k12.getKey().equals(kpiTemplateQuota.getQuotaId())){
             String storeId = kpiStaffMonth.getStoreId();
             KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,kpiStaffMonth.getMonth());
+            if(kpiStaffMonthEntity==null){
+                return 0;
+            }
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
@@ -556,6 +559,9 @@ public class KpiStaffMonthService {
         }else if(KpiQuotaEnum.k13.getKey().equals(kpiTemplateQuota.getQuotaId())){
             String storeId = kpiStaffMonth.getStoreId();
             KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,kpiStaffMonth.getMonth());
+            if(kpiStaffMonthEntity==null){
+                return 0;
+            }
             kpiTemplateQuota.setFinishRate("-");
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
@@ -685,6 +691,8 @@ public class KpiStaffMonthService {
         KpiStaffMonthEntity kpiStaffMonthDB = kpiStaffMonthDao.getByIdAndMonth(id,month);
         logger.info(" getByIdAndMonth , kpiStaffMonthDB = {}  ",kpiStaffMonthDB);
         KpiStaffMonth kpiStaffMonth = convertKpiStaffMonth(kpiStaffMonthDB);
+        logger.info(" ===getByIdAndMonth , kpiStaffMonth = {}  ",kpiStaffMonth);
+
         return kpiStaffMonth;
     }
 
