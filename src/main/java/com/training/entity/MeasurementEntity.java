@@ -54,6 +54,7 @@ public class MeasurementEntity {
 
     private Date modified;
 
+    private String memberImage;
 
 }
 
