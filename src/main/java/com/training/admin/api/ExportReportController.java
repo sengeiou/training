@@ -74,8 +74,8 @@ public class ExportReportController {
     @GetMapping("monthCardExcel")
     public Object monthCardExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" monthCardExcel   ");
-        String startDate = "2019-01-01";
-        String endDate = "2019-01-31";
+        String startDate = "2019-02-01";
+        String endDate = "2019-02-28";
         exportFileService.monthCardExcel(startDate,endDate);
         return "monthCardExcel执行成功";
     }

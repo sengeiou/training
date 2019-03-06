@@ -936,6 +936,19 @@ public class ut {
 		return "";
 	}
 
+	public static boolean betweenDays(String today, String pause_date, String restore_date) {
+		if(ut.passDayByDate(today,pause_date)>0){
+			return false;
+		}
+		if(ut.passDayByDate(today,restore_date)<=0){
+			return false;
+		}
+		if(ut.passDayByDate(today,pause_date)<=0){
+			return true;
+		}
+		return false;
+	}
+
 	public static void main(String[] args) {
 //		System.out.println(passMonth("2017-11","2016-11"));
 //		System.out.println(currentMonth("2017-11",-1));
@@ -961,7 +974,5 @@ public class ut {
 		System.out.println(ut.passDayByDate("2018-11-15",ut.currentDate(-30)));
 
 	}
-
-
 
 }

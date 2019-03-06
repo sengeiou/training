@@ -171,7 +171,7 @@ public class ExportFileService {
 
     public void monthCardExcel(String startDate, String endDate) {
         List data = jdbcTemplate.queryForList("select * from member_card where type in ('PM') and end_date >= ? and created <= ? and start_date <= ?  " +
-//                " and card_no = 10916 " +
+//                " and card_no = 12803 " +
                 " order by card_no desc ",new Object[]{ startDate, endDate+" 23:59:59",endDate});
         String m = endDate.substring(5,7);
         String tableName = "member_his_"+m;
@@ -225,6 +225,10 @@ public class ExportFileService {
         excelData.add(titleRow);
         for(Object card : data){
             try {
+
+                String start = startDate;
+                String end = endDate;
+
                 List<String> row = new ArrayList();
                 String memberId = ((Map) card).get("member_id").toString();
                 String card_no = ((Map) card).get("card_no").toString();
@@ -251,18 +255,16 @@ public class ExportFileService {
                     continue;
                 }
 
-                int monthDays = ut.passDayByDate(startDate,endDate)+1;
-                if(ut.passDayByDate(startDate,start_date)>0){
-                    monthDays = ut.passDayByDate(start_date,endDate)+1;
+                if(ut.passDayByDate(start,start_date)>0){
+                    start = start_date;
                 }
 
+                if(ut.passDayByDate(end_date,end)>0){
+                    end = end_date;
+                }
+                int monthDays = ut.passDayByDate(start,end)+1;
                 double money = 0;
-                int monthDays2 = ut.passDayByDate(startDate,end_date)+1;
-                if(monthDays>monthDays2){
-                    monthDays = monthDays2;
-                }
-
-                int pauseDays = reportMonthService.getPauseDaysByMonth(memberId,startDate,endDate);
+                int pauseDays = reportMonthService.getPauseDaysByMonth(memberId,start,end);
                 int days = memberCardEntity.getDays();
                 double price =  0;
 
@@ -310,8 +312,6 @@ public class ExportFileService {
         System.out.println(" monthCard total = "+ut.getDoubleString(total));
         System.out.println(" monthCard count = "+count);
         System.out.println(" monthCard pause_count = "+pause_count);
-
-
         ExcelUtil.writeExcel(excelData,"C://product/monthCard"+System.currentTimeMillis()+".xls");
     }
 
