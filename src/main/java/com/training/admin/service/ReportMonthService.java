@@ -214,7 +214,7 @@ public class ReportMonthService {
      */
     private void calculateUsedLessonMoney(FinanceMonthReportEntity financeMonthReportEntity, String month) {
         String startDate = month+"-01";
-        String endDate = month+"-31";
+        String endDate = month+"-"+ut.daysOfMonth(startDate);
         if(ut.passDayByDate(ut.currentDate(-1),endDate)>0){
             endDate = ut.currentDate(-1);
         }

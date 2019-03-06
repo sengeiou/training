@@ -209,7 +209,7 @@ public class ManualRestController {
     @GetMapping("star")
     public Object calculateStar(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateStar  execute start  ");
-        String month = "201901";
+        String month = "201902";
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练') ");
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
@@ -446,7 +446,7 @@ public class ManualRestController {
     public Object calculateStoreFinanceMonthReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2019-01-31";
+        String today = "2019-02-28";
 //        today = ut.currentDate(-1);
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
@@ -464,7 +464,7 @@ public class ManualRestController {
     public Object calculateStaffFinanceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
-        String today = "2019-01-31";
+        String today = "2019-02-28";
 //        today = ut.currentDate(-1);
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff  ");
         String msg = "";
