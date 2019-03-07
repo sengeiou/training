@@ -248,6 +248,8 @@ public class ReportMonthService {
         int cardCount = 0;
         int pause = 0;
 
+        TreeMap map = new TreeMap();
+
         for (int i = 0; i < members.size(); i++) {
             Map member = (Map)members.get(i);
             String memberId = member.get("member_id").toString();
@@ -259,23 +261,30 @@ public class ReportMonthService {
             }
             List cards = jdbcTemplate.queryForList(card_sql,new Object[]{memberId,startDate,endDate+" 23:59:59",endDate});
             for (int j = 0; j < cards.size(); j++) {
+
+                String start = startDate;
+                String end = endDate;
+
                 Map card = (Map)cards.get(j);
                 String start_date = card.get("start_date").toString();
-                String end = card.get("end_date").toString();
+                String end_date = card.get("end_date").toString();
                 int days = Integer.parseInt(card.get("days").toString());
 
-                int monthDays = ut.passDayByDate(startDate,endDate)+1;
-                if(ut.passDayByDate(startDate,start_date)>0){
-                    monthDays = ut.passDayByDate(start_date,endDate)+1;
+                if(ut.passDayByDate(start,start_date)>0){
+                    start = start_date;
                 }
 
-                int monthDays2 = ut.passDayByDate(startDate,end)+1;
-                if(monthDays>monthDays2){
-                    monthDays = monthDays2;
+                if(ut.passDayByDate(end_date,end)>0){
+                    end = end_date;
                 }
+                int monthDays = ut.passDayByDate(start,end)+1;
 
-                int pauseDays = getPauseDaysByMonth(memberId,startDate,endDate);
+                int pauseDays = getPauseDaysByMonth(memberId,start,end);
                 double price = Double.parseDouble(card.get("money").toString())/days;
+
+                map.put(Integer.parseInt(card.get("card_no").toString())," cardNo = "+card.get("card_no")+" , count = "+(monthDays-pauseDays)+" , pauseDays = "+pauseDays+"  ");
+
+//                logger.info(" calculateUsedLessonMoney  cardNo = {} , monthDays = {} , count = {} , pauseDays = {}  ",card.get("card_no"),monthDays,(monthDays-pauseDays),pauseDays);
                 if(monthDays-pauseDays>0){
                     money = money + price*(monthDays-pauseDays);
                     count = count + monthDays-pauseDays;
@@ -284,7 +293,13 @@ public class ReportMonthService {
                     cardCount++;
                 }
             }
+
         }
+
+//        for (Object key:map.keySet()){
+//            System.out.println(map.get(key));
+//        }
+
         logger.info(" calculateUsedLessonMoney  endDate = {} , memberCount = {} , cardCount = {} , money  = {} , count = {} ,pause = {}  ",endDate,memberCount.size(),cardCount,ut.getDoubleString(money),count,pause);
         financeMonthReportEntity.setUsedDaysMoney(ut.getDoubleString(money));
         financeMonthReportEntity.setUsedDaysCount(""+count);
@@ -453,6 +468,7 @@ public class ReportMonthService {
         // 5. 退课金额
         calculateBackLessonMoney(financeMonthReportEntity,month);
         try {
+            jdbcTemplate.update(" delete FROM  finance_month_report where store_id = ? and month = ? and report_date = ? ",new Object[]{storeId,month,today});
             jdbcTemplate.update(" update finance_month_report set status = 0 where store_id = ? and month = ?",new Object[]{storeId,month});
             financeMonthReportService.add(financeMonthReportEntity);
         }catch (Exception e){
