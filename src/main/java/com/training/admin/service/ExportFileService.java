@@ -69,6 +69,20 @@ public class ExportFileService {
     private JdbcTemplate jdbcTemplate;
 
     public void trainingExcel(String startDate, String endDate) {
+
+        List staffs = jdbcTemplate.queryForList("select * from staff_his where backup_date = ? ",new Object[]{ endDate});
+        Map<String,StaffEntity> staffMap = new HashMap<>();
+        for (int i = 0; i < staffs.size(); i++) {
+            Map staff = (Map)staffs.get(i);
+            String staffId = staff.get("staff_id").toString();
+            String storeId = staff.get("store_id").toString();
+            StaffEntity staffEntity = new StaffEntity();
+            staffEntity.setStaffId(staffId);
+            staffEntity.setStoreId(storeId);
+            staffEntity.setCustname(staff.get("custname").toString());
+            staffMap.put(staffId,staffEntity);
+        }
+
         List data = jdbcTemplate.queryForList("select * from training where  lesson_date >= ? and lesson_date <= ? and status >= 0 " +
                 " order by staff_id , lesson_date ",new Object[]{startDate,endDate});
         List<List<String>> excelData = new ArrayList<>();
@@ -115,7 +129,7 @@ public class ExportFileService {
                     logger.error(" member==null ,  "+ JSON.toJSONString(training));
                     continue;
                 }
-                StaffEntity staffEntity = staffDao.getById(staff_id);
+                StaffEntity staffEntity = staffMap.get(staff_id);
                 if(staffEntity==null){
                     logger.error(" staffEntity==null ,  "+ JSON.toJSONString(training));
                     continue;
@@ -158,14 +172,18 @@ public class ExportFileService {
                 row.add(ut.getDoubleString(price));
                 row.add(memberCardEntity.getMoney());
                 row.add(""+memberCardEntity.getTotal());
-                row.add("已完成");
+                if(StringUtils.isNotEmpty(sign_time)){
+                    row.add("已完成");
+                }else{
+                    row.add("已过期");
+                }
                 row.add(sign_time);
                 excelData.add(row);
             }catch (Exception e){
                 logger.error(" training = "+ JSON.toJSONString(training),e);
             }
         }
-        ExcelUtil.writeExcel(excelData,"C://product/training201901.xls");
+        ExcelUtil.writeExcel(excelData,"C://product/training-"+endDate+".xls");
     }
 
 
