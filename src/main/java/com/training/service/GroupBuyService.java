@@ -7,6 +7,7 @@ import com.training.common.*;
 import com.training.util.IDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,9 @@ public class GroupBuyService {
     @Autowired
     private GroupBuyDao groupBuyDao;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     /**
      * 新增实体
      * @param groupBuy
@@ -43,6 +47,9 @@ public class GroupBuyService {
         groupBuy.setShareUrl("http://cloud.heyheroes.com/od/"+id+"?from=singlemessage&isappinstalled=0");
         int n = groupBuyDao.add(groupBuy);
         if(n==1){
+            if(groupBuy.getMainTag()!=null&&groupBuy.getMainTag().equals("1")){
+                jdbcTemplate.update("update group_buy set main_tag = '0' where buy_id <> '"+id+"' ");
+            }
             return ResponseUtil.success("添加成功");
         }
         return ResponseUtil.exception("添加失败");
