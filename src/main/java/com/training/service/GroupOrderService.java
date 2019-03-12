@@ -77,6 +77,18 @@ public class GroupOrderService {
             return ResponseUtil.exception("验证码错误!");
         }
 
+        GroupBuyEntity groupBuyEntity = groupBuyDao.getById(groupOrder.getBuyId());
+        if(groupBuyEntity.getLimitation()==1){
+            GroupOrderQuery query = new GroupOrderQuery();
+            query.setBuyId(groupOrder.getBuyId());
+            query.setPhone(groupOrder.getPhone());
+            PageRequest page = new PageRequest();
+            page.setPageSize(10000);
+            List<GroupOrderEntity> groupOrderList = groupOrderDao.find(query,page);
+            if(groupOrderList.size()>groupBuyEntity.getLimitation()){
+                return ResponseUtil.exception("已超过限购数量，不能购买!");
+            }
+        }
 
         int n = groupOrderDao.add(groupOrder);
 

@@ -23,6 +23,19 @@ System.out.println(" ****************     index.jsp  *********  ");
     String query = request.getQueryString();
     System.out.println("query = "+query);
 
+    JdbcTemplate jdbcTemplate = (JdbcTemplate) ContextUtil.getBean("jdbcTemplate");
+    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = ? ",new Object[]{id});
+    Map buy = (Map)buys.get(0);
+    String startDate = buy.get("start_date").toString();
+    String endDate = buy.get("end_date").toString();
+
+    if(ut.passDayByDate(startDate,ut.currentDate())>0){
+    }
+    if(ut.passDayByDate(endDate,ut.currentDate())<0){
+
+    }
+
+
     String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx07d9e50873fe1786&secret=ddbc05a576ef96e7c08bdc31e3639d3f";
     DefaultHttpClient client = new DefaultHttpClient();//获取DefaultHttpClient请求
     HttpGet httpGet = new HttpGet(url);//HttpGet将使用Get方式发送请求URL
@@ -49,12 +62,11 @@ System.out.println(" ****************     index.jsp  *********  ");
         System.out.println("sha1 = "+sha1);
     }
 
-    JdbcTemplate jdbcTemplate = (JdbcTemplate) ContextUtil.getBean("jdbcTemplate");
-    List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = ? ",new Object[]{id});
-    Map buy = (Map)buys.get(0);
+
+
+    jdbcTemplate.update("update group_buy set view_count = view_count + 1 where buy_id = ?",new Object[]{id});
 
     String buyId = buy.get("buy_id").toString();
-    String endDate = buy.get("end_date").toString();
     String init_count = buy.get("init_count").toString();
     String sale_count = buy.get("sale_count").toString();
 

@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -74,10 +75,20 @@ public class WechatController {
     public String order(@PathVariable String id, HttpServletRequest request, HttpServletResponse response){
         logger.info("  order  id = {}",id);
         request.setAttribute("id",id);
+        List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = ? ",new Object[]{id});
+        Map buy = (Map)buys.get(0);
+        String startDate = buy.get("start_date").toString();
+        String endDate = buy.get("end_date").toString();
+        if(ut.passDayByDate(startDate,ut.currentDate())<0){
+            request.setAttribute("msg","活动未生效");
+            return "order/templates/error";
+        }
+        if(ut.passDayByDate(endDate,ut.currentDate())>0){
+            request.setAttribute("msg","活动已过期");
+            return "order/templates/error";
+        }
         return "order/templates/index";
     }
-
-
 
     /**
      * 支付回调接口
@@ -231,7 +242,7 @@ public class WechatController {
                 jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
             }
 
-            jdbcTemplate.update("update group_buy set sale_count = sale_count+1 where buy_id = ? ",new Object[]{groupOrder.getBuyId()});
+            jdbcTemplate.update("update group_buy set sale_count = sale_count+1,buy_count = buy_count+1 where buy_id = ? ",new Object[]{groupOrder.getBuyId()});
 
         } catch (Exception e) {
             e.printStackTrace();
