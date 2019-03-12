@@ -1,9 +1,13 @@
 package com.training.api;
 
+import com.training.config.ConstData;
 import com.training.domain.GroupOrder;
 import com.training.service.*;
 import com.training.entity.*;
 import com.training.common.*;
+import com.training.util.ExportUtil;
+import com.training.util.IDUtils;
+import com.training.util.ut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.training.util.ResponseUtil;
@@ -14,9 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 import com.alibaba.fastjson.JSONObject;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * group_order API控制器
@@ -114,6 +124,63 @@ public class GroupOrderRestController {
         return groupOrderService.delete(id);
     }
 
+    @RequestMapping(value = "export")
+    public ResponseEntity<String> export(@ModelAttribute GroupOrderQuery query , HttpServletRequest request, HttpServletResponse response) {
+        logger.info(" export   query = {}",query);
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setPageSize(100000);
+        Page<GroupOrder> page = groupOrderService.find(query,pageRequest);
+        String path = request.getSession().getServletContext().getRealPath("/export/member");
+        logger.info(" path = {} ",path);
+        String[] headers = { "订单号", "团单标题", "姓名", "手机号","性别","支付金额","下单时间", "支付时间","状态"};
+        String fileName = "card-"+System.currentTimeMillis()+".xls";
+        File targetFile = new File(path+"/"+ fileName);
+        File pathf = new File(path);
+        logger.info(" pathf.getPath() = {} " , pathf.getPath());
+        logger.info(" targetFile.getPath() = {} " , targetFile.getPath());
+        if(!pathf.exists()){
+            pathf.mkdir();
+        }
+        if(!targetFile.exists()){
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        logger.info(" targetFile.exists() = {} " , targetFile.exists());
+        try {
+            List<String[]> dataList = new ArrayList<>();
+            for (GroupOrder groupOrder : page.getContent()){
+                if(groupOrder==null){
+                    continue;
+                }
+                String[] row = new String[9];
+                row[0] = groupOrder.getOrderId().toString();
+                row[1] = groupOrder.getTitle();
+                row[2] = groupOrder.getMemberName();
+                row[3] = groupOrder.getPhone();
+                row[4] = GenderEnum.getEnumByKey(groupOrder.getGender()).getDesc();
+                row[5] = ""+groupOrder.getTotalFee();
+                row[6] = groupOrder.getCreateTime();
+                row[7] = groupOrder.getPayTime();
+                row[8] = groupOrder.getShowStatus();
+                dataList.add(row);
+            }
+            String sheetName = "拼团订单"+ ut.currentDate();
+            ExportUtil.writeExcel(sheetName, headers, dataList, new FileOutputStream(targetFile));
+            logger.info("filename = {}",targetFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Map result = new HashMap();
+        String id = IDUtils.getId();
+        ConstData.data.put(id,fileName);
+        String url = "/api/export/file/"+id;
+        result.put("url",url);
+        return ResponseUtil.success("导出拼团订单信息成功！",result);
+    }
 
 }
 
