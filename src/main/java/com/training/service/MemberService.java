@@ -550,31 +550,41 @@ public class MemberService {
         if(memberEntity==null){
             memberEntity = getByPhone(member.getPhone());
             if(memberEntity==null){
-                memberEntity = new MemberEntity();
-                memberEntity.setMemberId(IDUtils.getId());
-                memberEntity.setName(member.getPhone());
-                memberEntity.setPhone(member.getPhone());
-                memberEntity.setOpenId(openId);
-                memberEntity.setType("M");
-                StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
-                if( staffDB!=null && staffDB.getStatus() >= 0 && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
-                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"COO".equals(staffDB.getJob())
-                            ||"系统测试".equals(staffDB.getJob()) ||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())){
-                        logger.info("  bindIsCoach1 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
-                        memberEntity.setType("C");
-                        memberEntity.setName(staffDB.getCustname());
-                        memberEntity.setStoreId(staffDB.getStoreId());
-                        staffDB.setOpenId(openId);
-                        int n = staffDao.bind(staffDB);
-                        logger.info("  bind  staffDao.bind  n = {} ",n);
-                    }
+                String url = "";
+                List orders = jdbcTemplate.queryForList(" select share_url from group_buy where main_tag = 1 limit 1 ");
+                if(orders.size()>0){
+                    Map order = (Map)orders.get(0);
+                    url = order.get("share_url").toString();
                 }
-                memberEntity.setOrigin("自动生成");
-                int n = memberDao.add(memberEntity);
-                if(n!=1){
-                    return ResponseUtil.exception("创建新会员失败!");
-                }
-                memberEntity = this.getById(memberEntity.getMemberId());
+                Map data = new HashMap();
+                data.put("url",url);
+                return ResponseUtil.exception("请先购卡",data);
+
+//                memberEntity = new MemberEntity();
+//                memberEntity.setMemberId(IDUtils.getId());
+//                memberEntity.setName(member.getPhone());
+//                memberEntity.setPhone(member.getPhone());
+//                memberEntity.setOpenId(openId);
+//                memberEntity.setType("M");
+//                StaffEntity staffDB = staffDao.getByPhone(member.getPhone());
+//                if( staffDB!=null && staffDB.getStatus() >= 0 && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
+//                    if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"COO".equals(staffDB.getJob())
+//                            ||"系统测试".equals(staffDB.getJob()) ||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())){
+//                        logger.info("  bindIsCoach1 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
+//                        memberEntity.setType("C");
+//                        memberEntity.setName(staffDB.getCustname());
+//                        memberEntity.setStoreId(staffDB.getStoreId());
+//                        staffDB.setOpenId(openId);
+//                        int n = staffDao.bind(staffDB);
+//                        logger.info("  bind  staffDao.bind  n = {} ",n);
+//                    }
+//                }
+//                memberEntity.setOrigin("自动生成");
+//                int n = memberDao.add(memberEntity);
+//                if(n!=1){
+//                    return ResponseUtil.exception("创建新会员失败!");
+//                }
+//                memberEntity = this.getById(memberEntity.getMemberId());
             }else{
                 StaffEntity staffDB = staffDao.getByPhone(memberEntity.getPhone());
                 if(staffDB!=null && staffDB.getStatus() >= 0 && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
