@@ -62,6 +62,7 @@ public class GroupBuyEntity {
 
     private Date modified;
 
+    private String storeList;
 
 }
 

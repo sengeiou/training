@@ -77,7 +77,7 @@ public interface GroupOrderRepository {
             " <if test=\"query.payId != null\"> AND pay_id = #{query.payId} </if>" +
             " <if test=\"query.payTime != null\"> AND pay_time = #{query.payTime} </if>" +
             " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by order_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<GroupOrderEntity> find(@Param("query") GroupOrderQuery groupOrder , @Param("page") PageRequest page);
 
@@ -104,7 +104,7 @@ public interface GroupOrderRepository {
 
     @Select("<script> SELECT order_id,buy_id,store_id,member_id,phone,name,gender,count,total_fee,main_flag,main_order_id,status,feature,pay_type,pay_id,pay_time,remark,created,modified " +
             " FROM group_order " +
-            " WHERE order_id = #{id} " +
+            " WHERE order_id = #{id} order by order_id desc " +
             "</script>")
     GroupOrderEntity getById(@Param("id") String id);
 

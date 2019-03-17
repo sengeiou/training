@@ -62,6 +62,7 @@ public class GroupBuyQuery {
 
     private Date modified;
 
+    private String storeList;
 
 }
 
