@@ -27,6 +27,8 @@ public class GroupOrder {
 
     private String memberName;
 
+    private String name;
+
     private String phone;
 
     private Integer gender;
