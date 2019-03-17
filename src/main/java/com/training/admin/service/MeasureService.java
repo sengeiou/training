@@ -14,6 +14,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
@@ -263,6 +264,51 @@ public class MeasureService {
                 e.printStackTrace();
             }
         }
+    }
+
+    public String queryReportUrl(String token,String id) {
+        String url = detail_url + id+"/miniProgramCode";
+        HttpGet httpPost = new HttpGet(url);
+        CloseableHttpResponse response = null;
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        RequestConfig requestConfig = RequestConfig.custom().
+                setSocketTimeout(2000).setConnectTimeout(2000).build();
+        httpPost.setConfig(requestConfig);
+        httpPost.addHeader("accept", "application/vnd.XoneAPI.v2+json");
+        httpPost.addHeader("Authorization", "Bearer " + token);
+        try {
+            response = httpClient.execute(httpPost, new BasicHttpContext());
+            if (response.getStatusLine().getStatusCode() != 200) {
+                System.out.println("request url failed, http code=" + response.getStatusLine().getStatusCode()
+                        + ", url=" + url );
+                return "";
+            }
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                String resultStr = EntityUtils.toString(entity, "utf-8");
+                System.out.println("resultStr:" + resultStr);
+                JSONObject result = JSON.parseObject(resultStr);
+                return result.getString("wxacode_url");
+            }
+        } catch (IOException e) {
+            System.out.println("request url=" + url + ", exception, msg=" + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (response != null) try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    public static void main(String[] args) {
+        MeasureService measureService = new MeasureService();
+        String token = measureService.getToken();
+        String url = measureService.queryReportUrl(token,"13536006");
+        System.out.println("token = "+token);
+        System.out.println("url = "+url);
     }
 
 }
