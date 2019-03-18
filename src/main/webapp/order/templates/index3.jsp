@@ -1,18 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page language="java" import="com.training.config.ContextUtil"%>
 <%@ page language="java" import="org.springframework.jdbc.core.JdbcTemplate"%>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
-<%@ page import="com.training.domain.User" %>
-<%@ page import="org.apache.http.impl.client.DefaultHttpClient" %>
-<%@ page import="org.apache.http.client.methods.HttpGet" %>
-<%@ page import="org.apache.http.HttpResponse" %>
-<%@ page import="org.apache.http.HttpEntity" %>
-<%@ page import="org.apache.http.util.EntityUtils" %>
-<%@ page import="com.alibaba.fastjson.JSONObject" %>
-<%@ page import="com.alibaba.fastjson.JSON" %>
-<%@ page import="com.github.wxpay.sdk.WXPayUtil" %>
-<%@ page import="com.training.util.HttpUtils" %>
 <%@ page import="com.training.common.Const" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
 <%
     System.out.println(" ****************     index.jsp  *********  ");
     String info  = request.getParameter("info");
@@ -20,28 +10,18 @@
     String[] infos = info.split("_");
     String buyId = infos[0];
     String type = infos[1];
-    String code  = request.getParameter("code");
-    System.out.println(" ****************     code = "+code);
-    String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx07d9e50873fe1786&secret=ddbc05a576ef96e7c08bdc31e3639d3f&code="+code+"&grant_type=authorization_code";
 
-    DefaultHttpClient httpClient = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet(url);
-    HttpResponse httpResponse = httpClient.execute(httpGet);
-    HttpEntity httpEntity = httpResponse.getEntity();
-    String tokens = EntityUtils.toString(httpEntity, "utf-8");
-    System.out.println(" ****************     tokens = "+tokens);
+    String openId = infos[infos.length-1];
+    System.out.println(" ****************   jsp3_openId = "+openId);
 
-    JSONObject obj = JSON.parseObject(tokens);
-    String openId = obj.getString("openid");
-    String access_token = obj.getString("access_token");
-    System.out.println(" ****************     access_token = "+access_token);
-    System.out.println(" ****************     openId = "+openId);
+//    String access_token = obj.getString("access_token");
+//    System.out.println(" ****************     access_token = "+access_token);
+
     Const.openIds.add(openId);
     JdbcTemplate jdbcTemplate = (JdbcTemplate)ContextUtil.getBean("jdbcTemplate");
 
     List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id =  ? ",new Object[]{buyId});
     Map buy = (Map)buys.get(0);
-
     List<Map> storeList = new ArrayList<>();
     if(buy.get("store_list")!=null){
         String[] list = buy.get("store_list").toString().split("#");
@@ -211,7 +191,7 @@
     <div id="payBtn" class="bottomBtnBox-paybtn btn-hover">立即支付
     </div>
 </div>
-
+<script src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 <script src="../components/jquery/dist/jquery.min.js"></script>
 <script src="../components/humane/humane.min.js"></script>
 <script type="text/javascript">
@@ -351,7 +331,8 @@
             order.count="1";
             order.openId="<%= openId %>";
             order.validCode=validCode;
-            order.microTag=0;
+            order.microTag=1;
+
             $.post("/api/groupOrder/addOrder",order,function(result){
 //                alert(JSON.stringify(result))
 //                alert(result.msg)
@@ -364,27 +345,12 @@
                 }
 //                alert(result)
 //                alert(result.msg)
-                WeixinJSBridge.invoke(
-                    'getBrandWCPayRequest', {
-                        "appId":"wx07d9e50873fe1786",     //公众号名称，由商户传入
-                        "timeStamp":''+result.data.timeStamp,         //时间戳，自1970年以来的秒数
-                        "nonceStr":result.data.nonceStr, //随机串
-                        "package":result.data.package,
-                        "signType":"MD5",         //微信签名方式：
-                        "paySign":result.data.paySign //微信签名
-                    },
-                    function(res){
-                        if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                            // 使用以上方式判断前端返回,微信团队郑重提示：
-                            //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                            //alert("支付成功："+res);
-                            document.location.href="success.jsp?id=<%=buyId%>&p=<%=price%>";
-                        }else{
-                            flag = 0;
-//                            alert("支付失败："+res);
-                        }
-                    }
-                );
+                var params = '?timestamp='+result.data.timeStamp+'&nonceStr='+result.data.nonceStr
+                    +'&'+result.data.package+'&signType='+result.data.signType
+                    +'&paySign='+result.data.sign+'&orderId='+result.data.orderId+'&pType=0';
+                var path = '/pages/wxViewPay/wxViewPay'+params;
+                wx.miniProgram.navigateTo({url: path});
+                flag = 0;
 
             }, "json");
 

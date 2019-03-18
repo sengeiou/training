@@ -54,5 +54,7 @@ public class GroupOrderEntity {
 
     private String validCode;
 
+    private Integer microTag;
+
 }
 

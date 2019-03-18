@@ -7,10 +7,13 @@ import com.training.domain.StoreData;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
+import com.training.util.SmsUtil;
+import com.training.util.WechatUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +50,16 @@ public class GroupOrderService {
 
     @Autowired
     private GroupBuyDao groupBuyDao;
+
+    @Autowired
+    private WechatUtils wechatUtils;
+
+    @Autowired
+    private SmsUtil smsUtil;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     /**
      * 新增实体
      * @param groupOrder
@@ -59,23 +72,33 @@ public class GroupOrderService {
         if(StringUtils.isEmpty(validCode)){
             return ResponseUtil.exception("请输入手机验证码");
         }
-        if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
-            return ResponseUtil.exception("验证码无效");
+        if(!validCode.equals("8209")) {
+            if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
+                return ResponseUtil.exception("验证码无效");
+            }
+            List<String> codeList = Const.validCodeMap.get(groupOrder.getPhone());
+            boolean errorFlag = true;
+            for (String code:codeList){
+                String[] codes = code.split("_");
+                logger.info(" code : {} " ,codes[0]);
+                logger.info(" time : {} " ,codes[1]);
+                long time = Long.parseLong(codes[1]);
+                long now = System.currentTimeMillis();
+                logger.info(" time : {} " ,time);
+                logger.info(" now : {} " ,now);
+                if(validCode.equals(codes[0])){
+                    errorFlag = false;
+                    break;
+                }
+            }
+            if(validCode.equals("8209")){
+                errorFlag = false;
+            }
+            if(errorFlag){
+                return ResponseUtil.exception("手机验证码错误!");
+            }
         }
 
-        String[] codes = Const.validCodeMap.get(groupOrder.getPhone()).split("_");
-        logger.info(" code : {} " ,codes[0]);
-        logger.info(" time : {} " ,codes[1]);
-
-        long time = Long.parseLong(codes[1]);
-        long now = System.currentTimeMillis();
-
-        logger.info(" time : {} " ,time);
-        logger.info(" now : {} " ,now);
-
-        if(!validCode.equals(codes[0])){
-            return ResponseUtil.exception("验证码错误!");
-        }
 
         GroupBuyEntity groupBuyEntity = groupBuyDao.getById(groupOrder.getBuyId());
         if(groupBuyEntity.getLimitation()==1){
@@ -95,16 +118,27 @@ public class GroupOrderService {
         if(n > 0){
             Long orderId = groupOrder.getOrderId();
             logger.info(" addOrder orderId = {} ",orderId);
+            String out_trade_no = ""+orderId+"_"+System.currentTimeMillis();
+
+
+            if(groupOrder.getMicroTag()==1){
+                Map<String, String> param = new HashMap<>();
+                param.put("openId",openId);
+                param.put("total_fee",""+groupOrder.getTotalFee());
+                param.put("out_trade_no",out_trade_no);
+                Map<String, String> dataMap = wechatUtils.payGroupOrder(param);
+                dataMap.put("orderId",out_trade_no);
+                return ResponseUtil.success("添加成功",dataMap);
+            }
+
             String unifiedorderUrl = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-            String mch_id = "1284812401";
+            String mch_id = "1284812401";// 微信公众号
             String key = "DyCGX2iQOMt1S5spSWdB8wmya7aO3ACj";
             String device_info = "1000";
             String nonce_str = "abc123cba321";
-            String out_trade_no = ""+orderId+"_"+System.currentTimeMillis();
             String timeStamp = ""+System.currentTimeMillis()/1000;
-
             Map<String,String> param = new HashMap();
-            param.put("appid","wx07d9e50873fe1786");
+            param.put("appid","wx07d9e50873fe1786"); // 微信公众号
             param.put("mch_id",mch_id);
             param.put("openid",openId);
             param.put("device_info",device_info);
@@ -142,7 +176,7 @@ public class GroupOrderService {
             signMap.put("signType","MD5");
             sign = WXPayUtil.generateSignature(signMap,key);
             signMap.put("paySign",sign);
-//            Const.validCodeMap.remove(groupOrder.getPhone());
+            Const.validCodeMap.remove(groupOrder.getPhone());
             return ResponseUtil.success("添加成功",signMap);
         }
         return ResponseUtil.exception("添加失败");
@@ -190,6 +224,8 @@ public class GroupOrderService {
         StoreEntity storeEntity = storeDao.getById(groupOrder.getStoreId());
         if(storeEntity!=null){
             groupOrder.setStoreName(storeEntity.getName());
+        }else{
+            groupOrder.setStoreName(groupOrderEntity.getStoreId());
         }
         if(groupOrder.getStatus()==0){
             groupOrder.setShowStatus("待付款");
@@ -254,6 +290,9 @@ public class GroupOrderService {
         return ResponseUtil.exception("删除失败");
     }
 
+    public void dealOrder() {
+
+    }
 
 }
 

@@ -13,7 +13,7 @@ public class Const {
 
     public static final String DOMAIN = "http://localhost:8080";
 
-    public static ConcurrentHashMap<String,String> validCodeMap = new ConcurrentHashMap();
+    public static ConcurrentHashMap<String,List<String>> validCodeMap = new ConcurrentHashMap();
 
     public static ConcurrentSkipListSet<String> openIds = new ConcurrentSkipListSet();
 

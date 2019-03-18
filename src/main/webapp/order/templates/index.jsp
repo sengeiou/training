@@ -18,6 +18,13 @@ System.out.println(" ****************     index.jsp  *********  ");
     System.out.println("timeStamp = "+timeStamp);
     String id = request.getAttribute("id").toString();
 
+    String openId ="";
+    boolean fromMicro = false;
+    if(request.getAttribute("openId")!=null){
+        openId = request.getAttribute("openId").toString();
+        fromMicro = true;
+    }
+
     String uri = request.getRequestURI();
     System.out.println("uri = "+uri);
     String query = request.getQueryString();
@@ -56,7 +63,7 @@ System.out.println(" ****************     index.jsp  *********  ");
         String ticket = jsonObject.getString("ticket");
         System.out.println("ticket = "+ticket);
         String str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url=http://cloud.heyheroes.com/order/templates/index.jsp?"+query;
-        str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url=http://cloud.heyheroes.com/od/"+id+"?"+query;
+        str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url=http://trainingbj.huai23.com/od/"+id+"?"+query;
         System.out.println(str);
         sha1 = SHA1.encode(str);
         System.out.println("sha1 = "+sha1);
@@ -99,7 +106,7 @@ System.out.println(" ****************     index.jsp  *********  ");
     <meta content="yes" name="apple-touch-fullscreen">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <title>HeyHeroes</title>
-    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
     <script src="/order/components/jquery/dist/jquery.min.js"></script>
     <script>
         wx.config({
@@ -149,16 +156,16 @@ System.out.println(" ****************     index.jsp  *********  ");
 
             $("#gotoBuy").click(function () {
                 var buyId = "<%= buy.get("buy_id") %>";
-                var info = buyId+"_0";
-                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                var info = buyId+"_0<%= fromMicro==true?"_"+openId:"" %>";
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index<%= fromMicro==true?"3":"2" %>.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
                 document.location.href = url;
                 return false;
             })
 
             $("#createPt").click(function () {
                 var buyId = "<%= buy.get("buy_id") %>";
-                var info = buyId+"_1";
-                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                var info = buyId+"_1<%= fromMicro==true?"_"+openId:"" %>";
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index<%= fromMicro==true?"3":"2" %>.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
                 document.location.href = url;
                 return false;
             })
@@ -167,8 +174,8 @@ System.out.println(" ****************     index.jsp  *********  ");
             $("#gotoPt").click(function () {
                 var buyId = "<%= buy.get("buy_id") %>";
                 var mainOrderId = $("#mainOrderId").val();
-                var info = buyId+"_2_"+mainOrderId;
-                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index2.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+                var info = buyId+"_2_"+mainOrderId<%= fromMicro==true?"_"+openId:"" %>;
+                var url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx07d9e50873fe1786&redirect_uri=http://cloud.heyheroes.com/order/templates/index<%= fromMicro==true?"3":"2" %>.jsp?info="+info+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
                 document.location.href = url;
                 return false;
             })

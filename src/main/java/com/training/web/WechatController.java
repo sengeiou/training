@@ -6,6 +6,7 @@ import com.training.common.OriginEnum;
 import com.training.common.SysLogEnum;
 import com.training.dao.SysLogDao;
 import com.training.domain.GroupOrder;
+import com.training.domain.Member;
 import com.training.entity.GroupOrderEntity;
 import com.training.entity.MemberCardEntity;
 import com.training.entity.MemberEntity;
@@ -15,6 +16,7 @@ import com.training.service.MemberCardService;
 import com.training.service.MemberService;
 import com.training.service.SysLogService;
 import com.training.util.IDUtils;
+import com.training.util.RequestContextHelper;
 import com.training.util.SmsUtil;
 import com.training.util.ut;
 import org.slf4j.Logger;
@@ -75,6 +77,10 @@ public class WechatController {
     public String order(@PathVariable String id, HttpServletRequest request, HttpServletResponse response){
         logger.info("  order  id = {}",id);
         request.setAttribute("id",id);
+        String openId = request.getParameter("openid");
+        logger.info("  order_openId = {}",openId);
+        request.setAttribute("openId",openId);
+
         List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id = ? ",new Object[]{id});
         Map buy = (Map)buys.get(0);
         String startDate = buy.get("start_date").toString();
@@ -202,7 +208,7 @@ public class WechatController {
             if(memberEntity==null){
                 memberEntity = new MemberEntity();
                 memberEntity.setPhone(groupOrder.getPhone());
-                memberEntity.setStoreId(groupOrder.getStoreId());
+//                memberEntity.setStoreId(groupOrder.getStoreId());
                 memberEntity.setGender(groupOrder.getGender());
                 memberEntity.setOrigin(OriginEnum.WX.getDesc());
                 memberService.add(memberEntity);

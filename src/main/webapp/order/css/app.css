@@ -100,7 +100,7 @@ em {
 }
 .humane {
   line-height: .24rem !important;
-  font-size: .16rem !important;
+  font-size: .28rem !important;
   border-radius: 10px !important;
   min-height: .16rem !important;
   background-color: rgba(0, 0, 0, 0.8) !important;
@@ -176,7 +176,7 @@ em {
   width: 7.3rem;
   padding-right: .2rem;
   height: .12rem;
-  font-size: .28rem;
+  font-size: .24rem;
   line-height: .12rem;
   text-align: right;
 }
@@ -304,6 +304,11 @@ em {
   width: 6.7rem !important;
   margin-bottom: .25rem;
 }
+
+.protectBox video {
+  width: 6.7rem !important;
+  margin-bottom: .25rem;
+}
 .protectBox .protectBox-title {
   height: .45rem;
   font-size: .32rem;
@@ -319,6 +324,12 @@ em {
 .protectBox .protectBox-image {
   width: 6.7rem;
   margin-bottom: .25rem;
+}
+.mod_player_section {
+  width: 6.7rem !important;
+}
+.mod_player_section>div {
+  width: 6.7rem !important;
 }
 .bottomBtnBox {
   -webkit-box-pack: justify;
@@ -439,7 +450,7 @@ em {
 .modal-user .modal-userBox .modal-userBox-item {
   width: 5.5rem;
   height: 1.1rem;
-  border-bottom: 2rpx solid #e3e3e3;
+  border-bottom: .01rem solid #e3e3e3;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
@@ -640,6 +651,7 @@ em {
 }
 .pay-tip {
   width: 6.5rem;
+  font-size: .28rem;
   margin-left: .5rem;
   margin-top: .4rem;
   margin-bottom: 2rem;

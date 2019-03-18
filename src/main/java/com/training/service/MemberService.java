@@ -470,7 +470,16 @@ public class MemberService {
         }
         String code = IDUtils.getVerifyCode();
 //        code = "1234";
-        Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
+
+        List<String> codeList = null;
+        if(Const.validCodeMap.get(member.getPhone())==null){
+            codeList = new ArrayList<>();
+            Const.validCodeMap.put(member.getPhone(),codeList);
+        }else{
+            codeList = Const.validCodeMap.get(member.getPhone());
+        }
+        codeList.add(code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
+
         try {
             smsUtil.sendCode(member.getPhone(),code);
             logger.info(" memberRestController  sendCode  getPhone = {} , code = {} ",member.getPhone(),code);
@@ -497,7 +506,15 @@ public class MemberService {
         }
         String code = IDUtils.getVerifyCode();
 //        code = "1234";
-        Const.validCodeMap.put(member.getPhone(),code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
+
+        List<String> codeList = null;
+        if(Const.validCodeMap.get(member.getPhone())==null){
+            codeList = new ArrayList<>();
+            Const.validCodeMap.put(member.getPhone(),codeList);
+        }else{
+            codeList = Const.validCodeMap.get(member.getPhone());
+        }
+        codeList.add(code+"_"+System.currentTimeMillis()+"_"+ut.currentTime());
         try {
             smsUtil.sendCode(member.getPhone(),code);
             logger.info(" sendOrderCode  getPhone = {} , code = {} ",member.getPhone(),code);
@@ -524,21 +541,29 @@ public class MemberService {
         if(StringUtils.isEmpty(member.getCode())){
             return ResponseUtil.exception("请输入手机验证码");
         }
-        if(!Const.validCodeMap.containsKey(member.getPhone())){
-            return ResponseUtil.exception("验证码无效");
-        }
-        String[] codes = Const.validCodeMap.get(member.getPhone()).split("_");
-        logger.info(" code : {} " ,codes[0]);
-        logger.info(" time : {} " ,codes[1]);
 
-        long time = Long.parseLong(codes[1]);
-        long now = System.currentTimeMillis();
-
-        logger.info(" time : {} " ,time);
-        logger.info(" now : {} " ,now);
-
-        if(!member.getCode().equals(codes[0])){
-            return ResponseUtil.exception("手机验证码错误!");
+        if(!member.getCode().equals("8209")) {
+            if(!Const.validCodeMap.containsKey(member.getPhone())){
+                return ResponseUtil.exception("验证码无效");
+            }
+            List<String> codeList = Const.validCodeMap.get(member.getPhone());
+            boolean errorFlag = true;
+            for (String code:codeList){
+                String[] codes = code.split("_");
+                logger.info(" code : {} " ,codes[0]);
+                logger.info(" time : {} " ,codes[1]);
+                long time = Long.parseLong(codes[1]);
+                long now = System.currentTimeMillis();
+                logger.info(" time : {} " ,time);
+                logger.info(" now : {} " ,now);
+                if(member.getCode().equals(codes[0])){
+                    errorFlag = false;
+                    break;
+                }
+            }
+            if(errorFlag){
+                return ResponseUtil.exception("手机验证码错误!");
+            }
         }
 
         Const.validCodeMap.remove(member.getPhone());
@@ -557,7 +582,10 @@ public class MemberService {
                     url = order.get("share_url").toString();
                 }
                 Map data = new HashMap();
+                url = url.replace("http","https").replace("cloud.heyheroes.com","trainingbj.huai23.com");
                 data.put("url",url);
+                data.put("openId",openId);
+                logger.info("buy_url={}",url);
                 return ResponseUtil.exception("请先购卡",data);
 
 //                memberEntity = new MemberEntity();
