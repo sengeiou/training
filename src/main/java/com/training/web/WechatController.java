@@ -238,14 +238,18 @@ public class WechatController {
 
             if(groupOrder.getMainFlag().equals("2")){
                 String mainId = groupOrder.getMainOrderId();
+                GroupOrder mainOrder = groupOrderService.getById(mainId);
                 jdbcTemplate.update(" update group_order set count = count+1, status = 3 where order_id = ? ",new Object[]{mainId});
                 jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
-
+                smsUtil.sendOrderPintuanNotice(groupOrder.getPhone(),orderId);
+                Thread.sleep(100);
+                smsUtil.sendOrderPintuanNotice(mainOrder.getPhone(),orderId);
             }else if(groupOrder.getMainFlag().equals("1")){
                 jdbcTemplate.update(sql,new Object[]{"2",transactionId, ut.currentTime(),orderId});
 
             }else if(groupOrder.getMainFlag().equals("0")){
                 jdbcTemplate.update(sql,new Object[]{"3",transactionId, ut.currentTime(),orderId});
+                smsUtil.sendOrderBuyNotice(groupOrder.getPhone(),orderId);
             }
 
             jdbcTemplate.update("update group_buy set sale_count = sale_count+1,buy_count = buy_count+1 where buy_id = ? ",new Object[]{groupOrder.getBuyId()});

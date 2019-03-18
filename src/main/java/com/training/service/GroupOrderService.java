@@ -1,5 +1,6 @@
 package com.training.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.training.dao.*;
 import com.training.domain.GroupOrder;
@@ -7,8 +8,7 @@ import com.training.domain.StoreData;
 import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
-import com.training.util.SmsUtil;
-import com.training.util.WechatUtils;
+import com.training.util.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import com.training.util.ResponseUtil;
-import com.training.util.RequestContextHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -291,7 +289,43 @@ public class GroupOrderService {
     }
 
     public void dealOrder() {
+        GroupOrderQuery query = new GroupOrderQuery();
+        query.setStatus(2);
+        PageRequest page = new PageRequest(1000);
+        List<GroupOrderEntity> groupOrderList = groupOrderDao.find(query,page);
+        System.out.println(groupOrderList.size());
+        for (GroupOrderEntity groupOrderEntity : groupOrderList){
+            long created = groupOrderEntity.getCreated().getTime();
+            long now = System.currentTimeMillis();
+            long seconds = now-created;
+            logger.info(" dealOrder_orderId = {} , name = {} , phone = {} ,seconds = {}",groupOrderEntity.getOrderId(),groupOrderEntity.getName(),groupOrderEntity.getPhone(),seconds);
+            if(seconds>= 60*1000){
+                logger.info("   order  has expired  orderId = {} ,seconds = {}  ",groupOrderEntity.getOrderId(),seconds);
+                jdbcTemplate.update(" update group_order set status = 3 where order_id = ? ",new Object[]{groupOrderEntity.getOrderId()});
+                try {
+                    smsUtil.sendOrderPintuanNotice(groupOrderEntity.getPhone(),groupOrderEntity.getOrderId().toString());
+                } catch (ClientException e) {
+                    logger.error(" sendOrderPintuanNoticeError , e = {} ",e.getMessage(),e);
+                }
+            }
+        }
 
+        GroupOrderQuery query2 = new GroupOrderQuery();
+        query2.setStatus(0);
+        PageRequest page2 = new PageRequest(1000);
+        List<GroupOrderEntity> unPayList = groupOrderDao.find(query2,page2);
+        System.out.println(unPayList.size());
+        for (GroupOrderEntity groupOrderEntity : unPayList){
+            String day = new SimpleDateFormat("yyyy-MM-dd").format(groupOrderEntity.getCreated());
+            String now = ut.currentDate();
+            int passDays = ut.passDayByDate(day,now);
+            logger.info(" dealOrder_orderId = {} , name = {} , phone = {} ,passDays = {}",groupOrderEntity.getOrderId(),groupOrderEntity.getName(),groupOrderEntity.getPhone(),passDays);
+            if(passDays>1){
+                logger.info("   order  has canceled  orderId = {} ,passDays = {}  ",groupOrderEntity.getOrderId(),passDays);
+                jdbcTemplate.update(" insert into group_order_cancel select * from group_order  where order_id = ? ",new Object[]{groupOrderEntity.getOrderId()});
+                jdbcTemplate.update(" delete from group_order where order_id = ? ",new Object[]{groupOrderEntity.getOrderId()});
+            }
+        }
     }
 
 }
