@@ -293,7 +293,6 @@ public class GroupOrderService {
         query.setStatus(2);
         PageRequest page = new PageRequest(1000);
         List<GroupOrderEntity> groupOrderList = groupOrderDao.find(query,page);
-        System.out.println(groupOrderList.size());
         for (GroupOrderEntity groupOrderEntity : groupOrderList){
             long created = groupOrderEntity.getCreated().getTime();
             long now = System.currentTimeMillis();
@@ -314,7 +313,6 @@ public class GroupOrderService {
         query2.setStatus(0);
         PageRequest page2 = new PageRequest(1000);
         List<GroupOrderEntity> unPayList = groupOrderDao.find(query2,page2);
-        System.out.println(unPayList.size());
         for (GroupOrderEntity groupOrderEntity : unPayList){
             String day = new SimpleDateFormat("yyyy-MM-dd").format(groupOrderEntity.getCreated());
             String now = ut.currentDate();
