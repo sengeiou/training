@@ -117,12 +117,13 @@ public class GroupOrderService {
             Long orderId = groupOrder.getOrderId();
             logger.info(" addOrder orderId = {} ",orderId);
             String out_trade_no = ""+orderId+"_"+System.currentTimeMillis();
-
+            double fee = ut.doubled(groupOrder.getTotalFee());
+            int total_fee = (int)(fee*100);
 
             if(groupOrder.getMicroTag()==1){
                 Map<String, String> param = new HashMap<>();
                 param.put("openId",openId);
-                param.put("total_fee",""+groupOrder.getTotalFee());
+                param.put("total_fee",""+total_fee);
                 param.put("out_trade_no",out_trade_no);
                 Map<String, String> dataMap = wechatUtils.payGroupOrder(param);
                 dataMap.put("orderId",out_trade_no);
@@ -147,8 +148,8 @@ public class GroupOrderService {
             param.put("attach",openId);
             param.put("out_trade_no",out_trade_no);
             param.put("fee_type","CNY");
-            param.put("total_fee",groupOrder.getTotalFee());
-            param.put("total_fee","1");
+            param.put("total_fee",""+total_fee);
+//            param.put("total_fee","1");
             param.put("spbill_create_ip","47.104.252.220");
             param.put("notify_url","https://cloud.heyheroes.com/wechat/pay/group/callback");
             param.put("trade_type","JSAPI");
@@ -174,7 +175,7 @@ public class GroupOrderService {
             signMap.put("signType","MD5");
             sign = WXPayUtil.generateSignature(signMap,key);
             signMap.put("paySign",sign);
-            Const.validCodeMap.remove(groupOrder.getPhone());
+//            Const.validCodeMap.remove(groupOrder.getPhone());
             return ResponseUtil.success("添加成功",signMap);
         }
         return ResponseUtil.exception("添加失败");
