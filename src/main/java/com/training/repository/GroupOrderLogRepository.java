@@ -47,7 +47,7 @@ public interface GroupOrderLogRepository {
             " <if test=\"query.staffId != null\"> AND staff_id = #{query.staffId} </if>" +
             " <if test=\"query.storeId != null\"> AND store_id = #{query.storeId} </if>" +
             " <if test=\"query.remark != null\"> AND REMARK = #{query.remark} </if>" +
-            " LIMIT #{page.offset} , #{page.pageSize} " +
+            " order by pk_id desc LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<GroupOrderLogEntity> find(@Param("query") GroupOrderLogQuery groupOrderLog , @Param("page") PageRequest page);
 

@@ -219,6 +219,7 @@ public class GroupOrderService {
         GroupBuyEntity groupBuyEntity = groupBuyDao.getById(groupOrderEntity.getBuyId());
         if(groupBuyEntity!=null){
             groupOrder.setTitle(groupBuyEntity.getTitle());
+            groupOrder.setRemark(groupBuyEntity.getRemark());
         }
         StoreEntity storeEntity = storeDao.getById(groupOrder.getStoreId());
         if(storeEntity!=null){
@@ -236,6 +237,16 @@ public class GroupOrderService {
             groupOrder.setShowStatus("已完成");
         }else{
             groupOrder.setShowStatus(""+groupOrder.getStatus());
+        }
+
+        GroupOrderLogQuery query = new GroupOrderLogQuery();
+        query.setOrderId(groupOrderEntity.getOrderId().toString());
+        PageRequest page = new PageRequest(1);
+        List<GroupOrderLogEntity> groupOrderLogList = groupOrderLogDao.find(query,page);
+        if(groupOrderLogList.size()>0){
+            groupOrder.setLog(groupOrderLogList.get(0));
+        }else{
+            groupOrder.setLog(new GroupOrderLogEntity());
         }
         DateFormat df_time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         groupOrder.setCreateTime(df_time.format(groupOrderEntity.getCreated()));
