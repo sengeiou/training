@@ -1,12 +1,28 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page language="java" import="com.training.config.ContextUtil"%>
 <%@ page language="java" import="org.springframework.jdbc.core.JdbcTemplate"%>
-<%@ page import="com.training.common.Const" %>
 <%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.apache.http.impl.client.DefaultHttpClient" %>
+<%@ page import="org.apache.http.client.methods.HttpGet" %>
+<%@ page import="org.apache.http.HttpResponse" %>
+<%@ page import="org.apache.http.HttpEntity" %>
+<%@ page import="org.apache.http.util.EntityUtils" %>
+<%@ page import="com.alibaba.fastjson.JSONObject" %>
+<%@ page import="com.alibaba.fastjson.JSON" %>
+<%@ page import="com.training.util.SHA1" %>
+<%@ page import="com.training.common.Const" %>
 <%
-    System.out.println(" ****************     index.jsp  *********  ");
+    System.out.println(" ****************     index3.jsp  *********  ");
     String info  = request.getParameter("info");
-    System.out.println(" ****************     info = "+info);
+    System.out.println(" ****************  index3.jsp    info = "+info);
+    String getQueryString = request.getQueryString();
+    System.out.println(" ****************  index3.jsp    getQueryString = "+getQueryString);
+
+    String query  = info.split("@_@")[1].replaceAll("@@@","&");
+    info = info.split("@_@")[0];
+    System.out.println(" ****************  index3.jsp    info1 = "+info);
+    System.out.println(" ****************  index3.jsp    query = "+query);
+
     String[] infos = info.split("_");
     String buyId = infos[0];
     String type = infos[1];
@@ -51,6 +67,35 @@
         mainOrderId = infos[2];
     }
 
+    String timeStamp = ""+System.currentTimeMillis()/1000;
+    System.out.println("timeStamp = "+timeStamp);
+    String domain = "http://cloud.heyheroes.com";
+    String sha1 = "";
+    String url_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx07d9e50873fe1786&secret=ddbc05a576ef96e7c08bdc31e3639d3f";
+    DefaultHttpClient client = new DefaultHttpClient();//获取DefaultHttpClient请求
+    HttpGet httpGet = new HttpGet(url_token);//HttpGet将使用Get方式发送请求URL
+    JSONObject jsonObject = null;
+    HttpResponse resp = client.execute(httpGet);//使用HttpResponse接收client执行httpGet的结果
+    HttpEntity entity = resp.getEntity();//从response中获取结果，类型为HttpEntity
+    if(entity != null){
+        String result = EntityUtils.toString(entity,"UTF-8");//HttpEntity转为字符串类型
+        jsonObject = JSON.parseObject(result);//字符串类型转为JSON类型
+        String token = jsonObject.getString("access_token");
+        System.out.println("access_token = "+token);
+        String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+token+"&type=jsapi";
+        httpGet = new HttpGet(url);
+        resp = client.execute(httpGet);
+        entity = resp.getEntity();
+        result = EntityUtils.toString(entity,"UTF-8");
+        jsonObject = JSON.parseObject(result);
+        String ticket = jsonObject.getString("ticket");
+        System.out.println("ticket = "+ticket);
+        String str = "jsapi_ticket="+ticket+"&noncestr=Wm3WZYTPz0wzccnW&timestamp="+timeStamp+"&url="+domain+"/order/templates/index3.jsp?"+getQueryString;
+        System.out.println(str);
+        sha1 = SHA1.encode(str);
+        System.out.println("sha1 = "+sha1);
+    }
+
 //    String info_url = "https://api.weixin.qq.com/sns/userinfo?access_token="+access_token+"&openid="+openId+"&lang=zh_CN";
 //    httpGet = new HttpGet(info_url);
 //    httpResponse = httpClient.execute(httpGet);
@@ -92,7 +137,7 @@
 <body>
 <!-- 项目信息 -->
 <div class="flexRow projectBox">
-    <img class="projectBox-img" align="middle" src="../img/porject_image.png"/>
+    <img class="projectBox-img" align="middle" src="<%= buy.get("image") %>"/>
     <div class="projectBox-info">
         <%= buy.get("title") %>
     </div>

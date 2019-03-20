@@ -579,14 +579,14 @@ public class MemberService {
                 if( staffDB!=null && staffDB.getStatus() >= 0 && (StringUtils.isEmpty(staffDB.getOpenId()) || staffDB.getOpenId().equals(openId)) ){
                     if("教练".equals(staffDB.getJob())||"店长".equals(staffDB.getJob())||"CEO".equals(staffDB.getJob())||"COO".equals(staffDB.getJob())
                             ||"系统测试".equals(staffDB.getJob()) ||"区域经理".equals(staffDB.getJob())||"培训师".equals(staffDB.getJob())){
-                        logger.info("  bindIsCoach1 发现是教练 memberEntity.getPhone() = {} ",memberEntity.getPhone());
+                        memberEntity = new MemberEntity();
+                        logger.info("  bindIsCoach1 发现是教练 memberEntity.getPhone() = {} ",member.getPhone());
                         memberEntity.setType("C");
                         memberEntity.setName(staffDB.getCustname());
                         memberEntity.setStoreId(staffDB.getStoreId());
                         staffDB.setOpenId(openId);
                         int n = staffDao.bind(staffDB);
                         logger.info("  bind  staffDao.bind  n = {} ",n);
-                        memberEntity = new MemberEntity();
                         memberEntity.setMemberId(IDUtils.getId());
                         memberEntity.setName(member.getPhone());
                         memberEntity.setPhone(member.getPhone());

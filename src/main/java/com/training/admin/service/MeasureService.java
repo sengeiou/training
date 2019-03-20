@@ -146,6 +146,7 @@ public class MeasureService {
 
                     JSONObject outlineObj = JSON.parseObject(outline);
                     String bmi = outlineObj.getString("bmi");
+                    String pbf = outlineObj.getString("pbf");
 
                     String phone = measurement.getString("phone");
                     System.out.println("id:"+id+" , phone="+phone);
@@ -171,6 +172,7 @@ public class MeasureService {
                             memberBody.setCoachId(coachId);
                             memberBody.setMemberId(memberId);
                             memberBody.setBmi(bmi);
+                            memberBody.setFat(pbf);
                             memberBody.setHeight(height);
                             memberBody.setWeight(weight);
                             memberBody.setMeasurementId(id);
@@ -190,8 +192,13 @@ public class MeasureService {
                         String sql = "insert into measurement (measurement_id,body_id,member_id,device_sn,gender,age,height,weight,phone,outline,measurement,measure_date,start_time,created,modified) values (?,?,?,?,?,?,?,?,?,?,?,?,?,now(),now()) ";
                         jdbcTemplate.update(sql,new Object[]{id,bodyId,memberId,device_sn,gender,age,height,weight,phone,outline,measurement.toJSONString(),measure_date,start_time});
                         queryDetail(token,id);
-                    }else if(StringUtils.isEmpty(measurementEntity.getComposition())){
-                        queryDetail(token,id);
+                    }else {
+                        if(StringUtils.isNotEmpty(pbf)){
+                            jdbcTemplate.update("update member_body set fat = ? where measurement_id = ?  ",new Object[]{pbf,id});
+                        }
+                        if(StringUtils.isEmpty(measurementEntity.getComposition())){
+                            queryDetail(token,id);
+                        }
                     }
 
                 }

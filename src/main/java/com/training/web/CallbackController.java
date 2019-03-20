@@ -111,6 +111,7 @@ public class CallbackController {
 
         JSONObject outlineObj = JSON.parseObject(outline);
         String bmi = outlineObj.getString("bmi");
+        String pbf = outlineObj.getString("pbf");
 
         String phone = measurement.getString("phone");
         System.out.println("id:"+id+" , phone="+phone);
@@ -138,6 +139,7 @@ public class CallbackController {
                 memberBody.setCoachId(coachId);
                 memberBody.setMemberId(memberId);
                 memberBody.setBmi(bmi);
+                memberBody.setFat(pbf);
                 memberBody.setHeight(height);
                 memberBody.setWeight(weight);
                 memberBody.setMeasurementId(id);
