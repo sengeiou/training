@@ -107,7 +107,7 @@ public class GroupOrderService {
             page.setPageSize(10000);
             List<GroupOrderEntity> groupOrderList = groupOrderDao.find(query,page);
             if(groupOrderList.size()>groupBuyEntity.getLimitation()){
-                return ResponseUtil.exception("已超过限购数量，不能购买!");
+                return ResponseUtil.exception("很抱歉，已超过限购数量，无法购买!");
             }
         }
 
@@ -310,7 +310,7 @@ public class GroupOrderService {
             long now = System.currentTimeMillis();
             long seconds = now-created;
             logger.info(" dealOrder_orderId = {} , name = {} , phone = {} ,seconds = {}",groupOrderEntity.getOrderId(),groupOrderEntity.getName(),groupOrderEntity.getPhone(),seconds);
-            if(seconds>= 60*1000){
+            if(seconds>= 15*60*1000){
                 logger.info("   order  has expired  orderId = {} ,seconds = {}  ",groupOrderEntity.getOrderId(),seconds);
                 jdbcTemplate.update(" update group_order set status = 3 where order_id = ? ",new Object[]{groupOrderEntity.getOrderId()});
                 try {
