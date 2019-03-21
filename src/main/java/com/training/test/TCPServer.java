@@ -11,7 +11,7 @@ import java.util.Date;
 public class TCPServer {
 
     public static void main(String[] args) {
-        moreserver(8080);
+        moreserver(80);
     }
 
     //读取输入文本，返回响应文本（二级制，对象）
