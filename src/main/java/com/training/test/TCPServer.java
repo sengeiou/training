@@ -93,34 +93,37 @@ class ServerThread extends Thread
         InputStream in=null;
         PrintWriter out=null;
         try {
+            StringBuffer json = new StringBuffer();
             in = sk.getInputStream();
-            byte[] bytes = new byte[166];
-            int off = 0;
-            int length = bytes.length;
-            int readLength = 0;
+            byte[] bytes = new byte[1];
             do{
-                off = readLength+off;
-                length = length-readLength;
-                readLength = in.read(bytes, off, length);
-                System.out.println(new String(bytes));
+                in.read(bytes);
+                String line = new String(bytes);
+//                System.out.println("line="+line);
+                json.append(line);
+                if(line.equals("}")){
+                    String str = json.toString();
+                    System.out.println("str="+str);
+                    json = new StringBuffer();
+                }
             }while(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        finally{
-//            try {
-//                if (in!=null) {
-//                    in.close();
-//                }
-//                if (out!=null) {
-//                    out.close();
-//                }
-//                if (sk!=null) {
-//                    sk.close();
-//                }
-//            } catch (Exception e2) {
-//                e2.printStackTrace();
-//            }
-//        }
+        finally{
+            try {
+                if (in!=null) {
+                    in.close();
+                }
+                if (out!=null) {
+                    out.close();
+                }
+                if (sk!=null) {
+                    sk.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
     }
 }
