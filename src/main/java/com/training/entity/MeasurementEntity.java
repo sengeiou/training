@@ -56,5 +56,9 @@ public class MeasurementEntity {
 
     private String memberImage;
 
+    private String name;
+
+    private String memberName;
+
 }
 

@@ -206,12 +206,11 @@ public class WechatController {
             GroupOrder groupOrder = groupOrderService.getById(orderId);
             MemberEntity memberEntity = memberService.getByPhone(groupOrder.getPhone());
             if(memberEntity==null){
-                memberEntity = new MemberEntity();
-                memberEntity.setPhone(groupOrder.getPhone());
-//                memberEntity.setStoreId(groupOrder.getStoreId());
-                memberEntity.setGender(groupOrder.getGender());
-                memberEntity.setOrigin(OriginEnum.WX.getDesc());
-                memberService.add(memberEntity);
+//                memberEntity = new MemberEntity();
+//                memberEntity.setPhone(groupOrder.getPhone());
+//                memberEntity.setGender(groupOrder.getGender());
+//                memberEntity.setOrigin(OriginEnum.WX.getDesc());
+//                memberService.add(memberEntity);
             }
             String resultStr = "group_success";
             SysLogEntity sysLogEntity = new SysLogEntity();

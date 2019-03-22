@@ -80,8 +80,12 @@ public class MeasurementService {
         if(measurementDB!=null&&measurementDB.getMemberId()!=null){
             MemberEntity memberEntity = memberDao.getById(measurementDB.getMemberId());
             if(memberEntity!=null){
+                measurementDB.setMemberName(memberEntity.getName());
+                measurementDB.setName(memberEntity.getName());
                 measurementDB.setMemberImage(memberEntity.getImage());
             }else{
+                measurementDB.setMemberName(measurementDB.getPhone());
+                measurementDB.setName(measurementDB.getPhone());
                 measurementDB.setMemberImage("");
             }
         }

@@ -39,7 +39,7 @@ public class GroupBuyService {
     public ResponseEntity<String> add(GroupBuyEntity groupBuy){
         logger.info("content:{}",groupBuy.getContent().length());
         if(groupBuy.getContent()!=null&&groupBuy.getContent().length()>400000){
-            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
+//            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
         }
         logger.info(" group_buyRestController  add  groupBuy = {}",groupBuy);
         String id = IDUtils.getId();
@@ -100,7 +100,7 @@ public class GroupBuyService {
     public  ResponseEntity<String> update(GroupBuyEntity groupBuy){
         logger.info("content:{}",groupBuy.getContent().length());
         if(groupBuy.getContent()!=null&&groupBuy.getContent().length()>400000){
-            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
+//            return ResponseUtil.exception("图片太大，请更换小尺寸图片，图片大小限制在300k以内");
         }
         int n = groupBuyDao.update(groupBuy);
         if(n==1){

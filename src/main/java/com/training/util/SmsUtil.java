@@ -394,6 +394,7 @@ public class SmsUtil {
         request.setPhoneNumbers(phone);
         request.setSignName("HeyHeroes健身");
         request.setTemplateCode("SMS_158547766");
+        request.setTemplateCode("SMS_161380529");
         request.setTemplateParam("{\"order\":\""+orderId+"\"}");
         request.setOutId("huai23");
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
@@ -416,6 +417,7 @@ public class SmsUtil {
         request.setPhoneNumbers(phone);
         request.setSignName("HeyHeroes健身");
         request.setTemplateCode("SMS_158547767");
+        request.setTemplateCode("SMS_161380528");
         request.setTemplateParam("{\"order\":\""+orderId+"\"}");
         request.setOutId("huai23");
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
