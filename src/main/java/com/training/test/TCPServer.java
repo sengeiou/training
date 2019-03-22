@@ -1,10 +1,6 @@
 package com.training.test;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -15,7 +11,7 @@ import java.util.Date;
 public class TCPServer {
 
     public static void main(String[] args) {
-        moreserver(9090);
+        moreserver(80);
     }
 
     //读取输入文本，返回响应文本（二级制，对象）
@@ -71,7 +67,7 @@ public class TCPServer {
             {
                 //阻塞，直到有客户连接
                 Socket sk=server.accept();
-                System.out.println("有新客户端接入...............");
+                System.out.println("有新客户端接入..............."+sk.getInetAddress().getHostAddress());
                 //启动服务线程
                 new ServerThread(sk).start();
             }
@@ -94,23 +90,23 @@ class ServerThread extends Thread
     }
     //线程运行实体
     public void run() {
-        BufferedReader in=null;
+        InputStream in=null;
         PrintWriter out=null;
         try {
-            InputStreamReader isr;
-            isr=new InputStreamReader(sk.getInputStream());
-            in=new BufferedReader(isr);
-            out=new PrintWriter(new BufferedWriter(new OutputStreamWriter(sk.getOutputStream())),true);
-            while(true)
-            {
-                //接收来自客户端的请求，根据不同的命令返回不同的信息
-                String cmd=in.readLine();
-                System.out.println(cmd);
-                if (cmd==null) {
-                    break;
+            StringBuffer json = new StringBuffer();
+            in = sk.getInputStream();
+            byte[] bytes = new byte[1];
+            do{
+                in.read(bytes);
+                String line = new String(bytes);
+//                System.out.println("line="+line);
+                json.append(line);
+                if(line.equals("}")){
+                    String str = json.toString();
+                    System.out.println("str="+str);
+                    json = new StringBuffer();
                 }
-                out.println(new Date().toString()+":"+cmd);   //服务器返回时间和客户发送来的消息
-            }
+            }while(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
