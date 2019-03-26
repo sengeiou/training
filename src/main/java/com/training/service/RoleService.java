@@ -6,6 +6,7 @@ import com.training.entity.*;
 import com.training.domain.User;
 import com.training.common.*;
 import com.training.util.IDUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,11 @@ public class RoleService {
      */ 
     public ResponseEntity<String> add(RoleEntity role){
         role.setRoleId(IDUtils.getId());
+        String storeData = role.getStoreData();
+        if(StringUtils.isNotEmpty(storeData)&&storeData.indexOf("all")>=0){
+            storeData = storeData.replace("all,","");
+        }
+        role.setStoreData(storeData);
         int n = roleDao.add(role);
         if(n==1){
             return ResponseUtil.success("添加成功");
@@ -96,6 +102,11 @@ public class RoleService {
      * Created by huai23 on 2018-06-27 15:28:01.
      */ 
     public  ResponseEntity<String> update(RoleEntity role){
+        String storeData = role.getStoreData();
+        if(StringUtils.isNotEmpty(storeData)&&storeData.indexOf("all")>=0){
+            storeData = storeData.replace("all,","");
+        }
+        role.setStoreData(storeData);
         int n = roleDao.update(role);
         if(n==1){
             return ResponseUtil.success("修改成功");

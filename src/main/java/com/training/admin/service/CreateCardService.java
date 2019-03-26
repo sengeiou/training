@@ -372,6 +372,7 @@ public class CreateCardService {
         PageRequest page = new PageRequest();
         page.setPageSize(1000);
         List<StaffEntity> staffList = staffDao.find(query,new PageRequest());
+        logger.error(" checkContract_staffList = {} , staffName='{}'",staffList, staffName);
         StaffEntity staffEntity = null;
         for (StaffEntity staff : staffList){
             if(staff.getCustname().trim().equals(staffName)){
@@ -380,7 +381,7 @@ public class CreateCardService {
             }
         }
         if(staffEntity==null){
-            logger.error(" checkContract  ERROR :  staffEntity = null , staffName = {}  ", staffName);
+            logger.error(" checkContract  ERROR :  staffEntity = null , staffName='{}'", staffName);
             throw new Exception(" "+staffName+" staffEntity = null ");
         }
 //        if(staffList.size()!=1){
