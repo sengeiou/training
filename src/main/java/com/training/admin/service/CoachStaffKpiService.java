@@ -426,6 +426,7 @@ public class CoachStaffKpiService {
             update.setQdcjs(""+qdcjs);
             update.setQdtcs(""+qdtcs);
             update.setTczhl(""+tczhl);
+            logger.info("========================================== update= {}",update);
             kpiStaffMonthDao.update(update);
             item = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
             KpiStaffMonth kpiStaffMonthUpdate = kpiStaffMonthService.calculateKpiStaffMonth(item);

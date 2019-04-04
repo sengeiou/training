@@ -178,10 +178,10 @@ public class ManualRestController {
     @GetMapping("kpi")
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateKpi  execute start  ");
-        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') ");
-        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
+        List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') and staff_id = '1532360120239a9d560260b12440f9d7a30ce9a5f8930' ");
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') and store_id = 6720090 ");
 
-        String month = "201902";
+        String month = "201903";
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();
@@ -196,7 +196,7 @@ public class ManualRestController {
             Map store = stores.get(i);
             String store_id = store.get("store_id").toString();
             try {
-                coachStaffKpiService.calculateStoreKpi(store_id,month);
+//                coachStaffKpiService.calculateStoreKpi(store_id,month);
             }catch (Exception e){
                 logger.error(" ============== calculateKpiError  store_id:{} ",store_id);
                 e.printStackTrace();
@@ -428,7 +428,7 @@ public class ManualRestController {
     public Object calculateStoreFinanceOnceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceOnceReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2019-02-28";
+        String today = "2019-03-31";
 //        today = ut.currentDate(-1);
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
@@ -446,7 +446,7 @@ public class ManualRestController {
     public Object calculateStoreFinanceMonthReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStoreFinanceMonthReport!  time = {} ", ut.currentTime());
         String storeId = "31978073";
-        String today = "2019-02-28";
+        String today = "2019-03-31";
 //        today = ut.currentDate(-1);
         List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') ");
         String msg = "";
@@ -464,7 +464,7 @@ public class ManualRestController {
     public Object calculateStaffFinanceReport(HttpServletRequest request, HttpServletResponse response){
         logger.info("start calculateStaffFinanceReport!  time = {} ", ut.currentTime());
         String staffId = "1530715402419e703a209dd8d4e79892f7e0b8952344d";
-        String today = "2019-02-28";
+        String today = "2019-03-31";
 //        today = ut.currentDate(-1);
         List<Map<String,Object>> staffs =  jdbcTemplate.queryForList(" SELECT staff_id from staff  ");
         String msg = "";

@@ -18,6 +18,7 @@ import com.training.util.ResponseUtil;
 import com.training.util.RequestContextHelper;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -499,7 +500,10 @@ public class KpiStaffMonthService {
             kpiTemplateQuota.setKpiScore("-");
             kpiTemplateQuota.setScore("-");
 
-            double qdzjs = calculateQdzjs(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
+            double qdzjs1 = calculateQdzjs(kpiStaffMonth.getStoreId(),kpiStaffMonth.getMonth());
+
+            BigDecimal bg = new BigDecimal(qdzjs1);
+            double qdzjs = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
             kpiTemplateQuota.setFinishRate(ut.getDoubleString(qdzjs));
             List<KpiQuotaStandard> kpiQuotaStandardList = kpiTemplateQuota.getStandardList();
@@ -512,6 +516,7 @@ public class KpiStaffMonthService {
                 if(StringUtils.isNotEmpty(kpiQuotaStandard.getMin())){
                     min = Double.parseDouble(kpiQuotaStandard.getMin());
                 }
+
                 if(qdzjs>=min&&qdzjs<max){
                     int value = Integer.parseInt(kpiQuotaStandard.getScore());
 //                    logger.info(" value = {} ",value);
