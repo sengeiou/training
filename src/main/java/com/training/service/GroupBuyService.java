@@ -63,6 +63,9 @@ public class GroupBuyService {
      */ 
     public Page<GroupBuyEntity> find(GroupBuyQuery query , PageRequest page){
         List<GroupBuyEntity> groupBuyList = groupBuyDao.find(query,page);
+        for (GroupBuyEntity groupBuyEntity:groupBuyList){
+            groupBuyEntity.setContent(null);  // 因为内容太大  ， 不能直接返回
+        }
         Long count = groupBuyDao.count(query);
         Page<GroupBuyEntity> returnPage = new Page<>();
         returnPage.setContent(groupBuyList);
