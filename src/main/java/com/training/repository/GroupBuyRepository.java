@@ -32,6 +32,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.limitation != null\"> limitation, </if>" +
                 " <if test=\"groupBuy.content != null\"> content, </if>" +
                 " <if test=\"groupBuy.storeList != null\"> store_list, </if>" +
+                " <if test=\"groupBuy.storeTag != null\"> store_tag, </if>" +
                 " <if test=\"groupBuy.mainTag != null\"> main_tag, </if>" +
                 " <if test=\"groupBuy.status != null\"> status, </if>" +
                 " <if test=\"groupBuy.viewCount != null\"> view_count, </if>" +
@@ -59,6 +60,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.limitation != null\"> #{groupBuy.limitation}, </if>" +
                 " <if test=\"groupBuy.content != null\"> #{groupBuy.content}, </if>" +
                 " <if test=\"groupBuy.storeList != null\"> #{groupBuy.storeList}, </if>" +
+                " <if test=\"groupBuy.storeTag != null\"> #{groupBuy.storeTag}, </if>" +
                 " <if test=\"groupBuy.mainTag != null\"> #{groupBuy.mainTag}, </if>" +
                 " <if test=\"groupBuy.status != null\"> #{groupBuy.status}, </if>" +
                 " <if test=\"groupBuy.viewCount != null\"> #{groupBuy.viewCount}, </if>" +
@@ -71,7 +73,7 @@ public interface GroupBuyRepository {
             "</script>")
     int add(@Param("groupBuy") GroupBuyEntity groupBuy);
 
-    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,store_list,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
+    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,store_list,store_tag,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
             " FROM group_buy " +
             " WHERE 1 = 1 " +
             " <if test=\"query.buyId != null\"> AND buy_id = #{query.buyId} </if>" +
@@ -129,7 +131,7 @@ public interface GroupBuyRepository {
             "</script>")
     Long count(@Param("query") GroupBuyQuery groupBuy);
 
-    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,store_list,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
+    @Select("<script> SELECT pk_id,buy_id,title,image,share_title,share_desc,share_image,share_url,count,init_count,sale_count,auto_complete,price,group_price,start_date,end_date,limitation,content,store_list,store_tag,main_tag,status,view_count,buy_count,feature,remark,created,modified " +
             " FROM group_buy " +
             " WHERE buy_id = #{id} " +
             "</script>")
@@ -154,6 +156,7 @@ public interface GroupBuyRepository {
                 " <if test=\"groupBuy.limitation != null\"> limitation = #{groupBuy.limitation} , </if>" +
                 " <if test=\"groupBuy.content != null\"> content = #{groupBuy.content} , </if>" +
                 " <if test=\"groupBuy.storeList != null\"> store_list = #{groupBuy.storeList} , </if>" +
+                " <if test=\"groupBuy.storeTag != null\"> store_tag = #{groupBuy.storeTag} , </if>" +
                 " <if test=\"groupBuy.mainTag != null\"> main_tag = #{groupBuy.mainTag} , </if>" +
                 " <if test=\"groupBuy.status != null\"> status = #{groupBuy.status} , </if>" +
                 " <if test=\"groupBuy.viewCount != null\"> view_count = #{groupBuy.viewCount} , </if>" +

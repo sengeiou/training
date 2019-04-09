@@ -64,5 +64,7 @@ public class GroupBuyEntity {
 
     private String storeList;
 
+    private Integer storeTag;
+
 }
 

@@ -64,5 +64,7 @@ public class GroupBuyQuery {
 
     private String storeList;
 
+    private Integer storeTag;
+
 }
 
