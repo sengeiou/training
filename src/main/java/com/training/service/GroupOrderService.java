@@ -65,38 +65,41 @@ public class GroupOrderService {
      */ 
     public ResponseEntity<String> addOrder(GroupOrderEntity groupOrder) throws Exception {
         String openId = groupOrder.getOpenId();
-        String validCode = groupOrder.getValidCode();
-        logger.info(" validCodeMap : {} " , Const.validCodeMap);
-        if(StringUtils.isEmpty(validCode)){
-            return ResponseUtil.exception("请输入手机验证码");
-        }
-        if(!validCode.equals("8209")) {
-            if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
-                return ResponseUtil.exception("验证码无效");
-            }
-            List<String> codeList = Const.validCodeMap.get(groupOrder.getPhone());
-            boolean errorFlag = true;
-            for (String code:codeList){
-                String[] codes = code.split("_");
-                logger.info(" code : {} " ,codes[0]);
-                logger.info(" time : {} " ,codes[1]);
-                long time = Long.parseLong(codes[1]);
-                long now = System.currentTimeMillis();
-                logger.info(" time : {} " ,time);
-                logger.info(" now : {} " ,now);
-                if(validCode.equals(codes[0])){
-                    errorFlag = false;
-                    break;
-                }
-            }
-            if(validCode.equals("8209")){
-                errorFlag = false;
-            }
-            if(errorFlag){
-                return ResponseUtil.exception("手机验证码错误!");
-            }
-        }
+//        String validCode = groupOrder.getValidCode();
+//        logger.info(" validCodeMap : {} " , Const.validCodeMap);
+//        if(StringUtils.isEmpty(validCode)){
+//            return ResponseUtil.exception("请输入手机验证码");
+//        }
+//        if(!validCode.equals("8209")) {
+//            if(!Const.validCodeMap.containsKey(groupOrder.getPhone())){
+//                return ResponseUtil.exception("验证码无效");
+//            }
+//            List<String> codeList = Const.validCodeMap.get(groupOrder.getPhone());
+//            boolean errorFlag = true;
+//            for (String code:codeList){
+//                String[] codes = code.split("_");
+//                logger.info(" code : {} " ,codes[0]);
+//                logger.info(" time : {} " ,codes[1]);
+//                long time = Long.parseLong(codes[1]);
+//                long now = System.currentTimeMillis();
+//                logger.info(" time : {} " ,time);
+//                logger.info(" now : {} " ,now);
+//                if(validCode.equals(codes[0])){
+//                    errorFlag = false;
+//                    break;
+//                }
+//            }
+//            if(validCode.equals("8209")){
+//                errorFlag = false;
+//            }
+//            if(errorFlag){
+//                return ResponseUtil.exception("手机验证码错误!");
+//            }
+//        }
 
+        if(!groupOrder.getPhone().startsWith("1") || groupOrder.getPhone().length() != 11){
+            return ResponseUtil.exception("请输入正确的手机号码!");
+        }
 
         GroupBuyEntity groupBuyEntity = groupBuyDao.getById(groupOrder.getBuyId());
         if(groupBuyEntity.getLimitation()==1){

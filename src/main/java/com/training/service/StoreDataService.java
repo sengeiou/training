@@ -416,6 +416,9 @@ public class StoreDataService {
             if("新会员".equals(type)){
                 cjs++;
             }
+            if("转介绍".equals(type)){
+                cjs++;
+            }
         }
         List<StoreData> storeDataList= new ArrayList();
 

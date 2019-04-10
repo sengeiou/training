@@ -38,8 +38,11 @@
 
     List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id =  ? ",new Object[]{buyId});
     Map buy = (Map)buys.get(0);
+
+    int storeTag = Integer.parseInt(buy.get("store_list").toString());
+
     List<Map> storeList = new ArrayList<>();
-    if(buy.get("store_list")!=null){
+    if(storeTag>0 && buy.get("store_list")!=null){
         String[] list = buy.get("store_list").toString().split("#");
         for (int i = 0; i < list.length; i++) {
             if(StringUtils.isNotEmpty(list[i])){
@@ -144,7 +147,7 @@
 </div>
 <!-- 添加信息面板 -->
 <div class="flexColumn addInfoBox formBox " >
-    <div class="flexRow formBox-item formBox-selection">
+    <div class="flexRow formBox-item formBox-selection" style="<%= storeTag > 0 ?"":"display: none;"%>">
         <div class="formBox-item-label">您体验的门店</div>
         <div class="flexRow formBox-item-selection">
             <select name="" class="formBox-selectedBox"  >
@@ -169,7 +172,7 @@
         </div>
     </div>
 
-    <div class="flexRow formBox-item">
+    <div class="flexRow formBox-item" style="display: none;">
         <div class="formBox-item-label">性别</div>
         <div class="flexRow formBox-item-radioBox">
 
@@ -192,7 +195,7 @@
         </div>
     </div>
 
-    <div class="flexRow formBox-item">
+    <div class="flexRow formBox-item" style="display: none;">
         <div class="formBox-item-label">验证码</div>
         <div class="flexRow formBox-item-box">
             <input class="formBox-item-box-input-short" id="validCode" value=""/>
@@ -339,24 +342,31 @@
                 return;
             }
             flag = 1;
-            if($("#phone").val()==''){
+            var phone = $.trim($("#phone").val());
+            if(phone==''){
                 alert('请先填写您的信息');
                 flag = 0;
                 return;
             }
+            if(phone.length!=11){
+                alert('请填写正确的手机号码');
+                flag = 0;
+                return;
+            }
             var storeId = $('.formBox-selectedBox').val();
+            <% if(storeTag > 0 ){ %>
             if(storeId==""||storeId=="-1"||storeId==-1){
                 alert('请先选中您所在的门店');
                 flag = 0;
                 return;
             }
-
+            <% } %>
             var validCode = $.trim($('#validCode').val());
-            if(validCode==""){
-                alert('请填写手机验证码');
-                flag = 0;
-                return;
-            }
+//            if(validCode==""){
+//                alert('请填写手机验证码');
+//                flag = 0;
+//                return;
+//            }
 
             var gender = $('.item-radio').val();
 //            alert("提交成功");
@@ -366,7 +376,7 @@
             var order = {};
             order.buyId="<%= buyId %>";
             order.storeId=storeId;
-            order.phone=$("#phone").val();
+            order.phone=phone;
             order.name=$("#custname").val();
             order.gender=gender;
             <%--order.totalFee="<%= price %>";--%>

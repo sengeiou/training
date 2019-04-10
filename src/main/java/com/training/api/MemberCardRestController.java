@@ -159,7 +159,7 @@ public class MemberCardRestController {
         Page<MemberCard> page = memberCardService.findPro(query,pageRequest);
         String path = request.getSession().getServletContext().getRealPath("/export/member");
         logger.info(" path = {} ",path);
-        String[] headers = { "所属门店", "卡号", "会员姓名", "会员电话","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","剩余次数"};
+        String[] headers = { "所属门店", "卡号", "会员姓名", "会员电话","卡片名称","次数","生效时间", "失效时间","健身教练","销售教练","开卡门店","使用门店","剩余次数","剩余金额"};
         String fileName = "card-"+System.currentTimeMillis()+".xls";
         File targetFile = new File(path+"/"+ fileName);
         File pathf = new File(path);
@@ -182,7 +182,7 @@ public class MemberCardRestController {
                 if(memberCard==null){
                     continue;
                 }
-                String[] row = new String[12];
+                String[] row = new String[14];
                 row[0] = memberCard.getMemberStoreName();
                 row[1] = memberCard.getCardNo();
                 row[2] = memberCard.getMemberName();
@@ -194,7 +194,9 @@ public class MemberCardRestController {
                 row[8] = memberCard.getCoachName();
                 row[9] = memberCard.getSaleStaffName();
                 row[10] = memberCard.getStoreName();
-                row[11] = ""+memberCard.getCount();
+                row[11] = memberCard.getMemberStoreName();
+                row[12] = ""+memberCard.getCount();
+                row[13] = ""+memberCard.getRealFee();
                 dataList.add(row);
             }
             String sheetName = "课卡"+ ut.currentDate();
