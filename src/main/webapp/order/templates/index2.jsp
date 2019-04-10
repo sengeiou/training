@@ -48,7 +48,7 @@
     List buys = jdbcTemplate.queryForList("select * from group_buy where buy_id =  ? ",new Object[]{buyId});
     Map buy = (Map)buys.get(0);
 
-    int storeTag = Integer.parseInt(buy.get("store_list").toString());
+    int storeTag = Integer.parseInt(buy.get("store_tag").toString());
 
     List<Map> storeList = new ArrayList<>();
     if(storeTag>0 && buy.get("store_list")!=null){
@@ -266,7 +266,7 @@
 
 
 <!-- 支付信息 -->
-<div class="flexRow payBox">
+<div class="flexRow payBox" style="display: none;">
     <div class="flexRow payBox-left">
         <div class="payBox-img" ></div>
         <div class="payBox-label">微信支付</div>
