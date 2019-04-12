@@ -207,12 +207,15 @@ public class MemberCardService {
             int days = memberCardEntity.getDays();
             int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
             int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
-            count = memberCardEntity.getDays();
+//            count = memberCardEntity.getDays();
             memberCard.setTotal(total);
             memberCard.setCount(count);
             memberCard.setDays(total);
             if(days>0){
                 realFee = money*count/days;
+            }
+            if(count<0){
+                realFee=0;
             }
         }
         memberCard.setRealFee(ut.getDoubleString(realFee));
