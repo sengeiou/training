@@ -51,6 +51,9 @@ public class MemberCardService {
     @Autowired
     private ContractDao contractDao;
 
+    @Autowired
+    private MemberPauseDao memberPauseDao;
+
     /**
      * 新增实体
      * @param memberCard
@@ -204,9 +207,30 @@ public class MemberCardService {
         }
 
         if(memberCard.getType().equals(CardTypeEnum.PM.getKey())||memberCard.getType().equals(CardTypeEnum.TM.getKey())) {
+            logger.info("memberCard={}",memberCard);
+            int pauseDays = 0;
+            if(memberEntity.getStatus().equals(MemberStatusEnum.PAUSE.getKey())){
+                logger.info("用户停课中memberEntity={}",memberEntity);
+                MemberPauseQuery query = new MemberPauseQuery();
+                query.setMemberId(memberEntity.getMemberId());
+                query.setStatus(1);
+                PageRequest page = new PageRequest();
+                List<MemberPauseEntity> memberPauseEntities = memberPauseDao.find(query,page);
+
+                if(memberPauseEntities.size()>0) {
+                    MemberPauseEntity memberPauseEntity = memberPauseEntities.get(0);
+                    pauseDays = ut.passDayByDate(memberPauseEntity.getPauseDate(), ut.currentDate());
+                    logger.info("用户停课中pauseDays={},getPauseDate={}",pauseDays,memberPauseEntity.getPauseDate());
+                }
+            }
             int days = memberCardEntity.getDays();
+            logger.info("getEndDate={}",memberCard.getEndDate());
+            logger.info("days={}",days);
             int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
             int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
+            logger.info("count1={}",count);
+            count = count+pauseDays;
+            logger.info("count2={}",count);
 //            count = memberCardEntity.getDays();
             if(count<0) {
                 count = 0;
