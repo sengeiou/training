@@ -1334,9 +1334,14 @@ public class MemberService {
                         }
                     }
                     if(ut.passDayByDate(memberCardEntity.getEndDate(),memberPauseEntity.getPauseDate())<=0){
+                        String newStartDate = memberCardEntity.getStartDate();
+                        if(ut.passDayByDate(memberPauseEntity.getPauseDate(),newStartDate)>0){
+                            newStartDate = ut.currentDate(newStartDate,days);
+                        }
                         String newEndDate = ut.currentDate(memberCardEntity.getEndDate(),days);
                         logger.info("  restoreMember  newEndDate = {} , memberCardEntity = {} ", newEndDate,memberCardEntity);
                         MemberCardEntity memberCardEntityUpdate = new MemberCardEntity();
+                        memberCardEntityUpdate.setStartDate(newStartDate);
                         memberCardEntityUpdate.setEndDate(newEndDate);
                         memberCardEntityUpdate.setCardNo(memberCardEntity.getCardNo());
                         memberCardDao.update(memberCardEntityUpdate);
