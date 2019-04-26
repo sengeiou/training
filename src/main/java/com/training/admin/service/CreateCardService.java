@@ -2,6 +2,7 @@ package com.training.admin.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.SmartworkBpmsProcessinstanceListRequest;
@@ -14,6 +15,7 @@ import com.training.service.ContractService;
 import com.training.service.MemberCardService;
 import com.training.util.DingtalkUtil;
 import com.training.util.IDUtils;
+import com.training.util.SmsUtil;
 import com.training.util.ut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,9 +57,13 @@ public class CreateCardService {
     private SysLogDao sysLogDao;
 
     @Autowired
+    private SmsUtil smsUtil;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public void createCard() {
+        String[] phones = {"13810248890","13426474340"};
         ContractQuery query = new ContractQuery();
 //        query.setProcessInstanceId("7f31e570-e65d-4f17-aa65-0d53187eafa2");
         query.setStatus(0);
@@ -69,6 +75,29 @@ public class CreateCardService {
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
+                List data = jdbcTemplate.queryForList("select contract_id,type,card_no,status from contract where contract_id = ? and pk_id < ? ",new Object[]{contractEntity.getContractId(),contractEntity.getPkId()});
+                if(data.size()>0){
+                    Map log = (Map)data.get(0);
+                    String cardNo = " ";
+                    if(log.containsKey("card_no") && log.get("card_no")!=null){
+                        cardNo = log.get("card_no").toString();
+                    }else{
+                        cardNo = contractEntity.getType();
+                    }
+                    logger.error("createCard  此合同ID已经存在 contractId = {} ", contractEntity.getContractId());
+                    contractEntity.setStatus(2);
+                    updateContractStatus(contractEntity);
+                    for (int i = 0; i < phones.length; i++) {
+                        String phone = phones[i];
+                        try {
+                            SendSmsResponse sendSmsResponse = smsUtil.sendContractDuplicateNotice(phone,contractEntity.getSalesman(),contractEntity.getContractId(),cardNo);
+                            logger.info("sendContractDuplicateNotice sendSmsResponse={}",sendSmsResponse);
+                        }catch (Exception e){
+                            logger.error("sendContractDuplicateNotice e={} phone = {} contractEntity={},data={}",e.getMessage(), phone,contractEntity,data,e);
+                        }
+                    }
+                    continue;
+                }
 
                 if("TK".equals(contractEntity.getCardType())){
                     dealTK(contractEntity);

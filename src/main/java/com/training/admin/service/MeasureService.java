@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -316,6 +318,53 @@ public class MeasureService {
         String url = measureService.queryReportUrl(token,"13536006");
         System.out.println("token = "+token);
         System.out.println("url = "+url);
+    }
+
+    public void dealNoMemberLog() {
+        List data = jdbcTemplate.queryForList(" select measurement_id,phone from measurement where member_id = '' ");
+        for (int i = 0; i < data.size(); i++) {
+            Map log = (Map)data.get(i);
+            try {
+                logger.info(" dealNoMemberLog log{} = {}",i,log);
+                String id = log.get("measurement_id").toString();
+                String phone = log.get("phone").toString();
+                System.out.println("id:"+id+" , phone="+phone);
+                MemberEntity memberEntity = memberDao.getByPhone(phone);
+                MeasurementEntity measurementEntity = measurementDao.getById(id);
+                if(memberEntity!=null){
+                    String memberId = memberEntity.getMemberId();
+                    String bodyId = IDUtils.getId();
+                    String coachId = "";
+                    StaffEntity staffEntity = staffDao.getById(memberEntity.getCoachStaffId());
+                    if(staffEntity!=null&&StringUtils.isNotEmpty(staffEntity.getOpenId())){
+                        MemberEntity staff = memberDao.getByOpenId(staffEntity.getOpenId());
+                        if(staff!=null){
+                            coachId = staff.getMemberId();
+                        }
+                    }
+                    JSONObject outlineObj = JSON.parseObject(measurementEntity.getOutline());
+                    String bmi = outlineObj.getString("bmi");
+                    String pbf = outlineObj.getString("pbf");
+                    MemberBodyEntity memberBody = new MemberBodyEntity();
+                    memberBody.setBodyId(bodyId);
+                    memberBody.setCoachId(coachId);
+                    memberBody.setMemberId(memberId);
+                    memberBody.setBmi(bmi);
+                    memberBody.setFat(pbf);
+                    memberBody.setHeight(measurementEntity.getHeight().toString());
+                    memberBody.setWeight(measurementEntity.getWeight());
+                    memberBody.setMeasurementId(id);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    memberBody.setCreated(sdf.parse(measurementEntity.getStartTime()));
+                    int n = memberBodyDao.add(memberBody);
+
+                    String sql = "update measurement set body_id = ? , member_id = ? where measurement_id = ? ";
+                    jdbcTemplate.update(sql,new Object[]{bodyId,memberId,id});
+                }
+            }catch (Exception e){
+                logger.error(" dealNoMemberLog e={} log = {} ",e.getMessage(),log,e);
+            }
+        }
     }
 
 }

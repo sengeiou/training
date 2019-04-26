@@ -28,5 +28,14 @@ public class MeasureTask {
         logger.info("end MeasureTask!  time = {} ", ut.currentTime());
     }
 
+    /**
+     * 更新训练状态
+     */
+    @Scheduled(cron = "0 17 1,7,11,15,19,23 * * *")
+    public void dealNoMemberLog(){
+        logger.info("start MeasureTask!  dealNoMemberLog  time = {} ", ut.currentTime());
+        measureService.dealNoMemberLog();
+        logger.info("end MeasureTask!  dealNoMemberLog  time = {} ", ut.currentTime());
+    }
 
 }

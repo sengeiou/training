@@ -416,9 +416,31 @@ public class SmsUtil {
         SendSmsRequest request = new SendSmsRequest();
         request.setPhoneNumbers(phone);
         request.setSignName("HeyHeroes健身");
-        request.setTemplateCode("SMS_158547767");
         request.setTemplateCode("SMS_161380528");
         request.setTemplateParam("{\"order\":\""+orderId+"\"}");
+        request.setOutId("huai23");
+        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+        logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));
+        return sendSmsResponse;
+    }
+
+    /**
+     * 重复合同提醒
+     * @param staff
+     * @param contract
+     * @param cardNo
+     * @return
+     * @throws ClientException
+     */
+    public SendSmsResponse sendContractDuplicateNotice(String phone,String staff,String contract,String cardNo) throws ClientException {
+        if(StringUtils.isEmpty(phone)||StringUtils.isEmpty(staff)||StringUtils.isEmpty(contract)||StringUtils.isEmpty(cardNo)){
+            return null;
+        }
+        SendSmsRequest request = new SendSmsRequest();
+        request.setPhoneNumbers(phone);
+        request.setSignName("HeyHeroes健身");
+        request.setTemplateCode("SMS_164277151");
+        request.setTemplateParam("{\"staff\":\""+staff+"\",\"contract\":\""+contract+"\",\"cardNo\":\""+cardNo+"\"}");
         request.setOutId("huai23");
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
         logger.info("sendSmsResponse = {} ",JSON.toJSON(sendSmsResponse));

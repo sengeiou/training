@@ -13,12 +13,14 @@ import com.training.common.ProcessStatusEnum;
 import com.training.entity.ContractEntity;
 import com.training.service.ContractService;
 import com.training.util.DingtalkUtil;
+import com.training.util.SmsUtil;
 import com.training.util.ut;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,6 +35,12 @@ public class ProcessInstanceService {
 
     @Autowired
     private ContractService contractService;
+
+    @Autowired
+    private SmsUtil smsUtil;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public void getConcract(ProcessCodeEnum processCodeEnum){
         logger.info("start getConcract   time = {} ", ut.currentTime());

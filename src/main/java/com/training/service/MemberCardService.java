@@ -228,6 +228,9 @@ public class MemberCardService {
             logger.info("days={}",days);
             int total = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
             int count = ut.passDayByDate(ut.currentDate(),memberCardEntity.getEndDate())+1;
+            if(ut.passDayByDate(ut.currentDate(),memberCardEntity.getStartDate())>0){
+                count = ut.passDayByDate(memberCardEntity.getStartDate(),memberCardEntity.getEndDate())+1;
+            }
             logger.info("count1={}",count);
             count = count+pauseDays;
             logger.info("count2={}",count);
