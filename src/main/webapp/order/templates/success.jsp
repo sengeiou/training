@@ -135,7 +135,7 @@
     <div class="icon-share"></div>
     <div class="icon-success"></div>
     <div class="spage-title">支付成功</div>
-    <div class="spage-sub">支付方式：微信支付</div>
+    <div class="spage-sub" style="white-space : nowrap;">支付方式：微信支付</div>
     <div class="spage-sub">支付金额：¥<%= price %></div>
     <div class="spage-message">稍后您将收到订单短信</div>
 </div>

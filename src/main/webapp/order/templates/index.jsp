@@ -226,8 +226,8 @@ System.out.println(" ****************     index.jsp  *********  ");
         <!-- 开团人 -->
         <div class="flexRow userBox-item">
             <div class="flexRow userBox-item-left">
-                <img class="userBox-item-left-img" src="/order/img/headImage.png" />
-                <div class="userBox-item-left-name"></div>
+                <img class="userBox-item-left-img" src="/order/img/default_icon.png?v=<%= UUID.randomUUID() %>" />
+                <div class="userBox-item-left-name">匿名用户</div>
             </div>
             <div class="flexRow userBox-item-right">
                 <div class="userBox-item-right-info">
@@ -292,7 +292,7 @@ System.out.println(" ****************     index.jsp  *********  ");
             <!-- 遍历部分-拼团item -->
             <div class="flexRow modal-userBox-item">
                 <div class="flexRow modal-userBox-item-left">
-                    <img class="modal-userBox-item-left-head" src="/order/img/headImage.png"/>
+                    <img class="modal-userBox-item-left-head" src="/order/img/default_icon.png?v=<%= UUID.randomUUID() %>"/>
                     <div class="flexColumn modal-userBox-item-left-infoBox">
                         <div class="modal-userBox-item-left-infoBox-top">还差1人</div>
                         <div class="modal-userBox-item-left-infoBox-bottom">剩余<%= passdays %>天</div>
@@ -328,7 +328,7 @@ System.out.println(" ****************     index.jsp  *********  ");
         <input id = "mainOrderId" type="hidden" value ="" />
         <div class="modal-project-sub">仅剩<span>1</span>个名额，<%= passdays %>天后结束</div>
         <div class="flexRow modal-project-users">
-            <img class="modal-project-users-image" src="/order/img/headImage.png" />
+            <img class="modal-project-users-image" src="/order/img/default_icon.png" />
             <img class="modal-project-users-image" src="/order/img/icon-noUser.png" />
         </div>
         <a id="gotoPt" class="modal-project-btn btn-hover" href="">参与拼团</a>

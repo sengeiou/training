@@ -294,7 +294,7 @@ public class KpiStaffDetailAdminService {
                         isSk = true;
                         remark = "死课";
                     }else{
-                        List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? order by lesson_date desc " ,new Object[]{cardNo});
+                        List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and show_tag = 1 order by lesson_date desc , pk_id desc  " ,new Object[]{cardNo});
                         if(trainings.size()==0){
                             isJk = true;
                             remark = "结课";
