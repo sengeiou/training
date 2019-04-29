@@ -39,7 +39,7 @@ public interface RoleRepository {
             " FROM role " +
             " WHERE 1 = 1 " +
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
-            " <if test=\"query.roleName != null\"> AND role_name = #{query.roleName} </if>" +
+            " <if test=\"query.roleName != null\"> AND role_name like CONCAT('%',#{query.roleName},'%') </if>" +
             " <if test=\"query.nodeData != null\"> AND node_data = #{query.nodeData} </if>" +
             " <if test=\"query.storeData != null\"> AND store_data = #{query.storeData} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
@@ -51,7 +51,7 @@ public interface RoleRepository {
     @Select("<script> SELECT COUNT(1) FROM role " +
             " WHERE 1 = 1 " +
             " <if test=\"query.roleId != null\"> AND role_id = #{query.roleId} </if>" +
-            " <if test=\"query.roleName != null\"> AND role_name = #{query.roleName} </if>" +
+            " <if test=\"query.roleName != null\"> AND role_name like CONCAT('%',#{query.roleName},'%') </if>" +
             " <if test=\"query.nodeData != null\"> AND node_data = #{query.nodeData} </if>" +
             " <if test=\"query.storeData != null\"> AND store_data = #{query.storeData} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +

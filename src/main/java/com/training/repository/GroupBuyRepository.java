@@ -77,7 +77,7 @@ public interface GroupBuyRepository {
             " FROM group_buy " +
             " WHERE 1 = 1 " +
             " <if test=\"query.buyId != null\"> AND buy_id = #{query.buyId} </if>" +
-            " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
+            " <if test=\"query.title != null\"> AND title like CONCAT('%',#{query.title},'%')  </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.shareTitle != null\"> AND share_title = #{query.shareTitle} </if>" +
             " <if test=\"query.shareDesc != null\"> AND share_desc = #{query.shareDesc} </if>" +
@@ -98,7 +98,7 @@ public interface GroupBuyRepository {
             " <if test=\"query.viewCount != null\"> AND view_count = #{query.viewCount} </if>" +
             " <if test=\"query.buyCount != null\"> AND buy_count = #{query.buyCount} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.remark != null\"> AND remark like CONCAT('%',#{query.remark},'%')  </if>" +
             " LIMIT #{page.offset} , #{page.pageSize} " +
             "</script>")
     List<GroupBuyEntity> find(@Param("query") GroupBuyQuery groupBuy , @Param("page") PageRequest page);
@@ -106,7 +106,7 @@ public interface GroupBuyRepository {
     @Select("<script> SELECT COUNT(1) FROM group_buy " +
             " WHERE 1 = 1 " +
             " <if test=\"query.buyId != null\"> AND buy_id = #{query.buyId} </if>" +
-            " <if test=\"query.title != null\"> AND title = #{query.title} </if>" +
+            " <if test=\"query.title != null\"> AND title like CONCAT('%',#{query.title},'%') </if>" +
             " <if test=\"query.image != null\"> AND image = #{query.image} </if>" +
             " <if test=\"query.shareTitle != null\"> AND share_title = #{query.shareTitle} </if>" +
             " <if test=\"query.shareDesc != null\"> AND share_desc = #{query.shareDesc} </if>" +
@@ -127,7 +127,7 @@ public interface GroupBuyRepository {
             " <if test=\"query.viewCount != null\"> AND view_count = #{query.viewCount} </if>" +
             " <if test=\"query.buyCount != null\"> AND buy_count = #{query.buyCount} </if>" +
             " <if test=\"query.feature != null\"> AND feature = #{query.feature} </if>" +
-            " <if test=\"query.remark != null\"> AND remark = #{query.remark} </if>" +
+            " <if test=\"query.remark != null\"> AND remark like CONCAT('%',#{query.remark},'%')  </if>" +
             "</script>")
     Long count(@Param("query") GroupBuyQuery groupBuy);
 
