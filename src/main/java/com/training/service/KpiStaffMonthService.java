@@ -214,6 +214,7 @@ public class KpiStaffMonthService {
         }
         logger.info(" calculateKpiStaffMonth final finalScore : {}   ",finalScore);
         kpiStaffMonth.setFinalScore(ut.getDoubleString(finalScore));
+        kpiStaffMonth.setStar(kpiStaffMonthEntity.getParam1());
         return kpiStaffMonth;
     }
 
