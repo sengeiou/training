@@ -71,6 +71,11 @@ public class CoachStaffStarService {
             return "非教练员工没有星级";
         }
         staffEntity.setRemark("");
+
+        KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+        if(kpiStaffMonthEntity==null){
+            return "教练"+staffEntity.getCustname()+"没有kpi数据，month="+month;
+        }
 //        logger.info(" calculateStaffStar   staffName = {} , month = {} , star = {}   ",staffEntity.getCustname(),month,staffEntity.getStar());
         String month1 = ut.getKpiMonth(month,-1);
         KpiStaffMonthEntity kpiStaffMonthEntity1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month1);
@@ -130,6 +135,8 @@ public class CoachStaffStarService {
     private int calculateStar2(StaffEntity staffEntity, String month) {
         String msg = "";
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
+        logger.info(" calculateStar2   month={} , staffEntity={}",month,staffEntity);
+        logger.info(" calculateStar2   kpiStaffMonthEntity={}",kpiStaffMonthEntity);
         KpiStaffMonthEntity kpiStaffMonthEntity_1 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-1));
         KpiStaffMonthEntity kpiStaffMonthEntity_2 = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),ut.getKpiMonth(month,-2));
         double score = Double.parseDouble(kpiStaffMonthEntity.getKpiScore());

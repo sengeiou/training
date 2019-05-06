@@ -75,28 +75,30 @@ public class CreateCardService {
         for(ContractEntity contractEntity:contractEntityList){
             logger.info("createCard   contractEntity = {} ", contractEntity);
             try {
-                List data = jdbcTemplate.queryForList("select contract_id,type,card_no,status from contract where contract_id = ? and pk_id < ? ",new Object[]{contractEntity.getContractId(),contractEntity.getPkId()});
-                if(data.size()>0){
-                    Map log = (Map)data.get(0);
-                    String cardNo = " ";
-                    if(log.containsKey("card_no") && log.get("card_no")!=null){
-                        cardNo = log.get("card_no").toString();
-                    }else{
-                        cardNo = contractEntity.getType();
-                    }
-                    logger.error("createCard  此合同ID已经存在 contractId = {} ", contractEntity.getContractId());
-                    contractEntity.setStatus(2);
-                    updateContractStatus(contractEntity);
-                    for (int i = 0; i < phones.length; i++) {
-                        String phone = phones[i];
-                        try {
-                            SendSmsResponse sendSmsResponse = smsUtil.sendContractDuplicateNotice(phone,contractEntity.getSalesman(),contractEntity.getContractId(),cardNo);
-                            logger.info("sendContractDuplicateNotice sendSmsResponse={}",sendSmsResponse);
-                        }catch (Exception e){
-                            logger.error("sendContractDuplicateNotice e={} phone = {} contractEntity={},data={}",e.getMessage(), phone,contractEntity,data,e);
+                if(StringUtils.isNotEmpty(contractEntity.getContractId())){
+                    List data = jdbcTemplate.queryForList("select contract_id,type,card_no,status from contract where contract_id = ? and pk_id < ? ",new Object[]{contractEntity.getContractId(),contractEntity.getPkId()});
+                    if(data.size()>0){
+                        Map log = (Map)data.get(0);
+                        String cardNo = " ";
+                        if(log.containsKey("card_no") && log.get("card_no")!=null){
+                            cardNo = log.get("card_no").toString();
+                        }else{
+                            cardNo = contractEntity.getType();
                         }
+                        logger.error("createCard  此合同ID已经存在 contractId = {} ", contractEntity.getContractId());
+                        contractEntity.setStatus(2);
+                        updateContractStatus(contractEntity);
+                        for (int i = 0; i < phones.length; i++) {
+                            String phone = phones[i];
+                            try {
+                                SendSmsResponse sendSmsResponse = smsUtil.sendContractDuplicateNotice(phone,contractEntity.getSalesman(),contractEntity.getContractId(),cardNo);
+                                logger.info("sendContractDuplicateNotice sendSmsResponse={}",sendSmsResponse);
+                            }catch (Exception e){
+                                logger.error("sendContractDuplicateNotice e={} phone = {} contractEntity={},data={}",e.getMessage(), phone,contractEntity,data,e);
+                            }
+                        }
+                        continue;
                     }
-                    continue;
                 }
 
                 if("TK".equals(contractEntity.getCardType())){

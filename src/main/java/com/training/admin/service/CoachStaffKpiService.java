@@ -296,9 +296,10 @@ public class CoachStaffKpiService {
         int qdtcs = 0;
         List<String> staffIdList = queryStoreStaffList(storeId,y+"-"+m);
         int staffCount = staffIdList.size();
-//        logger.info(" staffCount  = {}  ",staffCount);
+        logger.info(" staffCount  = {}  ",staffCount);
         for (String staffId : staffIdList){
             KpiStaffMonthEntity subKpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(staffId,month);
+            logger.info(" subKpiStaffMonthEntity  = {}  ",subKpiStaffMonthEntity);
             if(subKpiStaffMonthEntity==null){
                 continue;
             }
