@@ -673,7 +673,7 @@ public class ProcessInstanceService {
             String[] dates = dateStr.split(",");
             contractEntity.setStartDate(dates[0].replaceAll("\"",""));
             contractEntity.setEndDate(dates[1].replaceAll("\"",""));
-            contractEntity.setTotal(dates[2]);
+            contractEntity.setTotal(dates[2].replaceAll("\"",""));
         }
         Map<String,String> feature = new HashMap();
         feature.put("storeName",contractMap.get("所在部门"));

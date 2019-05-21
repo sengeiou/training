@@ -270,12 +270,15 @@ public class ManualRestController {
     @GetMapping("dealContract")
     public Object dealContract(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" dealContract start  ");
-        String id = "f383ac47-14ac-40ae-b7d8-f5ae1e4a5c92";
-        String memberId = "15391682440744e73a7d6d7c54f1dbaa8bb5bcf0d423f";
+        String id = "daa522bc-8834-4e4b-b76a-30e9fdd8d296";
+        String memberId = "1553839178231eaa1998ea29b432ca4fb5c83d011ac93";
         ContractEntity contractEntity = contractService.getById(id);
         MemberEntity memberDB = memberService.getById(memberId);
-        createCardService.createPT(contractEntity,memberDB);
+//        createCardService.createPT(contractEntity,memberDB);
+        createCardService.createPM(contractEntity,memberDB);
+
         return "dealContract end";
+
     }
 
     /**

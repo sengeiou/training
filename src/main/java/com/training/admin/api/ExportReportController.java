@@ -40,8 +40,8 @@ public class ExportReportController {
     @GetMapping("trainingExcel")
     public Object trainingExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" trainingExcel   ");
-        String startDate = "2019-03-01";
-        String endDate = "2019-03-31";
+        String startDate = "2019-04-01";
+        String endDate = "2019-04-30";
         exportFileService.trainingExcel(startDate,endDate);
         return "trainingExcel执行成功";
     }
@@ -74,8 +74,8 @@ public class ExportReportController {
     @GetMapping("monthCardExcel")
     public Object monthCardExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" monthCardExcel   ");
-        String startDate = "2019-03-01";
-        String endDate = "2019-03-31";
+        String startDate = "2019-04-01";
+        String endDate = "2019-04-30";
         exportFileService.monthCardExcel(startDate,endDate);
         return "monthCardExcel执行成功";
     }
@@ -131,9 +131,9 @@ public class ExportReportController {
     @GetMapping("staffMemberDetailByDay")
     public Object staffMemberDetailByDay(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" staffMemberDetailByDay   ");
-        String startDate = "2019-01-01";
-        String endDate = "2019-01-31";
-        String month = "2019-01";
+        String startDate = "2019-04-01";
+        String endDate = "2019-04-30";
+        String month = "2019-04";
         exportFileService.staffMemberDetailByDay(month);
         return "staffMemberDetailByDay";
     }
