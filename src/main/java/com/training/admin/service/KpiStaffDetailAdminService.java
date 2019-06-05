@@ -294,20 +294,18 @@ public class KpiStaffDetailAdminService {
                         isSk = true;
                         remark = "死课";
                     }else{
-                        List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and show_tag = 1 order by lesson_date desc , pk_id desc  " ,new Object[]{cardNo});
-                        if(trainings.size()==0){
-                            isJk = true;
-                            remark = "结课";
-                        }else{
-                            Map training = (Map)trainings.get(0);
-                            String lessonDate = training.get("lesson_date").toString();
-                            if(ut.passDayByDate(day,lessonDate)>0){
-                                continue;
-                            }else{
-                                isJk = true;
-                                staffId = training.get("staff_id").toString();
-                                remark = "结课";
-                            }
+                        List trainings = jdbcTemplate.queryForList("select * from training where card_no = ? and status = 0 and show_tag = 0 order by lesson_date desc , pk_id desc  " ,new Object[]{cardNo});
+                        // 虽然课卡剩余0节课，但是如果还有约了未上的课，不能结课
+                        if(trainings.size()>0){
+                            continue;
+                        }
+                        // 所有的课都已经上完了 ， 取最后一次课程的教练  作为结课教练
+                        isJk = true;
+                        remark = "结课";
+                        List finishTrainings = jdbcTemplate.queryForList("select * from training where card_no = ? and show_tag = 1 order by lesson_date desc , pk_id desc  " ,new Object[]{cardNo});
+                        if(finishTrainings.size()>0){
+                            Map training = (Map)finishTrainings.get(0);
+                            staffId = training.get("staff_id").toString();
                         }
                     }
                 }
