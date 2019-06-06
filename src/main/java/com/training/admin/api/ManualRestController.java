@@ -169,8 +169,8 @@ public class ManualRestController {
     @GetMapping("kpione")
     public Object calculateOneKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" calculateOneKpi   ");
-        String staffId = "153071540242711d7cda002ae43dd9df6ad6398b23d5e";
-        String month = "201810";
+        String staffId = "1533083190936171d2d9caf764bd5b91949fcecd7b32b";
+        String month = "201905";
         coachStaffKpiService.calculateStaffKpi(staffId,month);
         return "calculateOneKpi执行成功";
     }
@@ -179,9 +179,9 @@ public class ManualRestController {
     public Object calculateKpi(HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.info(" =======   calculateKpi  execute start  ");
         List<Map<String,Object>> coachs =  jdbcTemplate.queryForList(" SELECT staff_id from staff where job in ('教练','店长') and staff_id = '1532360120239a9d560260b12440f9d7a30ce9a5f8930' ");
-        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0') and store_id = 31311256 ");
+        List<Map<String,Object>> stores =  jdbcTemplate.queryForList(" SELECT store_id from store where store_id not in ('0')  ");
 
-        String month = "201904";
+        String month = "201905";
         for (int i = 0; i < coachs.size(); i++){
             Map staff = coachs.get(i);
             String staffId = staff.get("staff_id").toString();

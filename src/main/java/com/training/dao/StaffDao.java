@@ -79,6 +79,16 @@ public class StaffDao {
      * @param id
      * Created by huai23 on 2018-05-26 13:55:30.
      */
+    public List<StaffEntity> getManagerByStoreIdAndDay(String id,String day){
+        List<StaffEntity> staffDBs = staffRepository.getManagerByStoreIdAndDay(id,day);
+        return staffDBs;
+    }
+
+    /**
+     * 根据ID查询实体
+     * @param id
+     * Created by huai23 on 2018-05-26 13:55:30.
+     */
     public StaffEntity getByOpenId(String id){
         if(StringUtils.isEmpty(id)){
             return null;

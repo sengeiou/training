@@ -273,6 +273,8 @@ public class CoachStaffKpiService {
         String startDate = y+"-"+m+"-01";
         int days = ut.daysOfMonth(startDate);
 
+        String endDate = y+"-"+m+"-"+days;
+
         KpiStaffMonthEntity kpiStaffMonthEntity = kpiStaffMonthDao.getByIdAndMonth(storeId,month);
         if(kpiStaffMonthEntity==null){
             int n = manualService.createSingleStaffMonth(storeId,month);
@@ -398,7 +400,8 @@ public class CoachStaffKpiService {
         qdxkl = kpiStaffMonthService.calculateQdxkl(storeId,month);
         qdzjs = kpiStaffMonthService.calculateQdzjs(storeId,month);
 
-        List<StaffEntity> managers = staffDao.getManagerByStoreId(storeId);
+        List<StaffEntity> managers = staffDao.getManagerByStoreIdAndDay(storeId,endDate);
+        logger.info("storeId={},endDate={},managers={}",storeId,endDate,managers);
         for (StaffEntity staffEntity : managers){
             KpiStaffMonthEntity item = kpiStaffMonthDao.getByIdAndMonth(staffEntity.getStaffId(),month);
             if(item==null){
